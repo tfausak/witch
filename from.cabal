@@ -1,0 +1,40 @@
+cabal-version: >= 1.8
+
+name: from
+version: 0.0.0.0
+synopsis: Convert from one type to another.
+description:
+  From converts from one type to another.
+
+build-type: Simple
+category: Data
+license-file: LICENSE.txt
+license: ISC
+maintainer: Taylor Fausak
+
+source-repository head
+  location: https://github.com/tfausak/from
+  type: git
+
+library
+  build-depends:
+    base >= 4.14.1 && < 4.15
+    , bytestring >= 0.10.10 && < 0.11
+    , containers >= 0.6.2 && < 0.7
+    , text >= 1.2.3 && < 1.3
+  exposed-modules: From
+  ghc-options:
+    -Weverything
+    -Wno-implicit-prelude
+    -Wno-missing-safe-haskell-mode
+    -Wno-prepositive-qualified-module
+    -Wno-safe
+    -Wno-unsafe
+  hs-source-dirs: src/lib
+
+test-suite test
+  build-depends: base, from
+  ghc-options: -rtsopts -threaded
+  hs-source-dirs: src/test
+  main-is: Main.hs
+  type: exitcode-stdio-1.0
