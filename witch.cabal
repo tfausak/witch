@@ -9,7 +9,7 @@ license: ISC
 maintainer: Taylor Fausak
 name: witch
 synopsis: Convert values from one type into another.
-version: 0.0.0.0
+version: 0.0.0.1
 
 source-repository head
   location: https://github.com/tfausak/witch
