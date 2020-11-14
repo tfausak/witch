@@ -39,4 +39,4 @@ jobs:
           name: witch-${{ github.sha }}.tar.gz
       - run: cabal check
       - if: github.event_name == 'release'
-        run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' "dist-newstyle/sdist/witch-*.tar.gz"
+        run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' dist-newstyle/sdist/witch-*.tar.gz
