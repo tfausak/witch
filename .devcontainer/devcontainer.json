@@ -6,6 +6,7 @@
   "extensions": [
     "taylorfausak.purple-yolk"
   ],
+  "postCreateCommand": "cabal update",
   "settings": {
     "purple-yolk.ghci.command": "cabal repl"
   }
