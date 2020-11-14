@@ -8,9 +8,10 @@ on:
 jobs:
   build:
     strategy:
-      os: [ ubuntu-18.04 ]
-      ghc: [ '8.10' ]
-      cabal: [ '3.2' ]
+      matrix:
+        os: [ ubuntu-18.04 ]
+        ghc: [ '8.10' ]
+        cabal: [ '3.2' ]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
