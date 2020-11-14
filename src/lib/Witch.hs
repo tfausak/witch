@@ -99,7 +99,7 @@ import qualified Numeric.Natural as Natural
 --   want to provide @From a c@. Sometimes using 'via' is ergonomic enough,
 --   other times you want the extra instance. (It would be nice if we could
 --   provide @instance (From a b, From b c) => From a c where from = via \@b@.)
-class From a b where
+class From source target where
   -- | This method converts a value from one type into another. This is
   -- intended to be used with the @TypeApplications@ language extension. For
   -- example, here are a few ways to convert from an 'Int' into an 'Integer':
@@ -120,13 +120,13 @@ class From a b where
   --
   -- The default implementation of 'from' simply calls 'Coerce.coerce', which
   -- works for types that have the same runtime representation.
-  from :: a -> b
-  default from :: Coerce.Coercible a b => a -> b
+  from :: source -> target
+  default from :: Coerce.Coercible source target => source -> target
   from = Coerce.coerce
 
 -- | This function converts a value from one type into another. This is the
 -- same as 'from' except that the type variables are in the opposite order.
-into :: forall b a . From a b => a -> b
+into :: forall target source . From source target => source -> target
 into = from
 
 -- | This function converts a value from one type into another by going through
@@ -137,8 +137,8 @@ into = from
 -- variable of this function. In other words, @via \@b \@a \@c@ first converts
 -- from @a@ to @b@, and then from @b@ to @c@. Often both @a@ and @c@ will be
 -- inferred from context, which means you can just write @via \@b@.
-via :: forall b a c . (From a b, From b c) => a -> c
-via = from . (\ x -> x :: b) . from
+via :: forall through source target . (From source through, From through target) => source -> target
+via = from . (\ x -> x :: through) . from
 
 -- | 'id'
 instance From a a where
