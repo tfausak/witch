@@ -3,7 +3,7 @@ cabal-version: >= 1.10
 build-type: Simple
 category: Data
 description: Witch converts values from one type into another.
-extra-source-files: README.markdown
+extra-source-files: CHANGELOG.markdown README.markdown
 license-file: LICENSE.txt
 license: ISC
 maintainer: Taylor Fausak
