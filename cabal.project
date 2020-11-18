@@ -1,4 +1,3 @@
 packages: .
 package witch
-  ghc-options: -Werror
   tests: true
