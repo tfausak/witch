@@ -101,23 +101,9 @@ import qualified Numeric.Natural as Natural
 --   other times you want the extra instance. (It would be nice if we could
 --   provide @instance (Cast a b, Cast b c) => Cast a c where cast = via \@b@.)
 class Cast source target where
-  -- | This method converts a value from one type into another. This is
-  -- intended to be used with the @TypeApplications@ language extension. For
-  -- example, here are a few ways to convert from an 'Int' into an 'Integer':
-  --
-  -- > cast @Int @Integer 123
-  -- > cast @_ @Integer (123 :: Int)
-  -- > cast @Int @_ 123 :: Integer
-  -- > cast @Int 123 :: Integer
-  -- > cast (123 :: Int) :: Integer
-  --
-  -- Often the context around an expression will make the explicit type
-  -- signatures unnecessary. If you find yourself using a partial type
-  -- signature, consider using 'into' instead. For example:
-  --
-  -- > let someInt = 123 :: Int
-  -- > cast @_ @Integer someInt -- avoid this
-  -- > into @Integer someInt -- prefer this
+  -- | This method implements the conversion of a value between types. In
+  -- practice most instances don't need an explicit implementation. At call
+  -- sites you'll usually want to use 'from' or 'into' instead of 'cast'.
   --
   -- The default implementation of 'cast' simply calls 'Coerce.coerce', which
   -- works for types that have the same runtime representation.
@@ -125,23 +111,45 @@ class Cast source target where
   default cast :: Coerce.Coercible source target => source -> target
   cast = Coerce.coerce
 
--- https://twitter.com/BanjoTragedy/status/1329091174305447938
+-- This ugly hack is used to require type applications when calling 'from' and
+-- 'into'. See <https://twitter.com/taylorfausak/status/1329084033003782148>.
+data Never
 type family Ambiguous a where
-  Ambiguous Void.Void = ()
+  Ambiguous Never = ()
   Ambiguous a = a
 
--- | TODO
+-- | This function converts a value from one type into another. This is
+-- intended to be used with the @TypeApplications@ language extension. The
+-- @Ambiguous@ type in the signature makes a type application required. If
+-- you'd prefer not to provide a type application, use 'cast' instead.
+--
+-- As an example, here are a few ways to convert from an 'Int' into an
+-- 'Integer':
+--
+-- > from @Int @Integer 123
+-- > from @_ @Integer (123 :: Int)
+-- > from @Int @_ 123 :: Integer
+-- > from @Int 123 :: Integer
+--
+-- Often the context around an expression will make the explicit type
+-- signatures unnecessary. If you find yourself using a partial type
+-- signature, consider using 'into' instead. For example:
+--
+-- > let someInt = 123 :: Int
+-- > from @_ @Integer someInt -- avoid this
+-- > into @Integer someInt -- prefer this
+--
 from :: forall s target source . (Ambiguous s ~ source, Cast source target) => source -> target
 from = cast
 
 -- | This function converts a value from one type into another. This is the
--- same as 'cast' except that the type variables are in the opposite order.
+-- same as 'from' except that the type variables are in the opposite order.
 into :: forall t source target . (Ambiguous t ~ target, Cast source target) => source -> target
 into = cast
 
 -- | This function converts a value from one type into another by going through
--- some third type. This is the same as calling 'cast' (or 'into') twice, but
--- can sometimes be more convenient.
+-- some third type. This is the same as calling 'cast' (or 'from' or 'into')
+-- twice, but can sometimes be more convenient.
 --
 -- Note that the type in the middle of the conversion is the first type
 -- variable of this function. In other words, @via \@b \@a \@c@ first converts
@@ -263,6 +271,9 @@ instance Cast LazyByteString.ByteString ByteString.ByteString where
   cast = LazyByteString.toStrict
 
 -- | 'Text.pack'
+--
+-- Note that some 'Char' values cannot be represented in 'Text' and will be
+-- replaced by U+FFFD.
 instance Cast String Text.Text where
   cast = Text.pack
 
