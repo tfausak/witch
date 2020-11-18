@@ -1,4 +1,6 @@
 {-# language AllowAmbiguousTypes #-}
+{-# language ConstraintKinds #-}
+{-# language DataKinds #-}
 {-# language DefaultSignatures #-}
 {-# language FlexibleInstances #-}
 {-# language MultiParamTypeClasses #-}
@@ -50,6 +52,7 @@ import qualified Data.Set as Set
 import qualified Data.Text as Text
 import qualified Data.Text.Lazy as LazyText
 import qualified Data.Tuple as Tuple
+import qualified Data.Type.Equality as Type
 import qualified Data.Void as Void
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
@@ -125,18 +128,15 @@ class Cast source target where
   default cast :: Coerce.Coercible source target => source -> target
   cast = Coerce.coerce
 
--- https://twitter.com/BanjoTragedy/status/1329091174305447938
-type family Ambiguous a where
-  Ambiguous Void.Void = ()
-  Ambiguous a = a
+type Ambiguous a b = (Type.==) a b ~ 'True
 
 -- | TODO
-from :: forall s target source . (Ambiguous s ~ source, Cast source target) => source -> target
+from :: forall s target source . (Ambiguous s source, Cast source target) => source -> target
 from = cast
 
 -- | This function converts a value from one type into another. This is the
 -- same as 'cast' except that the type variables are in the opposite order.
-into :: forall t source target . (Ambiguous t ~ target, Cast source target) => source -> target
+into :: forall t source target . (Ambiguous t target, Cast source target) => source -> target
 into = cast
 
 -- | This function converts a value from one type into another by going through
