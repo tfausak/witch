@@ -3,8 +3,9 @@
 {-# language FlexibleInstances #-}
 {-# language MultiParamTypeClasses #-}
 {-# language ScopedTypeVariables #-}
+{-# language TypeFamilies #-}
 
--- | This module provides the 'From' type class for converting values between
+-- | This module provides the 'Cast' type class for converting values between
 -- various types. This aims to be a common interface for the various @xToY@ or
 -- @yFromX@ functions you might write instead. It is inspired by the
 -- @std::convert::From@ trait that the Rust programming language provides.
@@ -35,7 +36,7 @@
 -- - <https://github.com/kframework/kore/blob/626f230/kore/src/From.hs>:
 --   This package is not available on Hackage, but otherwise is very similar to
 --   this one.
-module Witch (From(from), into, via) where
+module Witch (Cast(cast), from, into, via) where
 
 import qualified Data.ByteString as ByteString
 import qualified Data.ByteString.Lazy as LazyByteString
@@ -54,7 +55,7 @@ import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 
 -- | This type class represents a way to convert values from some type into
--- another type. The constraint @From a b@ means that you can convert from a
+-- another type. The constraint @Cast a b@ means that you can convert from a
 -- value of type @a@ into a value of type @b@.
 --
 -- This is primarily intended for "zero cost" conversions like @newtype@s. For
@@ -62,8 +63,8 @@ import qualified Numeric.Natural as Natural
 -- say:
 --
 -- > newtype Name = Name String
--- > instance From String Name
--- > instance From Name String
+-- > instance Cast String Name
+-- > instance Cast Name String
 --
 -- And then you could convert back and forth between @Name@s and @String@s:
 --
@@ -75,8 +76,8 @@ import qualified Numeric.Natural as Natural
 -- This type class does not have any laws, but it does have some expectations:
 --
 -- - Conversions should be total. A conversion should never fail or crash.
---   Avoid writing instances like @From Int (Maybe Char)@. (It might be
---   worthwhile to have a separate @TryFrom@ type class for this.)
+--   Avoid writing instances like @Cast Int (Maybe Char)@. (It might be
+--   worthwhile to have a separate @TryCast@ type class for this.)
 --
 -- - Conversions should be unambiguous. For example there are many ways to
 --   decode a @ByteString@ into @Text@, so you shouldn't provide an instance
@@ -86,213 +87,222 @@ import qualified Numeric.Natural as Natural
 --   @String@ to @Text@ is probably fine, but converting from a UTF-8 encoded
 --   @ByteString@ to @Text@ is problematic.
 --
--- - Conversions should be lossless. In other words if you have @From a b@ then
+-- - Conversions should be lossless. In other words if you have @Cast a b@ then
 --   no two @a@ values should be converted to the same @b@ value. For example
---   @From Int Integer@ is fine because every @Int@ can be mapped to a
---   corresponding @Integer@, but @From Integer Int@ is not good because some
+--   @Cast Int Integer@ is fine because every @Int@ can be mapped to a
+--   corresponding @Integer@, but @Cast Integer Int@ is not good because some
 --   @Integer@s are out of bounds and would need to be clamped.
 --
--- - If you have both @From a b@ and @From b a@, then @from . from@ should be
+-- - If you have both @Cast a b@ and @Cast b a@, then @cast . cast@ should be
 --   the same as 'id'. In other words @a@ and @b@ are isomorphic.
 --
--- - If you have both @From a b@ and @From b c@, then it's up to you if you
---   want to provide @From a c@. Sometimes using 'via' is ergonomic enough,
+-- - If you have both @Cast a b@ and @Cast b c@, then it's up to you if you
+--   want to provide @Cast a c@. Sometimes using 'via' is ergonomic enough,
 --   other times you want the extra instance. (It would be nice if we could
---   provide @instance (From a b, From b c) => From a c where from = via \@b@.)
-class From source target where
+--   provide @instance (Cast a b, Cast b c) => Cast a c where cast = via \@b@.)
+class Cast source target where
   -- | This method converts a value from one type into another. This is
   -- intended to be used with the @TypeApplications@ language extension. For
   -- example, here are a few ways to convert from an 'Int' into an 'Integer':
   --
-  -- > from @Int @Integer 123
-  -- > from @_ @Integer (123 :: Int)
-  -- > from @Int @_ 123 :: Integer
-  -- > from @Int 123 :: Integer
-  -- > from (123 :: Int) :: Integer
+  -- > cast @Int @Integer 123
+  -- > cast @_ @Integer (123 :: Int)
+  -- > cast @Int @_ 123 :: Integer
+  -- > cast @Int 123 :: Integer
+  -- > cast (123 :: Int) :: Integer
   --
   -- Often the context around an expression will make the explicit type
   -- signatures unnecessary. If you find yourself using a partial type
   -- signature, consider using 'into' instead. For example:
   --
   -- > let someInt = 123 :: Int
-  -- > from @_ @Integer someInt -- avoid this
+  -- > cast @_ @Integer someInt -- avoid this
   -- > into @Integer someInt -- prefer this
   --
-  -- The default implementation of 'from' simply calls 'Coerce.coerce', which
+  -- The default implementation of 'cast' simply calls 'Coerce.coerce', which
   -- works for types that have the same runtime representation.
-  from :: source -> target
-  default from :: Coerce.Coercible source target => source -> target
-  from = Coerce.coerce
+  cast :: source -> target
+  default cast :: Coerce.Coercible source target => source -> target
+  cast = Coerce.coerce
+
+-- https://twitter.com/BanjoTragedy/status/1329091174305447938
+type family Ambiguous a where
+  Ambiguous Void.Void = ()
+  Ambiguous a = a
+
+-- | TODO
+from :: forall s target source . (Ambiguous s ~ source, Cast source target) => source -> target
+from = cast
 
 -- | This function converts a value from one type into another. This is the
--- same as 'from' except that the type variables are in the opposite order.
-into :: forall target source . From source target => source -> target
-into = from
+-- same as 'cast' except that the type variables are in the opposite order.
+into :: forall t source target . (Ambiguous t ~ target, Cast source target) => source -> target
+into = cast
 
 -- | This function converts a value from one type into another by going through
--- some third type. This is the same as calling 'from' (or 'into') twice, but
+-- some third type. This is the same as calling 'cast' (or 'into') twice, but
 -- can sometimes be more convenient.
 --
 -- Note that the type in the middle of the conversion is the first type
 -- variable of this function. In other words, @via \@b \@a \@c@ first converts
 -- from @a@ to @b@, and then from @b@ to @c@. Often both @a@ and @c@ will be
 -- inferred from context, which means you can just write @via \@b@.
-via :: forall through source target . (From source through, From through target) => source -> target
-via = from . (\ x -> x :: through) . from
+via :: forall through source target . (Cast source through, Cast through target) => source -> target
+via = cast . (\ x -> x :: through) . cast
 
 -- | 'id'
-instance From a a where
-  from = id
+instance Cast a a where
+  cast = id
 
 -- | 'const'
-instance From a (x -> a) where
-  from = const
+instance Cast a (x -> a) where
+  cast = const
 
 -- | 'pure'
-instance From a [a] where
-  from = pure
+instance Cast a [a] where
+  cast = pure
 
 -- | 'Just'
-instance From a (Maybe a) where
-  from = Just
+instance Cast a (Maybe a) where
+  cast = Just
 
 -- | 'Left'
-instance From a (Either a x) where
-  from = Left
+instance Cast a (Either a x) where
+  cast = Left
 
 -- | 'Right'
-instance From a (Either x a) where
-  from = Right
+instance Cast a (Either x a) where
+  cast = Right
 
 -- | 'Void.absurd'
-instance From Void.Void x where
-  from = Void.absurd
+instance Cast Void.Void x where
+  cast = Void.absurd
 
 -- | 'fst'
-instance From (a, x) a where
-  from = fst
+instance Cast (a, x) a where
+  cast = fst
 
 -- | 'snd'
-instance From (x, a) a where
-  from = snd
+instance Cast (x, a) a where
+  cast = snd
 
 -- | 'Tuple.swap'
-instance From (a, b) (b, a) where
-  from = Tuple.swap
+instance Cast (a, b) (b, a) where
+  cast = Tuple.swap
 
 -- | 'NonEmpty.toList'
-instance From (NonEmpty.NonEmpty a) [a] where
-  from = NonEmpty.toList
+instance Cast (NonEmpty.NonEmpty a) [a] where
+  cast = NonEmpty.toList
 
 -- | 'fromIntegral'
-instance From Word.Word8 Word.Word16 where
-  from = fromIntegral
+instance Cast Word.Word8 Word.Word16 where
+  cast = fromIntegral
 
 -- | 'fromIntegral'
-instance From Word.Word16 Word.Word32 where
-  from = fromIntegral
+instance Cast Word.Word16 Word.Word32 where
+  cast = fromIntegral
 
 -- | 'fromIntegral'
-instance From Word.Word32 Word.Word64 where
-  from = fromIntegral
+instance Cast Word.Word32 Word.Word64 where
+  cast = fromIntegral
 
 -- | 'fromIntegral'
-instance From Word Natural.Natural where
-  from = fromIntegral
+instance Cast Word Natural.Natural where
+  cast = fromIntegral
 
 -- | 'fromIntegral'
-instance From Natural.Natural Integer where
-  from = fromIntegral
+instance Cast Natural.Natural Integer where
+  cast = fromIntegral
 
 -- | 'fromIntegral'
-instance From Int.Int8 Int.Int16 where
-  from = fromIntegral
+instance Cast Int.Int8 Int.Int16 where
+  cast = fromIntegral
 
 -- | 'fromIntegral'
-instance From Int.Int16 Int.Int32 where
-  from = fromIntegral
+instance Cast Int.Int16 Int.Int32 where
+  cast = fromIntegral
 
 -- | 'fromIntegral'
-instance From Int.Int32 Int.Int64 where
-  from = fromIntegral
+instance Cast Int.Int32 Int.Int64 where
+  cast = fromIntegral
 
 -- | 'fromIntegral'
-instance From Int Integer where
-  from = fromIntegral
+instance Cast Int Integer where
+  cast = fromIntegral
 
 -- | 'fromIntegral'
-instance From Integer Rational where
-  from = fromIntegral
+instance Cast Integer Rational where
+  cast = fromIntegral
 
 -- | 'realToFrac'
-instance From Float Double where
-  from = realToFrac
+instance Cast Float Double where
+  cast = realToFrac
 
 -- | 'fromEnum'
-instance From Bool Int where
-  from = fromEnum
+instance Cast Bool Int where
+  cast = fromEnum
 
 -- | 'fromEnum'
-instance From Char Int where
-  from = fromEnum
+instance Cast Char Int where
+  cast = fromEnum
 
 -- | 'ByteString.pack'
-instance From [Word.Word8] ByteString.ByteString where
-  from = ByteString.pack
+instance Cast [Word.Word8] ByteString.ByteString where
+  cast = ByteString.pack
 
 -- | 'ByteString.unpack'
-instance From ByteString.ByteString [Word.Word8] where
-  from = ByteString.unpack
+instance Cast ByteString.ByteString [Word.Word8] where
+  cast = ByteString.unpack
 
 -- | 'LazyByteString.fromStrict'
-instance From ByteString.ByteString LazyByteString.ByteString where
-  from = LazyByteString.fromStrict
+instance Cast ByteString.ByteString LazyByteString.ByteString where
+  cast = LazyByteString.fromStrict
 
 -- | 'LazyByteString.toStrict'
-instance From LazyByteString.ByteString ByteString.ByteString where
-  from = LazyByteString.toStrict
+instance Cast LazyByteString.ByteString ByteString.ByteString where
+  cast = LazyByteString.toStrict
 
 -- | 'Text.pack'
-instance From String Text.Text where
-  from = Text.pack
+instance Cast String Text.Text where
+  cast = Text.pack
 
 -- | 'Text.unpack'
-instance From Text.Text String where
-  from = Text.unpack
+instance Cast Text.Text String where
+  cast = Text.unpack
 
 -- | 'LazyText.fromStrict'
-instance From Text.Text LazyText.Text where
-  from = LazyText.fromStrict
+instance Cast Text.Text LazyText.Text where
+  cast = LazyText.fromStrict
 
 -- | 'LazyText.toStrict'
-instance From LazyText.Text Text.Text where
-  from = LazyText.toStrict
+instance Cast LazyText.Text Text.Text where
+  cast = LazyText.toStrict
 
 -- | 'Seq.fromList'
-instance From [a] (Seq.Seq a) where
-  from = Seq.fromList
+instance Cast [a] (Seq.Seq a) where
+  cast = Seq.fromList
 
 -- | 'Foldable.toList'
-instance From (Seq.Seq a) [a] where
-  from = Foldable.toList
+instance Cast (Seq.Seq a) [a] where
+  cast = Foldable.toList
 
 -- | 'Set.fromList'
 --
 -- Note that this will remove duplicate elements from the list.
-instance Ord a => From [a] (Set.Set a) where
-  from = Set.fromList
+instance Ord a => Cast [a] (Set.Set a) where
+  cast = Set.fromList
 
 -- | 'Set.toAscList'
-instance From (Set.Set a) [a] where
-  from = Set.toAscList
+instance Cast (Set.Set a) [a] where
+  cast = Set.toAscList
 
 -- | 'Map.fromList'
 --
 -- Note that if there are duplicate keys in the list, the one closest to the
 -- end will win.
-instance Ord k => From [(k, v)] (Map.Map k v) where
-  from = Map.fromList
+instance Ord k => Cast [(k, v)] (Map.Map k v) where
+  cast = Map.fromList
 
 -- | 'Map.toAscList'
-instance From (Map.Map k v) [(k, v)] where
-  from = Map.toAscList
+instance Cast (Map.Map k v) [(k, v)] where
+  cast = Map.toAscList

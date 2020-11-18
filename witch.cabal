@@ -26,6 +26,7 @@ library
   ghc-options:
     -Weverything
     -Wno-implicit-prelude
+    -Wno-redundant-constraints
     -Wno-safe
     -Wno-unsafe
   hs-source-dirs: src/lib
