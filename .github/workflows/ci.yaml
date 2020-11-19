@@ -42,5 +42,5 @@ jobs:
           path: dist-newstyle/sdist/witch-*.tar.gz
           name: witch-${{ github.sha }}.tar.gz
       - run: cabal check
-      - if: github.event_name == 'release'
+      - if: github.event_name == 'release' && matrix.os == 'ubuntu-18.04' && matrix.ghc == '8.10.2'
         run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' dist-newstyle/sdist/witch-*.tar.gz
