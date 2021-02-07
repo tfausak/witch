@@ -2,10 +2,10 @@ name: CI
 on:
   pull_request:
     branches:
-      - master
+      - main
   push:
     branches:
-      - master
+      - main
   release:
     types:
       - created
@@ -13,17 +13,17 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ macos-10.15, ubuntu-18.04, windows-2019 ]
-        ghc: [ 8.10.2 ]
-        cabal: [ 3.2.0.0 ]
         include:
-          - { os: ubuntu-18.04, ghc: 8.8.4, cabal: 3.2.0.0 }
-          - { os: ubuntu-18.04, ghc: 8.6.5, cabal: 3.2.0.0 }
+          - { os: ubuntu-18.04, ghc: 9.0.1, cabal: 3.4.0.0 }
+          - { os: ubuntu-18.04, ghc: 8.10.3, cabal: 3.2.0.0 }
+          - { os: macos-10.15, ghc: 8.10.3, cabal: 3.2.0.0 }
+          - { os: windows-2019, ghc: 8.10.3, cabal: 3.2.0.0 }
+          - { os: ubuntu-18.04, ghc: 8.8.4, cabal: 3.0.0.0 }
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - id: setup-haskell
-        uses: actions/setup-haskell@v1
+        uses: haskell/actions/setup@v1
         with:
           ghc-version: ${{ matrix.ghc }}
           cabal-version: ${{ matrix.cabal }}
@@ -42,5 +42,5 @@ jobs:
           path: dist-newstyle/sdist/witch-*.tar.gz
           name: witch-${{ github.sha }}.tar.gz
       - run: cabal check
-      - if: github.event_name == 'release' && matrix.os == 'ubuntu-18.04' && matrix.ghc == '8.10.2'
+      - if: github.event_name == 'release' && matrix.os == 'ubuntu-18.04' && matrix.ghc == '9.0.1'
         run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' dist-newstyle/sdist/witch-*.tar.gz

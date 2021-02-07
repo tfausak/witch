@@ -1,3 +1,4 @@
+{-# options_ghc -Wno-orphans #-}
 {-# language TypeApplications #-}
 
 import qualified Data.ByteString as B
