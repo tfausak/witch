@@ -1,162 +1,196 @@
-{-# options_ghc -Wno-orphans #-}
-{-# language TypeApplications #-}
+{-# LANGUAGE TypeApplications #-}
 
-import qualified Data.ByteString as B
-import qualified Data.ByteString.Lazy as LB
-import qualified Data.Foldable as Foldable
-import qualified Data.Int as Int
-import qualified Data.List.NonEmpty as NonEmpty
-import qualified Data.Map as Map
-import qualified Data.Sequence as Seq
-import qualified Data.Set as Set
-import qualified Data.Text as T
-import qualified Data.Text.Lazy as LT
-import qualified Data.Tuple as Tuple
-import qualified Data.Word as Word
-import qualified Numeric.Natural as Natural
-import qualified Test.Hspec as Hspec
-import qualified Test.Hspec.QuickCheck as Hspec
-import qualified Test.QuickCheck as QuickCheck
-import qualified Witch
+import Data.Int
+import Data.List.NonEmpty
+import Test.HUnit
+import Witch
 
 main :: IO ()
-main = Hspec.hspec . Hspec.parallel $ do
-
-  Hspec.describe "From a a" $ do
-    Hspec.prop "from" $ \ x -> Witch.from @Int @Int x == x
-    Hspec.prop "into" $ \ x -> Witch.into @Int @Int x == x
-    Hspec.prop "via" $ \ x -> Witch.via @Int @Int @Int x == x
-
-  Hspec.prop "From a (x -> a)" $ \ x ->
-    Witch.from @Int @(() -> Int) x () == x
-
-  Hspec.prop "From a [a]" $ \ x ->
-    Witch.from @Int @[Int] x == [x]
-
-  Hspec.prop "From a (Maybe a)" $ \ x ->
-    Witch.from @Int @(Maybe Int) x == Just x
-
-  Hspec.prop "From a (Either a x)" $ \ x ->
-    Witch.from @Int @(Either Int ()) x == Left x
-
-  Hspec.prop "From a (Either x a)" $ \ x ->
-    Witch.from @Int @(Either () Int) x == Right x
-
-  Hspec.it "From Void x" $ Hspec.pending
-
-  Hspec.prop "From (a, x) a" $ \ x ->
-    Witch.from @(Int, ()) @Int (x, ()) == x
-
-  Hspec.prop "From (x, a) a" $ \ x ->
-    Witch.from @((), Int) @Int ((), x) == x
-
-  Hspec.prop "From (a, b) (b, a)" $ \ x ->
-    Witch.from @(Char, Int) @(Int, Char) x == Tuple.swap x
-
-  Hspec.prop "From (NonEmpty a) [a]" $ \ x ->
-    Witch.from @(NonEmpty.NonEmpty Int) @[Int] x == NonEmpty.toList x
-
-  Hspec.prop "From Word8 Word16" $ \ x ->
-    Witch.from @Word.Word8 @Word.Word16 x == fromIntegral x
-
-  Hspec.prop "From Word16 Word32" $ \ x ->
-    Witch.from @Word.Word16 @Word.Word32 x == fromIntegral x
-
-  Hspec.prop "From Word32 Word64" $ \ x ->
-    Witch.from @Word.Word32 @Word.Word64 x == fromIntegral x
-
-  Hspec.prop "From Word Natural" $ \ x ->
-    Witch.from @Word @Natural.Natural x == fromIntegral x
-
-  Hspec.prop "From Natural Integer" $ \ x ->
-    Witch.from @Natural.Natural @Integer x == fromIntegral x
-
-  Hspec.prop "From Int8 Int16" $ \ x ->
-    Witch.from @Int.Int8 @Int.Int16 x == fromIntegral x
-
-  Hspec.prop "From Int16 Int32" $ \ x ->
-    Witch.from @Int.Int16 @Int.Int32 x == fromIntegral x
-
-  Hspec.prop "From Int32 Int64" $ \ x ->
-    Witch.from @Int.Int32 @Int.Int64 x == fromIntegral x
-
-  Hspec.prop "From Int Integer" $ \ x ->
-    Witch.from @Int @Integer x == fromIntegral x
-
-  Hspec.prop "From Integer Rational" $ \ x ->
-    Witch.from @Integer @Rational x == fromIntegral x
-
-  Hspec.prop "From Float Double" $ \ x ->
-    Witch.from @Float @Double x == realToFrac x
-
-  Hspec.prop "From Bool Int" $ \ x ->
-    Witch.from @Bool @Int x == fromEnum x
-
-  Hspec.prop "From Char Int" $ \ x ->
-    Witch.from @Char @Int x == fromEnum x
-
-  Hspec.prop "From [Word8] ByteString" $ \ x ->
-    Witch.from @[Word.Word8] @B.ByteString x == B.pack x
-
-  Hspec.prop "From ByteString [Word8]" $ \ x ->
-    Witch.from @B.ByteString @[Word.Word8] x == B.unpack x
-
-  Hspec.prop "From ByteString LazyByteString" $ \ x ->
-    Witch.from @B.ByteString @LB.ByteString x == LB.fromStrict x
-
-  Hspec.prop "From LazyByteString ByteString" $ \ x ->
-    Witch.from @LB.ByteString @B.ByteString x == LB.toStrict x
-
-  Hspec.prop "From String Text" $ \ x ->
-    Witch.from @String @T.Text x == T.pack x
-
-  Hspec.prop "From Text String" $ \ x ->
-    Witch.from @T.Text @String x == T.unpack x
-
-  Hspec.prop "From Text LazyText" $ \ x ->
-    Witch.from @T.Text @LT.Text x == LT.fromStrict x
-
-  Hspec.prop "From LazyText Text" $ \ x ->
-    Witch.from @LT.Text @T.Text x == LT.toStrict x
-
-  Hspec.prop "From [a] (Seq a)" $ \ x ->
-    Witch.from @[Int] @(Seq.Seq Int) x == Seq.fromList x
-
-  Hspec.prop "From (Seq a) [a]" $ \ x ->
-    Witch.from @(Seq.Seq Int) @[Int] x == Foldable.toList x
-
-  Hspec.prop "From [a] (Set a)" $ \ x ->
-    Witch.from @[Int] @(Set.Set Int) x == Set.fromList x
-
-  Hspec.prop "From (Set a) [a]" $ \ x ->
-    Witch.from @(Set.Set Int) @[Int] x == Set.toAscList x
-
-  Hspec.prop "From [(k, v)] (Map k v)" $ \ x ->
-    Witch.from @[(Char, Int)] @(Map.Map Char Int) x == Map.fromList x
-
-  Hspec.prop "From (Map k v) [(k, v)]" $ \ x ->
-    Witch.from @(Map.Map Char Int) @[(Char, Int)] x == Map.toAscList x
-
-instance QuickCheck.Arbitrary Natural.Natural where
-  arbitrary = QuickCheck.arbitrarySizedNatural
-  shrink = QuickCheck.shrinkIntegral
-
-instance QuickCheck.Arbitrary a => QuickCheck.Arbitrary (NonEmpty.NonEmpty a) where
-  arbitrary = QuickCheck.applyArbitrary2 (NonEmpty.:|)
-  shrink = QuickCheck.genericShrink
-
-instance QuickCheck.Arbitrary LB.ByteString where
-  arbitrary = fmap LB.pack QuickCheck.arbitrary
-  shrink = QuickCheck.shrinkMap LB.pack LB.unpack
-
-instance QuickCheck.Arbitrary B.ByteString where
-  arbitrary = fmap B.pack QuickCheck.arbitrary
-  shrink = QuickCheck.shrinkMap B.pack B.unpack
-
-instance QuickCheck.Arbitrary T.Text where
-  arbitrary = fmap T.pack QuickCheck.arbitrary
-  shrink = QuickCheck.shrinkMap T.pack T.unpack
-
-instance QuickCheck.Arbitrary LT.Text where
-  arbitrary = fmap LT.pack QuickCheck.arbitrary
-  shrink = QuickCheck.shrinkMap LT.pack LT.unpack
+main = runTestTTAndExit $ "Witch" ~:
+  [ "Cast (NonEmpty a) [a]" ~:
+    [ cast ('a' :| []) ~?= "a"
+    , cast ('a' :| "b") ~?= "ab"
+    ]
+  , "TryCast [a] (NonEmpty a)" ~:
+    [ tryInto @(NonEmpty Char) "" ~?= Left (TryCastException "")
+    , tryCast "a" ~?= Right ('a' :| [])
+    , tryCast "ab" ~?= Right ('a' :| "b")
+    ]
+  , "Cast Int8 Int16" ~:
+    [ cast @Int8 @Int16 0 ~?= 0
+    , cast @Int8 @Int16 127 ~?= 127
+    , cast @Int8 @Int16 (-128) ~?= -128
+    ]
+  , "Cast Int8 Int32" ~:
+    [ cast @Int8 @Int32 0 ~?= 0
+    , cast @Int8 @Int32 127 ~?= 127
+    , cast @Int8 @Int32 (-128) ~?= -128
+    ]
+  , "Cast Int8 Int64" ~:
+    [ cast @Int8 @Int64 0 ~?= 0
+    , cast @Int8 @Int64 127 ~?= 127
+    , cast @Int8 @Int64 (-128) ~?= -128
+    ]
+  , "Cast Int8 Int" ~:
+    [ cast @Int8 @Int 0 ~?= 0
+    , cast @Int8 @Int 127 ~?= 127
+    , cast @Int8 @Int (-128) ~?= -128
+    ]
+  , "Cast Int8 Integer" ~:
+    [ cast @Int8 @Integer 0 ~?= 0
+    , cast @Int8 @Integer 127 ~?= 127
+    , cast @Int8 @Integer (-128) ~?= -128
+    ]
+  , "TryCast Int16 Int8" ~:
+    [ tryCast @Int16 @Int8 0 ~?= Right 0
+    , tryCast @Int16 @Int8 127 ~?= Right 127
+    , tryCast @Int16 @Int8 128 ~?= Left (TryCastException 128)
+    , tryCast @Int16 @Int8 (-128) ~?= Right (-128)
+    , tryCast @Int16 @Int8 (-129) ~?= Left (TryCastException $ -129)
+    ]
+  , "Cast Int16 Int32" ~:
+    [ cast @Int16 @Int32 0 ~?= 0
+    , cast @Int16 @Int32 32767 ~?= 32767
+    , cast @Int16 @Int32 (-32768) ~?= -32768
+    ]
+  , "Cast Int16 Int64" ~:
+    [ cast @Int16 @Int64 0 ~?= 0
+    , cast @Int16 @Int64 32767 ~?= 32767
+    , cast @Int16 @Int64 (-32768) ~?= -32768
+    ]
+  , "Cast Int16 Int" ~:
+    [ cast @Int16 @Int 0 ~?= 0
+    , cast @Int16 @Int 32767 ~?= 32767
+    , cast @Int16 @Int (-32768) ~?= -32768
+    ]
+  , "Cast Int16 Integer" ~:
+    [ cast @Int16 @Integer 0 ~?= 0
+    , cast @Int16 @Integer 32767 ~?= 32767
+    , cast @Int16 @Integer (-32768) ~?= -32768
+    ]
+  , "TryCast Int32 Int8" ~:
+    [ tryCast @Int32 @Int8 0 ~?= Right 0
+    , tryCast @Int32 @Int8 127 ~?= Right 127
+    , tryCast @Int32 @Int8 128 ~?= Left (TryCastException 128)
+    , tryCast @Int32 @Int8 (-128) ~?= Right (-128)
+    , tryCast @Int32 @Int8 (-129) ~?= Left (TryCastException $ -129)
+    ]
+  , "TryCast Int32 Int16" ~:
+    [ tryCast @Int32 @Int16 0 ~?= Right 0
+    , tryCast @Int32 @Int16 32767 ~?= Right 32767
+    , tryCast @Int32 @Int16 32768 ~?= Left (TryCastException 32768)
+    , tryCast @Int32 @Int16 (-32768) ~?= Right (-32768)
+    , tryCast @Int32 @Int16 (-32769) ~?= Left (TryCastException $ -32769)
+    ]
+  , "Cast Int32 Int64" ~:
+    [ cast @Int32 @Int64 0 ~?= 0
+    , cast @Int32 @Int64 2147483647 ~?= 2147483647
+    , cast @Int32 @Int64 (-2147483648) ~?= -2147483648
+    ]
+  , "TryCast Int32 Int" ~:
+    if toInteger (maxBound :: Int) >= 2147483647 then
+      [ tryCast @Int32 @Int 0 ~?= Right 0
+      , tryCast @Int32 @Int 2147483647 ~?= Right 2147483647
+      , tryCast @Int32 @Int (-2147483648) ~?= Right (-2147483648)
+      ]
+    else [False ~? "untested"]
+  , "Cast Int32 Integer" ~:
+    [ cast @Int32 @Integer 0 ~?= 0
+    , cast @Int32 @Integer 2147483647 ~?= 2147483647
+    , cast @Int32 @Integer (-2147483648) ~?= -2147483648
+    ]
+  , "TryCast Int64 Int8" ~:
+    [ tryCast @Int64 @Int8 0 ~?= Right 0
+    , tryCast @Int64 @Int8 127 ~?= Right 127
+    , tryCast @Int64 @Int8 128 ~?= Left (TryCastException 128)
+    , tryCast @Int64 @Int8 (-128) ~?= Right (-128)
+    , tryCast @Int64 @Int8 (-129) ~?= Left (TryCastException $ -129)
+    ]
+  , "TryCast Int64 Int16" ~:
+    [ tryCast @Int64 @Int16 0 ~?= Right 0
+    , tryCast @Int64 @Int16 32767 ~?= Right 32767
+    , tryCast @Int64 @Int16 32768 ~?= Left (TryCastException 32768)
+    , tryCast @Int64 @Int16 (-32768) ~?= Right (-32768)
+    , tryCast @Int64 @Int16 (-32769) ~?= Left (TryCastException $ -32769)
+    ]
+  , "TryCast Int64 Int32" ~:
+    [ tryCast @Int64 @Int32 0 ~?= Right 0
+    , tryCast @Int64 @Int32 2147483647 ~?= Right 2147483647
+    , tryCast @Int64 @Int32 2147483648 ~?= Left (TryCastException 2147483648)
+    , tryCast @Int64 @Int32 (-2147483648) ~?= Right (-2147483648)
+    , tryCast @Int64 @Int32 (-2147483649) ~?= Left (TryCastException $ -2147483649)
+    ]
+  , "TryCast Int64 Int" ~:
+    if toInteger (maxBound :: Int) >= 9223372036854775807 then
+      [ tryCast @Int64 @Int 0 ~?= Right 0
+      , tryCast @Int64 @Int 9223372036854775807 ~?= Right 9223372036854775807
+      , tryCast @Int64 @Int (-9223372036854775808) ~?= Right (-9223372036854775808)
+      ]
+    else [False ~? "untested"]
+  , "Cast Int64 Integer" ~:
+    [ cast @Int64 @Integer 0 ~?= 0
+    , cast @Int64 @Integer 9223372036854775807 ~?= 9223372036854775807
+    , cast @Int64 @Integer (-9223372036854775808) ~?= -9223372036854775808
+    ]
+  , "TryCast Int Int8" ~:
+    [ tryCast @Int @Int8 0 ~?= Right 0
+    , tryCast @Int @Int8 127 ~?= Right 127
+    , tryCast @Int @Int8 128 ~?= Left (TryCastException 128)
+    , tryCast @Int @Int8 (-128) ~?= Right (-128)
+    , tryCast @Int @Int8 (-129) ~?= Left (TryCastException $ -129)
+    ]
+  , "TryCast Int Int16" ~:
+    [ tryCast @Int @Int16 0 ~?= Right 0
+    , tryCast @Int @Int16 32767 ~?= Right 32767
+    , tryCast @Int @Int16 32768 ~?= Left (TryCastException 32768)
+    , tryCast @Int @Int16 (-32768) ~?= Right (-32768)
+    , tryCast @Int @Int16 (-32769) ~?= Left (TryCastException $ -32769)
+    ]
+  , "TryCast Int Int32" ~:
+    if toInteger (maxBound :: Int) >= 2147483647 then
+      [ tryCast @Int @Int32 0 ~?= Right 0
+      , tryCast @Int @Int32 2147483647 ~?= Right 2147483647
+      , tryCast @Int @Int32 2147483648 ~?= Left (TryCastException 2147483648)
+      , tryCast @Int @Int32 (-2147483648) ~?= Right (-2147483648)
+      , tryCast @Int @Int32 (-2147483649) ~?= Left (TryCastException $ -2147483649)
+      ]
+    else [False ~? "untested"]
+  , "Cast Int Int64" ~:
+    [ cast @Int @Int64 0 ~?= 0
+    , cast @Int @Int64 maxBound ~?= fromIntegral (maxBound :: Int)
+    , cast @Int @Int64 minBound ~?= fromIntegral (minBound :: Int)
+    ]
+  , "Cast Int Integer" ~:
+    [ cast @Int @Integer 0 ~?= 0
+    , cast @Int @Integer maxBound ~?= fromIntegral (maxBound :: Int)
+    , cast @Int @Integer minBound ~?= fromIntegral (minBound :: Int)
+    ]
+  , "TryCast Integer Int8" ~:
+    [ tryCast @Integer @Int8 0 ~?= Right 0
+    , tryCast @Integer @Int8 127 ~?= Right 127
+    , tryCast @Integer @Int8 128 ~?= Left (TryCastException 128)
+    , tryCast @Integer @Int8 (-128) ~?= Right (-128)
+    , tryCast @Integer @Int8 (-129) ~?= Left (TryCastException $ -129)
+    ]
+  , "TryCast Integer Int16" ~:
+    [ tryCast @Integer @Int16 0 ~?= Right 0
+    , tryCast @Integer @Int16 32767 ~?= Right 32767
+    , tryCast @Integer @Int16 32768 ~?= Left (TryCastException 32768)
+    , tryCast @Integer @Int16 (-32768) ~?= Right (-32768)
+    , tryCast @Integer @Int16 (-32769) ~?= Left (TryCastException $ -32769)
+    ]
+  , "TryCast Integer Int32" ~:
+    [ tryCast @Integer @Int32 0 ~?= Right 0
+    , tryCast @Integer @Int32 2147483647 ~?= Right 2147483647
+    , tryCast @Integer @Int32 2147483648 ~?= Left (TryCastException 2147483648)
+    , tryCast @Integer @Int32 (-2147483648) ~?= Right (-2147483648)
+    , tryCast @Integer @Int32 (-2147483649) ~?= Left (TryCastException $ -2147483649)
+    ]
+  , "TryCast Integer Int64" ~:
+    [ tryCast @Integer @Int64 0 ~?= Right 0
+    , tryCast @Integer @Int64 9223372036854775807 ~?= Right 9223372036854775807
+    , tryCast @Integer @Int64 9223372036854775808 ~?= Left (TryCastException 9223372036854775808)
+    , tryCast @Integer @Int64 (-9223372036854775808) ~?= Right (-9223372036854775808)
+    , tryCast @Integer @Int64 (-9223372036854775809) ~?= Left (TryCastException $ -9223372036854775809)
+    ]
+  ]

@@ -5,3 +5,10 @@
 [![Stackage](https://www.stackage.org/package/witch/badge/nightly?label=stackage)](https://www.stackage.org/package/witch)
 
 :mage_woman: Convert values from one type into another.
+
+## To do
+
+- [ ] Upgrade Stackage snapshot.
+- [ ] Add dependency version constraints.
+- [ ] Add instances for `Word*` and `Natural`.
+- [ ] Add more instances ...
