@@ -9,6 +9,5 @@
 ## To do
 
 - [ ] Upgrade Stackage snapshot.
-- [ ] Add dependency version constraints.
 - [ ] Add instances for `Word*` and `Natural`.
 - [ ] Add more instances ...
