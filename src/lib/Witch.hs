@@ -12,12 +12,13 @@ module Witch
   , Witch.Utility.unsafeCast
   , Witch.Utility.unsafeFrom
   , Witch.Utility.unsafeInto
-  , Witch.Utility.liftedCast
-  , Witch.Utility.liftedFrom
-  , Witch.Utility.liftedInto
+  , Witch.Lift.liftedCast
+  , Witch.Lift.liftedFrom
+  , Witch.Lift.liftedInto
   ) where
 
 import qualified Witch.Cast
+import qualified Witch.Lift
 import qualified Witch.Utility
 import qualified Witch.TryCast
 import qualified Witch.TryCastException

@@ -25,6 +25,7 @@ library
     Witch
     Witch.Cast
     Witch.Identity
+    Witch.Lift
     Witch.TryCast
     Witch.TryCastException
     Witch.Utility
@@ -40,6 +41,14 @@ library
     -Wno-safe
     -Wno-unsafe
   hs-source-dirs: src/lib
+
+  if impl(ghc >= 9.0)
+    hs-source-dirs: src/ghc-9.0
+  else
+    if impl(ghc >= 8.10)
+      hs-source-dirs: src/ghc-8.10
+    else
+      hs-source-dirs: src/ghc-8.8
 
 test-suite test
   build-depends:
