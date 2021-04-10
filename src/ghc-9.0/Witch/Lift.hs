@@ -23,7 +23,7 @@ liftedCast
 liftedCast = either (TH.liftCode . IO.liftIO . Exception.throwIO) TH.liftTyped . TryCast.tryCast
 
 liftedFrom
-  :: forall s source target
+  :: forall s m source target
   . ( Identity.Identity s ~ source
   , TryCast.TryCast source target
   , TH.Lift target
@@ -36,7 +36,7 @@ liftedFrom
 liftedFrom = liftedCast
 
 liftedInto
-  :: forall t source target
+  :: forall t m source target
   . ( Identity.Identity t ~ target
   , TryCast.TryCast source target
   , TH.Lift target
