@@ -230,7 +230,11 @@ instance TryCast.TryCast Integer Word where
   tryCast = maybeTryCast Bits.toIntegralSized
 
 instance TryCast.TryCast Integer Natural.Natural where
-  tryCast = maybeTryCast fromNonNegativeIntegral
+  -- This should use @maybeTryCast fromNonNegativeIntegral@, but that causes a
+  -- bug in GHC 9.0.1. By inlining @fromNonNegativeIntegral@ and replacing
+  -- @fromIntegral@ with @fromInteger@, we can work around the bug.
+  -- https://mail.haskell.org/pipermail/haskell-cafe/2021-March/133540.html
+  tryCast = maybeTryCast $ \ s -> if s < 0 then Nothing else Just $ fromInteger s
 
 -- Word8
 
