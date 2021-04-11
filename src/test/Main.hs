@@ -31,16 +31,13 @@ main = runTestTTAndExit $ "Witch" ~:
   , ($$( liftedFrom @Int16 1 ) :: Int8) ~?= 1
   , ($$( liftedInto @Int8 (1 :: Int16) ) :: Int8) ~?= 1
 
-  -- []
+  -- NonEmpty
 
   , "TryCast [a] (NonEmpty a)" ~:
     [ tryCast @[Int] @(NonEmpty Int) [] ~?= Left (TryCastException [])
     , tryCast @[Int] @(NonEmpty Int) [1] ~?= Right (1 :| [])
     , tryCast @[Int] @(NonEmpty Int) [1, 2] ~?= Right (1 :| [2])
     ]
-
-  -- NonEmpty
-
   , "Cast (NonEmpty a) [a]" ~:
     [ cast @(NonEmpty Int) @[Int] (1 :| []) ~?= [1]
     , cast @(NonEmpty Int) @[Int] (1 :| [2]) ~?= [1, 2]

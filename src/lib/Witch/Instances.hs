@@ -16,13 +16,10 @@ import qualified Witch.Cast as Cast
 import qualified Witch.TryCast as TryCast
 import qualified Witch.TryCastException as TryCastException
 
--- []
+-- NonEmpty
 
 instance TryCast.TryCast [a] (NonEmpty.NonEmpty a) where
   tryCast = maybeTryCast NonEmpty.nonEmpty
-
--- NonEmpty
-
 instance Cast.Cast (NonEmpty.NonEmpty a) [a] where
   cast = NonEmpty.toList
 
@@ -455,7 +452,7 @@ instance Cast.Cast Natural.Natural Integer where
 instance Integral a => Cast.Cast a (Ratio.Ratio a) where
   cast = (Ratio.% 1)
 
-instance Integral a => TryCast.TryCast (Ratio.Ratio a) a where
+instance (Eq a, Num a) => TryCast.TryCast (Ratio.Ratio a) a where
   tryCast = maybeTryCast $ \ s -> if Ratio.denominator s == 1
     then Just $ Ratio.numerator s
     else Nothing
