@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 module Witch.Instances where
@@ -6,6 +7,7 @@ module Witch.Instances where
 import qualified Data.Bits as Bits
 import qualified Data.Int as Int
 import qualified Data.List.NonEmpty as NonEmpty
+import qualified Data.Ratio as Ratio
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 import qualified Witch.Cast as Cast
@@ -445,6 +447,14 @@ instance TryCast.TryCast Natural.Natural Int where
 
 instance Cast.Cast Natural.Natural Integer where
   cast = fromIntegral
+
+-- Ratio
+
+instance Integral a => Cast.Cast a (Ratio.Ratio a) where
+  cast = (Ratio.% 1)
+
+instance Integral a => TryCast.TryCast (Ratio.Ratio a) a where
+  tryCast = maybeTryCast $ \ s -> if Ratio.denominator s == 1 then Just $ Ratio.numerator s else Nothing
 
 fromNonNegativeIntegral :: (Integral s, Num t) => s -> Maybe t
 fromNonNegativeIntegral x = if x < 0 then Nothing else Just $ fromIntegral x

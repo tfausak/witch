@@ -6,6 +6,7 @@
 
 import Data.Int
 import Data.List.NonEmpty
+import Data.Ratio
 import Data.Word
 import Numeric.Natural
 import Test.HUnit
@@ -773,6 +774,19 @@ main = runTestTTAndExit $ "Witch" ~:
   , "Cast Natural Integer" ~:
     [ cast @Natural @Integer 0 ~?= 0
     , cast @Natural @Integer 9223372036854775808 ~?= 9223372036854775808
+    ]
+
+  -- Ratio
+
+  , "Cast a (Ratio a)" ~:
+    [ cast @Integer @Rational 0 ~?= 0
+    , cast @Int @(Ratio Int) 0 ~?= 0
+    ]
+  , "TryCast (Ratio a) a" ~:
+    [ tryCast @Rational @Integer 0 ~?= Right 0
+    , tryCast @Rational @Integer 0.5 ~?= Left (TryCastException 0.5)
+    , tryCast @(Ratio Int) @Int 0 ~?= Right 0
+    , tryCast @(Ratio Int) @Int 0.5 ~?= Left (TryCastException 0.5)
     ]
 
   ]
