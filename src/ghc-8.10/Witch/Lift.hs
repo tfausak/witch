@@ -5,7 +5,6 @@
 module Witch.Lift where
 
 import qualified Control.Exception as Exception
-import qualified Control.Monad.IO.Class as IO
 import qualified Data.Typeable as Typeable
 import qualified Language.Haskell.TH.Syntax as TH
 import qualified Witch.Identity as Identity
@@ -20,7 +19,7 @@ liftedCast
   , Typeable.Typeable target
   ) => source
   -> TH.Q (TH.TExp target)
-liftedCast = either (IO.liftIO . Exception.throwIO) TH.liftTyped . TryCast.tryCast
+liftedCast = either Exception.throw TH.liftTyped . TryCast.tryCast
 
 liftedFrom
   :: forall s target source

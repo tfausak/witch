@@ -1,5 +1,4 @@
 {-# OPTIONS_GHC -Wno-missing-import-lists #-}
-{-# LANGUAGE CPP #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -25,16 +24,9 @@ main = runTestTTAndExit $ "Witch" ~:
   , unsafeCast (1 :: Int16) ~?= (1 :: Int8)
   , unsafeFrom @Int16 1 ~?= (1 :: Int8)
   , unsafeInto @Int8 (1 :: Int16) ~?= 1
-
-# if MIN_VERSION_GLASGOW_HASKELL(8, 10, 1, 0)
   , ($$( liftedCast (1 :: Int16) ) :: Int8) ~?= 1
   , ($$( liftedFrom @Int16 1 ) :: Int8) ~?= 1
   , ($$( liftedInto @Int8 (1 :: Int16) ) :: Int8) ~?= 1
-# else
-  , $( liftedCast @Int16 @Int8 1 ) ~?= (1 :: Int8)
-  , $( liftedFrom @Int16 @Int8 1 ) ~?= (1 :: Int8)
-  , $( liftedInto @Int8 @Int16 1 ) ~?= (1 :: Int8)
-# endif
 
   -- []
 

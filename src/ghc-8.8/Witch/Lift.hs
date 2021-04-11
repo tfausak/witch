@@ -1,12 +1,10 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Witch.Lift where
 
 import qualified Control.Exception as Exception
-import qualified Control.Monad.IO.Class as IO
 import qualified Data.Typeable as Typeable
 import qualified Language.Haskell.TH.Syntax as TH
 import qualified Witch.Identity as Identity
@@ -20,10 +18,10 @@ liftedCast
   , Typeable.Typeable source
   , Typeable.Typeable target
   ) => source
-  -> TH.Q TH.Exp
+  -> TH.Q (TH.TExp target)
 liftedCast s = case TryCast.tryCast s of
-  Left e -> IO.liftIO $ Exception.throwIO e
-  Right t -> TH.lift (t :: target)
+  Left e -> Exception.throw e
+  Right t -> TH.unsafeTExpCoerce $ TH.lift (t :: target)
 
 liftedFrom
   :: forall s target source
@@ -34,8 +32,8 @@ liftedFrom
   , Typeable.Typeable source
   , Typeable.Typeable target
   ) => source
-  -> TH.Q TH.Exp
-liftedFrom = liftedCast @source @target
+  -> TH.Q (TH.TExp target)
+liftedFrom = liftedCast
 
 liftedInto
   :: forall t source target
@@ -46,5 +44,5 @@ liftedInto
   , Typeable.Typeable source
   , Typeable.Typeable target
   ) => source
-  -> TH.Q TH.Exp
-liftedInto = liftedCast @source @target
+  -> TH.Q (TH.TExp target)
+liftedInto = liftedCast
