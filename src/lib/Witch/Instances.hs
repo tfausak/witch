@@ -39,6 +39,24 @@ instance Cast.Cast Int.Int8 Int where
 instance Cast.Cast Int.Int8 Integer where
   cast = fromIntegral
 
+instance TryCast.TryCast Int.Int8 Word.Word8 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int8 Word.Word16 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int8 Word.Word32 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int8 Word.Word64 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int8 Word where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int8 Natural.Natural where
+  tryCast = maybeTryCast fromNonNegativeIntegral
+
 -- Int16
 
 instance TryCast.TryCast Int.Int16 Int.Int8 where
@@ -55,6 +73,24 @@ instance Cast.Cast Int.Int16 Int where
 
 instance Cast.Cast Int.Int16 Integer where
   cast = fromIntegral
+
+instance TryCast.TryCast Int.Int16 Word.Word8 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int16 Word.Word16 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int16 Word.Word32 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int16 Word.Word64 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int16 Word where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int16 Natural.Natural where
+  tryCast = maybeTryCast fromNonNegativeIntegral
 
 -- Int32
 
@@ -73,6 +109,24 @@ instance TryCast.TryCast Int.Int32 Int where
 instance Cast.Cast Int.Int32 Integer where
   cast = fromIntegral
 
+instance TryCast.TryCast Int.Int32 Word.Word8 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int32 Word.Word16 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int32 Word.Word32 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int32 Word.Word64 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int32 Word where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int32 Natural.Natural where
+  tryCast = maybeTryCast fromNonNegativeIntegral
+
 -- Int64
 
 instance TryCast.TryCast Int.Int64 Int.Int8 where
@@ -89,6 +143,24 @@ instance TryCast.TryCast Int.Int64 Int where
 
 instance Cast.Cast Int.Int64 Integer where
   cast = fromIntegral
+
+instance TryCast.TryCast Int.Int64 Word.Word8 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int64 Word.Word16 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int64 Word.Word32 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int64 Word.Word64 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int64 Word where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int.Int64 Natural.Natural where
+  tryCast = maybeTryCast fromNonNegativeIntegral
 
 -- Int
 
@@ -107,6 +179,24 @@ instance Cast.Cast Int Int.Int64 where
 instance Cast.Cast Int Integer where
   cast = fromIntegral
 
+instance TryCast.TryCast Int Word.Word8 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int Word.Word16 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int Word.Word32 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int Word.Word64 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int Word where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Int Natural.Natural where
+  tryCast = maybeTryCast fromNonNegativeIntegral
+
 -- Integer
 
 instance TryCast.TryCast Integer Int.Int8 where
@@ -124,6 +214,24 @@ instance TryCast.TryCast Integer Int.Int64 where
 instance TryCast.TryCast Integer Int where
   tryCast = maybeTryCast Bits.toIntegralSized
 
+instance TryCast.TryCast Integer Word.Word8 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Integer Word.Word16 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Integer Word.Word32 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Integer Word.Word64 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Integer Word where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Integer Natural.Natural where
+  tryCast = maybeTryCast fromNonNegativeIntegral
+
 -- Word8
 
 instance Cast.Cast Word.Word8 Word.Word16 where
@@ -139,6 +247,24 @@ instance Cast.Cast Word.Word8 Word where
   cast = fromIntegral
 
 instance Cast.Cast Word.Word8 Natural.Natural where
+  cast = fromIntegral
+
+instance TryCast.TryCast Word.Word8 Int.Int8 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance Cast.Cast Word.Word8 Int.Int16 where
+  cast = fromIntegral
+
+instance Cast.Cast Word.Word8 Int.Int32 where
+  cast = fromIntegral
+
+instance Cast.Cast Word.Word8 Int.Int64 where
+  cast = fromIntegral
+
+instance Cast.Cast Word.Word8 Int where
+  cast = fromIntegral
+
+instance Cast.Cast Word.Word8 Integer where
   cast = fromIntegral
 
 -- Word16
@@ -158,6 +284,24 @@ instance Cast.Cast Word.Word16 Word where
 instance Cast.Cast Word.Word16 Natural.Natural where
   cast = fromIntegral
 
+instance TryCast.TryCast Word.Word16 Int.Int8 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Word.Word16 Int.Int16 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance Cast.Cast Word.Word16 Int.Int32 where
+  cast = fromIntegral
+
+instance Cast.Cast Word.Word16 Int.Int64 where
+  cast = fromIntegral
+
+instance Cast.Cast Word.Word16 Int where
+  cast = fromIntegral
+
+instance Cast.Cast Word.Word16 Integer where
+  cast = fromIntegral
+
 -- Word32
 
 instance TryCast.TryCast Word.Word32 Word.Word8 where
@@ -173,6 +317,24 @@ instance TryCast.TryCast Word.Word32 Word where
   tryCast = maybeTryCast Bits.toIntegralSized
 
 instance Cast.Cast Word.Word32 Natural.Natural where
+  cast = fromIntegral
+
+instance TryCast.TryCast Word.Word32 Int.Int8 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Word.Word32 Int.Int16 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Word.Word32 Int.Int32 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance Cast.Cast Word.Word32 Int.Int64 where
+  cast = fromIntegral
+
+instance TryCast.TryCast Word.Word32 Int where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance Cast.Cast Word.Word32 Integer where
   cast = fromIntegral
 
 -- Word64
@@ -192,6 +354,24 @@ instance TryCast.TryCast Word.Word64 Word where
 instance Cast.Cast Word.Word64 Natural.Natural where
   cast = fromIntegral
 
+instance TryCast.TryCast Word.Word64 Int.Int8 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Word.Word64 Int.Int16 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Word.Word64 Int.Int32 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Word.Word64 Int.Int64 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Word.Word64 Int where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance Cast.Cast Word.Word64 Integer where
+  cast = fromIntegral
+
 -- Word
 
 instance TryCast.TryCast Word Word.Word8 where
@@ -207,6 +387,24 @@ instance Cast.Cast Word Word.Word64 where
   cast = fromIntegral
 
 instance Cast.Cast Word Natural.Natural where
+  cast = fromIntegral
+
+instance TryCast.TryCast Word Int.Int8 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Word Int.Int16 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Word Int.Int32 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Word Int.Int64 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Word Int where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance Cast.Cast Word Integer where
   cast = fromIntegral
 
 -- Natural
@@ -225,6 +423,27 @@ instance TryCast.TryCast Natural.Natural Word.Word64 where
 
 instance TryCast.TryCast Natural.Natural Word where
   tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Natural.Natural Int.Int8 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Natural.Natural Int.Int16 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Natural.Natural Int.Int32 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Natural.Natural Int.Int64 where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance TryCast.TryCast Natural.Natural Int where
+  tryCast = maybeTryCast Bits.toIntegralSized
+
+instance Cast.Cast Natural.Natural Integer where
+  cast = fromIntegral
+
+fromNonNegativeIntegral :: (Integral s, Num t) => s -> Maybe t
+fromNonNegativeIntegral x = if x < 0 then Nothing else Just $ fromIntegral x
 
 maybeTryCast :: (s -> Maybe t) -> s -> Either (TryCastException.TryCastException s t) t
 maybeTryCast f s = case f s of
