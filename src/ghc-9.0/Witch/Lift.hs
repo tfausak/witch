@@ -9,6 +9,7 @@ import qualified Data.Typeable as Typeable
 import qualified Language.Haskell.TH.Syntax as TH
 import qualified Witch.Identity as Identity
 import qualified Witch.TryCast as TryCast
+import qualified Witch.Utility as Utility
 
 liftedCast
   :: forall source target m
@@ -20,7 +21,7 @@ liftedCast
   , TH.Quote m
   ) => source
   -> TH.Code m target
-liftedCast = either Exception.throw TH.liftTyped . TryCast.tryCast
+liftedCast = TH.liftTyped . Utility.unsafeCast
 
 liftedFrom
   :: forall s target m source

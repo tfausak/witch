@@ -4,11 +4,11 @@
 
 module Witch.Lift where
 
-import qualified Control.Exception as Exception
 import qualified Data.Typeable as Typeable
 import qualified Language.Haskell.TH.Syntax as TH
 import qualified Witch.Identity as Identity
 import qualified Witch.TryCast as TryCast
+import qualified Witch.Utility as Utility
 
 liftedCast
   :: forall source target
@@ -19,7 +19,7 @@ liftedCast
   , Typeable.Typeable target
   ) => source
   -> TH.Q (TH.TExp target)
-liftedCast = either Exception.throw TH.liftTyped . TryCast.tryCast
+liftedCast = TH.liftTyped . Utility.unsafeCast
 
 liftedFrom
   :: forall s target source
