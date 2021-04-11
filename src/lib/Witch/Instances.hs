@@ -5,6 +5,7 @@
 module Witch.Instances where
 
 import qualified Data.Bits as Bits
+import qualified Data.Complex as Complex
 import qualified Data.Fixed as Fixed
 import qualified Data.Int as Int
 import qualified Data.List.NonEmpty as NonEmpty
@@ -455,7 +456,9 @@ instance Integral a => Cast.Cast a (Ratio.Ratio a) where
   cast = (Ratio.% 1)
 
 instance Integral a => TryCast.TryCast (Ratio.Ratio a) a where
-  tryCast = maybeTryCast $ \ s -> if Ratio.denominator s == 1 then Just $ Ratio.numerator s else Nothing
+  tryCast = maybeTryCast $ \ s -> if Ratio.denominator s == 1
+    then Just $ Ratio.numerator s
+    else Nothing
 
 -- Fixed
 
@@ -464,6 +467,16 @@ instance Cast.Cast Integer (Fixed.Fixed a) where
 
 instance Cast.Cast (Fixed.Fixed a) Integer where
   cast (Fixed.MkFixed t) = t
+
+-- Complex
+
+instance Num a => Cast.Cast a (Complex.Complex a) where
+  cast = (Complex.:+ 0)
+
+instance (Eq a, Num a) => TryCast.TryCast (Complex.Complex a) a where
+  tryCast = maybeTryCast $ \ s -> if Complex.imagPart s == 0
+    then Just $ Complex.realPart s
+    else Nothing
 
 fromNonNegativeIntegral :: (Integral s, Num t) => s -> Maybe t
 fromNonNegativeIntegral x = if x < 0 then Nothing else Just $ fromIntegral x

@@ -4,6 +4,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 
+import Data.Complex
 import Data.Fixed
 import Data.Int
 import Data.List.NonEmpty
@@ -799,6 +800,19 @@ main = runTestTTAndExit $ "Witch" ~:
   , "Cast (Fixed a) Integer" ~:
     [ cast @Uni @Integer 1 ~?= 1
     , cast @Deci @Integer 1 ~?= 10
+    ]
+
+  -- Complex
+
+  , "Cast a (Complex a)" ~:
+    [ cast @Float @(Complex Float) 1 ~?= 1
+    , cast @Double @(Complex Double) 1 ~?= 1
+    ]
+  , "TryCast (Complex a) a" ~:
+    [ tryCast @(Complex Float) @Float 1 ~?= Right 1
+    , tryCast @(Complex Float) @Float (0 :+ 1) ~?= Left (TryCastException $ 0 :+ 1)
+    , tryCast @(Complex Double) @Double 1 ~?= Right 1
+    , tryCast @(Complex Double) @Double (0 :+ 1) ~?= Left (TryCastException $ 0 :+ 1)
     ]
 
   ]
