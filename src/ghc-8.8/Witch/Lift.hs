@@ -26,7 +26,7 @@ liftedCast s = case TryCast.tryCast s of
   Right t -> TH.lift (t :: target)
 
 liftedFrom
-  :: forall s source target
+  :: forall s target source
   . ( Identity.Identity s ~ source
   , TryCast.TryCast source target
   , TH.Lift target

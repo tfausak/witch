@@ -20,7 +20,7 @@ as
 as = id
 
 from
-  :: forall s source target
+  :: forall s target source
   . (Identity.Identity s ~ source, Cast.Cast source target)
   => source
   -> target
@@ -42,14 +42,14 @@ over
 over f = Cast.cast . f . Cast.cast
 
 via
-  :: forall u source through target
+  :: forall u source target through
   . (Identity.Identity u ~ through, Cast.Cast source through, Cast.Cast through target)
   => source
   -> target
 via = Cast.cast . (\ x -> x :: through) . Cast.cast
 
 tryFrom
-  :: forall s source target
+  :: forall s target source
   . (Identity.Identity s ~ source, TryCast.TryCast source target)
   => source
   -> Either (TryCastException.TryCastException source target) target
@@ -63,7 +63,8 @@ tryInto
 tryInto = TryCast.tryCast
 
 unsafeCast
-  :: ( Stack.HasCallStack
+  :: forall source target
+  . ( Stack.HasCallStack
   , TryCast.TryCast source target
   , Show source
   , Typeable.Typeable source
@@ -73,7 +74,7 @@ unsafeCast
 unsafeCast = either Exception.throw id . TryCast.tryCast
 
 unsafeFrom
-  :: forall s source target
+  :: forall s target source
   . ( Identity.Identity s ~ source
   , Stack.HasCallStack
   , TryCast.TryCast source target

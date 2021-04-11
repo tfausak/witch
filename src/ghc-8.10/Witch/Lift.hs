@@ -12,7 +12,8 @@ import qualified Witch.Identity as Identity
 import qualified Witch.TryCast as TryCast
 
 liftedCast
-  :: ( TryCast.TryCast source target
+  :: forall source target
+  . ( TryCast.TryCast source target
   , TH.Lift target
   , Show source
   , Typeable.Typeable source
@@ -22,7 +23,7 @@ liftedCast
 liftedCast = either (IO.liftIO . Exception.throwIO) TH.liftTyped . TryCast.tryCast
 
 liftedFrom
-  :: forall s source target
+  :: forall s target source
   . ( Identity.Identity s ~ source
   , TryCast.TryCast source target
   , TH.Lift target

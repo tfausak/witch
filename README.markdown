@@ -8,6 +8,4 @@
 
 ## To do
 
-- [ ] Upgrade Stackage snapshot.
-- [ ] Add instances for `Word*` and `Natural`.
 - [ ] Add more instances ...
