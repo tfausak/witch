@@ -4,6 +4,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 
+import Data.Fixed
 import Data.Int
 import Data.List.NonEmpty
 import Data.Ratio
@@ -787,6 +788,17 @@ main = runTestTTAndExit $ "Witch" ~:
     , tryCast @Rational @Integer 0.5 ~?= Left (TryCastException 0.5)
     , tryCast @(Ratio Int) @Int 0 ~?= Right 0
     , tryCast @(Ratio Int) @Int 0.5 ~?= Left (TryCastException 0.5)
+    ]
+
+  -- Fixed
+
+  , "Cast Integer (Fixed a)" ~:
+    [ cast @Integer @Uni 1 ~?= 1
+    , cast @Integer @Deci 1 ~?= 0.1
+    ]
+  , "Cast (Fixed a) Integer" ~:
+    [ cast @Uni @Integer 1 ~?= 1
+    , cast @Deci @Integer 1 ~?= 10
     ]
 
   ]
