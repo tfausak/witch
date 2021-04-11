@@ -4,7 +4,6 @@
 
 module Witch.Lift where
 
-import qualified Control.Exception as Exception
 import qualified Data.Typeable as Typeable
 import qualified Language.Haskell.TH.Syntax as TH
 import qualified Witch.Identity as Identity
