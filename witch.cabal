@@ -25,6 +25,7 @@ library
     Witch
     Witch.Cast
     Witch.Identity
+    Witch.Instances
     Witch.Lift
     Witch.TryCast
     Witch.TryCastException

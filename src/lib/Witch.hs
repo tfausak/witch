@@ -18,6 +18,7 @@ module Witch
   ) where
 
 import qualified Witch.Cast
+import Witch.Instances ()
 import qualified Witch.Lift
 import qualified Witch.Utility
 import qualified Witch.TryCast
