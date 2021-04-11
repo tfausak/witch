@@ -27,13 +27,13 @@ main = runTestTTAndExit $ "Witch" ~:
   , unsafeInto @Int8 (1 :: Int16) ~?= 1
 
 # if MIN_VERSION_GLASGOW_HASKELL(8, 10, 1, 0)
-  , ($$(liftedCast (1 :: Int16)) :: Int8) ~?= 1
-  , ($$(liftedFrom @Int16 1) :: Int8) ~?= 1
-  , ($$(liftedInto @Int8 (1 :: Int16)) :: Int8) ~?= 1
+  , ($$( liftedCast (1 :: Int16) ) :: Int8) ~?= 1
+  , ($$( liftedFrom @Int16 1 ) :: Int8) ~?= 1
+  , ($$( liftedInto @Int8 (1 :: Int16) ) :: Int8) ~?= 1
 # else
-  , ($(liftedCast (1 :: Int16)) :: Int8) ~?= 1
-  , ($(liftedFrom @Int16 1) :: Int8) ~?= 1
-  , ($(liftedInto @Int8 (1 :: Int16)) :: Int8) ~?= 1
+  , $( liftedCast @Int16 @Int8 1 ) ~?= (1 :: Int8)
+  , $( liftedFrom @Int16 @Int8 1 ) ~?= (1 :: Int8)
+  , $( liftedInto @Int8 @Int16 1 ) ~?= (1 :: Int8)
 # endif
 
   -- []
