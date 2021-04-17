@@ -14,6 +14,7 @@ import Data.Ratio
 import Data.Word
 import Numeric.Natural
 import Test.Hspec
+import Test.QuickCheck
 import Witch
 
 main :: IO ()
@@ -79,1168 +80,1525 @@ main = hspec . describe "Witch" $ do
     -- Int8
 
     describe "Cast Int8 Int16" $ do
-      test $ cast @Int8 @Int16 0 `shouldBe` 0
-      test $ cast @Int8 @Int16 127 `shouldBe` 127
-      test $ cast @Int8 @Int16 (-128) `shouldBe` (-128)
+      let f = cast @Int8 @Int16
+      test $ f 0 `shouldBe` 0
+      test $ f 127 `shouldBe` 127
+      test $ f (-128) `shouldBe` (-128)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int8 Int32" $ do
-      test $ cast @Int8 @Int32 0 `shouldBe` 0
-      test $ cast @Int8 @Int32 127 `shouldBe` 127
-      test $ cast @Int8 @Int32 (-128) `shouldBe` (-128)
+      let f = cast @Int8 @Int32
+      test $ f 0 `shouldBe` 0
+      test $ f 127 `shouldBe` 127
+      test $ f (-128) `shouldBe` (-128)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int8 Int64" $ do
-      test $ cast @Int8 @Int64 0 `shouldBe` 0
-      test $ cast @Int8 @Int64 127 `shouldBe` 127
-      test $ cast @Int8 @Int64 (-128) `shouldBe` (-128)
+      let f = cast @Int8 @Int64
+      test $ f 0 `shouldBe` 0
+      test $ f 127 `shouldBe` 127
+      test $ f (-128) `shouldBe` (-128)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int8 Int" $ do
-      test $ cast @Int8 @Int 0 `shouldBe` 0
-      test $ cast @Int8 @Int 127 `shouldBe` 127
-      test $ cast @Int8 @Int (-128) `shouldBe` (-128)
+      let f = cast @Int8 @Int
+      test $ f 0 `shouldBe` 0
+      test $ f 127 `shouldBe` 127
+      test $ f (-128) `shouldBe` (-128)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int8 Integer" $ do
-      test $ cast @Int8 @Integer 0 `shouldBe` 0
-      test $ cast @Int8 @Integer 127 `shouldBe` 127
-      test $ cast @Int8 @Integer (-128) `shouldBe` (-128)
+      let f = cast @Int8 @Integer
+      test $ f 0 `shouldBe` 0
+      test $ f 127 `shouldBe` 127
+      test $ f (-128) `shouldBe` (-128)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int8 Word8" $ do
-      test $ tryCast @Int8 @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Int8 @Word8 127 `shouldBe` Right 127
-      test $ tryCast @Int8 @Word8 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int8 @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int8 Word16" $ do
-      test $ tryCast @Int8 @Word16 0 `shouldBe` Right 0
-      test $ tryCast @Int8 @Word16 127 `shouldBe` Right 127
-      test $ tryCast @Int8 @Word16 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int8 @Word16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int8 Word32" $ do
-      test $ tryCast @Int8 @Word32 0 `shouldBe` Right 0
-      test $ tryCast @Int8 @Word32 127 `shouldBe` Right 127
-      test $ tryCast @Int8 @Word32 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int8 @Word32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int8 Word64" $ do
-      test $ tryCast @Int8 @Word64 0 `shouldBe` Right 0
-      test $ tryCast @Int8 @Word64 127 `shouldBe` Right 127
-      test $ tryCast @Int8 @Word64 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int8 @Word64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int8 Word" $ do
-      test $ tryCast @Int8 @Word 0 `shouldBe` Right 0
-      test $ tryCast @Int8 @Word 127 `shouldBe` Right 127
-      test $ tryCast @Int8 @Word (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int8 @Word
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int8 Natural" $ do
-      test $ tryCast @Int8 @Natural 0 `shouldBe` Right 0
-      test $ tryCast @Int8 @Natural 127 `shouldBe` Right 127
-      test $ tryCast @Int8 @Natural (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int8 @Natural
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int8 Float" $ do
-      test $ cast @Int8 @Float 0 `shouldBe` 0
-      test $ cast @Int8 @Float 127 `shouldBe` 127
-      test $ cast @Int8 @Float (-128) `shouldBe` (-128)
+      let f = cast @Int8 @Float
+      test $ f 0 `shouldBe` 0
+      test $ f 127 `shouldBe` 127
+      test $ f (-128) `shouldBe` (-128)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int8 Double" $ do
-      test $ cast @Int8 @Double 0 `shouldBe` 0
-      test $ cast @Int8 @Double 127 `shouldBe` 127
-      test $ cast @Int8 @Double (-128) `shouldBe` (-128)
+      let f = cast @Int8 @Double
+      test $ f 0 `shouldBe` 0
+      test $ f 127 `shouldBe` 127
+      test $ f (-128) `shouldBe` (-128)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Int16
 
     describe "TryCast Int16 Int8" $ do
-      test $ tryCast @Int16 @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Int16 @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Int16 @Int8 128 `shouldSatisfy` isLeft
-      test $ tryCast @Int16 @Int8 (-128) `shouldBe` Right (-128)
-      test $ tryCast @Int16 @Int8 (-129) `shouldSatisfy` isLeft
+      let f = tryCast @Int16 @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      test $ f (-128) `shouldBe` Right (-128)
+      test $ f (-129) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int16 Int32" $ do
-      test $ cast @Int16 @Int32 0 `shouldBe` 0
-      test $ cast @Int16 @Int32 32767 `shouldBe` 32767
-      test $ cast @Int16 @Int32 (-32768) `shouldBe` (-32768)
+      let f = cast @Int16 @Int32
+      test $ f 0 `shouldBe` 0
+      test $ f 32767 `shouldBe` 32767
+      test $ f (-32768) `shouldBe` (-32768)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int16 Int64" $ do
-      test $ cast @Int16 @Int64 0 `shouldBe` 0
-      test $ cast @Int16 @Int64 32767 `shouldBe` 32767
-      test $ cast @Int16 @Int64 (-32768) `shouldBe` (-32768)
+      let f = cast @Int16 @Int64
+      test $ f 0 `shouldBe` 0
+      test $ f 32767 `shouldBe` 32767
+      test $ f (-32768) `shouldBe` (-32768)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int16 Int" $ do
-      test $ cast @Int16 @Int 0 `shouldBe` 0
-      test $ cast @Int16 @Int 32767 `shouldBe` 32767
-      test $ cast @Int16 @Int (-32768) `shouldBe` (-32768)
+      let f = cast @Int16 @Int
+      test $ f 0 `shouldBe` 0
+      test $ f 32767 `shouldBe` 32767
+      test $ f (-32768) `shouldBe` (-32768)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int16 Integer" $ do
-      test $ cast @Int16 @Integer 0 `shouldBe` 0
-      test $ cast @Int16 @Integer 32767 `shouldBe` 32767
-      test $ cast @Int16 @Integer (-32768) `shouldBe` (-32768)
+      let f = cast @Int16 @Integer
+      test $ f 0 `shouldBe` 0
+      test $ f 32767 `shouldBe` 32767
+      test $ f (-32768) `shouldBe` (-32768)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int16 Word8" $ do
-      test $ tryCast @Int16 @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Int16 @Word8 255 `shouldBe` Right 255
-      test $ tryCast @Int16 @Word8 256 `shouldSatisfy` isLeft
-      test $ tryCast @Int16 @Word8 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int16 @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 255 `shouldBe` Right 255
+      test $ f 256 `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int16 Word16" $ do
-      test $ tryCast @Int16 @Word16 0 `shouldBe` Right 0
-      test $ tryCast @Int16 @Word16 127 `shouldBe` Right 127
-      test $ tryCast @Int16 @Word16 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int16 @Word16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int16 Word32" $ do
-      test $ tryCast @Int16 @Word32 0 `shouldBe` Right 0
-      test $ tryCast @Int16 @Word32 32767 `shouldBe` Right 32767
-      test $ tryCast @Int16 @Word32 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int16 @Word32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int16 Word64" $ do
-      test $ tryCast @Int16 @Word64 0 `shouldBe` Right 0
-      test $ tryCast @Int16 @Word64 32767 `shouldBe` Right 32767
-      test $ tryCast @Int16 @Word64 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int16 @Word64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int16 Word" $ do
-      test $ tryCast @Int16 @Word 0 `shouldBe` Right 0
-      test $ tryCast @Int16 @Word 32767 `shouldBe` Right 32767
-      test $ tryCast @Int16 @Word (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int16 @Word
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int16 Natural" $ do
-      test $ tryCast @Int16 @Natural 0 `shouldBe` Right 0
-      test $ tryCast @Int16 @Natural 32767 `shouldBe` Right 32767
-      test $ tryCast @Int16 @Natural (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int16 @Natural
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int16 Float" $ do
-      test $ cast @Int16 @Float 0 `shouldBe` 0
-      test $ cast @Int16 @Float 32767 `shouldBe` 32767
-      test $ cast @Int16 @Float (-32768) `shouldBe` (-32768)
+      let f = cast @Int16 @Float
+      test $ f 0 `shouldBe` 0
+      test $ f 32767 `shouldBe` 32767
+      test $ f (-32768) `shouldBe` (-32768)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int16 Double" $ do
-      test $ cast @Int16 @Double 0 `shouldBe` 0
-      test $ cast @Int16 @Double 32767 `shouldBe` 32767
-      test $ cast @Int16 @Double (-32768) `shouldBe` (-32768)
+      let f = cast @Int16 @Double
+      test $ f 0 `shouldBe` 0
+      test $ f 32767 `shouldBe` 32767
+      test $ f (-32768) `shouldBe` (-32768)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Int32
 
     describe "TryCast Int32 Int8" $ do
-      test $ tryCast @Int32 @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Int32 @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Int32 @Int8 128 `shouldSatisfy` isLeft
-      test $ tryCast @Int32 @Int8 (-128) `shouldBe` Right (-128)
-      test $ tryCast @Int32 @Int8 (-129) `shouldSatisfy` isLeft
+      let f = tryCast @Int32 @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      test $ f (-128) `shouldBe` Right (-128)
+      test $ f (-129) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int32 Int16" $ do
-      test $ tryCast @Int32 @Int16 0 `shouldBe` Right 0
-      test $ tryCast @Int32 @Int16 32767 `shouldBe` Right 32767
-      test $ tryCast @Int32 @Int16 32768 `shouldSatisfy` isLeft
-      test $ tryCast @Int32 @Int16 (-32768) `shouldBe` Right (-32768)
-      test $ tryCast @Int32 @Int16 (-32769) `shouldSatisfy` isLeft
+      let f = tryCast @Int32 @Int16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f 32768 `shouldSatisfy` isLeft
+      test $ f (-32768) `shouldBe` Right (-32768)
+      test $ f (-32769) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int32 Int64" $ do
-      test $ cast @Int32 @Int64 0 `shouldBe` 0
-      test $ cast @Int32 @Int64 2147483647 `shouldBe` 2147483647
-      test $ cast @Int32 @Int64 (-2147483648) `shouldBe` (-2147483648)
+      let f = cast @Int32 @Int64
+      test $ f 0 `shouldBe` 0
+      test $ f 2147483647 `shouldBe` 2147483647
+      test $ f (-2147483648) `shouldBe` (-2147483648)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int32 Int" $ do
       when (toInteger (maxBound :: Int) < 2147483647) untested
-      test $ tryCast @Int32 @Int 0 `shouldBe` Right 0
-      test $ tryCast @Int32 @Int 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Int32 @Int (-2147483648) `shouldBe` Right (-2147483648)
+      let f = tryCast @Int32 @Int
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f (-2147483648) `shouldBe` Right (-2147483648)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int32 Integer" $ do
-      test $ cast @Int32 @Integer 0 `shouldBe` 0
-      test $ cast @Int32 @Integer 2147483647 `shouldBe` 2147483647
-      test $ cast @Int32 @Integer (-2147483648) `shouldBe` (-2147483648)
+      let f = cast @Int32 @Integer
+      test $ f 0 `shouldBe` 0
+      test $ f 2147483647 `shouldBe` 2147483647
+      test $ f (-2147483648) `shouldBe` (-2147483648)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int32 Word8" $ do
-      test $ tryCast @Int32 @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Int32 @Word8 255 `shouldBe` Right 255
-      test $ tryCast @Int32 @Word8 256 `shouldSatisfy` isLeft
-      test $ tryCast @Int32 @Word8 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int32 @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 255 `shouldBe` Right 255
+      test $ f 256 `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int32 Word16" $ do
-      test $ tryCast @Int32 @Word16 0 `shouldBe` Right 0
-      test $ tryCast @Int32 @Word16 65535 `shouldBe` Right 65535
-      test $ tryCast @Int32 @Word16 65536 `shouldSatisfy` isLeft
-      test $ tryCast @Int32 @Word16 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int32 @Word16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 65535 `shouldBe` Right 65535
+      test $ f 65536 `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int32 Word32" $ do
-      test $ tryCast @Int32 @Word32 0 `shouldBe` Right 0
-      test $ tryCast @Int32 @Word32 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Int32 @Word32 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int32 @Word32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int32 Word64" $ do
-      test $ tryCast @Int32 @Word64 0 `shouldBe` Right 0
-      test $ tryCast @Int32 @Word64 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Int32 @Word64 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int32 @Word64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int32 Word" $ do
       when (toInteger (maxBound :: Word) < 2147483647) untested
-      test $ tryCast @Int32 @Word 0 `shouldBe` Right 0
-      test $ tryCast @Int32 @Word 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Int32 @Word (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int32 @Word
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int32 Natural" $ do
-      test $ tryCast @Int32 @Natural 0 `shouldBe` Right 0
-      test $ tryCast @Int32 @Natural 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Int32 @Natural (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int32 @Natural
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int32 Float" $ do
-      test $ tryCast @Int32 @Float 0 `shouldBe` Right 0
-      test $ tryCast @Int32 @Float 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Int32 @Float 16777216 `shouldSatisfy` isLeft
-      test $ tryCast @Int32 @Float (-16777215) `shouldBe` Right (-16777215)
-      test $ tryCast @Int32 @Float (-16777216) `shouldSatisfy` isLeft
+      let f = tryCast @Int32 @Float
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      test $ f (-16777215) `shouldBe` Right (-16777215)
+      test $ f (-16777216) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int32 Double" $ do
-      test $ cast @Int32 @Double 0 `shouldBe` 0
-      test $ cast @Int32 @Double 2147483647 `shouldBe` 2147483647
-      test $ cast @Int32 @Double (-2147483648) `shouldBe` (-2147483648)
+      let f = cast @Int32 @Double
+      test $ f 0 `shouldBe` 0
+      test $ f 2147483647 `shouldBe` 2147483647
+      test $ f (-2147483648) `shouldBe` (-2147483648)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Int64
 
     describe "TryCast Int64 Int8" $ do
-      test $ tryCast @Int64 @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Int64 @Int8 128 `shouldSatisfy` isLeft
-      test $ tryCast @Int64 @Int8 (-128) `shouldBe` Right (-128)
-      test $ tryCast @Int64 @Int8 (-129) `shouldSatisfy` isLeft
+      let f = tryCast @Int64 @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      test $ f (-128) `shouldBe` Right (-128)
+      test $ f (-129) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int64 Int16" $ do
-      test $ tryCast @Int64 @Int16 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Int16 32767 `shouldBe` Right 32767
-      test $ tryCast @Int64 @Int16 32768 `shouldSatisfy` isLeft
-      test $ tryCast @Int64 @Int16 (-32768) `shouldBe` Right (-32768)
-      test $ tryCast @Int64 @Int16 (-32769) `shouldSatisfy` isLeft
+      let f = tryCast @Int64 @Int16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f 32768 `shouldSatisfy` isLeft
+      test $ f (-32768) `shouldBe` Right (-32768)
+      test $ f (-32769) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int64 Int32" $ do
-      test $ tryCast @Int64 @Int32 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Int32 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Int64 @Int32 2147483648 `shouldSatisfy` isLeft
-      test $ tryCast @Int64 @Int32 (-2147483648) `shouldBe` Right (-2147483648)
-      test $ tryCast @Int64 @Int32 (-2147483649) `shouldSatisfy` isLeft
+      let f = tryCast @Int64 @Int32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f 2147483648 `shouldSatisfy` isLeft
+      test $ f (-2147483648) `shouldBe` Right (-2147483648)
+      test $ f (-2147483649) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int64 Int" $ do
       when (toInteger (maxBound :: Int) < 9223372036854775807) untested
-      test $ tryCast @Int64 @Int 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Int 9223372036854775807 `shouldBe` Right 9223372036854775807
-      test $ tryCast @Int64 @Int (-9223372036854775808) `shouldBe` Right (-9223372036854775808)
+      let f = tryCast @Int64 @Int
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ f (-9223372036854775808) `shouldBe` Right (-9223372036854775808)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int64 Integer" $ do
-      test $ cast @Int64 @Integer 0 `shouldBe` 0
-      test $ cast @Int64 @Integer 9223372036854775807 `shouldBe` 9223372036854775807
-      test $ cast @Int64 @Integer (-9223372036854775808) `shouldBe` (-9223372036854775808)
+      let f = cast @Int64 @Integer
+      test $ f 0 `shouldBe` 0
+      test $ f 9223372036854775807 `shouldBe` 9223372036854775807
+      test $ f (-9223372036854775808) `shouldBe` (-9223372036854775808)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int64 Word8" $ do
-      test $ tryCast @Int64 @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Word8 255 `shouldBe` Right 255
-      test $ tryCast @Int64 @Word8 256 `shouldSatisfy` isLeft
-      test $ tryCast @Int64 @Word8 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int64 @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 255 `shouldBe` Right 255
+      test $ f 256 `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int64 Word16" $ do
-      test $ tryCast @Int64 @Word16 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Word16 65535 `shouldBe` Right 65535
-      test $ tryCast @Int64 @Word16 65536 `shouldSatisfy` isLeft
-      test $ tryCast @Int64 @Word16 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int64 @Word16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 65535 `shouldBe` Right 65535
+      test $ f 65536 `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int64 Word32" $ do
-      test $ tryCast @Int64 @Word32 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Word32 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Int64 @Word32 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int64 @Word32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int64 Word64" $ do
-      test $ tryCast @Int64 @Word64 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Word64 9223372036854775807 `shouldBe` Right 9223372036854775807
-      test $ tryCast @Int64 @Word64 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int64 @Word64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int64 Word" $ do
       when (toInteger (maxBound :: Word) < 9223372036854775807) untested
-      test $ tryCast @Int64 @Word 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Word 9223372036854775807 `shouldBe` Right 9223372036854775807
-      test $ tryCast @Int64 @Word (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int64 @Word
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int64 Natural" $ do
-      test $ tryCast @Int64 @Natural 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Natural 9223372036854775807 `shouldBe` Right 9223372036854775807
-      test $ tryCast @Int64 @Natural (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int64 @Natural
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int64 Float" $ do
-      test $ tryCast @Int64 @Float 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Float 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Int64 @Float 16777216 `shouldSatisfy` isLeft
-      test $ tryCast @Int64 @Float (-16777215) `shouldBe` Right (-16777215)
-      test $ tryCast @Int64 @Float (-16777216) `shouldSatisfy` isLeft
+      let f = tryCast @Int64 @Float
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      test $ f (-16777215) `shouldBe` Right (-16777215)
+      test $ f (-16777216) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int64 Double" $ do
-      test $ tryCast @Int64 @Double 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Double 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Int64 @Double 9007199254740992 `shouldSatisfy` isLeft
-      test $ tryCast @Int64 @Double (-9007199254740991) `shouldBe` Right (-9007199254740991)
-      test $ tryCast @Int64 @Double (-9007199254740992) `shouldSatisfy` isLeft
+      let f = tryCast @Int64 @Double
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f 9007199254740992 `shouldSatisfy` isLeft
+      test $ f (-9007199254740991) `shouldBe` Right (-9007199254740991)
+      test $ f (-9007199254740992) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Int
 
     describe "TryCast Int Int8" $ do
-      test $ tryCast @Int @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Int @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Int @Int8 128 `shouldSatisfy` isLeft
-      test $ tryCast @Int @Int8 (-128) `shouldBe` Right (-128)
-      test $ tryCast @Int @Int8 (-129) `shouldSatisfy` isLeft
+      let f = tryCast @Int @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      test $ f (-128) `shouldBe` Right (-128)
+      test $ f (-129) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int Int16" $ do
-      test $ tryCast @Int @Int16 0 `shouldBe` Right 0
-      test $ tryCast @Int @Int16 32767 `shouldBe` Right 32767
-      test $ tryCast @Int @Int16 32768 `shouldSatisfy` isLeft
-      test $ tryCast @Int @Int16 (-32768) `shouldBe` Right (-32768)
-      test $ tryCast @Int @Int16 (-32769) `shouldSatisfy` isLeft
+      let f = tryCast @Int @Int16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f 32768 `shouldSatisfy` isLeft
+      test $ f (-32768) `shouldBe` Right (-32768)
+      test $ f (-32769) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int Int32" $ do
       when (toInteger (maxBound :: Int) < 2147483647) untested
-      test $ tryCast @Int @Int32 0 `shouldBe` Right 0
-      test $ tryCast @Int @Int32 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Int @Int32 2147483648 `shouldSatisfy` isLeft
-      test $ tryCast @Int @Int32 (-2147483648) `shouldBe` Right (-2147483648)
-      test $ tryCast @Int @Int32 (-2147483649) `shouldSatisfy` isLeft
+      let f = tryCast @Int @Int32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f 2147483648 `shouldSatisfy` isLeft
+      test $ f (-2147483648) `shouldBe` Right (-2147483648)
+      test $ f (-2147483649) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int Int64" $ do
-      test $ cast @Int @Int64 0 `shouldBe` 0
-      test $ cast @Int @Int64 maxBound `shouldBe` fromIntegral (maxBound :: Int)
-      test $ cast @Int @Int64 minBound `shouldBe` fromIntegral (minBound :: Int)
+      let f = cast @Int @Int64
+      test $ f 0 `shouldBe` 0
+      test $ f maxBound `shouldBe` fromIntegral (maxBound :: Int)
+      test $ f minBound `shouldBe` fromIntegral (minBound :: Int)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Int Integer" $ do
-      test $ cast @Int @Integer 0 `shouldBe` 0
-      test $ cast @Int @Integer maxBound `shouldBe` fromIntegral (maxBound :: Int)
-      test $ cast @Int @Integer minBound `shouldBe` fromIntegral (minBound :: Int)
+      let f = cast @Int @Integer
+      test $ f 0 `shouldBe` 0
+      test $ f maxBound `shouldBe` fromIntegral (maxBound :: Int)
+      test $ f minBound `shouldBe` fromIntegral (minBound :: Int)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int Word8" $ do
-      test $ tryCast @Int @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Int @Word8 255 `shouldBe` Right 255
-      test $ tryCast @Int @Word8 256 `shouldSatisfy` isLeft
-      test $ tryCast @Int @Word8 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 255 `shouldBe` Right 255
+      test $ f 256 `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int Word16" $ do
-      test $ tryCast @Int @Word16 0 `shouldBe` Right 0
-      test $ tryCast @Int @Word16 65535 `shouldBe` Right 65535
-      test $ tryCast @Int @Word16 65536 `shouldSatisfy` isLeft
-      test $ tryCast @Int @Word16 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int @Word16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 65535 `shouldBe` Right 65535
+      test $ f 65536 `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int Word32" $ do
       when (toInteger (maxBound :: Int) < 4294967295) untested
-      test $ tryCast @Int @Word32 0 `shouldBe` Right 0
-      test $ tryCast @Int @Word32 4294967295 `shouldBe` Right 4294967295
-      test $ tryCast @Int @Word32 4294967296 `shouldSatisfy` isLeft
-      test $ tryCast @Int @Word32 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int @Word32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 4294967295 `shouldBe` Right 4294967295
+      test $ f 4294967296 `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int Word64" $ do
-      test $ tryCast @Int @Word64 0 `shouldBe` Right 0
-      test $ tryCast @Int @Word64 maxBound `shouldBe` Right (fromIntegral (maxBound :: Int))
-      test $ tryCast @Int @Word64 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int @Word64
+      test $ f 0 `shouldBe` Right 0
+      test $ f maxBound `shouldBe` Right (fromIntegral (maxBound :: Int))
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int Word" $ do
-      test $ tryCast @Int @Word 0 `shouldBe` Right 0
-      test $ tryCast @Int @Word maxBound `shouldBe` Right (fromIntegral (maxBound :: Int))
-      test $ tryCast @Int @Word (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int @Word
+      test $ f 0 `shouldBe` Right 0
+      test $ f maxBound `shouldBe` Right (fromIntegral (maxBound :: Int))
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int Natural" $ do
-      test $ tryCast @Int @Natural 0 `shouldBe` Right 0
-      test $ tryCast @Int @Natural maxBound `shouldBe` Right (fromIntegral (maxBound :: Int))
-      test $ tryCast @Int @Natural (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Int @Natural
+      test $ f 0 `shouldBe` Right 0
+      test $ f maxBound `shouldBe` Right (fromIntegral (maxBound :: Int))
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int Float" $ do
-      test $ tryCast @Int @Float 0 `shouldBe` Right 0
-      test $ tryCast @Int @Float 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Int @Float 16777216 `shouldSatisfy` isLeft
-      test $ tryCast @Int @Float (-16777215) `shouldBe` Right (-16777215)
-      test $ tryCast @Int @Float (-16777216) `shouldSatisfy` isLeft
+      let f = tryCast @Int @Float
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      test $ f (-16777215) `shouldBe` Right (-16777215)
+      test $ f (-16777216) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Int Double" $ do
       when (toInteger (maxBound :: Int) < 9007199254740991) untested
-      test $ tryCast @Int @Double 0 `shouldBe` Right 0
-      test $ tryCast @Int @Double 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Int @Double 9007199254740992 `shouldSatisfy` isLeft
-      test $ tryCast @Int @Double (-9007199254740991) `shouldBe` Right (-9007199254740991)
-      test $ tryCast @Int @Double (-9007199254740992) `shouldSatisfy` isLeft
+      let f = tryCast @Int @Double
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f 9007199254740992 `shouldSatisfy` isLeft
+      test $ f (-9007199254740991) `shouldBe` Right (-9007199254740991)
+      test $ f (-9007199254740992) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Integer
 
     describe "TryCast Integer Int8" $ do
-      test $ tryCast @Integer @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Integer @Int8 128 `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Int8 (-128) `shouldBe` Right (-128)
-      test $ tryCast @Integer @Int8 (-129) `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      test $ f (-128) `shouldBe` Right (-128)
+      test $ f (-129) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Integer Int16" $ do
-      test $ tryCast @Integer @Int16 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Int16 32767 `shouldBe` Right 32767
-      test $ tryCast @Integer @Int16 32768 `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Int16 (-32768) `shouldBe` Right (-32768)
-      test $ tryCast @Integer @Int16 (-32769) `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Int16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f 32768 `shouldSatisfy` isLeft
+      test $ f (-32768) `shouldBe` Right (-32768)
+      test $ f (-32769) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Integer Int32" $ do
-      test $ tryCast @Integer @Int32 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Int32 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Integer @Int32 2147483648 `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Int32 (-2147483648) `shouldBe` Right (-2147483648)
-      test $ tryCast @Integer @Int32 (-2147483649) `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Int32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f 2147483648 `shouldSatisfy` isLeft
+      test $ f (-2147483648) `shouldBe` Right (-2147483648)
+      test $ f (-2147483649) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Integer Int64" $ do
-      test $ tryCast @Integer @Int64 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Int64 9223372036854775807 `shouldBe` Right 9223372036854775807
-      test $ tryCast @Integer @Int64 9223372036854775808 `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Int64 (-9223372036854775808) `shouldBe` Right (-9223372036854775808)
-      test $ tryCast @Integer @Int64 (-9223372036854775809) `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Int64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ f 9223372036854775808 `shouldSatisfy` isLeft
+      test $ f (-9223372036854775808) `shouldBe` Right (-9223372036854775808)
+      test $ f (-9223372036854775809) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Integer Int" $ do
-      test $ tryCast @Integer @Int 0 `shouldBe` Right 0
-      test $ do
-        let x = maxBound :: Int
-        tryCast @Integer @Int (fromIntegral x) `shouldBe` Right x
-      test $ do
-        let x = toInteger (maxBound :: Int) + 1
-        tryCast @Integer @Int x `shouldSatisfy` isLeft
-      test $ do
-        let x = minBound :: Int
-        tryCast @Integer @Int (fromIntegral x) `shouldBe` Right x
-      test $ do
-        let x = toInteger (minBound :: Int) - 1
-        tryCast @Integer @Int x `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Int
+      test $ f 0 `shouldBe` Right 0
+      test $ let x = maxBound :: Int in f (fromIntegral x) `shouldBe` Right x
+      test $ let x = toInteger (maxBound :: Int) + 1 in f x `shouldSatisfy` isLeft
+      test $ let x = minBound :: Int in f (fromIntegral x) `shouldBe` Right x
+      test $ let x = toInteger (minBound :: Int) - 1 in f x `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Integer Word8" $ do
-      test $ tryCast @Integer @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Word8 255 `shouldBe` Right 255
-      test $ tryCast @Integer @Word8 256 `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Word8 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 255 `shouldBe` Right 255
+      test $ f 256 `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Integer Word16" $ do
-      test $ tryCast @Integer @Word16 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Word16 65535 `shouldBe` Right 65535
-      test $ tryCast @Integer @Word16 65536 `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Word16 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Word16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 65535 `shouldBe` Right 65535
+      test $ f 65536 `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Integer Word32" $ do
-      test $ tryCast @Integer @Word32 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Word32 4294967295 `shouldBe` Right 4294967295
-      test $ tryCast @Integer @Word32 4294967296 `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Word32 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Word32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 4294967295 `shouldBe` Right 4294967295
+      test $ f 4294967296 `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Integer Word64" $ do
-      test $ tryCast @Integer @Word64 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Word64 18446744073709551615 `shouldBe` Right 18446744073709551615
-      test $ tryCast @Integer @Word64 18446744073709551616 `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Word64 (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Word64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 18446744073709551615 `shouldBe` Right 18446744073709551615
+      test $ f 18446744073709551616 `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Integer Word" $ do
-      test $ tryCast @Integer @Word 0 `shouldBe` Right 0
-      test $ do
-        let x = maxBound :: Word
-        tryCast @Integer @Word (fromIntegral x) `shouldBe` Right x
-      test $ do
-        let x = toInteger (maxBound :: Word) + 1
-        tryCast @Integer @Word x `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Word (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Word
+      test $ f 0 `shouldBe` Right 0
+      test $ let x = maxBound :: Word in f (fromIntegral x) `shouldBe` Right x
+      test $ let x = toInteger (maxBound :: Word) + 1 in f x `shouldSatisfy` isLeft
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Integer Natural" $ do
-      test $ tryCast @Integer @Natural 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Natural 18446744073709551616 `shouldBe` Right 18446744073709551616
-      test $ tryCast @Integer @Natural (-1) `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Natural
+      test $ f 0 `shouldBe` Right 0
+      test $ f 18446744073709551616 `shouldBe` Right 18446744073709551616
+      test $ f (-1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Integer Float" $ do
-      test $ tryCast @Integer @Float 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Float 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Integer @Float 16777216 `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Float (-16777215) `shouldBe` Right (-16777215)
-      test $ tryCast @Integer @Float (-16777216) `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Float
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      test $ f (-16777215) `shouldBe` Right (-16777215)
+      test $ f (-16777216) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Integer Double" $ do
-      test $ tryCast @Integer @Double 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Double 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Integer @Double 9007199254740992 `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Double (-9007199254740991) `shouldBe` Right (-9007199254740991)
-      test $ tryCast @Integer @Double (-9007199254740992) `shouldSatisfy` isLeft
+      let f = tryCast @Integer @Double
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f 9007199254740992 `shouldSatisfy` isLeft
+      test $ f (-9007199254740991) `shouldBe` Right (-9007199254740991)
+      test $ f (-9007199254740992) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Word8
 
     describe "Cast Word8 Word16" $ do
-      test $ cast @Word8 @Word16 0 `shouldBe` 0
-      test $ cast @Word8 @Word16 255 `shouldBe` 255
+      let f = cast @Word8 @Word16
+      test $ f 0 `shouldBe` 0
+      test $ f 255 `shouldBe` 255
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word8 Word32" $ do
-      test $ cast @Word8 @Word32 0 `shouldBe` 0
-      test $ cast @Word8 @Word32 255 `shouldBe` 255
+      let f = cast @Word8 @Word32
+      test $ f 0 `shouldBe` 0
+      test $ f 255 `shouldBe` 255
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word8 Word64" $ do
-      test $ cast @Word8 @Word64 0 `shouldBe` 0
-      test $ cast @Word8 @Word64 255 `shouldBe` 255
+      let f = cast @Word8 @Word64
+      test $ f 0 `shouldBe` 0
+      test $ f 255 `shouldBe` 255
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word8 Word" $ do
-      test $ cast @Word8 @Word 0 `shouldBe` 0
-      test $ cast @Word8 @Word 255 `shouldBe` 255
+      let f = cast @Word8 @Word
+      test $ f 0 `shouldBe` 0
+      test $ f 255 `shouldBe` 255
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word8 Natural" $ do
-      test $ cast @Word8 @Natural 0 `shouldBe` 0
-      test $ cast @Word8 @Natural 255 `shouldBe` 255
+      let f = cast @Word8 @Natural
+      test $ f 0 `shouldBe` 0
+      test $ f 255 `shouldBe` 255
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word8 Int8" $ do
-      test $ tryCast @Word8 @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Word8 @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Word8 @Int8 128 `shouldSatisfy` isLeft
+      let f = tryCast @Word8 @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word8 Int16" $ do
-      test $ cast @Word8 @Int16 0 `shouldBe` 0
-      test $ cast @Word8 @Int16 255 `shouldBe` 255
+      let f = cast @Word8 @Int16
+      test $ f 0 `shouldBe` 0
+      test $ f 255 `shouldBe` 255
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word8 Int32" $ do
-      test $ cast @Word8 @Int32 0 `shouldBe` 0
-      test $ cast @Word8 @Int32 255 `shouldBe` 255
+      let f = cast @Word8 @Int32
+      test $ f 0 `shouldBe` 0
+      test $ f 255 `shouldBe` 255
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word8 Int64" $ do
-      test $ cast @Word8 @Int64 0 `shouldBe` 0
-      test $ cast @Word8 @Int64 255 `shouldBe` 255
+      let f = cast @Word8 @Int64
+      test $ f 0 `shouldBe` 0
+      test $ f 255 `shouldBe` 255
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word8 Int" $ do
-      test $ cast @Word8 @Int 0 `shouldBe` 0
-      test $ cast @Word8 @Int 255 `shouldBe` 255
+      let f = cast @Word8 @Int
+      test $ f 0 `shouldBe` 0
+      test $ f 255 `shouldBe` 255
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word8 Integer" $ do
-      test $ cast @Word8 @Integer 0 `shouldBe` 0
-      test $ cast @Word8 @Integer 255 `shouldBe` 255
+      let f = cast @Word8 @Integer
+      test $ f 0 `shouldBe` 0
+      test $ f 255 `shouldBe` 255
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word8 Float" $ do
-      test $ cast @Word8 @Float 0 `shouldBe` 0
-      test $ cast @Word8 @Float 255 `shouldBe` 255
+      let f = cast @Word8 @Float
+      test $ f 0 `shouldBe` 0
+      test $ f 255 `shouldBe` 255
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word8 Double" $ do
-      test $ cast @Word8 @Double 0 `shouldBe` 0
-      test $ cast @Word8 @Double 255 `shouldBe` 255
+      let f = cast @Word8 @Double
+      test $ f 0 `shouldBe` 0
+      test $ f 255 `shouldBe` 255
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Word16
 
     describe "TryCast Word16 Word8" $ do
-      test $ tryCast @Word16 @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Word16 @Word8 255 `shouldBe` Right 255
-      test $ tryCast @Word16 @Word8 256 `shouldSatisfy` isLeft
+      let f = tryCast @Word16 @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 255 `shouldBe` Right 255
+      test $ f 256 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word16 Word32" $ do
-      test $ cast @Word16 @Word32 0 `shouldBe` 0
-      test $ cast @Word16 @Word32 65535 `shouldBe` 65535
+      let f = cast @Word16 @Word32
+      test $ f 0 `shouldBe` 0
+      test $ f 65535 `shouldBe` 65535
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word16 Word64" $ do
-      test $ cast @Word16 @Word64 0 `shouldBe` 0
-      test $ cast @Word16 @Word64 65535 `shouldBe` 65535
+      let f = cast @Word16 @Word64
+      test $ f 0 `shouldBe` 0
+      test $ f 65535 `shouldBe` 65535
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word16 Word" $ do
-      test $ cast @Word16 @Word 0 `shouldBe` 0
-      test $ cast @Word16 @Word 65535 `shouldBe` 65535
+      let f = cast @Word16 @Word
+      test $ f 0 `shouldBe` 0
+      test $ f 65535 `shouldBe` 65535
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word16 Natural" $ do
-      test $ cast @Word16 @Natural 0 `shouldBe` 0
-      test $ cast @Word16 @Natural 65535 `shouldBe` 65535
+      let f = cast @Word16 @Natural
+      test $ f 0 `shouldBe` 0
+      test $ f 65535 `shouldBe` 65535
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word16 Int8" $ do
-      test $ tryCast @Word16 @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Word16 @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Word16 @Int8 128 `shouldSatisfy` isLeft
+      let f = tryCast @Word16 @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word16 Int16" $ do
-      test $ tryCast @Word16 @Int16 0 `shouldBe` Right 0
-      test $ tryCast @Word16 @Int16 32767 `shouldBe` Right 32767
-      test $ tryCast @Word16 @Int16 32768 `shouldSatisfy` isLeft
+      let f = tryCast @Word16 @Int16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f 32768 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word16 Int32" $ do
-      test $ cast @Word16 @Int32 0 `shouldBe` 0
-      test $ cast @Word16 @Int32 65535 `shouldBe` 65535
+      let f = cast @Word16 @Int32
+      test $ f 0 `shouldBe` 0
+      test $ f 65535 `shouldBe` 65535
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word16 Int64" $ do
-      test $ cast @Word16 @Int64 0 `shouldBe` 0
-      test $ cast @Word16 @Int64 65535 `shouldBe` 65535
+      let f = cast @Word16 @Int64
+      test $ f 0 `shouldBe` 0
+      test $ f 65535 `shouldBe` 65535
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word16 Int" $ do
-      test $ cast @Word16 @Int 0 `shouldBe` 0
-      test $ cast @Word16 @Int 65535 `shouldBe` 65535
+      let f = cast @Word16 @Int
+      test $ f 0 `shouldBe` 0
+      test $ f 65535 `shouldBe` 65535
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word16 Integer" $ do
-      test $ cast @Word16 @Integer 0 `shouldBe` 0
-      test $ cast @Word16 @Integer 65535 `shouldBe` 65535
+      let f = cast @Word16 @Integer
+      test $ f 0 `shouldBe` 0
+      test $ f 65535 `shouldBe` 65535
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word16 Float" $ do
-      test $ cast @Word16 @Float 0 `shouldBe` 0
-      test $ cast @Word16 @Float 65535 `shouldBe` 65535
+      let f = cast @Word16 @Float
+      test $ f 0 `shouldBe` 0
+      test $ f 65535 `shouldBe` 65535
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word16 Double" $ do
-      test $ cast @Word16 @Double 0 `shouldBe` 0
-      test $ cast @Word16 @Double 65535 `shouldBe` 65535
+      let f = cast @Word16 @Double
+      test $ f 0 `shouldBe` 0
+      test $ f 65535 `shouldBe` 65535
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Word32
 
     describe "TryCast Word32 Word8" $ do
-      test $ tryCast @Word32 @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Word32 @Word8 255 `shouldBe` Right 255
-      test $ tryCast @Word32 @Word8 256 `shouldSatisfy` isLeft
+      let f = tryCast @Word32 @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 255 `shouldBe` Right 255
+      test $ f 256 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word32 Word16" $ do
-      test $ tryCast @Word32 @Word16 0 `shouldBe` Right 0
-      test $ tryCast @Word32 @Word16 65535 `shouldBe` Right 65535
-      test $ tryCast @Word32 @Word16 65536 `shouldSatisfy` isLeft
+      let f = tryCast @Word32 @Word16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 65535 `shouldBe` Right 65535
+      test $ f 65536 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word32 Word64" $ do
-      test $ cast @Word32 @Word64 0 `shouldBe` 0
-      test $ cast @Word32 @Word64 4294967295 `shouldBe` 4294967295
+      let f = cast @Word32 @Word64
+      test $ f 0 `shouldBe` 0
+      test $ f 4294967295 `shouldBe` 4294967295
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word32 Word" $ do
       when (toInteger (maxBound :: Word) < 4294967295) untested
-      test $ tryCast @Word32 @Word 0 `shouldBe` Right 0
-      test $ tryCast @Word32 @Word 4294967295 `shouldBe` Right 4294967295
+      let f = tryCast @Word32 @Word
+      test $ f 0 `shouldBe` Right 0
+      test $ f 4294967295 `shouldBe` Right 4294967295
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word32 Natural" $ do
-      test $ cast @Word32 @Natural 0 `shouldBe` 0
-      test $ cast @Word32 @Natural 4294967295 `shouldBe` 4294967295
+      let f = cast @Word32 @Natural
+      test $ f 0 `shouldBe` 0
+      test $ f 4294967295 `shouldBe` 4294967295
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word32 Int8" $ do
-      test $ tryCast @Word32 @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Word32 @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Word32 @Int8 128 `shouldSatisfy` isLeft
+      let f = tryCast @Word32 @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word32 Int16" $ do
-      test $ tryCast @Word32 @Int16 0 `shouldBe` Right 0
-      test $ tryCast @Word32 @Int16 32767 `shouldBe` Right 32767
-      test $ tryCast @Word32 @Int16 32768 `shouldSatisfy` isLeft
+      let f = tryCast @Word32 @Int16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f 32768 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word32 Int32" $ do
-      test $ tryCast @Word32 @Int32 0 `shouldBe` Right 0
-      test $ tryCast @Word32 @Int32 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Word32 @Int32 2147483648 `shouldSatisfy` isLeft
+      let f = tryCast @Word32 @Int32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f 2147483648 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word32 Int64" $ do
-      test $ cast @Word32 @Int64 0 `shouldBe` 0
-      test $ cast @Word32 @Int64 4294967295 `shouldBe` 4294967295
+      let f = cast @Word32 @Int64
+      test $ f 0 `shouldBe` 0
+      test $ f 4294967295 `shouldBe` 4294967295
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word32 Int" $ do
       when (toInteger (maxBound :: Int) < 4294967295) untested
-      test $ tryCast @Word32 @Int 0 `shouldBe` Right 0
-      test $ tryCast @Word32 @Int 4294967295 `shouldBe` Right 4294967295
+      let f = tryCast @Word32 @Int
+      test $ f 0 `shouldBe` Right 0
+      test $ f 4294967295 `shouldBe` Right 4294967295
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word32 Integer" $ do
-      test $ cast @Word32 @Integer 0 `shouldBe` 0
-      test $ cast @Word32 @Integer 4294967295 `shouldBe` 4294967295
+      let f = cast @Word32 @Integer
+      test $ f 0 `shouldBe` 0
+      test $ f 4294967295 `shouldBe` 4294967295
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word32 Float" $ do
-      test $ tryCast @Word32 @Float 0 `shouldBe` Right 0
-      test $ tryCast @Word32 @Float 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Word32 @Float 16777216 `shouldSatisfy` isLeft
+      let f = tryCast @Word32 @Float
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word32 Double" $ do
-      test $ cast @Word32 @Double 0 `shouldBe` 0
-      test $ cast @Word32 @Double 4294967295 `shouldBe` 4294967295
+      let f = cast @Word32 @Double
+      test $ f 0 `shouldBe` 0
+      test $ f 4294967295 `shouldBe` 4294967295
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Word64
 
     describe "TryCast Word64 Word8" $ do
-      test $ tryCast @Word64 @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Word64 @Word8 255 `shouldBe` Right 255
-      test $ tryCast @Word64 @Word8 256 `shouldSatisfy` isLeft
+      let f = tryCast @Word64 @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 255 `shouldBe` Right 255
+      test $ f 256 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word64 Word16" $ do
-      test $ tryCast @Word64 @Word16 0 `shouldBe` Right 0
-      test $ tryCast @Word64 @Word16 65535 `shouldBe` Right 65535
-      test $ tryCast @Word64 @Word16 65536 `shouldSatisfy` isLeft
+      let f = tryCast @Word64 @Word16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 65535 `shouldBe` Right 65535
+      test $ f 65536 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word64 Word32" $ do
-      test $ tryCast @Word64 @Word32 0 `shouldBe` Right 0
-      test $ tryCast @Word64 @Word32 4294967295 `shouldBe` Right 4294967295
-      test $ tryCast @Word64 @Word32 4294967296 `shouldSatisfy` isLeft
+      let f = tryCast @Word64 @Word32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 4294967295 `shouldBe` Right 4294967295
+      test $ f 4294967296 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word64 Word" $ do
       when (toInteger (maxBound :: Word) < 18446744073709551615) untested
-      test $ tryCast @Word64 @Word 0 `shouldBe` Right 0
-      test $ tryCast @Word64 @Word 18446744073709551615 `shouldBe` Right 18446744073709551615
+      let f = tryCast @Word64 @Word
+      test $ f 0 `shouldBe` Right 0
+      test $ f 18446744073709551615 `shouldBe` Right 18446744073709551615
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word64 Natural" $ do
-      test $ cast @Word64 @Natural 0 `shouldBe` 0
-      test $ cast @Word64 @Natural 18446744073709551615 `shouldBe` 18446744073709551615
+      let f = cast @Word64 @Natural
+      test $ f 0 `shouldBe` 0
+      test $ f 18446744073709551615 `shouldBe` 18446744073709551615
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word64 Int8" $ do
-      test $ tryCast @Word64 @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Word64 @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Word64 @Int8 128 `shouldSatisfy` isLeft
+      let f = tryCast @Word64 @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word64 Int16" $ do
-      test $ tryCast @Word64 @Int16 0 `shouldBe` Right 0
-      test $ tryCast @Word64 @Int16 32767 `shouldBe` Right 32767
-      test $ tryCast @Word64 @Int16 32768 `shouldSatisfy` isLeft
+      let f = tryCast @Word64 @Int16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f 32768 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word64 Int32" $ do
-      test $ tryCast @Word64 @Int32 0 `shouldBe` Right 0
-      test $ tryCast @Word64 @Int32 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Word64 @Int32 2147483648 `shouldSatisfy` isLeft
+      let f = tryCast @Word64 @Int32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f 2147483648 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word64 Int64" $ do
-      test $ tryCast @Word64 @Int64 0 `shouldBe` Right 0
-      test $ tryCast @Word64 @Int64 9223372036854775807 `shouldBe` Right 9223372036854775807
-      test $ tryCast @Word64 @Int32 9223372036854775808 `shouldSatisfy` isLeft
+      let f = tryCast @Word64 @Int64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ f 9223372036854775808 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word64 Int" $ do
-      test $ tryCast @Word64 @Int 0 `shouldBe` Right 0
-      test $ do
-        let x = maxBound :: Int
-        tryCast @Word64 @Int (fromIntegral x) `shouldBe` Right x
-      test $ do
-        let x = fromIntegral (maxBound :: Int) + 1 :: Word64
-        tryCast @Word64 @Int x `shouldSatisfy` isLeft
+      let f = tryCast @Word64 @Int
+      test $ f 0 `shouldBe` Right 0
+      test $ let x = maxBound :: Int in tryCast @Word64 @Int (fromIntegral x) `shouldBe` Right x
+      test $ let x = fromIntegral (maxBound :: Int) + 1 :: Word64 in tryCast @Word64 @Int x `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word64 Integer" $ do
-      test $ cast @Word64 @Integer 0 `shouldBe` 0
-      test $ cast @Word64 @Integer 18446744073709551615 `shouldBe` 18446744073709551615
+      let f = cast @Word64 @Integer
+      test $ f 0 `shouldBe` 0
+      test $ f 18446744073709551615 `shouldBe` 18446744073709551615
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word64 Float" $ do
-      test $ tryCast @Word64 @Float 0 `shouldBe` Right 0
-      test $ tryCast @Word64 @Float 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Word64 @Float 16777216 `shouldSatisfy` isLeft
+      let f = tryCast @Word64 @Float
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word64 Double" $ do
-      test $ tryCast @Word64 @Double 0 `shouldBe` Right 0
-      test $ tryCast @Word64 @Double 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Word64 @Double 9007199254740992 `shouldSatisfy` isLeft
+      let f = tryCast @Word64 @Double
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f 9007199254740992 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Word
 
     describe "TryCast Word Word8" $ do
-      test $ tryCast @Word @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Word @Word8 255 `shouldBe` Right 255
-      test $ tryCast @Word @Word8 256 `shouldSatisfy` isLeft
+      let f = tryCast @Word @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 255 `shouldBe` Right 255
+      test $ f 256 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word Word16" $ do
-      test $ tryCast @Word @Word16 0 `shouldBe` Right 0
-      test $ tryCast @Word @Word16 65535 `shouldBe` Right 65535
-      test $ tryCast @Word @Word16 65536 `shouldSatisfy` isLeft
+      let f = tryCast @Word @Word16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 65535 `shouldBe` Right 65535
+      test $ f 65536 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word Word32" $ do
       when (toInteger (maxBound :: Word) < 4294967295) untested
-      test $ tryCast @Word @Word32 0 `shouldBe` Right 0
-      test $ tryCast @Word @Word32 4294967295 `shouldBe` Right 4294967295
-      test $ tryCast @Word @Word32 4294967296 `shouldSatisfy` isLeft
+      let f = tryCast @Word @Word32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 4294967295 `shouldBe` Right 4294967295
+      test $ f 4294967296 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word Word64" $ do
-      test $ cast @Word @Word64 0 `shouldBe` 0
-      test $ cast @Word @Word64 maxBound `shouldBe` fromIntegral (maxBound :: Word)
+      let f = cast @Word @Word64
+      test $ f 0 `shouldBe` 0
+      test $ f maxBound `shouldBe` fromIntegral (maxBound :: Word)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word Natural" $ do
-      test $ cast @Word @Natural 0 `shouldBe` 0
-      test $ cast @Word @Natural maxBound `shouldBe` fromIntegral (maxBound :: Word)
+      let f = cast @Word @Natural
+      test $ f 0 `shouldBe` 0
+      test $ f maxBound `shouldBe` fromIntegral (maxBound :: Word)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word Int8" $ do
-      test $ tryCast @Word @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Word @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Word @Int8 128 `shouldSatisfy` isLeft
+      let f = tryCast @Word @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word Int16" $ do
-      test $ tryCast @Word @Int16 0 `shouldBe` Right 0
-      test $ tryCast @Word @Int16 32767 `shouldBe` Right 32767
-      test $ tryCast @Word @Int16 32768 `shouldSatisfy` isLeft
+      let f = tryCast @Word @Int16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f 32768 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word Int32" $ do
       when (toInteger (maxBound :: Word) < 2147483647) untested
-      test $ tryCast @Word @Int32 0 `shouldBe` Right 0
-      test $ tryCast @Word @Int32 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Word @Int32 2147483648 `shouldSatisfy` isLeft
+      let f = tryCast @Word @Int32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f 2147483648 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word Int64" $ do
       when (toInteger (maxBound :: Word) < 9223372036854775807) untested
-      test $ tryCast @Word @Int64 0 `shouldBe` Right 0
-      test $ tryCast @Word @Int64 9223372036854775807 `shouldBe` Right 9223372036854775807
-      test $ tryCast @Word @Int32 9223372036854775808 `shouldSatisfy` isLeft
+      let f = tryCast @Word @Int64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ f 9223372036854775808 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word Int" $ do
-      test $ tryCast @Word @Int 0 `shouldBe` Right 0
-      test $ do
-        let x = maxBound :: Int
-        tryCast @Word @Int (fromIntegral x) `shouldBe` Right x
-      test $ do
-        let x = fromIntegral (maxBound :: Int) + 1 :: Word
-        tryCast @Word @Int x `shouldSatisfy` isLeft
+      let f = tryCast @Word @Int
+      test $ f 0 `shouldBe` Right 0
+      test $ let x = maxBound :: Int in tryCast @Word @Int (fromIntegral x) `shouldBe` Right x
+      test $ let x = fromIntegral (maxBound :: Int) + 1 :: Word in tryCast @Word @Int x `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Word Integer" $ do
-      test $ cast @Word @Integer 0 `shouldBe` 0
-      test $ cast @Word @Integer maxBound `shouldBe` fromIntegral (maxBound :: Word)
+      let f = cast @Word @Integer
+      test $ f 0 `shouldBe` 0
+      test $ f maxBound `shouldBe` fromIntegral (maxBound :: Word)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word Float" $ do
-      test $ tryCast @Word @Float 0 `shouldBe` Right 0
-      test $ tryCast @Word @Float 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Word @Float 16777216 `shouldSatisfy` isLeft
+      let f = tryCast @Word @Float
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Word Double" $ do
       when (toInteger (maxBound :: Word) < 9007199254740991) untested
-      test $ tryCast @Word @Double 0 `shouldBe` Right 0
-      test $ tryCast @Word @Double 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Word @Double 9007199254740992 `shouldSatisfy` isLeft
+      let f = tryCast @Word @Double
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f 9007199254740992 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Natural
 
     describe "TryCast Natural Word8" $ do
-      test $ tryCast @Natural @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Natural @Word8 255 `shouldBe` Right 255
-      test $ tryCast @Natural @Word8 256 `shouldSatisfy` isLeft
+      let f = tryCast @Natural @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 255 `shouldBe` Right 255
+      test $ f 256 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Natural Word16" $ do
-      test $ tryCast @Natural @Word16 0 `shouldBe` Right 0
-      test $ tryCast @Natural @Word16 65535 `shouldBe` Right 65535
-      test $ tryCast @Natural @Word16 65536 `shouldSatisfy` isLeft
+      let f = tryCast @Natural @Word16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 65535 `shouldBe` Right 65535
+      test $ f 65536 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Natural Word32" $ do
-      test $ tryCast @Natural @Word32 0 `shouldBe` Right 0
-      test $ tryCast @Natural @Word32 4294967295 `shouldBe` Right 4294967295
-      test $ tryCast @Natural @Word32 4294967296 `shouldSatisfy` isLeft
+      let f = tryCast @Natural @Word32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 4294967295 `shouldBe` Right 4294967295
+      test $ f 4294967296 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Natural Word64" $ do
-      test $ tryCast @Natural @Word64 0 `shouldBe` Right 0
-      test $ tryCast @Natural @Word64 18446744073709551615 `shouldBe` Right 18446744073709551615
-      test $ tryCast @Natural @Word64 18446744073709551616 `shouldSatisfy` isLeft
+      let f = tryCast @Natural @Word64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 18446744073709551615 `shouldBe` Right 18446744073709551615
+      test $ f 18446744073709551616 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Natural Word" $ do
-      test $ tryCast @Natural @Word 0 `shouldBe` Right 0
-      test $ do
-        let x = maxBound :: Word
-        tryCast @Natural @Word (fromIntegral x) `shouldBe` Right x
-      test $ do
-        let x = fromIntegral (maxBound :: Word) + 1 :: Natural
-        tryCast @Natural @Word x `shouldSatisfy` isLeft
+      let f = tryCast @Natural @Word
+      test $ f 0 `shouldBe` Right 0
+      test $ let x = maxBound :: Word in tryCast @Natural @Word (fromIntegral x) `shouldBe` Right x
+      test $ let x = fromIntegral (maxBound :: Word) + 1 :: Natural in tryCast @Natural @Word x `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Natural Int8" $ do
-      test $ tryCast @Natural @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Natural @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Natural @Int8 128 `shouldSatisfy` isLeft
+      let f = tryCast @Natural @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Natural Int16" $ do
-      test $ tryCast @Natural @Int16 0 `shouldBe` Right 0
-      test $ tryCast @Natural @Int16 32767 `shouldBe` Right 32767
-      test $ tryCast @Natural @Int16 32768 `shouldSatisfy` isLeft
+      let f = tryCast @Natural @Int16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f 32768 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Natural Int32" $ do
-      test $ tryCast @Natural @Int32 0 `shouldBe` Right 0
-      test $ tryCast @Natural @Int32 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Natural @Int32 2147483648 `shouldSatisfy` isLeft
+      let f = tryCast @Natural @Int32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f 2147483648 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Natural Int64" $ do
-      test $ tryCast @Natural @Int64 0 `shouldBe` Right 0
-      test $ tryCast @Natural @Int64 9223372036854775807 `shouldBe` Right 9223372036854775807
-      test $ tryCast @Natural @Int32 9223372036854775808 `shouldSatisfy` isLeft
+      let f = tryCast @Natural @Int64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ f 9223372036854775808 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Natural Int" $ do
-      test $ tryCast @Natural @Int 0 `shouldBe` Right 0
-      test $ do
-        let x = maxBound :: Int
-        tryCast @Natural @Int (fromIntegral x) `shouldBe` Right x
-      test $ do
-        let x = fromIntegral (maxBound :: Int) + 1 :: Natural
-        tryCast @Natural @Int x `shouldSatisfy` isLeft
+      let f = tryCast @Natural @Int
+      test $ f 0 `shouldBe` Right 0
+      test $ let x = maxBound :: Int in tryCast @Natural @Int (fromIntegral x) `shouldBe` Right x
+      test $ let x = fromIntegral (maxBound :: Int) + 1 :: Natural in tryCast @Natural @Int x `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Natural Integer" $ do
-      test $ cast @Natural @Integer 0 `shouldBe` 0
-      test $ cast @Natural @Integer 9223372036854775808 `shouldBe` 9223372036854775808
+      let f = cast @Natural @Integer
+      test $ f 0 `shouldBe` 0
+      test $ f 9223372036854775808 `shouldBe` 9223372036854775808
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Natural Float" $ do
-      test $ tryCast @Natural @Float 0 `shouldBe` Right 0
-      test $ tryCast @Natural @Float 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Natural @Float 16777216 `shouldSatisfy` isLeft
+      let f = tryCast @Natural @Float
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Natural Double" $ do
-      test $ tryCast @Natural @Double 0 `shouldBe` Right 0
-      test $ tryCast @Natural @Double 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Natural @Double 9007199254740992 `shouldSatisfy` isLeft
+      let f = tryCast @Natural @Double
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f 9007199254740992 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Float
 
     describe "TryCast Float Int8" $ do
-      test $ tryCast @Float @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Float @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Float @Int8 128 `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int8 (-128) `shouldBe` Right (-128)
-      test $ tryCast @Float @Int8 (-129) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int8 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int8 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int8 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      test $ f (-128) `shouldBe` Right (-128)
+      test $ f (-129) `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Float Int16" $ do
-      test $ tryCast @Float @Int16 0 `shouldBe` Right 0
-      test $ tryCast @Float @Int16 32767 `shouldBe` Right 32767
-      test $ tryCast @Float @Int16 32768 `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int16 (-32768) `shouldBe` Right (-32768)
-      test $ tryCast @Float @Int16 (-32769) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int16 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int16 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int16 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Int16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f 32768 `shouldSatisfy` isLeft
+      test $ f (-32768) `shouldBe` Right (-32768)
+      test $ f (-32769) `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Float Int32" $ do
-      test $ tryCast @Float @Int32 0 `shouldBe` Right 0
-      test $ tryCast @Float @Int32 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Float @Int32 16777216 `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int32 (-16777215) `shouldBe` Right (-16777215)
-      test $ tryCast @Float @Int32 (-16777216) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int32 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int32 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int32 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Int32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      test $ f (-16777215) `shouldBe` Right (-16777215)
+      test $ f (-16777216) `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Float Int64" $ do
-      test $ tryCast @Float @Int64 0 `shouldBe` Right 0
-      test $ tryCast @Float @Int64 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Float @Int64 16777216 `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int64 (-16777215) `shouldBe` Right (-16777215)
-      test $ tryCast @Float @Int64 (-16777216) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int64 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int64 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int64 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Int64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      test $ f (-16777215) `shouldBe` Right (-16777215)
+      test $ f (-16777216) `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Float Int" $ do
-      test $ tryCast @Float @Int 0 `shouldBe` Right 0
-      test $ tryCast @Float @Int 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Float @Int 16777216 `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int (-16777215) `shouldBe` Right (-16777215)
-      test $ tryCast @Float @Int (-16777216) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Int (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Int
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      test $ f (-16777215) `shouldBe` Right (-16777215)
+      test $ f (-16777216) `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Float Integer" $ do
-      test $ tryCast @Float @Integer 0 `shouldBe` Right 0
-      test $ tryCast @Float @Integer 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Float @Integer 16777216 `shouldSatisfy` isLeft
-      test $ tryCast @Float @Integer (-16777215) `shouldBe` Right (-16777215)
-      test $ tryCast @Float @Integer (-16777216) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Integer (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Integer (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Integer (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Integer
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      test $ f (-16777215) `shouldBe` Right (-16777215)
+      test $ f (-16777216) `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Float Word8" $ do
-      test $ tryCast @Float @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Float @Word8 255 `shouldBe` Right 255
-      test $ tryCast @Float @Word8 256 `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word8 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word8 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word8 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 255 `shouldBe` Right 255
+      test $ f 256 `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Float Word16" $ do
-      test $ tryCast @Float @Word16 0 `shouldBe` Right 0
-      test $ tryCast @Float @Word16 65535 `shouldBe` Right 65535
-      test $ tryCast @Float @Word16 65536 `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word16 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word16 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word16 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Word16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 65535 `shouldBe` Right 65535
+      test $ f 65536 `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Float Word32" $ do
-      test $ tryCast @Float @Word32 0 `shouldBe` Right 0
-      test $ tryCast @Float @Word32 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Float @Word32 16777216 `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word32 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word32 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word32 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Word32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Float Word64" $ do
-      test $ tryCast @Float @Word64 0 `shouldBe` Right 0
-      test $ tryCast @Float @Word64 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Float @Word64 16777216 `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word64 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word64 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word64 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Word64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Float Word" $ do
-      test $ tryCast @Float @Word 0 `shouldBe` Right 0
-      test $ tryCast @Float @Word 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Float @Word 16777216 `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Word (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Word
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Float Natural" $ do
-      test $ tryCast @Float @Natural 0 `shouldBe` Right 0
-      test $ tryCast @Float @Natural 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Float @Natural 16777216 `shouldSatisfy` isLeft
-      test $ tryCast @Float @Natural (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Natural (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Natural (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Natural
+      test $ f 0 `shouldBe` Right 0
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f 16777216 `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Float Rational" $ do
-      test $ tryCast @Float @Rational 0 `shouldBe` Right 0
-      test $ tryCast @Float @Rational (-0) `shouldBe` Right 0
-      test $ tryCast @Float @Rational 0.5 `shouldBe` Right 0.5
-      test $ tryCast @Float @Rational (-0.5) `shouldBe` Right (-0.5)
-      test $ tryCast @Float @Rational 16777215 `shouldBe` Right 16777215
-      test $ tryCast @Float @Rational (-16777215) `shouldBe` Right (-16777215)
-      test $ tryCast @Float @Rational 16777216 `shouldBe` Right 16777216
-      test $ tryCast @Float @Rational (-16777216) `shouldBe` Right (-16777216)
-      test $ tryCast @Float @Rational (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Rational (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Float @Rational (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Float @Rational
+      test $ f 0 `shouldBe` Right 0
+      test $ f (-0) `shouldBe` Right 0
+      test $ f 0.5 `shouldBe` Right 0.5
+      test $ f (-0.5) `shouldBe` Right (-0.5)
+      test $ f 16777215 `shouldBe` Right 16777215
+      test $ f (-16777215) `shouldBe` Right (-16777215)
+      test $ f 16777216 `shouldBe` Right 16777216
+      test $ f (-16777216) `shouldBe` Right (-16777216)
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast Float Double" $ do
-      test $ cast @Float @Double 0 `shouldBe` 0
-      test $ cast @Float @Double 0.5 `shouldBe` 0.5
-      test $ cast @Float @Double (-0.5) `shouldBe` (-0.5)
+      let f = cast @Float @Double
+      test $ f 0 `shouldBe` 0
+      test $ f 0.5 `shouldBe` 0.5
+      test $ f (-0.5) `shouldBe` (-0.5)
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Float
 
     describe "TryCast Double Int8" $ do
-      test $ tryCast @Double @Int8 0 `shouldBe` Right 0
-      test $ tryCast @Double @Int8 127 `shouldBe` Right 127
-      test $ tryCast @Double @Int8 128 `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int8 (-128) `shouldBe` Right (-128)
-      test $ tryCast @Double @Int8 (-129) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int8 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int8 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int8 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Int8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 127 `shouldBe` Right 127
+      test $ f 128 `shouldSatisfy` isLeft
+      test $ f (-128) `shouldBe` Right (-128)
+      test $ f (-129) `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Double Int16" $ do
-      test $ tryCast @Double @Int16 0 `shouldBe` Right 0
-      test $ tryCast @Double @Int16 32767 `shouldBe` Right 32767
-      test $ tryCast @Double @Int16 32768 `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int16 (-32768) `shouldBe` Right (-32768)
-      test $ tryCast @Double @Int16 (-32769) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int16 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int16 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int16 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Int16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 32767 `shouldBe` Right 32767
+      test $ f 32768 `shouldSatisfy` isLeft
+      test $ f (-32768) `shouldBe` Right (-32768)
+      test $ f (-32769) `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Double Int32" $ do
-      test $ tryCast @Double @Int32 0 `shouldBe` Right 0
-      test $ tryCast @Double @Int32 2147483647 `shouldBe` Right 2147483647
-      test $ tryCast @Double @Int32 2147483648 `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int32 (-2147483648) `shouldBe` Right (-2147483648)
-      test $ tryCast @Double @Int32 (-2147483649) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int32 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int32 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int32 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Int32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 2147483647 `shouldBe` Right 2147483647
+      test $ f 2147483648 `shouldSatisfy` isLeft
+      test $ f (-2147483648) `shouldBe` Right (-2147483648)
+      test $ f (-2147483649) `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Double Int64" $ do
-      test $ tryCast @Double @Int64 0 `shouldBe` Right 0
-      test $ tryCast @Double @Int64 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Double @Int64 9007199254740992 `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int64 (-9007199254740991) `shouldBe` Right (-9007199254740991)
-      test $ tryCast @Double @Int64 (-9007199254740992) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int64 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int64 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int64 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Int64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f 9007199254740992 `shouldSatisfy` isLeft
+      test $ f (-9007199254740991) `shouldBe` Right (-9007199254740991)
+      test $ f (-9007199254740992) `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Double Int" $ do
       when (toInteger (maxBound :: Int) < 9007199254740991) untested
-      test $ tryCast @Double @Int 0 `shouldBe` Right 0
-      test $ tryCast @Double @Int 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Double @Int 9007199254740992 `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int (-9007199254740991) `shouldBe` Right (-9007199254740991)
-      test $ tryCast @Double @Int (-9007199254740992) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Int (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Int
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f 9007199254740992 `shouldSatisfy` isLeft
+      test $ f (-9007199254740991) `shouldBe` Right (-9007199254740991)
+      test $ f (-9007199254740992) `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Double Integer" $ do
-      test $ tryCast @Double @Integer 0 `shouldBe` Right 0
-      test $ tryCast @Double @Integer 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Double @Integer 9007199254740992 `shouldSatisfy` isLeft
-      test $ tryCast @Double @Integer (-9007199254740991) `shouldBe` Right (-9007199254740991)
-      test $ tryCast @Double @Integer (-9007199254740992) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Integer (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Integer (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Integer (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Integer
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f 9007199254740992 `shouldSatisfy` isLeft
+      test $ f (-9007199254740991) `shouldBe` Right (-9007199254740991)
+      test $ f (-9007199254740992) `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Double Word8" $ do
-      test $ tryCast @Double @Word8 0 `shouldBe` Right 0
-      test $ tryCast @Double @Word8 255 `shouldBe` Right 255
-      test $ tryCast @Double @Word8 256 `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word8 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word8 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word8 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Word8
+      test $ f 0 `shouldBe` Right 0
+      test $ f 255 `shouldBe` Right 255
+      test $ f 256 `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Double Word16" $ do
-      test $ tryCast @Double @Word16 0 `shouldBe` Right 0
-      test $ tryCast @Double @Word16 65535 `shouldBe` Right 65535
-      test $ tryCast @Double @Word16 65536 `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word16 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word16 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word16 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Word16
+      test $ f 0 `shouldBe` Right 0
+      test $ f 65535 `shouldBe` Right 65535
+      test $ f 65536 `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Double Word32" $ do
-      test $ tryCast @Double @Word32 0 `shouldBe` Right 0
-      test $ tryCast @Double @Word32 4294967295 `shouldBe` Right 4294967295
-      test $ tryCast @Double @Word32 4294967296 `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word32 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word32 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word32 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Word32
+      test $ f 0 `shouldBe` Right 0
+      test $ f 4294967295 `shouldBe` Right 4294967295
+      test $ f 4294967296 `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Double Word64" $ do
-      test $ tryCast @Double @Word64 0 `shouldBe` Right 0
-      test $ tryCast @Double @Word64 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Double @Word64 9007199254740992 `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word64 (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word64 (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word64 (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Word64
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f 9007199254740992 `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Double Word" $ do
       when (toInteger (maxBound :: Word) < 9007199254740991) untested
-      test $ tryCast @Double @Word 0 `shouldBe` Right 0
-      test $ tryCast @Double @Word 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Double @Word 9007199254740992 `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Word (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Word
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f 9007199254740992 `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Double Natural" $ do
-      test $ tryCast @Double @Natural 0 `shouldBe` Right 0
-      test $ tryCast @Double @Natural 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Double @Natural 9007199254740992 `shouldSatisfy` isLeft
-      test $ tryCast @Double @Natural (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Natural (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Natural (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Natural
+      test $ f 0 `shouldBe` Right 0
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f 9007199254740992 `shouldSatisfy` isLeft
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast Double Rational" $ do
-      test $ tryCast @Double @Rational 0 `shouldBe` Right 0
-      test $ tryCast @Double @Rational (-0) `shouldBe` Right 0
-      test $ tryCast @Double @Rational 0.5 `shouldBe` Right 0.5
-      test $ tryCast @Double @Rational (-0.5) `shouldBe` Right (-0.5)
-      test $ tryCast @Double @Rational 9007199254740991 `shouldBe` Right 9007199254740991
-      test $ tryCast @Double @Rational (-9007199254740991) `shouldBe` Right (-9007199254740991)
-      test $ tryCast @Double @Rational 9007199254740992 `shouldBe` Right 9007199254740992
-      test $ tryCast @Double @Rational (-9007199254740992) `shouldBe` Right (-9007199254740992)
-      test $ tryCast @Double @Rational (0 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Rational (1 / 0) `shouldSatisfy` isLeft
-      test $ tryCast @Double @Rational (-1 / 0) `shouldSatisfy` isLeft
+      let f = tryCast @Double @Rational
+      test $ f 0 `shouldBe` Right 0
+      test $ f (-0) `shouldBe` Right 0
+      test $ f 0.5 `shouldBe` Right 0.5
+      test $ f (-0.5) `shouldBe` Right (-0.5)
+      test $ f 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ f (-9007199254740991) `shouldBe` Right (-9007199254740991)
+      test $ f 9007199254740992 `shouldBe` Right 9007199254740992
+      test $ f (-9007199254740992) `shouldBe` Right (-9007199254740992)
+      test $ f (0 / 0) `shouldSatisfy` isLeft
+      test $ f (1 / 0) `shouldSatisfy` isLeft
+      test $ f (-1 / 0) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- NonEmpty
 
     describe "TryCast [a] (NonEmpty a)" $ do
-      test $ tryCast @[Int] @(NonEmpty Int) [] `shouldSatisfy` isLeft
-      test $ tryCast @[Int] @(NonEmpty Int) [1] `shouldBe` Right (1 :| [])
-      test $ tryCast @[Int] @(NonEmpty Int) [1, 2] `shouldBe` Right (1 :| [2])
+      let f = tryCast @[Int] @(NonEmpty Int)
+      test $ f [] `shouldSatisfy` isLeft
+      test $ f [1] `shouldBe` Right (1 :| [])
+      test $ f [1, 2] `shouldBe` Right (1 :| [2])
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast (NonEmpty a) [a]" $ do
-      test $ cast @(NonEmpty Int) @[Int] (1 :| []) `shouldBe` [1]
-      test $ cast @(NonEmpty Int) @[Int] (1 :| [2]) `shouldBe` [1, 2]
+      let f = cast @(NonEmpty Int) @[Int]
+      test $ f (1 :| []) `shouldBe` [1]
+      test $ f (1 :| [2]) `shouldBe` [1, 2]
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Ratio
 
     describe "Cast a (Ratio a)" $ do
       test $ cast @Integer @Rational 0 `shouldBe` 0
-      test $ cast @Int @(Ratio Int) 0 `shouldBe` 0
+      let f = cast @Int @(Ratio Int)
+      test $ f 0 `shouldBe` 0
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast (Ratio a) a" $ do
       test $ tryCast @Rational @Integer 0 `shouldBe` Right 0
       test $ tryCast @Rational @Integer 0.5 `shouldSatisfy` isLeft
-      test $ tryCast @(Ratio Int) @Int 0 `shouldBe` Right 0
-      test $ tryCast @(Ratio Int) @Int 0.5 `shouldSatisfy` isLeft
+      let f = tryCast @(Ratio Int) @Int
+      test $ f 0 `shouldBe` Right 0
+      test $ f 0.5 `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Fixed
 
     describe "Cast Integer (Fixed a)" $ do
       test $ cast @Integer @Uni 1 `shouldBe` 1
-      test $ cast @Integer @Deci 1 `shouldBe` 0.1
+      let f = cast @Integer @Deci
+      test $ f 1 `shouldBe` 0.1
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "Cast (Fixed a) Integer" $ do
       test $ cast @Uni @Integer 1 `shouldBe` 1
-      test $ cast @Deci @Integer 1 `shouldBe` 10
+      let f = cast @Deci @Integer
+      test $ f 1 `shouldBe` 10
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     -- Complex
 
     describe "Cast a (Complex a)" $ do
-      test $ cast @Float @(Complex Float) 1 `shouldBe` 1
       test $ cast @Double @(Complex Double) 1 `shouldBe` 1
+      let f = cast @Float @(Complex Float)
+      test $ f 1 `shouldBe` 1
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
     describe "TryCast (Complex a) a" $ do
-      test $ tryCast @(Complex Float) @Float 1 `shouldBe` Right 1
-      test $ tryCast @(Complex Float) @Float (0 :+ 1) `shouldSatisfy` isLeft
       test $ tryCast @(Complex Double) @Double 1 `shouldBe` Right 1
       test $ tryCast @(Complex Double) @Double (0 :+ 1) `shouldSatisfy` isLeft
+      let f = tryCast @(Complex Float) @Float
+      test $ f 1 `shouldBe` Right 1
+      test $ f (0 :+ 1) `shouldSatisfy` isLeft
+      prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
 test :: Example a => a -> SpecWith (Arg a)
 test = it ""
+
+prop :: Testable a => a -> Spec
+prop = test . property
 
 untested :: SpecWith a
 untested = runIO $ throwIO Untested
@@ -1258,3 +1616,9 @@ newtype Name
 instance Cast Name String
 
 instance Cast String Name
+
+instance Arbitrary Natural where
+  arbitrary = fromInteger . abs <$> arbitrary
+
+instance Arbitrary a => Arbitrary (NonEmpty a) where
+  arbitrary = (:|) <$> arbitrary <*> arbitrary
