@@ -5,5 +5,9 @@
   "purple-yolk.hlint.onSave": false,
   "editor.rulers": [
     79
-  ]
+  ],
+  "editor.tabSize": 2,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true
 }

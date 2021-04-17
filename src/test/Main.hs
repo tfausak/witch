@@ -3,6 +3,8 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 
+import Control.Exception
+import Control.Monad
 import Data.Complex
 import Data.Either
 import Data.Fixed
@@ -11,949 +13,990 @@ import Data.List.NonEmpty
 import Data.Ratio
 import Data.Word
 import Numeric.Natural
-import Test.HUnit
+import Test.Hspec
 import Witch
 
 main :: IO ()
-main = runTestTTAndExit $ "Witch" ~: tests
+main = hspec . describe "Witch" $ do
 
-tests :: [Test]
-tests =
-  [ as @Int8 1 ~?= 1
-  , cast (1 :: Int8) ~?= (1 :: Int16)
-  , from @Int8 1 ~?= (1 :: Int)
-  , into @Int16 (1 :: Int8) ~?= 1
-  , over @String (<> "!") (Name "Simon") ~?= Name "Simon!"
-  , via @Int16 (1 :: Int8) ~?= (1 :: Int32)
-  , tryFrom @Int16 1 ~?= Right (1 :: Int8)
-  , tryInto @Int8 (1 :: Int16) ~?= Right 1
-  , unsafeCast (1 :: Int16) ~?= (1 :: Int8)
-  , unsafeFrom @Int16 1 ~?= (1 :: Int8)
-  , unsafeInto @Int8 (1 :: Int16) ~?= 1
-  , ($$( liftedCast (1 :: Int16) ) :: Int8) ~?= 1
-  , ($$( liftedFrom @Int16 1 ) :: Int8) ~?= 1
-  , ($$( liftedInto @Int8 (1 :: Int16) ) :: Int8) ~?= 1
+  describe "Cast" $ do
 
-  -- NonEmpty
+    describe "cast" $ do
+      test $ cast (1 :: Int8) `shouldBe` (1 :: Int16)
 
-  , "TryCast [a] (NonEmpty a)" ~:
-    [ tryCast @[Int] @(NonEmpty Int) [] ~?& isLeft
-    , tryCast @[Int] @(NonEmpty Int) [1] ~?= Right (1 :| [])
-    , tryCast @[Int] @(NonEmpty Int) [1, 2] ~?= Right (1 :| [2])
-    ]
-  , "Cast (NonEmpty a) [a]" ~:
-    [ cast @(NonEmpty Int) @[Int] (1 :| []) ~?= [1]
-    , cast @(NonEmpty Int) @[Int] (1 :| [2]) ~?= [1, 2]
-    ]
+  describe "TryCast" $ do
 
-  -- Int8
+    describe "tryCast" $ do
+      test $ tryCast (1 :: Int16) `shouldBe` Right (1 :: Int8)
+      test $ tryCast 128 `shouldBe` Left (TryCastException @Int16 @Int8 128)
 
-  , "Cast Int8 Int16" ~:
-    [ cast @Int8 @Int16 0 ~?= 0
-    , cast @Int8 @Int16 127 ~?= 127
-    , cast @Int8 @Int16 (-128) ~?= -128
-    ]
-  , "Cast Int8 Int32" ~:
-    [ cast @Int8 @Int32 0 ~?= 0
-    , cast @Int8 @Int32 127 ~?= 127
-    , cast @Int8 @Int32 (-128) ~?= -128
-    ]
-  , "Cast Int8 Int64" ~:
-    [ cast @Int8 @Int64 0 ~?= 0
-    , cast @Int8 @Int64 127 ~?= 127
-    , cast @Int8 @Int64 (-128) ~?= -128
-    ]
-  , "Cast Int8 Int" ~:
-    [ cast @Int8 @Int 0 ~?= 0
-    , cast @Int8 @Int 127 ~?= 127
-    , cast @Int8 @Int (-128) ~?= -128
-    ]
-  , "Cast Int8 Integer" ~:
-    [ cast @Int8 @Integer 0 ~?= 0
-    , cast @Int8 @Integer 127 ~?= 127
-    , cast @Int8 @Integer (-128) ~?= -128
-    ]
-  , "TryCast Int8 Word8" ~:
-    [ tryCast @Int8 @Word8 0 ~?= Right 0
-    , tryCast @Int8 @Word8 127 ~?= Right 127
-    , tryCast @Int8 @Word8 (-1) ~?& isLeft
-    ]
-  , "TryCast Int8 Word16" ~:
-    [ tryCast @Int8 @Word16 0 ~?= Right 0
-    , tryCast @Int8 @Word16 127 ~?= Right 127
-    , tryCast @Int8 @Word16 (-1) ~?& isLeft
-    ]
-  , "TryCast Int8 Word32" ~:
-    [ tryCast @Int8 @Word32 0 ~?= Right 0
-    , tryCast @Int8 @Word32 127 ~?= Right 127
-    , tryCast @Int8 @Word32 (-1) ~?& isLeft
-    ]
-  , "TryCast Int8 Word64" ~:
-    [ tryCast @Int8 @Word64 0 ~?= Right 0
-    , tryCast @Int8 @Word64 127 ~?= Right 127
-    , tryCast @Int8 @Word64 (-1) ~?& isLeft
-    ]
-  , "TryCast Int8 Word" ~:
-    [ tryCast @Int8 @Word 0 ~?= Right 0
-    , tryCast @Int8 @Word 127 ~?= Right 127
-    , tryCast @Int8 @Word (-1) ~?& isLeft
-    ]
-  , "TryCast Int8 Natural" ~:
-    [ tryCast @Int8 @Natural 0 ~?= Right 0
-    , tryCast @Int8 @Natural 127 ~?= Right 127
-    , tryCast @Int8 @Natural (-1) ~?& isLeft
-    ]
-  , "Cast Int8 Float" ~:
-    [ cast @Int8 @Float 0 ~?= 0
-    , cast @Int8 @Float 127 ~?= 127
-    , cast @Int8 @Float (-128) ~?= (-128)
-    ]
-  , "Cast Int8 Double" ~:
-    [ cast @Int8 @Double 0 ~?= 0
-    , cast @Int8 @Double 127 ~?= 127
-    , cast @Int8 @Double (-128) ~?= (-128)
-    ]
+  describe "Utility" $ do
 
-  -- Int16
+    describe "as" $ do
+      test $ as @Int8 1 `shouldBe` 1
 
-  , "TryCast Int16 Int8" ~:
-    [ tryCast @Int16 @Int8 0 ~?= Right 0
-    , tryCast @Int16 @Int8 127 ~?= Right 127
-    , tryCast @Int16 @Int8 128 ~?& isLeft
-    , tryCast @Int16 @Int8 (-128) ~?= Right (-128)
-    , tryCast @Int16 @Int8 (-129) ~?& isLeft
-    ]
-  , "Cast Int16 Int32" ~:
-    [ cast @Int16 @Int32 0 ~?= 0
-    , cast @Int16 @Int32 32767 ~?= 32767
-    , cast @Int16 @Int32 (-32768) ~?= -32768
-    ]
-  , "Cast Int16 Int64" ~:
-    [ cast @Int16 @Int64 0 ~?= 0
-    , cast @Int16 @Int64 32767 ~?= 32767
-    , cast @Int16 @Int64 (-32768) ~?= -32768
-    ]
-  , "Cast Int16 Int" ~:
-    [ cast @Int16 @Int 0 ~?= 0
-    , cast @Int16 @Int 32767 ~?= 32767
-    , cast @Int16 @Int (-32768) ~?= -32768
-    ]
-  , "Cast Int16 Integer" ~:
-    [ cast @Int16 @Integer 0 ~?= 0
-    , cast @Int16 @Integer 32767 ~?= 32767
-    , cast @Int16 @Integer (-32768) ~?= -32768
-    ]
-  , "TryCast Int16 Word8" ~:
-    [ tryCast @Int16 @Word8 0 ~?= Right 0
-    , tryCast @Int16 @Word8 255 ~?= Right 255
-    , tryCast @Int16 @Word8 256 ~?& isLeft
-    , tryCast @Int16 @Word8 (-1) ~?& isLeft
-    ]
-  , "TryCast Int16 Word16" ~:
-    [ tryCast @Int16 @Word16 0 ~?= Right 0
-    , tryCast @Int16 @Word16 127 ~?= Right 127
-    , tryCast @Int16 @Word16 (-1) ~?& isLeft
-    ]
-  , "TryCast Int16 Word32" ~:
-    [ tryCast @Int16 @Word32 0 ~?= Right 0
-    , tryCast @Int16 @Word32 32767 ~?= Right 32767
-    , tryCast @Int16 @Word32 (-1) ~?& isLeft
-    ]
-  , "TryCast Int16 Word64" ~:
-    [ tryCast @Int16 @Word64 0 ~?= Right 0
-    , tryCast @Int16 @Word64 32767 ~?= Right 32767
-    , tryCast @Int16 @Word64 (-1) ~?& isLeft
-    ]
-  , "TryCast Int16 Word" ~:
-    [ tryCast @Int16 @Word 0 ~?= Right 0
-    , tryCast @Int16 @Word 32767 ~?= Right 32767
-    , tryCast @Int16 @Word (-1) ~?& isLeft
-    ]
-  , "TryCast Int16 Natural" ~:
-    [ tryCast @Int16 @Natural 0 ~?= Right 0
-    , tryCast @Int16 @Natural 32767 ~?= Right 32767
-    , tryCast @Int16 @Natural (-1) ~?& isLeft
-    ]
-  , "Cast Int16 Float" ~:
-    [ cast @Int16 @Float 0 ~?= 0
-    , cast @Int16 @Float 32767 ~?= 32767
-    , cast @Int16 @Float (-32768) ~?= (-32768)
-    ]
-  , "Cast Int16 Double" ~:
-    [ cast @Int16 @Double 0 ~?= 0
-    , cast @Int16 @Double 32767 ~?= 32767
-    , cast @Int16 @Double (-32768) ~?= (-32768)
-    ]
+    describe "from" $ do
+      test $ from @Int8 1 `shouldBe` (1 :: Int16)
 
-  -- Int32
+    describe "into" $ do
+      test $ into @Int16 (1 :: Int8) `shouldBe` 1
 
-  , "TryCast Int32 Int8" ~:
-    [ tryCast @Int32 @Int8 0 ~?= Right 0
-    , tryCast @Int32 @Int8 127 ~?= Right 127
-    , tryCast @Int32 @Int8 128 ~?& isLeft
-    , tryCast @Int32 @Int8 (-128) ~?= Right (-128)
-    , tryCast @Int32 @Int8 (-129) ~?& isLeft
-    ]
-  , "TryCast Int32 Int16" ~:
-    [ tryCast @Int32 @Int16 0 ~?= Right 0
-    , tryCast @Int32 @Int16 32767 ~?= Right 32767
-    , tryCast @Int32 @Int16 32768 ~?& isLeft
-    , tryCast @Int32 @Int16 (-32768) ~?= Right (-32768)
-    , tryCast @Int32 @Int16 (-32769) ~?& isLeft
-    ]
-  , "Cast Int32 Int64" ~:
-    [ cast @Int32 @Int64 0 ~?= 0
-    , cast @Int32 @Int64 2147483647 ~?= 2147483647
-    , cast @Int32 @Int64 (-2147483648) ~?= -2147483648
-    ]
-  , "TryCast Int32 Int" ~:
-    if toInteger (maxBound :: Int) < 2147483647 then untested else
-      [ tryCast @Int32 @Int 0 ~?= Right 0
-      , tryCast @Int32 @Int 2147483647 ~?= Right 2147483647
-      , tryCast @Int32 @Int (-2147483648) ~?= Right (-2147483648)
-      ]
-  , "Cast Int32 Integer" ~:
-    [ cast @Int32 @Integer 0 ~?= 0
-    , cast @Int32 @Integer 2147483647 ~?= 2147483647
-    , cast @Int32 @Integer (-2147483648) ~?= -2147483648
-    ]
-  , "TryCast Int32 Word8" ~:
-    [ tryCast @Int32 @Word8 0 ~?= Right 0
-    , tryCast @Int32 @Word8 255 ~?= Right 255
-    , tryCast @Int32 @Word8 256 ~?& isLeft
-    , tryCast @Int32 @Word8 (-1) ~?& isLeft
-    ]
-  , "TryCast Int32 Word16" ~:
-    [ tryCast @Int32 @Word16 0 ~?= Right 0
-    , tryCast @Int32 @Word16 65535 ~?= Right 65535
-    , tryCast @Int32 @Word16 65536 ~?& isLeft
-    , tryCast @Int32 @Word16 (-1) ~?& isLeft
-    ]
-  , "TryCast Int32 Word32" ~:
-    [ tryCast @Int32 @Word32 0 ~?= Right 0
-    , tryCast @Int32 @Word32 2147483647 ~?= Right 2147483647
-    , tryCast @Int32 @Word32 (-1) ~?& isLeft
-    ]
-  , "TryCast Int32 Word64" ~:
-    [ tryCast @Int32 @Word64 0 ~?= Right 0
-    , tryCast @Int32 @Word64 2147483647 ~?= Right 2147483647
-    , tryCast @Int32 @Word64 (-1) ~?& isLeft
-    ]
-  , "TryCast Int32 Word" ~:
-    if toInteger (maxBound :: Word) < 2147483647 then untested else
-      [ tryCast @Int32 @Word 0 ~?= Right 0
-      , tryCast @Int32 @Word 2147483647 ~?= Right 2147483647
-      , tryCast @Int32 @Word (-1) ~?& isLeft
-      ]
-  , "TryCast Int32 Natural" ~:
-    [ tryCast @Int32 @Natural 0 ~?= Right 0
-    , tryCast @Int32 @Natural 2147483647 ~?= Right 2147483647
-    , tryCast @Int32 @Natural (-1) ~?& isLeft
-    ]
-  , "TryCast Int32 Float" ~:
-    [ tryCast @Int32 @Float 0 ~?= Right 0
-    , tryCast @Int32 @Float 16777216 ~?= Right 16777216
-    , tryCast @Int32 @Float 16777217 ~?& isLeft
-    , tryCast @Int32 @Float (-16777216) ~?= Right (-16777216)
-    , tryCast @Int32 @Float (-16777217) ~?& isLeft
-    ]
-  , "Cast Int32 Double" ~:
-    [ cast @Int32 @Double 0 ~?= 0
-    , cast @Int32 @Double 2147483647 ~?= 2147483647
-    , cast @Int32 @Double (-2147483648) ~?= (-2147483648)
-    ]
+    describe "over" $ do
+      test $ over @String (<> "!") (Name "Kiki") `shouldBe` Name "Kiki!"
 
-  -- Int64
+    describe "via" $ do
+      test $ via @Int16 (1 :: Int8) `shouldBe` (1 :: Int32)
 
-  , "TryCast Int64 Int8" ~:
-    [ tryCast @Int64 @Int8 0 ~?= Right 0
-    , tryCast @Int64 @Int8 127 ~?= Right 127
-    , tryCast @Int64 @Int8 128 ~?& isLeft
-    , tryCast @Int64 @Int8 (-128) ~?= Right (-128)
-    , tryCast @Int64 @Int8 (-129) ~?& isLeft
-    ]
-  , "TryCast Int64 Int16" ~:
-    [ tryCast @Int64 @Int16 0 ~?= Right 0
-    , tryCast @Int64 @Int16 32767 ~?= Right 32767
-    , tryCast @Int64 @Int16 32768 ~?& isLeft
-    , tryCast @Int64 @Int16 (-32768) ~?= Right (-32768)
-    , tryCast @Int64 @Int16 (-32769) ~?& isLeft
-    ]
-  , "TryCast Int64 Int32" ~:
-    [ tryCast @Int64 @Int32 0 ~?= Right 0
-    , tryCast @Int64 @Int32 2147483647 ~?= Right 2147483647
-    , tryCast @Int64 @Int32 2147483648 ~?& isLeft
-    , tryCast @Int64 @Int32 (-2147483648) ~?= Right (-2147483648)
-    , tryCast @Int64 @Int32 (-2147483649) ~?& isLeft
-    ]
-  , "TryCast Int64 Int" ~:
-    if toInteger (maxBound :: Int) < 9223372036854775807 then untested else
-      [ tryCast @Int64 @Int 0 ~?= Right 0
-      , tryCast @Int64 @Int 9223372036854775807 ~?= Right 9223372036854775807
-      , tryCast @Int64 @Int (-9223372036854775808) ~?= Right (-9223372036854775808)
-      ]
-  , "Cast Int64 Integer" ~:
-    [ cast @Int64 @Integer 0 ~?= 0
-    , cast @Int64 @Integer 9223372036854775807 ~?= 9223372036854775807
-    , cast @Int64 @Integer (-9223372036854775808) ~?= -9223372036854775808
-    ]
-  , "TryCast Int64 Word8" ~:
-    [ tryCast @Int64 @Word8 0 ~?= Right 0
-    , tryCast @Int64 @Word8 255 ~?= Right 255
-    , tryCast @Int64 @Word8 256 ~?& isLeft
-    , tryCast @Int64 @Word8 (-1) ~?& isLeft
-    ]
-  , "TryCast Int64 Word16" ~:
-    [ tryCast @Int64 @Word16 0 ~?= Right 0
-    , tryCast @Int64 @Word16 65535 ~?= Right 65535
-    , tryCast @Int64 @Word16 65536 ~?& isLeft
-    , tryCast @Int64 @Word16 (-1) ~?& isLeft
-    ]
-  , "TryCast Int64 Word32" ~:
-    [ tryCast @Int64 @Word32 0 ~?= Right 0
-    , tryCast @Int64 @Word32 2147483647 ~?= Right 2147483647
-    , tryCast @Int64 @Word32 (-1) ~?& isLeft
-    ]
-  , "TryCast Int64 Word64" ~:
-    [ tryCast @Int64 @Word64 0 ~?= Right 0
-    , tryCast @Int64 @Word64 9223372036854775807 ~?= Right 9223372036854775807
-    , tryCast @Int64 @Word64 (-1) ~?& isLeft
-    ]
-  , "TryCast Int64 Word" ~:
-    if toInteger (maxBound :: Word) < 9223372036854775807 then untested else
-      [ tryCast @Int64 @Word 0 ~?= Right 0
-      , tryCast @Int64 @Word 9223372036854775807 ~?= Right 9223372036854775807
-      , tryCast @Int64 @Word (-1) ~?& isLeft
-      ]
-  , "TryCast Int64 Natural" ~:
-    [ tryCast @Int64 @Natural 0 ~?= Right 0
-    , tryCast @Int64 @Natural 9223372036854775807 ~?= Right 9223372036854775807
-    , tryCast @Int64 @Natural (-1) ~?& isLeft
-    ]
-  , "TryCast Int64 Float" ~:
-    [ tryCast @Int64 @Float 0 ~?= Right 0
-    , tryCast @Int64 @Float 16777216 ~?= Right 16777216
-    , tryCast @Int64 @Float 16777217 ~?& isLeft
-    , tryCast @Int64 @Float (-16777216) ~?= Right (-16777216)
-    , tryCast @Int64 @Float (-16777217) ~?& isLeft
-    ]
-  , "TryCast Int64 Double" ~:
-    [ tryCast @Int64 @Double 0 ~?= Right 0
-    , tryCast @Int64 @Double 9007199254740992 ~?= Right 9007199254740992
-    , tryCast @Int64 @Double 9007199254740993 ~?& isLeft
-    , tryCast @Int64 @Double (-9007199254740992) ~?= Right (-9007199254740992)
-    , tryCast @Int64 @Double (-9007199254740993) ~?& isLeft
-    ]
+    describe "tryFrom" $ do
+      test $ tryFrom @Int16 1 `shouldBe` Right (1 :: Int8)
 
-  -- Int
+    describe "tryInto" $ do
+      test $ tryInto @Int8 (1 :: Int16) `shouldBe` Right 1
 
-  , "TryCast Int Int8" ~:
-    [ tryCast @Int @Int8 0 ~?= Right 0
-    , tryCast @Int @Int8 127 ~?= Right 127
-    , tryCast @Int @Int8 128 ~?& isLeft
-    , tryCast @Int @Int8 (-128) ~?= Right (-128)
-    , tryCast @Int @Int8 (-129) ~?& isLeft
-    ]
-  , "TryCast Int Int16" ~:
-    [ tryCast @Int @Int16 0 ~?= Right 0
-    , tryCast @Int @Int16 32767 ~?= Right 32767
-    , tryCast @Int @Int16 32768 ~?& isLeft
-    , tryCast @Int @Int16 (-32768) ~?= Right (-32768)
-    , tryCast @Int @Int16 (-32769) ~?& isLeft
-    ]
-  , "TryCast Int Int32" ~:
-    if toInteger (maxBound :: Int) < 2147483647 then untested else
-      [ tryCast @Int @Int32 0 ~?= Right 0
-      , tryCast @Int @Int32 2147483647 ~?= Right 2147483647
-      , tryCast @Int @Int32 2147483648 ~?& isLeft
-      , tryCast @Int @Int32 (-2147483648) ~?= Right (-2147483648)
-      , tryCast @Int @Int32 (-2147483649) ~?& isLeft
-      ]
-  , "Cast Int Int64" ~:
-    [ cast @Int @Int64 0 ~?= 0
-    , cast @Int @Int64 maxBound ~?= fromIntegral (maxBound :: Int)
-    , cast @Int @Int64 minBound ~?= fromIntegral (minBound :: Int)
-    ]
-  , "Cast Int Integer" ~:
-    [ cast @Int @Integer 0 ~?= 0
-    , cast @Int @Integer maxBound ~?= fromIntegral (maxBound :: Int)
-    , cast @Int @Integer minBound ~?= fromIntegral (minBound :: Int)
-    ]
-  , "TryCast Int Word8" ~:
-    [ tryCast @Int @Word8 0 ~?= Right 0
-    , tryCast @Int @Word8 255 ~?= Right 255
-    , tryCast @Int @Word8 256 ~?& isLeft
-    , tryCast @Int @Word8 (-1) ~?& isLeft
-    ]
-  , "TryCast Int Word16" ~:
-    [ tryCast @Int @Word16 0 ~?= Right 0
-    , tryCast @Int @Word16 65535 ~?= Right 65535
-    , tryCast @Int @Word16 65536 ~?& isLeft
-    , tryCast @Int @Word16 (-1) ~?& isLeft
-    ]
-  , "TryCast Int Word32" ~:
-    if toInteger (maxBound :: Int) < 4294967295 then untested else
-      [ tryCast @Int @Word32 0 ~?= Right 0
-      , tryCast @Int @Word32 4294967295 ~?= Right 4294967295
-      , tryCast @Int @Word32 4294967296 ~?& isLeft
-      , tryCast @Int @Word32 (-1) ~?& isLeft
-      ]
-  , "TryCast Int Word64" ~:
-    [ tryCast @Int @Word64 0 ~?= Right 0
-    , tryCast @Int @Word64 maxBound ~?= Right (fromIntegral (maxBound :: Int))
-    , tryCast @Int @Word64 (-1) ~?& isLeft
-    ]
-  , "TryCast Int Word" ~:
-    [ tryCast @Int @Word 0 ~?= Right 0
-    , tryCast @Int @Word maxBound ~?= Right (fromIntegral (maxBound :: Int))
-    , tryCast @Int @Word (-1) ~?& isLeft
-    ]
-  , "TryCast Int Natural" ~:
-    [ tryCast @Int @Natural 0 ~?= Right 0
-    , tryCast @Int @Natural maxBound ~?= Right (fromIntegral (maxBound :: Int))
-    , tryCast @Int @Natural (-1) ~?& isLeft
-    ]
-  , "TryCast Int Float" ~:
-    [ tryCast @Int @Float 0 ~?= Right 0
-    , tryCast @Int @Float 16777216 ~?= Right 16777216
-    , tryCast @Int @Float 16777217 ~?& isLeft
-    , tryCast @Int @Float (-16777216) ~?= Right (-16777216)
-    , tryCast @Int @Float (-16777217) ~?& isLeft
-    ]
-  , "TryCast Int Double" ~:
-    if toInteger (maxBound :: Int) <= 9007199254740992 then untested else
-    [ tryCast @Int @Double 0 ~?= Right 0
-    , tryCast @Int @Double 9007199254740992 ~?= Right 9007199254740992
-    , tryCast @Int @Double 9007199254740993 ~?& isLeft
-    , tryCast @Int @Double (-9007199254740992) ~?= Right (-9007199254740992)
-    , tryCast @Int @Double (-9007199254740993) ~?& isLeft
-    ]
+    describe "unsafeCast" $ do
+      test $ unsafeCast (1 :: Int16) `shouldBe` (1 :: Int8)
+      test $ evaluate (unsafeCast @Int16 @Int8 128) `shouldThrow` (== TryCastException @Int16 @Int8 128)
 
-  -- Integer
+    describe "unsafeFrom" $ do
+      test $ unsafeFrom @Int16 1 `shouldBe` (1 :: Int8)
 
-  , "TryCast Integer Int8" ~:
-    [ tryCast @Integer @Int8 0 ~?= Right 0
-    , tryCast @Integer @Int8 127 ~?= Right 127
-    , tryCast @Integer @Int8 128 ~?& isLeft
-    , tryCast @Integer @Int8 (-128) ~?= Right (-128)
-    , tryCast @Integer @Int8 (-129) ~?& isLeft
-    ]
-  , "TryCast Integer Int16" ~:
-    [ tryCast @Integer @Int16 0 ~?= Right 0
-    , tryCast @Integer @Int16 32767 ~?= Right 32767
-    , tryCast @Integer @Int16 32768 ~?& isLeft
-    , tryCast @Integer @Int16 (-32768) ~?= Right (-32768)
-    , tryCast @Integer @Int16 (-32769) ~?& isLeft
-    ]
-  , "TryCast Integer Int32" ~:
-    [ tryCast @Integer @Int32 0 ~?= Right 0
-    , tryCast @Integer @Int32 2147483647 ~?= Right 2147483647
-    , tryCast @Integer @Int32 2147483648 ~?& isLeft
-    , tryCast @Integer @Int32 (-2147483648) ~?= Right (-2147483648)
-    , tryCast @Integer @Int32 (-2147483649) ~?& isLeft
-    ]
-  , "TryCast Integer Int64" ~:
-    [ tryCast @Integer @Int64 0 ~?= Right 0
-    , tryCast @Integer @Int64 9223372036854775807 ~?= Right 9223372036854775807
-    , tryCast @Integer @Int64 9223372036854775808 ~?& isLeft
-    , tryCast @Integer @Int64 (-9223372036854775808) ~?= Right (-9223372036854775808)
-    , tryCast @Integer @Int64 (-9223372036854775809) ~?& isLeft
-    ]
-  , "TryCast Integer Int" ~:
-    [ tryCast @Integer @Int 0 ~?= Right 0
-    , let x = maxBound :: Int
-      in tryCast @Integer @Int (fromIntegral x) ~?= Right x
-    , let x = toInteger (maxBound :: Int) + 1
-      in tryCast @Integer @Int x ~?& isLeft
-    , let x = minBound :: Int
-      in tryCast @Integer @Int (fromIntegral x) ~?= Right x
-    , let x = toInteger (minBound :: Int) - 1
-      in tryCast @Integer @Int x ~?& isLeft
-    ]
-  , "TryCast Integer Word8" ~:
-    [ tryCast @Integer @Word8 0 ~?= Right 0
-    , tryCast @Integer @Word8 255 ~?= Right 255
-    , tryCast @Integer @Word8 256 ~?& isLeft
-    , tryCast @Integer @Word8 (-1) ~?& isLeft
-    ]
-  , "TryCast Integer Word16" ~:
-    [ tryCast @Integer @Word16 0 ~?= Right 0
-    , tryCast @Integer @Word16 65535 ~?= Right 65535
-    , tryCast @Integer @Word16 65536 ~?& isLeft
-    , tryCast @Integer @Word16 (-1) ~?& isLeft
-    ]
-  , "TryCast Integer Word32" ~:
-    [ tryCast @Integer @Word32 0 ~?= Right 0
-    , tryCast @Integer @Word32 4294967295 ~?= Right 4294967295
-    , tryCast @Integer @Word32 4294967296 ~?& isLeft
-    , tryCast @Integer @Word32 (-1) ~?& isLeft
-    ]
-  , "TryCast Integer Word64" ~:
-    [ tryCast @Integer @Word64 0 ~?= Right 0
-    , tryCast @Integer @Word64 18446744073709551615 ~?= Right 18446744073709551615
-    , tryCast @Integer @Word64 18446744073709551616 ~?& isLeft
-    , tryCast @Integer @Word64 (-1) ~?& isLeft
-    ]
-  , "TryCast Integer Word" ~:
-    [ tryCast @Integer @Word 0 ~?= Right 0
-    , let x = maxBound :: Word
-      in tryCast @Integer @Word (fromIntegral x) ~?= Right x
-    , let x = toInteger (maxBound :: Word) + 1
-      in tryCast @Integer @Word x ~?& isLeft
-    , tryCast @Integer @Word (-1) ~?& isLeft
-    ]
-  , "TryCast Integer Natural" ~:
-    [ tryCast @Integer @Natural 0 ~?= Right 0
-    , tryCast @Integer @Natural 18446744073709551616 ~?= Right 18446744073709551616
-    , tryCast @Integer @Natural (-1) ~?& isLeft
-    ]
-  , "TryCast Integer Float" ~:
-    [ tryCast @Integer @Float 0 ~?= Right 0
-    , tryCast @Integer @Float 16777216 ~?= Right 16777216
-    , tryCast @Integer @Float 16777217 ~?& isLeft
-    , tryCast @Integer @Float (-16777216) ~?= Right (-16777216)
-    , tryCast @Integer @Float (-16777217) ~?& isLeft
-    ]
-  , "TryCast Integer Double" ~:
-    [ tryCast @Integer @Double 0 ~?= Right 0
-    , tryCast @Integer @Double 9007199254740992 ~?= Right 9007199254740992
-    , tryCast @Integer @Double 9007199254740993 ~?& isLeft
-    , tryCast @Integer @Double (-9007199254740992) ~?= Right (-9007199254740992)
-    , tryCast @Integer @Double (-9007199254740993) ~?& isLeft
-    ]
+    describe "unsafeInto" $ do
+      test $ unsafeInto @Int8 (1 :: Int16) `shouldBe` 1
 
-  -- Word8
+  describe "Lift" $ do
 
-  , "Cast Word8 Word16" ~:
-    [ cast @Word8 @Word16 0 ~?= 0
-    , cast @Word8 @Word16 255 ~?= 255
-    ]
-  , "Cast Word8 Word32" ~:
-    [ cast @Word8 @Word32 0 ~?= 0
-    , cast @Word8 @Word32 255 ~?= 255
-    ]
-  , "Cast Word8 Word64" ~:
-    [ cast @Word8 @Word64 0 ~?= 0
-    , cast @Word8 @Word64 255 ~?= 255
-    ]
-  , "Cast Word8 Word" ~:
-    [ cast @Word8 @Word 0 ~?= 0
-    , cast @Word8 @Word 255 ~?= 255
-    ]
-  , "Cast Word8 Natural" ~:
-    [ cast @Word8 @Natural 0 ~?= 0
-    , cast @Word8 @Natural 255 ~?= 255
-    ]
-  , "TryCast Word8 Int8" ~:
-    [ tryCast @Word8 @Int8 0 ~?= Right 0
-    , tryCast @Word8 @Int8 127 ~?= Right 127
-    , tryCast @Word8 @Int8 128 ~?& isLeft
-    ]
-  , "Cast Word8 Int16" ~:
-    [ cast @Word8 @Int16 0 ~?= 0
-    , cast @Word8 @Int16 255 ~?= 255
-    ]
-  , "Cast Word8 Int32" ~:
-    [ cast @Word8 @Int32 0 ~?= 0
-    , cast @Word8 @Int32 255 ~?= 255
-    ]
-  , "Cast Word8 Int64" ~:
-    [ cast @Word8 @Int64 0 ~?= 0
-    , cast @Word8 @Int64 255 ~?= 255
-    ]
-  , "Cast Word8 Int" ~:
-    [ cast @Word8 @Int 0 ~?= 0
-    , cast @Word8 @Int 255 ~?= 255
-    ]
-  , "Cast Word8 Integer" ~:
-    [ cast @Word8 @Integer 0 ~?= 0
-    , cast @Word8 @Integer 255 ~?= 255
-    ]
-  , "Cast Word8 Float" ~:
-    [ cast @Word8 @Float 0 ~?= 0
-    , cast @Word8 @Float 255 ~?= 255
-    ]
-  , "Cast Word8 Double" ~:
-    [ cast @Word8 @Double 0 ~?= 0
-    , cast @Word8 @Double 255 ~?= 255
-    ]
+    describe "liftedCast" $ do
+      test $ ($$(liftedCast (1 :: Int16)) :: Int8) `shouldBe` 1
 
-  -- Word16
+    describe "liftedFrom" $ do
+      test $ ($$(liftedFrom @Int16 1) :: Int8) `shouldBe` 1
 
-  , "TryCast Word16 Word8" ~:
-    [ tryCast @Word16 @Word8 0 ~?= Right 0
-    , tryCast @Word16 @Word8 255 ~?= Right 255
-    , tryCast @Word16 @Word8 256 ~?& isLeft
-    ]
-  , "Cast Word16 Word32" ~:
-    [ cast @Word16 @Word32 0 ~?= 0
-    , cast @Word16 @Word32 65535 ~?= 65535
-    ]
-  , "Cast Word16 Word64" ~:
-    [ cast @Word16 @Word64 0 ~?= 0
-    , cast @Word16 @Word64 65535 ~?= 65535
-    ]
-  , "Cast Word16 Word" ~:
-    [ cast @Word16 @Word 0 ~?= 0
-    , cast @Word16 @Word 65535 ~?= 65535
-    ]
-  , "Cast Word16 Natural" ~:
-    [ cast @Word16 @Natural 0 ~?= 0
-    , cast @Word16 @Natural 65535 ~?= 65535
-    ]
-  , "TryCast Word16 Int8" ~:
-    [ tryCast @Word16 @Int8 0 ~?= Right 0
-    , tryCast @Word16 @Int8 127 ~?= Right 127
-    , tryCast @Word16 @Int8 128 ~?& isLeft
-    ]
-  , "TryCast Word16 Int16" ~:
-    [ tryCast @Word16 @Int16 0 ~?= Right 0
-    , tryCast @Word16 @Int16 32767 ~?= Right 32767
-    , tryCast @Word16 @Int16 32768 ~?& isLeft
-    ]
-  , "Cast Word16 Int32" ~:
-    [ cast @Word16 @Int32 0 ~?= 0
-    , cast @Word16 @Int32 65535 ~?= 65535
-    ]
-  , "Cast Word16 Int64" ~:
-    [ cast @Word16 @Int64 0 ~?= 0
-    , cast @Word16 @Int64 65535 ~?= 65535
-    ]
-  , "Cast Word16 Int" ~:
-    [ cast @Word16 @Int 0 ~?= 0
-    , cast @Word16 @Int 65535 ~?= 65535
-    ]
-  , "Cast Word16 Integer" ~:
-    [ cast @Word16 @Integer 0 ~?= 0
-    , cast @Word16 @Integer 65535 ~?= 65535
-    ]
-  , "Cast Word16 Float" ~:
-    [ cast @Word16 @Float 0 ~?= 0
-    , cast @Word16 @Float 65535 ~?= 65535
-    ]
-  , "Cast Word16 Double" ~:
-    [ cast @Word16 @Double 0 ~?= 0
-    , cast @Word16 @Double 65535 ~?= 65535
-    ]
+    describe "liftedInto" $ do
+      test $ ($$(liftedInto @Int8 (1 :: Int16))) `shouldBe` 1
 
-  -- Word32
+  describe "Instances" $ do
 
-  , "TryCast Word32 Word8" ~:
-    [ tryCast @Word32 @Word8 0 ~?= Right 0
-    , tryCast @Word32 @Word8 255 ~?= Right 255
-    , tryCast @Word32 @Word8 256 ~?& isLeft
-    ]
-  , "TryCast Word32 Word16" ~:
-    [ tryCast @Word32 @Word16 0 ~?= Right 0
-    , tryCast @Word32 @Word16 65535 ~?= Right 65535
-    , tryCast @Word32 @Word16 65536 ~?& isLeft
-    ]
-  , "Cast Word32 Word64" ~:
-    [ cast @Word32 @Word64 0 ~?= 0
-    , cast @Word32 @Word64 4294967295 ~?= 4294967295
-    ]
-  , "TryCast Word32 Word" ~:
-    if toInteger (maxBound :: Word) < 4294967295 then untested else
-      [ tryCast @Word32 @Word 0 ~?= Right 0
-      , tryCast @Word32 @Word 4294967295 ~?= Right 4294967295
-      ]
-  , "Cast Word32 Natural" ~:
-    [ cast @Word32 @Natural 0 ~?= 0
-    , cast @Word32 @Natural 4294967295 ~?= 4294967295
-    ]
-  , "TryCast Word32 Int8" ~:
-    [ tryCast @Word32 @Int8 0 ~?= Right 0
-    , tryCast @Word32 @Int8 127 ~?= Right 127
-    , tryCast @Word32 @Int8 128 ~?& isLeft
-    ]
-  , "TryCast Word32 Int16" ~:
-    [ tryCast @Word32 @Int16 0 ~?= Right 0
-    , tryCast @Word32 @Int16 32767 ~?= Right 32767
-    , tryCast @Word32 @Int16 32768 ~?& isLeft
-    ]
-  , "TryCast Word32 Int32" ~:
-    [ tryCast @Word32 @Int32 0 ~?= Right 0
-    , tryCast @Word32 @Int32 2147483647 ~?= Right 2147483647
-    , tryCast @Word32 @Int32 2147483648 ~?& isLeft
-    ]
-  , "Cast Word32 Int64" ~:
-    [ cast @Word32 @Int64 0 ~?= 0
-    , cast @Word32 @Int64 4294967295 ~?= 4294967295
-    ]
-  , "TryCast Word32 Int" ~:
-    if toInteger (maxBound :: Int) < 4294967295 then untested else
-      [ tryCast @Word32 @Int 0 ~?= Right 0
-      , tryCast @Word32 @Int 4294967295 ~?= Right 4294967295
-      ]
-  , "Cast Word32 Integer" ~:
-    [ cast @Word32 @Integer 0 ~?= 0
-    , cast @Word32 @Integer 4294967295 ~?= 4294967295
-    ]
-  , "TryCast Word32 Float" ~:
-    [ tryCast @Word32 @Float 0 ~?= Right 0
-    , tryCast @Word32 @Float 16777216 ~?= Right 16777216
-    , tryCast @Word32 @Float 16777217 ~?& isLeft
-    ]
-  , "Cast Word32 Double" ~:
-    [ cast @Word32 @Double 0 ~?= 0
-    , cast @Word32 @Double 4294967295 ~?= 4294967295
-    ]
+    -- Int8
 
-  -- Word64
+    describe "Cast Int8 Int16" $ do
+      test $ cast @Int8 @Int16 0 `shouldBe` 0
+      test $ cast @Int8 @Int16 127 `shouldBe` 127
+      test $ cast @Int8 @Int16 (-128) `shouldBe` (-128)
 
-  , "TryCast Word64 Word8" ~:
-    [ tryCast @Word64 @Word8 0 ~?= Right 0
-    , tryCast @Word64 @Word8 255 ~?= Right 255
-    , tryCast @Word64 @Word8 256 ~?& isLeft
-    ]
-  , "TryCast Word64 Word16" ~:
-    [ tryCast @Word64 @Word16 0 ~?= Right 0
-    , tryCast @Word64 @Word16 65535 ~?= Right 65535
-    , tryCast @Word64 @Word16 65536 ~?& isLeft
-    ]
-  , "TryCast Word64 Word32" ~:
-    [ tryCast @Word64 @Word32 0 ~?= Right 0
-    , tryCast @Word64 @Word32 4294967295 ~?= Right 4294967295
-    , tryCast @Word64 @Word32 4294967296 ~?& isLeft
-    ]
-  , "TryCast Word64 Word" ~:
-    if toInteger (maxBound :: Word) < 18446744073709551615 then untested else
-      [ tryCast @Word64 @Word 0 ~?= Right 0
-      , tryCast @Word64 @Word 18446744073709551615 ~?= Right 18446744073709551615
-      ]
-  , "Cast Word64 Natural" ~:
-    [ cast @Word64 @Natural 0 ~?= 0
-    , cast @Word64 @Natural 18446744073709551615 ~?= 18446744073709551615
-    ]
-  , "TryCast Word64 Int8" ~:
-    [ tryCast @Word64 @Int8 0 ~?= Right 0
-    , tryCast @Word64 @Int8 127 ~?= Right 127
-    , tryCast @Word64 @Int8 128 ~?& isLeft
-    ]
-  , "TryCast Word64 Int16" ~:
-    [ tryCast @Word64 @Int16 0 ~?= Right 0
-    , tryCast @Word64 @Int16 32767 ~?= Right 32767
-    , tryCast @Word64 @Int16 32768 ~?& isLeft
-    ]
-  , "TryCast Word64 Int32" ~:
-    [ tryCast @Word64 @Int32 0 ~?= Right 0
-    , tryCast @Word64 @Int32 2147483647 ~?= Right 2147483647
-    , tryCast @Word64 @Int32 2147483648 ~?& isLeft
-    ]
-  , "TryCast Word64 Int64" ~:
-    [ tryCast @Word64 @Int64 0 ~?= Right 0
-    , tryCast @Word64 @Int64 9223372036854775807 ~?= Right 9223372036854775807
-    , tryCast @Word64 @Int32 9223372036854775808 ~?& isLeft
-    ]
-  , "TryCast Word64 Int" ~:
-    [ tryCast @Word64 @Int 0 ~?= Right 0
-    , let x = maxBound :: Int
-      in tryCast @Word64 @Int (fromIntegral x) ~?= Right x
-    , let x = fromIntegral (maxBound :: Int) + 1 :: Word64
-      in tryCast @Word64 @Int x ~?& isLeft
-    ]
-  , "Cast Word64 Integer" ~:
-    [ cast @Word64 @Integer 0 ~?= 0
-    , cast @Word64 @Integer 18446744073709551615 ~?= 18446744073709551615
-    ]
-  , "TryCast Word64 Float" ~:
-    [ tryCast @Word64 @Float 0 ~?= Right 0
-    , tryCast @Word64 @Float 16777216 ~?= Right 16777216
-    , tryCast @Word64 @Float 16777217 ~?& isLeft
-    ]
-  , "TryCast Word64 Double" ~:
-    [ tryCast @Word64 @Double 0 ~?= Right 0
-    , tryCast @Word64 @Double 9007199254740992 ~?= Right 9007199254740992
-    , tryCast @Word64 @Double 9007199254740993 ~?& isLeft
-    ]
+    describe "Cast Int8 Int32" $ do
+      test $ cast @Int8 @Int32 0 `shouldBe` 0
+      test $ cast @Int8 @Int32 127 `shouldBe` 127
+      test $ cast @Int8 @Int32 (-128) `shouldBe` (-128)
 
-  -- Word
+    describe "Cast Int8 Int64" $ do
+      test $ cast @Int8 @Int64 0 `shouldBe` 0
+      test $ cast @Int8 @Int64 127 `shouldBe` 127
+      test $ cast @Int8 @Int64 (-128) `shouldBe` (-128)
 
-  , "TryCast Word Word8" ~:
-    [ tryCast @Word @Word8 0 ~?= Right 0
-    , tryCast @Word @Word8 255 ~?= Right 255
-    , tryCast @Word @Word8 256 ~?& isLeft
-    ]
-  , "TryCast Word Word16" ~:
-    [ tryCast @Word @Word16 0 ~?= Right 0
-    , tryCast @Word @Word16 65535 ~?= Right 65535
-    , tryCast @Word @Word16 65536 ~?& isLeft
-    ]
-  , "TryCast Word Word32" ~:
-    if toInteger (maxBound :: Word) < 4294967295 then untested else
-      [ tryCast @Word @Word32 0 ~?= Right 0
-      , tryCast @Word @Word32 4294967295 ~?= Right 4294967295
-      , tryCast @Word @Word32 4294967296 ~?& isLeft
-      ]
-  , "Cast Word Word64" ~:
-    [ cast @Word @Word64 0 ~?= 0
-    , cast @Word @Word64 maxBound ~?= fromIntegral (maxBound :: Word)
-    ]
-  , "Cast Word Natural" ~:
-    [ cast @Word @Natural 0 ~?= 0
-    , cast @Word @Natural maxBound ~?= fromIntegral (maxBound :: Word)
-    ]
-  , "TryCast Word Int8" ~:
-    [ tryCast @Word @Int8 0 ~?= Right 0
-    , tryCast @Word @Int8 127 ~?= Right 127
-    , tryCast @Word @Int8 128 ~?& isLeft
-    ]
-  , "TryCast Word Int16" ~:
-    [ tryCast @Word @Int16 0 ~?= Right 0
-    , tryCast @Word @Int16 32767 ~?= Right 32767
-    , tryCast @Word @Int16 32768 ~?& isLeft
-    ]
-  , "TryCast Word Int32" ~:
-    if toInteger (maxBound :: Word) < 2147483647 then untested else
-      [ tryCast @Word @Int32 0 ~?= Right 0
-      , tryCast @Word @Int32 2147483647 ~?= Right 2147483647
-      , tryCast @Word @Int32 2147483648 ~?& isLeft
-      ]
-  , "TryCast Word Int64" ~:
-    if toInteger (maxBound :: Word) < 9223372036854775807 then untested else
-      [ tryCast @Word @Int64 0 ~?= Right 0
-      , tryCast @Word @Int64 9223372036854775807 ~?= Right 9223372036854775807
-      , tryCast @Word @Int32 9223372036854775808 ~?& isLeft
-      ]
-  , "TryCast Word Int" ~:
-    [ tryCast @Word @Int 0 ~?= Right 0
-    , let x = maxBound :: Int
-      in tryCast @Word @Int (fromIntegral x) ~?= Right x
-    , let x = fromIntegral (maxBound :: Int) + 1 :: Word
-      in tryCast @Word @Int x ~?& isLeft
-    ]
-  , "Cast Word Integer" ~:
-    [ cast @Word @Integer 0 ~?= 0
-    , cast @Word @Integer maxBound ~?= fromIntegral (maxBound :: Word)
-    ]
-  , "TryCast Word Float" ~:
-    [ tryCast @Word @Float 0 ~?= Right 0
-    , tryCast @Word @Float 16777216 ~?= Right 16777216
-    , tryCast @Word @Float 16777217 ~?& isLeft
-    ]
-  , "TryCast Word Double" ~:
-    if toInteger (maxBound :: Word) <= 9007199254740992 then untested else
-    [ tryCast @Word @Double 0 ~?= Right 0
-    , tryCast @Word @Double 9007199254740992 ~?= Right 9007199254740992
-    , tryCast @Word @Double 9007199254740993 ~?& isLeft
-    ]
+    describe "Cast Int8 Int" $ do
+      test $ cast @Int8 @Int 0 `shouldBe` 0
+      test $ cast @Int8 @Int 127 `shouldBe` 127
+      test $ cast @Int8 @Int (-128) `shouldBe` (-128)
 
-  -- Natural
+    describe "Cast Int8 Integer" $ do
+      test $ cast @Int8 @Integer 0 `shouldBe` 0
+      test $ cast @Int8 @Integer 127 `shouldBe` 127
+      test $ cast @Int8 @Integer (-128) `shouldBe` (-128)
 
-  , "TryCast Natural Word8" ~:
-    [ tryCast @Natural @Word8 0 ~?= Right 0
-    , tryCast @Natural @Word8 255 ~?= Right 255
-    , tryCast @Natural @Word8 256 ~?& isLeft
-    ]
-  , "TryCast Natural Word16" ~:
-    [ tryCast @Natural @Word16 0 ~?= Right 0
-    , tryCast @Natural @Word16 65535 ~?= Right 65535
-    , tryCast @Natural @Word16 65536 ~?& isLeft
-    ]
-  , "TryCast Natural Word32" ~:
-    [ tryCast @Natural @Word32 0 ~?= Right 0
-    , tryCast @Natural @Word32 4294967295 ~?= Right 4294967295
-    , tryCast @Natural @Word32 4294967296 ~?& isLeft
-    ]
-  , "TryCast Natural Word64" ~:
-    [ tryCast @Natural @Word64 0 ~?= Right 0
-    , tryCast @Natural @Word64 18446744073709551615 ~?= Right 18446744073709551615
-    , tryCast @Natural @Word64 18446744073709551616 ~?& isLeft
-    ]
-  , "TryCast Natural Word" ~:
-    [ tryCast @Natural @Word 0 ~?= Right 0
-    , let x = maxBound :: Word
-      in tryCast @Natural @Word (fromIntegral x) ~?= Right x
-    , let x = fromIntegral (maxBound :: Word) + 1 :: Natural
-      in tryCast @Natural @Word x ~?& isLeft
-    ]
-  , "TryCast Natural Int8" ~:
-    [ tryCast @Natural @Int8 0 ~?= Right 0
-    , tryCast @Natural @Int8 127 ~?= Right 127
-    , tryCast @Natural @Int8 128 ~?& isLeft
-    ]
-  , "TryCast Natural Int16" ~:
-    [ tryCast @Natural @Int16 0 ~?= Right 0
-    , tryCast @Natural @Int16 32767 ~?= Right 32767
-    , tryCast @Natural @Int16 32768 ~?& isLeft
-    ]
-  , "TryCast Natural Int32" ~:
-    [ tryCast @Natural @Int32 0 ~?= Right 0
-    , tryCast @Natural @Int32 2147483647 ~?= Right 2147483647
-    , tryCast @Natural @Int32 2147483648 ~?& isLeft
-    ]
-  , "TryCast Natural Int64" ~:
-    [ tryCast @Natural @Int64 0 ~?= Right 0
-    , tryCast @Natural @Int64 9223372036854775807 ~?= Right 9223372036854775807
-    , tryCast @Natural @Int32 9223372036854775808 ~?& isLeft
-    ]
-  , "TryCast Natural Int" ~:
-    [ tryCast @Natural @Int 0 ~?= Right 0
-    , let x = maxBound :: Int
-      in tryCast @Natural @Int (fromIntegral x) ~?= Right x
-    , let x = fromIntegral (maxBound :: Int) + 1 :: Natural
-      in tryCast @Natural @Int x ~?& isLeft
-    ]
-  , "Cast Natural Integer" ~:
-    [ cast @Natural @Integer 0 ~?= 0
-    , cast @Natural @Integer 9223372036854775808 ~?= 9223372036854775808
-    ]
-  , "TryCast Natural Float" ~:
-    [ tryCast @Natural @Float 0 ~?= Right 0
-    , tryCast @Natural @Float 16777216 ~?= Right 16777216
-    , tryCast @Natural @Float 16777217 ~?& isLeft
-    ]
-  , "TryCast Natural Double" ~:
-    [ tryCast @Natural @Double 0 ~?= Right 0
-    , tryCast @Natural @Double 9007199254740992 ~?= Right 9007199254740992
-    , tryCast @Natural @Double 9007199254740993 ~?& isLeft
-    ]
+    describe "TryCast Int8 Word8" $ do
+      test $ tryCast @Int8 @Word8 0 `shouldBe` Right 0
+      test $ tryCast @Int8 @Word8 127 `shouldBe` Right 127
+      test $ tryCast @Int8 @Word8 (-1) `shouldSatisfy` isLeft
 
-  -- Ratio
+    describe "TryCast Int8 Word16" $ do
+      test $ tryCast @Int8 @Word16 0 `shouldBe` Right 0
+      test $ tryCast @Int8 @Word16 127 `shouldBe` Right 127
+      test $ tryCast @Int8 @Word16 (-1) `shouldSatisfy` isLeft
 
-  , "Cast a (Ratio a)" ~:
-    [ cast @Integer @Rational 0 ~?= 0
-    , cast @Int @(Ratio Int) 0 ~?= 0
-    ]
-  , "TryCast (Ratio a) a" ~:
-    [ tryCast @Rational @Integer 0 ~?= Right 0
-    , tryCast @Rational @Integer 0.5 ~?& isLeft
-    , tryCast @(Ratio Int) @Int 0 ~?= Right 0
-    , tryCast @(Ratio Int) @Int 0.5 ~?& isLeft
-    ]
+    describe "TryCast Int8 Word32" $ do
+      test $ tryCast @Int8 @Word32 0 `shouldBe` Right 0
+      test $ tryCast @Int8 @Word32 127 `shouldBe` Right 127
+      test $ tryCast @Int8 @Word32 (-1) `shouldSatisfy` isLeft
 
-  -- Fixed
+    describe "TryCast Int8 Word64" $ do
+      test $ tryCast @Int8 @Word64 0 `shouldBe` Right 0
+      test $ tryCast @Int8 @Word64 127 `shouldBe` Right 127
+      test $ tryCast @Int8 @Word64 (-1) `shouldSatisfy` isLeft
 
-  , "Cast Integer (Fixed a)" ~:
-    [ cast @Integer @Uni 1 ~?= 1
-    , cast @Integer @Deci 1 ~?= 0.1
-    ]
-  , "Cast (Fixed a) Integer" ~:
-    [ cast @Uni @Integer 1 ~?= 1
-    , cast @Deci @Integer 1 ~?= 10
-    ]
+    describe "TryCast Int8 Word" $ do
+      test $ tryCast @Int8 @Word 0 `shouldBe` Right 0
+      test $ tryCast @Int8 @Word 127 `shouldBe` Right 127
+      test $ tryCast @Int8 @Word (-1) `shouldSatisfy` isLeft
 
-  -- Complex
+    describe "TryCast Int8 Natural" $ do
+      test $ tryCast @Int8 @Natural 0 `shouldBe` Right 0
+      test $ tryCast @Int8 @Natural 127 `shouldBe` Right 127
+      test $ tryCast @Int8 @Natural (-1) `shouldSatisfy` isLeft
 
-  , "Cast a (Complex a)" ~:
-    [ cast @Float @(Complex Float) 1 ~?= 1
-    , cast @Double @(Complex Double) 1 ~?= 1
-    ]
-  , "TryCast (Complex a) a" ~:
-    [ tryCast @(Complex Float) @Float 1 ~?= Right 1
-    , tryCast @(Complex Float) @Float (0 :+ 1) ~?& isLeft
-    , tryCast @(Complex Double) @Double 1 ~?= Right 1
-    , tryCast @(Complex Double) @Double (0 :+ 1) ~?& isLeft
-    ]
+    describe "Cast Int8 Float" $ do
+      test $ cast @Int8 @Float 0 `shouldBe` 0
+      test $ cast @Int8 @Float 127 `shouldBe` 127
+      test $ cast @Int8 @Float (-128) `shouldBe` (-128)
 
-  ]
+    describe "Cast Int8 Double" $ do
+      test $ cast @Int8 @Double 0 `shouldBe` 0
+      test $ cast @Int8 @Double 127 `shouldBe` 127
+      test $ cast @Int8 @Double (-128) `shouldBe` (-128)
 
-(~?&) :: Show a => a -> (a -> Bool) -> Test
-x ~?& f = f x ~? show x
-infix 1 ~?&
+    -- Int16
 
-untested :: [Test]
-untested = [False ~? "untested"]
+    describe "TryCast Int16 Int8" $ do
+      test $ tryCast @Int16 @Int8 0 `shouldBe` Right 0
+      test $ tryCast @Int16 @Int8 127 `shouldBe` Right 127
+      test $ tryCast @Int16 @Int8 128 `shouldSatisfy` isLeft
+      test $ tryCast @Int16 @Int8 (-128) `shouldBe` Right (-128)
+      test $ tryCast @Int16 @Int8 (-129) `shouldSatisfy` isLeft
+
+    describe "Cast Int16 Int32" $ do
+      test $ cast @Int16 @Int32 0 `shouldBe` 0
+      test $ cast @Int16 @Int32 32767 `shouldBe` 32767
+      test $ cast @Int16 @Int32 (-32768) `shouldBe` (-32768)
+
+    describe "Cast Int16 Int64" $ do
+      test $ cast @Int16 @Int64 0 `shouldBe` 0
+      test $ cast @Int16 @Int64 32767 `shouldBe` 32767
+      test $ cast @Int16 @Int64 (-32768) `shouldBe` (-32768)
+
+    describe "Cast Int16 Int" $ do
+      test $ cast @Int16 @Int 0 `shouldBe` 0
+      test $ cast @Int16 @Int 32767 `shouldBe` 32767
+      test $ cast @Int16 @Int (-32768) `shouldBe` (-32768)
+
+    describe "Cast Int16 Integer" $ do
+      test $ cast @Int16 @Integer 0 `shouldBe` 0
+      test $ cast @Int16 @Integer 32767 `shouldBe` 32767
+      test $ cast @Int16 @Integer (-32768) `shouldBe` (-32768)
+
+    describe "TryCast Int16 Word8" $ do
+      test $ tryCast @Int16 @Word8 0 `shouldBe` Right 0
+      test $ tryCast @Int16 @Word8 255 `shouldBe` Right 255
+      test $ tryCast @Int16 @Word8 256 `shouldSatisfy` isLeft
+      test $ tryCast @Int16 @Word8 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int16 Word16" $ do
+      test $ tryCast @Int16 @Word16 0 `shouldBe` Right 0
+      test $ tryCast @Int16 @Word16 127 `shouldBe` Right 127
+      test $ tryCast @Int16 @Word16 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int16 Word32" $ do
+      test $ tryCast @Int16 @Word32 0 `shouldBe` Right 0
+      test $ tryCast @Int16 @Word32 32767 `shouldBe` Right 32767
+      test $ tryCast @Int16 @Word32 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int16 Word64" $ do
+      test $ tryCast @Int16 @Word64 0 `shouldBe` Right 0
+      test $ tryCast @Int16 @Word64 32767 `shouldBe` Right 32767
+      test $ tryCast @Int16 @Word64 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int16 Word" $ do
+      test $ tryCast @Int16 @Word 0 `shouldBe` Right 0
+      test $ tryCast @Int16 @Word 32767 `shouldBe` Right 32767
+      test $ tryCast @Int16 @Word (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int16 Natural" $ do
+      test $ tryCast @Int16 @Natural 0 `shouldBe` Right 0
+      test $ tryCast @Int16 @Natural 32767 `shouldBe` Right 32767
+      test $ tryCast @Int16 @Natural (-1) `shouldSatisfy` isLeft
+
+    describe "Cast Int16 Float" $ do
+      test $ cast @Int16 @Float 0 `shouldBe` 0
+      test $ cast @Int16 @Float 32767 `shouldBe` 32767
+      test $ cast @Int16 @Float (-32768) `shouldBe` (-32768)
+
+    describe "Cast Int16 Double" $ do
+      test $ cast @Int16 @Double 0 `shouldBe` 0
+      test $ cast @Int16 @Double 32767 `shouldBe` 32767
+      test $ cast @Int16 @Double (-32768) `shouldBe` (-32768)
+
+    -- Int32
+
+    describe "TryCast Int32 Int8" $ do
+      test $ tryCast @Int32 @Int8 0 `shouldBe` Right 0
+      test $ tryCast @Int32 @Int8 127 `shouldBe` Right 127
+      test $ tryCast @Int32 @Int8 128 `shouldSatisfy` isLeft
+      test $ tryCast @Int32 @Int8 (-128) `shouldBe` Right (-128)
+      test $ tryCast @Int32 @Int8 (-129) `shouldSatisfy` isLeft
+
+    describe "TryCast Int32 Int16" $ do
+      test $ tryCast @Int32 @Int16 0 `shouldBe` Right 0
+      test $ tryCast @Int32 @Int16 32767 `shouldBe` Right 32767
+      test $ tryCast @Int32 @Int16 32768 `shouldSatisfy` isLeft
+      test $ tryCast @Int32 @Int16 (-32768) `shouldBe` Right (-32768)
+      test $ tryCast @Int32 @Int16 (-32769) `shouldSatisfy` isLeft
+
+    describe "Cast Int32 Int64" $ do
+      test $ cast @Int32 @Int64 0 `shouldBe` 0
+      test $ cast @Int32 @Int64 2147483647 `shouldBe` 2147483647
+      test $ cast @Int32 @Int64 (-2147483648) `shouldBe` (-2147483648)
+
+    describe "TryCast Int32 Int" $ do
+      when (toInteger (maxBound :: Int) < 2147483647) untested
+      test $ tryCast @Int32 @Int 0 `shouldBe` Right 0
+      test $ tryCast @Int32 @Int 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Int32 @Int (-2147483648) `shouldBe` Right (-2147483648)
+
+    describe "Cast Int32 Integer" $ do
+      test $ cast @Int32 @Integer 0 `shouldBe` 0
+      test $ cast @Int32 @Integer 2147483647 `shouldBe` 2147483647
+      test $ cast @Int32 @Integer (-2147483648) `shouldBe` (-2147483648)
+
+    describe "TryCast Int32 Word8" $ do
+      test $ tryCast @Int32 @Word8 0 `shouldBe` Right 0
+      test $ tryCast @Int32 @Word8 255 `shouldBe` Right 255
+      test $ tryCast @Int32 @Word8 256 `shouldSatisfy` isLeft
+      test $ tryCast @Int32 @Word8 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int32 Word16" $ do
+      test $ tryCast @Int32 @Word16 0 `shouldBe` Right 0
+      test $ tryCast @Int32 @Word16 65535 `shouldBe` Right 65535
+      test $ tryCast @Int32 @Word16 65536 `shouldSatisfy` isLeft
+      test $ tryCast @Int32 @Word16 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int32 Word32" $ do
+      test $ tryCast @Int32 @Word32 0 `shouldBe` Right 0
+      test $ tryCast @Int32 @Word32 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Int32 @Word32 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int32 Word64" $ do
+      test $ tryCast @Int32 @Word64 0 `shouldBe` Right 0
+      test $ tryCast @Int32 @Word64 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Int32 @Word64 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int32 Word" $ do
+      when (toInteger (maxBound :: Word) < 2147483647) untested
+      test $ tryCast @Int32 @Word 0 `shouldBe` Right 0
+      test $ tryCast @Int32 @Word 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Int32 @Word (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int32 Natural" $ do
+      test $ tryCast @Int32 @Natural 0 `shouldBe` Right 0
+      test $ tryCast @Int32 @Natural 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Int32 @Natural (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int32 Float" $ do
+      test $ tryCast @Int32 @Float 0 `shouldBe` Right 0
+      test $ tryCast @Int32 @Float 16777216 `shouldBe` Right 16777216
+      test $ tryCast @Int32 @Float 16777217 `shouldSatisfy` isLeft
+      test $ tryCast @Int32 @Float (-16777216) `shouldBe` Right (-16777216)
+      test $ tryCast @Int32 @Float (-16777217) `shouldSatisfy` isLeft
+
+    describe "Cast Int32 Double" $ do
+      test $ cast @Int32 @Double 0 `shouldBe` 0
+      test $ cast @Int32 @Double 2147483647 `shouldBe` 2147483647
+      test $ cast @Int32 @Double (-2147483648) `shouldBe` (-2147483648)
+
+    -- Int64
+
+    describe "TryCast Int64 Int8" $ do
+      test $ tryCast @Int64 @Int8 0 `shouldBe` Right 0
+      test $ tryCast @Int64 @Int8 127 `shouldBe` Right 127
+      test $ tryCast @Int64 @Int8 128 `shouldSatisfy` isLeft
+      test $ tryCast @Int64 @Int8 (-128) `shouldBe` Right (-128)
+      test $ tryCast @Int64 @Int8 (-129) `shouldSatisfy` isLeft
+
+    describe "TryCast Int64 Int16" $ do
+      test $ tryCast @Int64 @Int16 0 `shouldBe` Right 0
+      test $ tryCast @Int64 @Int16 32767 `shouldBe` Right 32767
+      test $ tryCast @Int64 @Int16 32768 `shouldSatisfy` isLeft
+      test $ tryCast @Int64 @Int16 (-32768) `shouldBe` Right (-32768)
+      test $ tryCast @Int64 @Int16 (-32769) `shouldSatisfy` isLeft
+
+    describe "TryCast Int64 Int32" $ do
+      test $ tryCast @Int64 @Int32 0 `shouldBe` Right 0
+      test $ tryCast @Int64 @Int32 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Int64 @Int32 2147483648 `shouldSatisfy` isLeft
+      test $ tryCast @Int64 @Int32 (-2147483648) `shouldBe` Right (-2147483648)
+      test $ tryCast @Int64 @Int32 (-2147483649) `shouldSatisfy` isLeft
+
+    describe "TryCast Int64 Int" $ do
+      when (toInteger (maxBound :: Int) < 9223372036854775807) untested
+      test $ tryCast @Int64 @Int 0 `shouldBe` Right 0
+      test $ tryCast @Int64 @Int 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ tryCast @Int64 @Int (-9223372036854775808) `shouldBe` Right (-9223372036854775808)
+
+    describe "Cast Int64 Integer" $ do
+      test $ cast @Int64 @Integer 0 `shouldBe` 0
+      test $ cast @Int64 @Integer 9223372036854775807 `shouldBe` 9223372036854775807
+      test $ cast @Int64 @Integer (-9223372036854775808) `shouldBe` (-9223372036854775808)
+
+    describe "TryCast Int64 Word8" $ do
+      test $ tryCast @Int64 @Word8 0 `shouldBe` Right 0
+      test $ tryCast @Int64 @Word8 255 `shouldBe` Right 255
+      test $ tryCast @Int64 @Word8 256 `shouldSatisfy` isLeft
+      test $ tryCast @Int64 @Word8 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int64 Word16" $ do
+      test $ tryCast @Int64 @Word16 0 `shouldBe` Right 0
+      test $ tryCast @Int64 @Word16 65535 `shouldBe` Right 65535
+      test $ tryCast @Int64 @Word16 65536 `shouldSatisfy` isLeft
+      test $ tryCast @Int64 @Word16 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int64 Word32" $ do
+      test $ tryCast @Int64 @Word32 0 `shouldBe` Right 0
+      test $ tryCast @Int64 @Word32 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Int64 @Word32 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int64 Word64" $ do
+      test $ tryCast @Int64 @Word64 0 `shouldBe` Right 0
+      test $ tryCast @Int64 @Word64 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ tryCast @Int64 @Word64 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int64 Word" $ do
+      when (toInteger (maxBound :: Word) < 9223372036854775807) untested
+      test $ tryCast @Int64 @Word 0 `shouldBe` Right 0
+      test $ tryCast @Int64 @Word 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ tryCast @Int64 @Word (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int64 Natural" $ do
+      test $ tryCast @Int64 @Natural 0 `shouldBe` Right 0
+      test $ tryCast @Int64 @Natural 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ tryCast @Int64 @Natural (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int64 Float" $ do
+      test $ tryCast @Int64 @Float 0 `shouldBe` Right 0
+      test $ tryCast @Int64 @Float 16777216 `shouldBe` Right 16777216
+      test $ tryCast @Int64 @Float 16777217 `shouldSatisfy` isLeft
+      test $ tryCast @Int64 @Float (-16777216) `shouldBe` Right (-16777216)
+      test $ tryCast @Int64 @Float (-16777217) `shouldSatisfy` isLeft
+
+    describe "TryCast Int64 Double" $ do
+      test $ tryCast @Int64 @Double 0 `shouldBe` Right 0
+      test $ tryCast @Int64 @Double 9007199254740992 `shouldBe` Right 9007199254740992
+      test $ tryCast @Int64 @Double 9007199254740993 `shouldSatisfy` isLeft
+      test $ tryCast @Int64 @Double (-9007199254740992) `shouldBe` Right (-9007199254740992)
+      test $ tryCast @Int64 @Double (-9007199254740993) `shouldSatisfy` isLeft
+
+    -- Int
+
+    describe "TryCast Int Int8" $ do
+      test $ tryCast @Int @Int8 0 `shouldBe` Right 0
+      test $ tryCast @Int @Int8 127 `shouldBe` Right 127
+      test $ tryCast @Int @Int8 128 `shouldSatisfy` isLeft
+      test $ tryCast @Int @Int8 (-128) `shouldBe` Right (-128)
+      test $ tryCast @Int @Int8 (-129) `shouldSatisfy` isLeft
+
+    describe "TryCast Int Int16" $ do
+      test $ tryCast @Int @Int16 0 `shouldBe` Right 0
+      test $ tryCast @Int @Int16 32767 `shouldBe` Right 32767
+      test $ tryCast @Int @Int16 32768 `shouldSatisfy` isLeft
+      test $ tryCast @Int @Int16 (-32768) `shouldBe` Right (-32768)
+      test $ tryCast @Int @Int16 (-32769) `shouldSatisfy` isLeft
+
+    describe "TryCast Int Int32" $ do
+      when (toInteger (maxBound :: Int) < 2147483647) untested
+      test $ tryCast @Int @Int32 0 `shouldBe` Right 0
+      test $ tryCast @Int @Int32 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Int @Int32 2147483648 `shouldSatisfy` isLeft
+      test $ tryCast @Int @Int32 (-2147483648) `shouldBe` Right (-2147483648)
+      test $ tryCast @Int @Int32 (-2147483649) `shouldSatisfy` isLeft
+
+    describe "Cast Int Int64" $ do
+      test $ cast @Int @Int64 0 `shouldBe` 0
+      test $ cast @Int @Int64 maxBound `shouldBe` fromIntegral (maxBound :: Int)
+      test $ cast @Int @Int64 minBound `shouldBe` fromIntegral (minBound :: Int)
+
+    describe "Cast Int Integer" $ do
+      test $ cast @Int @Integer 0 `shouldBe` 0
+      test $ cast @Int @Integer maxBound `shouldBe` fromIntegral (maxBound :: Int)
+      test $ cast @Int @Integer minBound `shouldBe` fromIntegral (minBound :: Int)
+
+    describe "TryCast Int Word8" $ do
+      test $ tryCast @Int @Word8 0 `shouldBe` Right 0
+      test $ tryCast @Int @Word8 255 `shouldBe` Right 255
+      test $ tryCast @Int @Word8 256 `shouldSatisfy` isLeft
+      test $ tryCast @Int @Word8 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int Word16" $ do
+      test $ tryCast @Int @Word16 0 `shouldBe` Right 0
+      test $ tryCast @Int @Word16 65535 `shouldBe` Right 65535
+      test $ tryCast @Int @Word16 65536 `shouldSatisfy` isLeft
+      test $ tryCast @Int @Word16 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int Word32" $ do
+      when (toInteger (maxBound :: Int) < 4294967295) untested
+      test $ tryCast @Int @Word32 0 `shouldBe` Right 0
+      test $ tryCast @Int @Word32 4294967295 `shouldBe` Right 4294967295
+      test $ tryCast @Int @Word32 4294967296 `shouldSatisfy` isLeft
+      test $ tryCast @Int @Word32 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int Word64" $ do
+      test $ tryCast @Int @Word64 0 `shouldBe` Right 0
+      test $ tryCast @Int @Word64 maxBound `shouldBe` Right (fromIntegral (maxBound :: Int))
+      test $ tryCast @Int @Word64 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int Word" $ do
+      test $ tryCast @Int @Word 0 `shouldBe` Right 0
+      test $ tryCast @Int @Word maxBound `shouldBe` Right (fromIntegral (maxBound :: Int))
+      test $ tryCast @Int @Word (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int Natural" $ do
+      test $ tryCast @Int @Natural 0 `shouldBe` Right 0
+      test $ tryCast @Int @Natural maxBound `shouldBe` Right (fromIntegral (maxBound :: Int))
+      test $ tryCast @Int @Natural (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Int Float" $ do
+      test $ tryCast @Int @Float 0 `shouldBe` Right 0
+      test $ tryCast @Int @Float 16777216 `shouldBe` Right 16777216
+      test $ tryCast @Int @Float 16777217 `shouldSatisfy` isLeft
+      test $ tryCast @Int @Float (-16777216) `shouldBe` Right (-16777216)
+      test $ tryCast @Int @Float (-16777217) `shouldSatisfy` isLeft
+
+    describe "TryCast Int Double" $ do
+      when (toInteger (maxBound :: Int) <= 9007199254740992) untested
+      test $ tryCast @Int @Double 0 `shouldBe` Right 0
+      test $ tryCast @Int @Double 9007199254740992 `shouldBe` Right 9007199254740992
+      test $ tryCast @Int @Double 9007199254740993 `shouldSatisfy` isLeft
+      test $ tryCast @Int @Double (-9007199254740992) `shouldBe` Right (-9007199254740992)
+      test $ tryCast @Int @Double (-9007199254740993) `shouldSatisfy` isLeft
+
+    -- Integer
+
+    describe "TryCast Integer Int8" $ do
+      test $ tryCast @Integer @Int8 0 `shouldBe` Right 0
+      test $ tryCast @Integer @Int8 127 `shouldBe` Right 127
+      test $ tryCast @Integer @Int8 128 `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Int8 (-128) `shouldBe` Right (-128)
+      test $ tryCast @Integer @Int8 (-129) `shouldSatisfy` isLeft
+
+    describe "TryCast Integer Int16" $ do
+      test $ tryCast @Integer @Int16 0 `shouldBe` Right 0
+      test $ tryCast @Integer @Int16 32767 `shouldBe` Right 32767
+      test $ tryCast @Integer @Int16 32768 `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Int16 (-32768) `shouldBe` Right (-32768)
+      test $ tryCast @Integer @Int16 (-32769) `shouldSatisfy` isLeft
+
+    describe "TryCast Integer Int32" $ do
+      test $ tryCast @Integer @Int32 0 `shouldBe` Right 0
+      test $ tryCast @Integer @Int32 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Integer @Int32 2147483648 `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Int32 (-2147483648) `shouldBe` Right (-2147483648)
+      test $ tryCast @Integer @Int32 (-2147483649) `shouldSatisfy` isLeft
+
+    describe "TryCast Integer Int64" $ do
+      test $ tryCast @Integer @Int64 0 `shouldBe` Right 0
+      test $ tryCast @Integer @Int64 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ tryCast @Integer @Int64 9223372036854775808 `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Int64 (-9223372036854775808) `shouldBe` Right (-9223372036854775808)
+      test $ tryCast @Integer @Int64 (-9223372036854775809) `shouldSatisfy` isLeft
+
+    describe "TryCast Integer Int" $ do
+      test $ tryCast @Integer @Int 0 `shouldBe` Right 0
+      test $ do
+        let x = maxBound :: Int
+        tryCast @Integer @Int (fromIntegral x) `shouldBe` Right x
+      test $ do
+        let x = toInteger (maxBound :: Int) + 1
+        tryCast @Integer @Int x `shouldSatisfy` isLeft
+      test $ do
+        let x = minBound :: Int
+        tryCast @Integer @Int (fromIntegral x) `shouldBe` Right x
+      test $ do
+        let x = toInteger (minBound :: Int) - 1
+        tryCast @Integer @Int x `shouldSatisfy` isLeft
+
+    describe "TryCast Integer Word8" $ do
+      test $ tryCast @Integer @Word8 0 `shouldBe` Right 0
+      test $ tryCast @Integer @Word8 255 `shouldBe` Right 255
+      test $ tryCast @Integer @Word8 256 `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Word8 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Integer Word16" $ do
+      test $ tryCast @Integer @Word16 0 `shouldBe` Right 0
+      test $ tryCast @Integer @Word16 65535 `shouldBe` Right 65535
+      test $ tryCast @Integer @Word16 65536 `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Word16 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Integer Word32" $ do
+      test $ tryCast @Integer @Word32 0 `shouldBe` Right 0
+      test $ tryCast @Integer @Word32 4294967295 `shouldBe` Right 4294967295
+      test $ tryCast @Integer @Word32 4294967296 `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Word32 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Integer Word64" $ do
+      test $ tryCast @Integer @Word64 0 `shouldBe` Right 0
+      test $ tryCast @Integer @Word64 18446744073709551615 `shouldBe` Right 18446744073709551615
+      test $ tryCast @Integer @Word64 18446744073709551616 `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Word64 (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Integer Word" $ do
+      test $ tryCast @Integer @Word 0 `shouldBe` Right 0
+      test $ do
+        let x = maxBound :: Word
+        tryCast @Integer @Word (fromIntegral x) `shouldBe` Right x
+      test $ do
+        let x = toInteger (maxBound :: Word) + 1
+        tryCast @Integer @Word x `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Word (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Integer Natural" $ do
+      test $ tryCast @Integer @Natural 0 `shouldBe` Right 0
+      test $ tryCast @Integer @Natural 18446744073709551616 `shouldBe` Right 18446744073709551616
+      test $ tryCast @Integer @Natural (-1) `shouldSatisfy` isLeft
+
+    describe "TryCast Integer Float" $ do
+      test $ tryCast @Integer @Float 0 `shouldBe` Right 0
+      test $ tryCast @Integer @Float 16777216 `shouldBe` Right 16777216
+      test $ tryCast @Integer @Float 16777217 `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Float (-16777216) `shouldBe` Right (-16777216)
+      test $ tryCast @Integer @Float (-16777217) `shouldSatisfy` isLeft
+
+    describe "TryCast Integer Double" $ do
+      test $ tryCast @Integer @Double 0 `shouldBe` Right 0
+      test $ tryCast @Integer @Double 9007199254740992 `shouldBe` Right 9007199254740992
+      test $ tryCast @Integer @Double 9007199254740993 `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Double (-9007199254740992) `shouldBe` Right (-9007199254740992)
+      test $ tryCast @Integer @Double (-9007199254740993) `shouldSatisfy` isLeft
+
+    -- Word8
+
+    describe "Cast Word8 Word16" $ do
+      test $ cast @Word8 @Word16 0 `shouldBe` 0
+      test $ cast @Word8 @Word16 255 `shouldBe` 255
+
+    describe "Cast Word8 Word32" $ do
+      test $ cast @Word8 @Word32 0 `shouldBe` 0
+      test $ cast @Word8 @Word32 255 `shouldBe` 255
+
+    describe "Cast Word8 Word64" $ do
+      test $ cast @Word8 @Word64 0 `shouldBe` 0
+      test $ cast @Word8 @Word64 255 `shouldBe` 255
+
+    describe "Cast Word8 Word" $ do
+      test $ cast @Word8 @Word 0 `shouldBe` 0
+      test $ cast @Word8 @Word 255 `shouldBe` 255
+
+    describe "Cast Word8 Natural" $ do
+      test $ cast @Word8 @Natural 0 `shouldBe` 0
+      test $ cast @Word8 @Natural 255 `shouldBe` 255
+
+    describe "TryCast Word8 Int8" $ do
+      test $ tryCast @Word8 @Int8 0 `shouldBe` Right 0
+      test $ tryCast @Word8 @Int8 127 `shouldBe` Right 127
+      test $ tryCast @Word8 @Int8 128 `shouldSatisfy` isLeft
+
+    describe "Cast Word8 Int16" $ do
+      test $ cast @Word8 @Int16 0 `shouldBe` 0
+      test $ cast @Word8 @Int16 255 `shouldBe` 255
+
+    describe "Cast Word8 Int32" $ do
+      test $ cast @Word8 @Int32 0 `shouldBe` 0
+      test $ cast @Word8 @Int32 255 `shouldBe` 255
+
+    describe "Cast Word8 Int64" $ do
+      test $ cast @Word8 @Int64 0 `shouldBe` 0
+      test $ cast @Word8 @Int64 255 `shouldBe` 255
+
+    describe "Cast Word8 Int" $ do
+      test $ cast @Word8 @Int 0 `shouldBe` 0
+      test $ cast @Word8 @Int 255 `shouldBe` 255
+
+    describe "Cast Word8 Integer" $ do
+      test $ cast @Word8 @Integer 0 `shouldBe` 0
+      test $ cast @Word8 @Integer 255 `shouldBe` 255
+
+    describe "Cast Word8 Float" $ do
+      test $ cast @Word8 @Float 0 `shouldBe` 0
+      test $ cast @Word8 @Float 255 `shouldBe` 255
+
+    describe "Cast Word8 Double" $ do
+      test $ cast @Word8 @Double 0 `shouldBe` 0
+      test $ cast @Word8 @Double 255 `shouldBe` 255
+
+    -- Word16
+
+    describe "TryCast Word16 Word8" $ do
+      test $ tryCast @Word16 @Word8 0 `shouldBe` Right 0
+      test $ tryCast @Word16 @Word8 255 `shouldBe` Right 255
+      test $ tryCast @Word16 @Word8 256 `shouldSatisfy` isLeft
+
+    describe "Cast Word16 Word32" $ do
+      test $ cast @Word16 @Word32 0 `shouldBe` 0
+      test $ cast @Word16 @Word32 65535 `shouldBe` 65535
+
+    describe "Cast Word16 Word64" $ do
+      test $ cast @Word16 @Word64 0 `shouldBe` 0
+      test $ cast @Word16 @Word64 65535 `shouldBe` 65535
+
+    describe "Cast Word16 Word" $ do
+      test $ cast @Word16 @Word 0 `shouldBe` 0
+      test $ cast @Word16 @Word 65535 `shouldBe` 65535
+
+    describe "Cast Word16 Natural" $ do
+      test $ cast @Word16 @Natural 0 `shouldBe` 0
+      test $ cast @Word16 @Natural 65535 `shouldBe` 65535
+
+    describe "TryCast Word16 Int8" $ do
+      test $ tryCast @Word16 @Int8 0 `shouldBe` Right 0
+      test $ tryCast @Word16 @Int8 127 `shouldBe` Right 127
+      test $ tryCast @Word16 @Int8 128 `shouldSatisfy` isLeft
+
+    describe "TryCast Word16 Int16" $ do
+      test $ tryCast @Word16 @Int16 0 `shouldBe` Right 0
+      test $ tryCast @Word16 @Int16 32767 `shouldBe` Right 32767
+      test $ tryCast @Word16 @Int16 32768 `shouldSatisfy` isLeft
+
+    describe "Cast Word16 Int32" $ do
+      test $ cast @Word16 @Int32 0 `shouldBe` 0
+      test $ cast @Word16 @Int32 65535 `shouldBe` 65535
+
+    describe "Cast Word16 Int64" $ do
+      test $ cast @Word16 @Int64 0 `shouldBe` 0
+      test $ cast @Word16 @Int64 65535 `shouldBe` 65535
+
+    describe "Cast Word16 Int" $ do
+      test $ cast @Word16 @Int 0 `shouldBe` 0
+      test $ cast @Word16 @Int 65535 `shouldBe` 65535
+
+    describe "Cast Word16 Integer" $ do
+      test $ cast @Word16 @Integer 0 `shouldBe` 0
+      test $ cast @Word16 @Integer 65535 `shouldBe` 65535
+
+    describe "Cast Word16 Float" $ do
+      test $ cast @Word16 @Float 0 `shouldBe` 0
+      test $ cast @Word16 @Float 65535 `shouldBe` 65535
+
+    describe "Cast Word16 Double" $ do
+      test $ cast @Word16 @Double 0 `shouldBe` 0
+      test $ cast @Word16 @Double 65535 `shouldBe` 65535
+
+    -- Word32
+
+    describe "TryCast Word32 Word8" $ do
+      test $ tryCast @Word32 @Word8 0 `shouldBe` Right 0
+      test $ tryCast @Word32 @Word8 255 `shouldBe` Right 255
+      test $ tryCast @Word32 @Word8 256 `shouldSatisfy` isLeft
+
+    describe "TryCast Word32 Word16" $ do
+      test $ tryCast @Word32 @Word16 0 `shouldBe` Right 0
+      test $ tryCast @Word32 @Word16 65535 `shouldBe` Right 65535
+      test $ tryCast @Word32 @Word16 65536 `shouldSatisfy` isLeft
+
+    describe "Cast Word32 Word64" $ do
+      test $ cast @Word32 @Word64 0 `shouldBe` 0
+      test $ cast @Word32 @Word64 4294967295 `shouldBe` 4294967295
+
+    describe "TryCast Word32 Word" $ do
+      when (toInteger (maxBound :: Word) < 4294967295) untested
+      test $ tryCast @Word32 @Word 0 `shouldBe` Right 0
+      test $ tryCast @Word32 @Word 4294967295 `shouldBe` Right 4294967295
+
+    describe "Cast Word32 Natural" $ do
+      test $ cast @Word32 @Natural 0 `shouldBe` 0
+      test $ cast @Word32 @Natural 4294967295 `shouldBe` 4294967295
+
+    describe "TryCast Word32 Int8" $ do
+      test $ tryCast @Word32 @Int8 0 `shouldBe` Right 0
+      test $ tryCast @Word32 @Int8 127 `shouldBe` Right 127
+      test $ tryCast @Word32 @Int8 128 `shouldSatisfy` isLeft
+
+    describe "TryCast Word32 Int16" $ do
+      test $ tryCast @Word32 @Int16 0 `shouldBe` Right 0
+      test $ tryCast @Word32 @Int16 32767 `shouldBe` Right 32767
+      test $ tryCast @Word32 @Int16 32768 `shouldSatisfy` isLeft
+
+    describe "TryCast Word32 Int32" $ do
+      test $ tryCast @Word32 @Int32 0 `shouldBe` Right 0
+      test $ tryCast @Word32 @Int32 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Word32 @Int32 2147483648 `shouldSatisfy` isLeft
+
+    describe "Cast Word32 Int64" $ do
+      test $ cast @Word32 @Int64 0 `shouldBe` 0
+      test $ cast @Word32 @Int64 4294967295 `shouldBe` 4294967295
+
+    describe "TryCast Word32 Int" $ do
+      when (toInteger (maxBound :: Int) < 4294967295) untested
+      test $ tryCast @Word32 @Int 0 `shouldBe` Right 0
+      test $ tryCast @Word32 @Int 4294967295 `shouldBe` Right 4294967295
+
+    describe "Cast Word32 Integer" $ do
+      test $ cast @Word32 @Integer 0 `shouldBe` 0
+      test $ cast @Word32 @Integer 4294967295 `shouldBe` 4294967295
+
+    describe "TryCast Word32 Float" $ do
+      test $ tryCast @Word32 @Float 0 `shouldBe` Right 0
+      test $ tryCast @Word32 @Float 16777216 `shouldBe` Right 16777216
+      test $ tryCast @Word32 @Float 16777217 `shouldSatisfy` isLeft
+
+    describe "Cast Word32 Double" $ do
+      test $ cast @Word32 @Double 0 `shouldBe` 0
+      test $ cast @Word32 @Double 4294967295 `shouldBe` 4294967295
+
+    -- Word64
+
+    describe "TryCast Word64 Word8" $ do
+      test $ tryCast @Word64 @Word8 0 `shouldBe` Right 0
+      test $ tryCast @Word64 @Word8 255 `shouldBe` Right 255
+      test $ tryCast @Word64 @Word8 256 `shouldSatisfy` isLeft
+
+    describe "TryCast Word64 Word16" $ do
+      test $ tryCast @Word64 @Word16 0 `shouldBe` Right 0
+      test $ tryCast @Word64 @Word16 65535 `shouldBe` Right 65535
+      test $ tryCast @Word64 @Word16 65536 `shouldSatisfy` isLeft
+
+    describe "TryCast Word64 Word32" $ do
+      test $ tryCast @Word64 @Word32 0 `shouldBe` Right 0
+      test $ tryCast @Word64 @Word32 4294967295 `shouldBe` Right 4294967295
+      test $ tryCast @Word64 @Word32 4294967296 `shouldSatisfy` isLeft
+
+    describe "TryCast Word64 Word" $ do
+      when (toInteger (maxBound :: Word) < 18446744073709551615) untested
+      test $ tryCast @Word64 @Word 0 `shouldBe` Right 0
+      test $ tryCast @Word64 @Word 18446744073709551615 `shouldBe` Right 18446744073709551615
+
+    describe "Cast Word64 Natural" $ do
+      test $ cast @Word64 @Natural 0 `shouldBe` 0
+      test $ cast @Word64 @Natural 18446744073709551615 `shouldBe` 18446744073709551615
+
+    describe "TryCast Word64 Int8" $ do
+      test $ tryCast @Word64 @Int8 0 `shouldBe` Right 0
+      test $ tryCast @Word64 @Int8 127 `shouldBe` Right 127
+      test $ tryCast @Word64 @Int8 128 `shouldSatisfy` isLeft
+
+    describe "TryCast Word64 Int16" $ do
+      test $ tryCast @Word64 @Int16 0 `shouldBe` Right 0
+      test $ tryCast @Word64 @Int16 32767 `shouldBe` Right 32767
+      test $ tryCast @Word64 @Int16 32768 `shouldSatisfy` isLeft
+
+    describe "TryCast Word64 Int32" $ do
+      test $ tryCast @Word64 @Int32 0 `shouldBe` Right 0
+      test $ tryCast @Word64 @Int32 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Word64 @Int32 2147483648 `shouldSatisfy` isLeft
+
+    describe "TryCast Word64 Int64" $ do
+      test $ tryCast @Word64 @Int64 0 `shouldBe` Right 0
+      test $ tryCast @Word64 @Int64 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ tryCast @Word64 @Int32 9223372036854775808 `shouldSatisfy` isLeft
+
+    describe "TryCast Word64 Int" $ do
+      test $ tryCast @Word64 @Int 0 `shouldBe` Right 0
+      test $ do
+        let x = maxBound :: Int
+        tryCast @Word64 @Int (fromIntegral x) `shouldBe` Right x
+      test $ do
+        let x = fromIntegral (maxBound :: Int) + 1 :: Word64
+        tryCast @Word64 @Int x `shouldSatisfy` isLeft
+
+    describe "Cast Word64 Integer" $ do
+      test $ cast @Word64 @Integer 0 `shouldBe` 0
+      test $ cast @Word64 @Integer 18446744073709551615 `shouldBe` 18446744073709551615
+
+    describe "TryCast Word64 Float" $ do
+      test $ tryCast @Word64 @Float 0 `shouldBe` Right 0
+      test $ tryCast @Word64 @Float 16777216 `shouldBe` Right 16777216
+      test $ tryCast @Word64 @Float 16777217 `shouldSatisfy` isLeft
+
+    describe "TryCast Word64 Double" $ do
+      test $ tryCast @Word64 @Double 0 `shouldBe` Right 0
+      test $ tryCast @Word64 @Double 9007199254740992 `shouldBe` Right 9007199254740992
+      test $ tryCast @Word64 @Double 9007199254740993 `shouldSatisfy` isLeft
+
+    -- Word
+
+    describe "TryCast Word Word8" $ do
+      test $ tryCast @Word @Word8 0 `shouldBe` Right 0
+      test $ tryCast @Word @Word8 255 `shouldBe` Right 255
+      test $ tryCast @Word @Word8 256 `shouldSatisfy` isLeft
+
+    describe "TryCast Word Word16" $ do
+      test $ tryCast @Word @Word16 0 `shouldBe` Right 0
+      test $ tryCast @Word @Word16 65535 `shouldBe` Right 65535
+      test $ tryCast @Word @Word16 65536 `shouldSatisfy` isLeft
+
+    describe "TryCast Word Word32" $ do
+      when (toInteger (maxBound :: Word) < 4294967295) untested
+      test $ tryCast @Word @Word32 0 `shouldBe` Right 0
+      test $ tryCast @Word @Word32 4294967295 `shouldBe` Right 4294967295
+      test $ tryCast @Word @Word32 4294967296 `shouldSatisfy` isLeft
+
+    describe "Cast Word Word64" $ do
+      test $ cast @Word @Word64 0 `shouldBe` 0
+      test $ cast @Word @Word64 maxBound `shouldBe` fromIntegral (maxBound :: Word)
+
+    describe "Cast Word Natural" $ do
+      test $ cast @Word @Natural 0 `shouldBe` 0
+      test $ cast @Word @Natural maxBound `shouldBe` fromIntegral (maxBound :: Word)
+
+    describe "TryCast Word Int8" $ do
+      test $ tryCast @Word @Int8 0 `shouldBe` Right 0
+      test $ tryCast @Word @Int8 127 `shouldBe` Right 127
+      test $ tryCast @Word @Int8 128 `shouldSatisfy` isLeft
+
+    describe "TryCast Word Int16" $ do
+      test $ tryCast @Word @Int16 0 `shouldBe` Right 0
+      test $ tryCast @Word @Int16 32767 `shouldBe` Right 32767
+      test $ tryCast @Word @Int16 32768 `shouldSatisfy` isLeft
+
+    describe "TryCast Word Int32" $ do
+      when (toInteger (maxBound :: Word) < 2147483647) untested
+      test $ tryCast @Word @Int32 0 `shouldBe` Right 0
+      test $ tryCast @Word @Int32 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Word @Int32 2147483648 `shouldSatisfy` isLeft
+
+    describe "TryCast Word Int64" $ do
+      when (toInteger (maxBound :: Word) < 9223372036854775807) untested
+      test $ tryCast @Word @Int64 0 `shouldBe` Right 0
+      test $ tryCast @Word @Int64 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ tryCast @Word @Int32 9223372036854775808 `shouldSatisfy` isLeft
+
+    describe "TryCast Word Int" $ do
+      test $ tryCast @Word @Int 0 `shouldBe` Right 0
+      test $ do
+        let x = maxBound :: Int
+        tryCast @Word @Int (fromIntegral x) `shouldBe` Right x
+      test $ do
+        let x = fromIntegral (maxBound :: Int) + 1 :: Word
+        tryCast @Word @Int x `shouldSatisfy` isLeft
+
+    describe "Cast Word Integer" $ do
+      test $ cast @Word @Integer 0 `shouldBe` 0
+      test $ cast @Word @Integer maxBound `shouldBe` fromIntegral (maxBound :: Word)
+
+    describe "TryCast Word Float" $ do
+      test $ tryCast @Word @Float 0 `shouldBe` Right 0
+      test $ tryCast @Word @Float 16777216 `shouldBe` Right 16777216
+      test $ tryCast @Word @Float 16777217 `shouldSatisfy` isLeft
+
+    describe "TryCast Word Double" $ do
+      when (toInteger (maxBound :: Word) <= 9007199254740992) untested
+      test $ tryCast @Word @Double 0 `shouldBe` Right 0
+      test $ tryCast @Word @Double 9007199254740992 `shouldBe` Right 9007199254740992
+      test $ tryCast @Word @Double 9007199254740993 `shouldSatisfy` isLeft
+
+    -- Natural
+
+    describe "TryCast Natural Word8" $ do
+      test $ tryCast @Natural @Word8 0 `shouldBe` Right 0
+      test $ tryCast @Natural @Word8 255 `shouldBe` Right 255
+      test $ tryCast @Natural @Word8 256 `shouldSatisfy` isLeft
+
+    describe "TryCast Natural Word16" $ do
+      test $ tryCast @Natural @Word16 0 `shouldBe` Right 0
+      test $ tryCast @Natural @Word16 65535 `shouldBe` Right 65535
+      test $ tryCast @Natural @Word16 65536 `shouldSatisfy` isLeft
+
+    describe "TryCast Natural Word32" $ do
+      test $ tryCast @Natural @Word32 0 `shouldBe` Right 0
+      test $ tryCast @Natural @Word32 4294967295 `shouldBe` Right 4294967295
+      test $ tryCast @Natural @Word32 4294967296 `shouldSatisfy` isLeft
+
+    describe "TryCast Natural Word64" $ do
+      test $ tryCast @Natural @Word64 0 `shouldBe` Right 0
+      test $ tryCast @Natural @Word64 18446744073709551615 `shouldBe` Right 18446744073709551615
+      test $ tryCast @Natural @Word64 18446744073709551616 `shouldSatisfy` isLeft
+
+    describe "TryCast Natural Word" $ do
+      test $ tryCast @Natural @Word 0 `shouldBe` Right 0
+      test $ do
+        let x = maxBound :: Word
+        tryCast @Natural @Word (fromIntegral x) `shouldBe` Right x
+      test $ do
+        let x = fromIntegral (maxBound :: Word) + 1 :: Natural
+        tryCast @Natural @Word x `shouldSatisfy` isLeft
+
+    describe "TryCast Natural Int8" $ do
+      test $ tryCast @Natural @Int8 0 `shouldBe` Right 0
+      test $ tryCast @Natural @Int8 127 `shouldBe` Right 127
+      test $ tryCast @Natural @Int8 128 `shouldSatisfy` isLeft
+
+    describe "TryCast Natural Int16" $ do
+      test $ tryCast @Natural @Int16 0 `shouldBe` Right 0
+      test $ tryCast @Natural @Int16 32767 `shouldBe` Right 32767
+      test $ tryCast @Natural @Int16 32768 `shouldSatisfy` isLeft
+
+    describe "TryCast Natural Int32" $ do
+      test $ tryCast @Natural @Int32 0 `shouldBe` Right 0
+      test $ tryCast @Natural @Int32 2147483647 `shouldBe` Right 2147483647
+      test $ tryCast @Natural @Int32 2147483648 `shouldSatisfy` isLeft
+
+    describe "TryCast Natural Int64" $ do
+      test $ tryCast @Natural @Int64 0 `shouldBe` Right 0
+      test $ tryCast @Natural @Int64 9223372036854775807 `shouldBe` Right 9223372036854775807
+      test $ tryCast @Natural @Int32 9223372036854775808 `shouldSatisfy` isLeft
+
+    describe "TryCast Natural Int" $ do
+      test $ tryCast @Natural @Int 0 `shouldBe` Right 0
+      test $ do
+        let x = maxBound :: Int
+        tryCast @Natural @Int (fromIntegral x) `shouldBe` Right x
+      test $ do
+        let x = fromIntegral (maxBound :: Int) + 1 :: Natural
+        tryCast @Natural @Int x `shouldSatisfy` isLeft
+
+    describe "Cast Natural Integer" $ do
+      test $ cast @Natural @Integer 0 `shouldBe` 0
+      test $ cast @Natural @Integer 9223372036854775808 `shouldBe` 9223372036854775808
+
+    describe "TryCast Natural Float" $ do
+      test $ tryCast @Natural @Float 0 `shouldBe` Right 0
+      test $ tryCast @Natural @Float 16777216 `shouldBe` Right 16777216
+      test $ tryCast @Natural @Float 16777217 `shouldSatisfy` isLeft
+
+    describe "TryCast Natural Double" $ do
+      test $ tryCast @Natural @Double 0 `shouldBe` Right 0
+      test $ tryCast @Natural @Double 9007199254740992 `shouldBe` Right 9007199254740992
+      test $ tryCast @Natural @Double 9007199254740993 `shouldSatisfy` isLeft
+
+    -- NonEmpty
+
+    describe "TryCast [a] (NonEmpty a)" $ do
+      test $ tryCast @[Int] @(NonEmpty Int) [] `shouldSatisfy` isLeft
+      test $ tryCast @[Int] @(NonEmpty Int) [1] `shouldBe` Right (1 :| [])
+      test $ tryCast @[Int] @(NonEmpty Int) [1, 2] `shouldBe` Right (1 :| [2])
+
+    describe "Cast (NonEmpty a) [a]" $ do
+      test $ cast @(NonEmpty Int) @[Int] (1 :| []) `shouldBe` [1]
+      test $ cast @(NonEmpty Int) @[Int] (1 :| [2]) `shouldBe` [1, 2]
+
+    -- Ratio
+
+    describe "Cast a (Ratio a)" $ do
+      test $ cast @Integer @Rational 0 `shouldBe` 0
+      test $ cast @Int @(Ratio Int) 0 `shouldBe` 0
+
+    describe "TryCast (Ratio a) a" $ do
+      test $ tryCast @Rational @Integer 0 `shouldBe` Right 0
+      test $ tryCast @Rational @Integer 0.5 `shouldSatisfy` isLeft
+      test $ tryCast @(Ratio Int) @Int 0 `shouldBe` Right 0
+      test $ tryCast @(Ratio Int) @Int 0.5 `shouldSatisfy` isLeft
+
+    -- Fixed
+
+    describe "Cast Integer (Fixed a)" $ do
+      test $ cast @Integer @Uni 1 `shouldBe` 1
+      test $ cast @Integer @Deci 1 `shouldBe` 0.1
+
+    describe "Cast (Fixed a) Integer" $ do
+      test $ cast @Uni @Integer 1 `shouldBe` 1
+      test $ cast @Deci @Integer 1 `shouldBe` 10
+
+    -- Complex
+
+    describe "Cast a (Complex a)" $ do
+      test $ cast @Float @(Complex Float) 1 `shouldBe` 1
+      test $ cast @Double @(Complex Double) 1 `shouldBe` 1
+
+    describe "TryCast (Complex a) a" $ do
+      test $ tryCast @(Complex Float) @Float 1 `shouldBe` Right 1
+      test $ tryCast @(Complex Float) @Float (0 :+ 1) `shouldSatisfy` isLeft
+      test $ tryCast @(Complex Double) @Double 1 `shouldBe` Right 1
+      test $ tryCast @(Complex Double) @Double (0 :+ 1) `shouldSatisfy` isLeft
+
+test :: Example a => a -> SpecWith (Arg a)
+test = it ""
+
+untested :: SpecWith a
+untested = runIO $ throwIO Untested
+
+data Untested
+  = Untested
+  deriving (Eq, Show)
+
+instance Exception Untested
 
 newtype Name
   = Name String
