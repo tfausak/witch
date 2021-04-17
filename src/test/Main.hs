@@ -103,6 +103,16 @@ tests =
     , tryCast @Int8 @Natural 127 ~?= Right 127
     , tryCast @Int8 @Natural (-1) ~?& isLeft
     ]
+  , "Cast Int8 Float" ~:
+    [ cast @Int8 @Float 0 ~?= 0
+    , cast @Int8 @Float 127 ~?= 127
+    , cast @Int8 @Float (-128) ~?= (-128)
+    ]
+  , "Cast Int8 Double" ~:
+    [ cast @Int8 @Double 0 ~?= 0
+    , cast @Int8 @Double 127 ~?= 127
+    , cast @Int8 @Double (-128) ~?= (-128)
+    ]
 
   -- Int16
 
@@ -163,6 +173,16 @@ tests =
     [ tryCast @Int16 @Natural 0 ~?= Right 0
     , tryCast @Int16 @Natural 32767 ~?= Right 32767
     , tryCast @Int16 @Natural (-1) ~?& isLeft
+    ]
+  , "Cast Int16 Float" ~:
+    [ cast @Int16 @Float 0 ~?= 0
+    , cast @Int16 @Float 32767 ~?= 32767
+    , cast @Int16 @Float (-32768) ~?= (-32768)
+    ]
+  , "Cast Int16 Double" ~:
+    [ cast @Int16 @Double 0 ~?= 0
+    , cast @Int16 @Double 32767 ~?= 32767
+    , cast @Int16 @Double (-32768) ~?= (-32768)
     ]
 
   -- Int32
@@ -229,6 +249,18 @@ tests =
     [ tryCast @Int32 @Natural 0 ~?= Right 0
     , tryCast @Int32 @Natural 2147483647 ~?= Right 2147483647
     , tryCast @Int32 @Natural (-1) ~?& isLeft
+    ]
+  , "TryCast Int32 Float" ~:
+    [ tryCast @Int32 @Float 0 ~?= Right 0
+    , tryCast @Int32 @Float 16777216 ~?= Right 16777216
+    , tryCast @Int32 @Float 16777217 ~?& isLeft
+    , tryCast @Int32 @Float (-16777216) ~?= Right (-16777216)
+    , tryCast @Int32 @Float (-16777217) ~?& isLeft
+    ]
+  , "Cast Int32 Double" ~:
+    [ cast @Int32 @Double 0 ~?= 0
+    , cast @Int32 @Double 2147483647 ~?= 2147483647
+    , cast @Int32 @Double (-2147483648) ~?= (-2147483648)
     ]
 
   -- Int64
@@ -298,6 +330,20 @@ tests =
     , tryCast @Int64 @Natural 9223372036854775807 ~?= Right 9223372036854775807
     , tryCast @Int64 @Natural (-1) ~?& isLeft
     ]
+  , "TryCast Int64 Float" ~:
+    [ tryCast @Int64 @Float 0 ~?= Right 0
+    , tryCast @Int64 @Float 16777216 ~?= Right 16777216
+    , tryCast @Int64 @Float 16777217 ~?& isLeft
+    , tryCast @Int64 @Float (-16777216) ~?= Right (-16777216)
+    , tryCast @Int64 @Float (-16777217) ~?& isLeft
+    ]
+  , "TryCast Int64 Double" ~:
+    [ tryCast @Int64 @Double 0 ~?= Right 0
+    , tryCast @Int64 @Double 9007199254740992 ~?= Right 9007199254740992
+    , tryCast @Int64 @Double 9007199254740993 ~?& isLeft
+    , tryCast @Int64 @Double (-9007199254740992) ~?= Right (-9007199254740992)
+    , tryCast @Int64 @Double (-9007199254740993) ~?& isLeft
+    ]
 
   -- Int
 
@@ -366,6 +412,21 @@ tests =
     [ tryCast @Int @Natural 0 ~?= Right 0
     , tryCast @Int @Natural maxBound ~?= Right (fromIntegral (maxBound :: Int))
     , tryCast @Int @Natural (-1) ~?& isLeft
+    ]
+  , "TryCast Int Float" ~:
+    [ tryCast @Int @Float 0 ~?= Right 0
+    , tryCast @Int @Float 16777216 ~?= Right 16777216
+    , tryCast @Int @Float 16777217 ~?& isLeft
+    , tryCast @Int @Float (-16777216) ~?= Right (-16777216)
+    , tryCast @Int @Float (-16777217) ~?& isLeft
+    ]
+  , "TryCast Int Double" ~:
+    if toInteger (maxBound :: Int) <= 9007199254740992 then untested else
+    [ tryCast @Int @Double 0 ~?= Right 0
+    , tryCast @Int @Double 9007199254740992 ~?= Right 9007199254740992
+    , tryCast @Int @Double 9007199254740993 ~?& isLeft
+    , tryCast @Int @Double (-9007199254740992) ~?= Right (-9007199254740992)
+    , tryCast @Int @Double (-9007199254740993) ~?& isLeft
     ]
 
   -- Integer
@@ -446,6 +507,20 @@ tests =
     , tryCast @Integer @Natural 18446744073709551616 ~?= Right 18446744073709551616
     , tryCast @Integer @Natural (-1) ~?& isLeft
     ]
+  , "TryCast Integer Float" ~:
+    [ tryCast @Integer @Float 0 ~?= Right 0
+    , tryCast @Integer @Float 16777216 ~?= Right 16777216
+    , tryCast @Integer @Float 16777217 ~?& isLeft
+    , tryCast @Integer @Float (-16777216) ~?= Right (-16777216)
+    , tryCast @Integer @Float (-16777217) ~?& isLeft
+    ]
+  , "TryCast Integer Double" ~:
+    [ tryCast @Integer @Double 0 ~?= Right 0
+    , tryCast @Integer @Double 9007199254740992 ~?= Right 9007199254740992
+    , tryCast @Integer @Double 9007199254740993 ~?& isLeft
+    , tryCast @Integer @Double (-9007199254740992) ~?= Right (-9007199254740992)
+    , tryCast @Integer @Double (-9007199254740993) ~?& isLeft
+    ]
 
   -- Word8
 
@@ -493,6 +568,14 @@ tests =
   , "Cast Word8 Integer" ~:
     [ cast @Word8 @Integer 0 ~?= 0
     , cast @Word8 @Integer 255 ~?= 255
+    ]
+  , "Cast Word8 Float" ~:
+    [ cast @Word8 @Float 0 ~?= 0
+    , cast @Word8 @Float 255 ~?= 255
+    ]
+  , "Cast Word8 Double" ~:
+    [ cast @Word8 @Double 0 ~?= 0
+    , cast @Word8 @Double 255 ~?= 255
     ]
 
   -- Word16
@@ -543,6 +626,14 @@ tests =
   , "Cast Word16 Integer" ~:
     [ cast @Word16 @Integer 0 ~?= 0
     , cast @Word16 @Integer 65535 ~?= 65535
+    ]
+  , "Cast Word16 Float" ~:
+    [ cast @Word16 @Float 0 ~?= 0
+    , cast @Word16 @Float 65535 ~?= 65535
+    ]
+  , "Cast Word16 Double" ~:
+    [ cast @Word16 @Double 0 ~?= 0
+    , cast @Word16 @Double 65535 ~?= 65535
     ]
 
   -- Word32
@@ -597,6 +688,15 @@ tests =
   , "Cast Word32 Integer" ~:
     [ cast @Word32 @Integer 0 ~?= 0
     , cast @Word32 @Integer 4294967295 ~?= 4294967295
+    ]
+  , "TryCast Word32 Float" ~:
+    [ tryCast @Word32 @Float 0 ~?= Right 0
+    , tryCast @Word32 @Float 16777216 ~?= Right 16777216
+    , tryCast @Word32 @Float 16777217 ~?& isLeft
+    ]
+  , "Cast Word32 Double" ~:
+    [ cast @Word32 @Double 0 ~?= 0
+    , cast @Word32 @Double 4294967295 ~?= 4294967295
     ]
 
   -- Word64
@@ -655,6 +755,16 @@ tests =
   , "Cast Word64 Integer" ~:
     [ cast @Word64 @Integer 0 ~?= 0
     , cast @Word64 @Integer 18446744073709551615 ~?= 18446744073709551615
+    ]
+  , "TryCast Word64 Float" ~:
+    [ tryCast @Word64 @Float 0 ~?= Right 0
+    , tryCast @Word64 @Float 16777216 ~?= Right 16777216
+    , tryCast @Word64 @Float 16777217 ~?& isLeft
+    ]
+  , "TryCast Word64 Double" ~:
+    [ tryCast @Word64 @Double 0 ~?= Right 0
+    , tryCast @Word64 @Double 9007199254740992 ~?= Right 9007199254740992
+    , tryCast @Word64 @Double 9007199254740993 ~?& isLeft
     ]
 
   -- Word
@@ -716,6 +826,17 @@ tests =
     [ cast @Word @Integer 0 ~?= 0
     , cast @Word @Integer maxBound ~?= fromIntegral (maxBound :: Word)
     ]
+  , "TryCast Word Float" ~:
+    [ tryCast @Word @Float 0 ~?= Right 0
+    , tryCast @Word @Float 16777216 ~?= Right 16777216
+    , tryCast @Word @Float 16777217 ~?& isLeft
+    ]
+  , "TryCast Word Double" ~:
+    if toInteger (maxBound :: Word) <= 9007199254740992 then untested else
+    [ tryCast @Word @Double 0 ~?= Right 0
+    , tryCast @Word @Double 9007199254740992 ~?= Right 9007199254740992
+    , tryCast @Word @Double 9007199254740993 ~?& isLeft
+    ]
 
   -- Natural
 
@@ -776,6 +897,16 @@ tests =
   , "Cast Natural Integer" ~:
     [ cast @Natural @Integer 0 ~?= 0
     , cast @Natural @Integer 9223372036854775808 ~?= 9223372036854775808
+    ]
+  , "TryCast Natural Float" ~:
+    [ tryCast @Natural @Float 0 ~?= Right 0
+    , tryCast @Natural @Float 16777216 ~?= Right 16777216
+    , tryCast @Natural @Float 16777217 ~?& isLeft
+    ]
+  , "TryCast Natural Double" ~:
+    [ tryCast @Natural @Double 0 ~?= Right 0
+    , tryCast @Natural @Double 9007199254740992 ~?= Right 9007199254740992
+    , tryCast @Natural @Double 9007199254740993 ~?& isLeft
     ]
 
   -- Ratio

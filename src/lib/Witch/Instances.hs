@@ -59,6 +59,12 @@ instance TryCast.TryCast Int.Int8 Word where
 instance TryCast.TryCast Int.Int8 Natural.Natural where
   tryCast = maybeTryCast fromNonNegativeIntegral
 
+instance Cast.Cast Int.Int8 Float where
+  cast = fromIntegral
+
+instance Cast.Cast Int.Int8 Double where
+  cast = fromIntegral
+
 -- Int16
 
 instance TryCast.TryCast Int.Int16 Int.Int8 where
@@ -93,6 +99,12 @@ instance TryCast.TryCast Int.Int16 Word where
 
 instance TryCast.TryCast Int.Int16 Natural.Natural where
   tryCast = maybeTryCast fromNonNegativeIntegral
+
+instance Cast.Cast Int.Int16 Float where
+  cast = fromIntegral
+
+instance Cast.Cast Int.Int16 Double where
+  cast = fromIntegral
 
 -- Int32
 
@@ -129,6 +141,13 @@ instance TryCast.TryCast Int.Int32 Word where
 instance TryCast.TryCast Int.Int32 Natural.Natural where
   tryCast = maybeTryCast fromNonNegativeIntegral
 
+instance TryCast.TryCast Int.Int32 Float where
+  tryCast = maybeTryCast $ \s ->
+    if -16777216 <= s && s <= 16777216 then Just $ fromIntegral s else Nothing
+
+instance Cast.Cast Int.Int32 Double where
+  cast = fromIntegral
+
 -- Int64
 
 instance TryCast.TryCast Int.Int64 Int.Int8 where
@@ -164,6 +183,16 @@ instance TryCast.TryCast Int.Int64 Word where
 instance TryCast.TryCast Int.Int64 Natural.Natural where
   tryCast = maybeTryCast fromNonNegativeIntegral
 
+instance TryCast.TryCast Int.Int64 Float where
+  tryCast = maybeTryCast $ \s ->
+    if -16777216 <= s && s <= 16777216 then Just $ fromIntegral s else Nothing
+
+instance TryCast.TryCast Int.Int64 Double where
+  tryCast = maybeTryCast $ \s ->
+    if -9007199254740992 <= s && s <= 9007199254740992
+      then Just $ fromIntegral s
+      else Nothing
+
 -- Int
 
 instance TryCast.TryCast Int Int.Int8 where
@@ -198,6 +227,18 @@ instance TryCast.TryCast Int Word where
 
 instance TryCast.TryCast Int Natural.Natural where
   tryCast = maybeTryCast fromNonNegativeIntegral
+
+instance TryCast.TryCast Int Float where
+  tryCast = maybeTryCast $ \s ->
+    if -16777216 <= s && s <= 16777216 then Just $ fromIntegral s else Nothing
+
+instance TryCast.TryCast Int Double where
+  tryCast = maybeTryCast $ \s ->
+    if toInteger (maxBound :: Int) <= 9007199254740992
+      then Just $ fromIntegral s
+      else if -9007199254740992 <= s && s <= 9007199254740992
+        then Just $ fromIntegral s
+        else Nothing
 
 -- Integer
 
@@ -239,6 +280,16 @@ instance TryCast.TryCast Integer Natural.Natural where
   tryCast =
     maybeTryCast $ \s -> if s < 0 then Nothing else Just $ fromInteger s
 
+instance TryCast.TryCast Integer Float where
+  tryCast = maybeTryCast $ \s ->
+    if -16777216 <= s && s <= 16777216 then Just $ fromIntegral s else Nothing
+
+instance TryCast.TryCast Integer Double where
+  tryCast = maybeTryCast $ \s ->
+    if -9007199254740992 <= s && s <= 9007199254740992
+      then Just $ fromIntegral s
+      else Nothing
+
 -- Word8
 
 instance Cast.Cast Word.Word8 Word.Word16 where
@@ -272,6 +323,12 @@ instance Cast.Cast Word.Word8 Int where
   cast = fromIntegral
 
 instance Cast.Cast Word.Word8 Integer where
+  cast = fromIntegral
+
+instance Cast.Cast Word.Word8 Float where
+  cast = fromIntegral
+
+instance Cast.Cast Word.Word8 Double where
   cast = fromIntegral
 
 -- Word16
@@ -309,6 +366,12 @@ instance Cast.Cast Word.Word16 Int where
 instance Cast.Cast Word.Word16 Integer where
   cast = fromIntegral
 
+instance Cast.Cast Word.Word16 Float where
+  cast = fromIntegral
+
+instance Cast.Cast Word.Word16 Double where
+  cast = fromIntegral
+
 -- Word32
 
 instance TryCast.TryCast Word.Word32 Word.Word8 where
@@ -342,6 +405,13 @@ instance TryCast.TryCast Word.Word32 Int where
   tryCast = maybeTryCast Bits.toIntegralSized
 
 instance Cast.Cast Word.Word32 Integer where
+  cast = fromIntegral
+
+instance TryCast.TryCast Word.Word32 Float where
+  tryCast = maybeTryCast $ \s ->
+    if s <= 16777216 then Just $ fromIntegral s else Nothing
+
+instance Cast.Cast Word.Word32 Double where
   cast = fromIntegral
 
 -- Word64
@@ -379,6 +449,14 @@ instance TryCast.TryCast Word.Word64 Int where
 instance Cast.Cast Word.Word64 Integer where
   cast = fromIntegral
 
+instance TryCast.TryCast Word.Word64 Float where
+  tryCast = maybeTryCast $ \s ->
+    if s <= 16777216 then Just $ fromIntegral s else Nothing
+
+instance TryCast.TryCast Word.Word64 Double where
+  tryCast = maybeTryCast $ \s ->
+    if s <= 9007199254740992 then Just $ fromIntegral s else Nothing
+
 -- Word
 
 instance TryCast.TryCast Word Word.Word8 where
@@ -414,6 +492,16 @@ instance TryCast.TryCast Word Int where
 instance Cast.Cast Word Integer where
   cast = fromIntegral
 
+instance TryCast.TryCast Word Float where
+  tryCast = maybeTryCast $ \s ->
+    if s <= 16777216 then Just $ fromIntegral s else Nothing
+
+instance TryCast.TryCast Word Double where
+  tryCast = maybeTryCast $ \s ->
+    if toInteger (maxBound :: Word) <= 9007199254740992
+      then Just $ fromIntegral s
+      else if s <= 9007199254740992 then Just $ fromIntegral s else Nothing
+
 -- Natural
 
 instance TryCast.TryCast Natural.Natural Word.Word8 where
@@ -448,6 +536,14 @@ instance TryCast.TryCast Natural.Natural Int where
 
 instance Cast.Cast Natural.Natural Integer where
   cast = fromIntegral
+
+instance TryCast.TryCast Natural.Natural Float where
+  tryCast = maybeTryCast $ \s ->
+    if s <= 16777216 then Just $ fromIntegral s else Nothing
+
+instance TryCast.TryCast Natural.Natural Double where
+  tryCast = maybeTryCast $ \s ->
+    if s <= 9007199254740992 then Just $ fromIntegral s else Nothing
 
 -- Ratio
 
