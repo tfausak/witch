@@ -2,5 +2,8 @@
   "purple-yolk.brittany.command": "false",
   "purple-yolk.ghci.command": "cabal repl --ghc-options -Wwarn --repl-options -ddump-json",
   "purple-yolk.hlint.command": "false",
-  "purple-yolk.hlint.onSave": false
+  "purple-yolk.hlint.onSave": false,
+  "editor.rulers": [
+    79
+  ]
 }
