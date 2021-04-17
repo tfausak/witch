@@ -594,6 +594,55 @@ instance TryCast.TryCast Float Rational where
   tryCast = maybeTryCast $ \s ->
     if isNaN s || isInfinite s then Nothing else Just $ toRational s
 
+instance Cast.Cast Float Double where
+  cast = realToFrac
+
+-- Double
+
+instance TryCast.TryCast Double Int.Int8 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Double Int.Int16 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Double Int.Int32 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Double Int.Int64 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Double Int where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Double Integer where
+  tryCast s = case tryCastVia @Rational s of
+    Left e -> Left e
+    Right t -> if -9007199254740991 <= t && t <= 9007199254740991
+      then Right t
+      else Left $ TryCastException.TryCastException s
+
+instance TryCast.TryCast Double Word.Word8 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Double Word.Word16 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Double Word.Word32 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Double Word.Word64 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Double Word where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Double Natural.Natural where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Double Rational where
+  tryCast = maybeTryCast $ \s ->
+    if isNaN s || isInfinite s then Nothing else Just $ toRational s
+
 -- Ratio
 
 instance Integral a => Cast.Cast a (Ratio.Ratio a) where
