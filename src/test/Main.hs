@@ -15,7 +15,10 @@ import Test.HUnit
 import Witch
 
 main :: IO ()
-main = runTestTTAndExit $ "Witch" ~:
+main = runTestTTAndExit $ "Witch" ~: tests
+
+tests :: [Test]
+tests =
   [ as @Int8 1 ~?= 1
   , cast (1 :: Int8) ~?= (1 :: Int16)
   , from @Int8 1 ~?= (1 :: Int)

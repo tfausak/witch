@@ -20,6 +20,7 @@ import qualified Witch.TryCastException as TryCastException
 
 instance TryCast.TryCast [a] (NonEmpty.NonEmpty a) where
   tryCast = maybeTryCast NonEmpty.nonEmpty
+
 instance Cast.Cast (NonEmpty.NonEmpty a) [a] where
   cast = NonEmpty.toList
 
@@ -235,7 +236,8 @@ instance TryCast.TryCast Integer Natural.Natural where
   -- bug in GHC 9.0.1. By inlining @fromNonNegativeIntegral@ and replacing
   -- @fromIntegral@ with @fromInteger@, we can work around the bug.
   -- https://mail.haskell.org/pipermail/haskell-cafe/2021-March/133540.html
-  tryCast = maybeTryCast $ \ s -> if s < 0 then Nothing else Just $ fromInteger s
+  tryCast =
+    maybeTryCast $ \s -> if s < 0 then Nothing else Just $ fromInteger s
 
 -- Word8
 
@@ -453,9 +455,8 @@ instance Integral a => Cast.Cast a (Ratio.Ratio a) where
   cast = (Ratio.% 1)
 
 instance (Eq a, Num a) => TryCast.TryCast (Ratio.Ratio a) a where
-  tryCast = maybeTryCast $ \ s -> if Ratio.denominator s == 1
-    then Just $ Ratio.numerator s
-    else Nothing
+  tryCast = maybeTryCast $ \s ->
+    if Ratio.denominator s == 1 then Just $ Ratio.numerator s else Nothing
 
 -- Fixed
 
@@ -471,14 +472,14 @@ instance Num a => Cast.Cast a (Complex.Complex a) where
   cast = (Complex.:+ 0)
 
 instance (Eq a, Num a) => TryCast.TryCast (Complex.Complex a) a where
-  tryCast = maybeTryCast $ \ s -> if Complex.imagPart s == 0
-    then Just $ Complex.realPart s
-    else Nothing
+  tryCast = maybeTryCast $ \s ->
+    if Complex.imagPart s == 0 then Just $ Complex.realPart s else Nothing
 
 fromNonNegativeIntegral :: (Integral s, Num t) => s -> Maybe t
 fromNonNegativeIntegral x = if x < 0 then Nothing else Just $ fromIntegral x
 
-maybeTryCast :: (s -> Maybe t) -> s -> Either (TryCastException.TryCastException s t) t
+maybeTryCast
+  :: (s -> Maybe t) -> s -> Either (TryCastException.TryCastException s t) t
 maybeTryCast f s = case f s of
   Nothing -> Left $ TryCastException.TryCastException s
   Just t -> Right t

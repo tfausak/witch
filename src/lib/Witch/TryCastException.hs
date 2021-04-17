@@ -15,11 +15,11 @@ instance
   , Typeable.Typeable source
   , Typeable.Typeable target
   ) => Exception.Exception (TryCastException source target) where
-    displayException (TryCastException x) = mconcat
-      [ "TryCastException: failed to cast value "
-      , show x
-      , " from type "
-      , show $ Typeable.typeOf x
-      , " into type "
-      , show $ Typeable.typeRep (Proxy.Proxy :: Proxy.Proxy target)
-      ]
+  displayException (TryCastException x) = mconcat
+    [ "TryCastException: failed to cast value "
+    , show x
+    , " from type "
+    , show $ Typeable.typeOf x
+    , " into type "
+    , show $ Typeable.typeRep (Proxy.Proxy :: Proxy.Proxy target)
+    ]
