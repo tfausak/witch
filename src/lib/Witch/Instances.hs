@@ -1,6 +1,9 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Witch.Instances where
 
@@ -143,7 +146,7 @@ instance TryCast.TryCast Int.Int32 Natural.Natural where
 
 instance TryCast.TryCast Int.Int32 Float where
   tryCast = maybeTryCast $ \s ->
-    if -16777216 <= s && s <= 16777216 then Just $ fromIntegral s else Nothing
+    if -16777215 <= s && s <= 16777215 then Just $ fromIntegral s else Nothing
 
 instance Cast.Cast Int.Int32 Double where
   cast = fromIntegral
@@ -185,11 +188,11 @@ instance TryCast.TryCast Int.Int64 Natural.Natural where
 
 instance TryCast.TryCast Int.Int64 Float where
   tryCast = maybeTryCast $ \s ->
-    if -16777216 <= s && s <= 16777216 then Just $ fromIntegral s else Nothing
+    if -16777215 <= s && s <= 16777215 then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Int.Int64 Double where
   tryCast = maybeTryCast $ \s ->
-    if -9007199254740992 <= s && s <= 9007199254740992
+    if -9007199254740991 <= s && s <= 9007199254740991
       then Just $ fromIntegral s
       else Nothing
 
@@ -230,13 +233,13 @@ instance TryCast.TryCast Int Natural.Natural where
 
 instance TryCast.TryCast Int Float where
   tryCast = maybeTryCast $ \s ->
-    if -16777216 <= s && s <= 16777216 then Just $ fromIntegral s else Nothing
+    if -16777215 <= s && s <= 16777215 then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Int Double where
   tryCast = maybeTryCast $ \s ->
-    if toInteger (maxBound :: Int) <= 9007199254740992
+    if toInteger (maxBound :: Int) <= 9007199254740991
       then Just $ fromIntegral s
-      else if -9007199254740992 <= s && s <= 9007199254740992
+      else if -9007199254740991 <= s && s <= 9007199254740991
         then Just $ fromIntegral s
         else Nothing
 
@@ -282,11 +285,11 @@ instance TryCast.TryCast Integer Natural.Natural where
 
 instance TryCast.TryCast Integer Float where
   tryCast = maybeTryCast $ \s ->
-    if -16777216 <= s && s <= 16777216 then Just $ fromIntegral s else Nothing
+    if -16777215 <= s && s <= 16777215 then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Integer Double where
   tryCast = maybeTryCast $ \s ->
-    if -9007199254740992 <= s && s <= 9007199254740992
+    if -9007199254740991 <= s && s <= 9007199254740991
       then Just $ fromIntegral s
       else Nothing
 
@@ -409,7 +412,7 @@ instance Cast.Cast Word.Word32 Integer where
 
 instance TryCast.TryCast Word.Word32 Float where
   tryCast = maybeTryCast $ \s ->
-    if s <= 16777216 then Just $ fromIntegral s else Nothing
+    if s <= 16777215 then Just $ fromIntegral s else Nothing
 
 instance Cast.Cast Word.Word32 Double where
   cast = fromIntegral
@@ -451,11 +454,11 @@ instance Cast.Cast Word.Word64 Integer where
 
 instance TryCast.TryCast Word.Word64 Float where
   tryCast = maybeTryCast $ \s ->
-    if s <= 16777216 then Just $ fromIntegral s else Nothing
+    if s <= 16777215 then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Word.Word64 Double where
   tryCast = maybeTryCast $ \s ->
-    if s <= 9007199254740992 then Just $ fromIntegral s else Nothing
+    if s <= 9007199254740991 then Just $ fromIntegral s else Nothing
 
 -- Word
 
@@ -494,13 +497,13 @@ instance Cast.Cast Word Integer where
 
 instance TryCast.TryCast Word Float where
   tryCast = maybeTryCast $ \s ->
-    if s <= 16777216 then Just $ fromIntegral s else Nothing
+    if s <= 16777215 then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Word Double where
   tryCast = maybeTryCast $ \s ->
-    if toInteger (maxBound :: Word) <= 9007199254740992
+    if toInteger (maxBound :: Word) <= 9007199254740991
       then Just $ fromIntegral s
-      else if s <= 9007199254740992 then Just $ fromIntegral s else Nothing
+      else if s <= 9007199254740991 then Just $ fromIntegral s else Nothing
 
 -- Natural
 
@@ -539,11 +542,57 @@ instance Cast.Cast Natural.Natural Integer where
 
 instance TryCast.TryCast Natural.Natural Float where
   tryCast = maybeTryCast $ \s ->
-    if s <= 16777216 then Just $ fromIntegral s else Nothing
+    if s <= 16777215 then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Natural.Natural Double where
   tryCast = maybeTryCast $ \s ->
-    if s <= 9007199254740992 then Just $ fromIntegral s else Nothing
+    if s <= 9007199254740991 then Just $ fromIntegral s else Nothing
+
+-- Float
+
+instance TryCast.TryCast Float Int.Int8 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Float Int.Int16 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Float Int.Int32 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Float Int.Int64 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Float Int where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Float Integer where
+  tryCast s = case tryCastVia @Rational s of
+    Left e -> Left e
+    Right t -> if -16777215 <= t && t <= 16777215
+      then Right t
+      else Left $ TryCastException.TryCastException s
+
+instance TryCast.TryCast Float Word.Word8 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Float Word.Word16 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Float Word.Word32 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Float Word.Word64 where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Float Word where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Float Natural.Natural where
+  tryCast = tryCastVia @Integer
+
+instance TryCast.TryCast Float Rational where
+  tryCast = maybeTryCast $ \s ->
+    if isNaN s || isInfinite s then Nothing else Just $ toRational s
 
 -- Ratio
 
@@ -579,3 +628,14 @@ maybeTryCast
 maybeTryCast f s = case f s of
   Nothing -> Left $ TryCastException.TryCastException s
   Just t -> Right t
+
+tryCastVia
+  :: forall through source target
+  . (TryCast.TryCast source through, TryCast.TryCast through target)
+  => source
+  -> Either (TryCastException.TryCastException source target) target
+tryCastVia s = case TryCast.tryCast s of
+  Left _ -> Left $ TryCastException.TryCastException s
+  Right u -> case TryCast.tryCast (u :: through) of
+    Left _ -> Left $ TryCastException.TryCastException s
+    Right t -> Right t

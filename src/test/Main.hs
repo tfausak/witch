@@ -280,10 +280,10 @@ main = hspec . describe "Witch" $ do
 
     describe "TryCast Int32 Float" $ do
       test $ tryCast @Int32 @Float 0 `shouldBe` Right 0
-      test $ tryCast @Int32 @Float 16777216 `shouldBe` Right 16777216
-      test $ tryCast @Int32 @Float 16777217 `shouldSatisfy` isLeft
-      test $ tryCast @Int32 @Float (-16777216) `shouldBe` Right (-16777216)
-      test $ tryCast @Int32 @Float (-16777217) `shouldSatisfy` isLeft
+      test $ tryCast @Int32 @Float 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Int32 @Float 16777216 `shouldSatisfy` isLeft
+      test $ tryCast @Int32 @Float (-16777215) `shouldBe` Right (-16777215)
+      test $ tryCast @Int32 @Float (-16777216) `shouldSatisfy` isLeft
 
     describe "Cast Int32 Double" $ do
       test $ cast @Int32 @Double 0 `shouldBe` 0
@@ -359,17 +359,17 @@ main = hspec . describe "Witch" $ do
 
     describe "TryCast Int64 Float" $ do
       test $ tryCast @Int64 @Float 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Float 16777216 `shouldBe` Right 16777216
-      test $ tryCast @Int64 @Float 16777217 `shouldSatisfy` isLeft
-      test $ tryCast @Int64 @Float (-16777216) `shouldBe` Right (-16777216)
-      test $ tryCast @Int64 @Float (-16777217) `shouldSatisfy` isLeft
+      test $ tryCast @Int64 @Float 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Int64 @Float 16777216 `shouldSatisfy` isLeft
+      test $ tryCast @Int64 @Float (-16777215) `shouldBe` Right (-16777215)
+      test $ tryCast @Int64 @Float (-16777216) `shouldSatisfy` isLeft
 
     describe "TryCast Int64 Double" $ do
       test $ tryCast @Int64 @Double 0 `shouldBe` Right 0
-      test $ tryCast @Int64 @Double 9007199254740992 `shouldBe` Right 9007199254740992
-      test $ tryCast @Int64 @Double 9007199254740993 `shouldSatisfy` isLeft
-      test $ tryCast @Int64 @Double (-9007199254740992) `shouldBe` Right (-9007199254740992)
-      test $ tryCast @Int64 @Double (-9007199254740993) `shouldSatisfy` isLeft
+      test $ tryCast @Int64 @Double 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ tryCast @Int64 @Double 9007199254740992 `shouldSatisfy` isLeft
+      test $ tryCast @Int64 @Double (-9007199254740991) `shouldBe` Right (-9007199254740991)
+      test $ tryCast @Int64 @Double (-9007199254740992) `shouldSatisfy` isLeft
 
     -- Int
 
@@ -441,18 +441,18 @@ main = hspec . describe "Witch" $ do
 
     describe "TryCast Int Float" $ do
       test $ tryCast @Int @Float 0 `shouldBe` Right 0
-      test $ tryCast @Int @Float 16777216 `shouldBe` Right 16777216
-      test $ tryCast @Int @Float 16777217 `shouldSatisfy` isLeft
-      test $ tryCast @Int @Float (-16777216) `shouldBe` Right (-16777216)
-      test $ tryCast @Int @Float (-16777217) `shouldSatisfy` isLeft
+      test $ tryCast @Int @Float 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Int @Float 16777216 `shouldSatisfy` isLeft
+      test $ tryCast @Int @Float (-16777215) `shouldBe` Right (-16777215)
+      test $ tryCast @Int @Float (-16777216) `shouldSatisfy` isLeft
 
     describe "TryCast Int Double" $ do
-      when (toInteger (maxBound :: Int) <= 9007199254740992) untested
+      when (toInteger (maxBound :: Int) <= 9007199254740991) untested
       test $ tryCast @Int @Double 0 `shouldBe` Right 0
-      test $ tryCast @Int @Double 9007199254740992 `shouldBe` Right 9007199254740992
-      test $ tryCast @Int @Double 9007199254740993 `shouldSatisfy` isLeft
-      test $ tryCast @Int @Double (-9007199254740992) `shouldBe` Right (-9007199254740992)
-      test $ tryCast @Int @Double (-9007199254740993) `shouldSatisfy` isLeft
+      test $ tryCast @Int @Double 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ tryCast @Int @Double 9007199254740992 `shouldSatisfy` isLeft
+      test $ tryCast @Int @Double (-9007199254740991) `shouldBe` Right (-9007199254740991)
+      test $ tryCast @Int @Double (-9007199254740992) `shouldSatisfy` isLeft
 
     -- Integer
 
@@ -540,17 +540,17 @@ main = hspec . describe "Witch" $ do
 
     describe "TryCast Integer Float" $ do
       test $ tryCast @Integer @Float 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Float 16777216 `shouldBe` Right 16777216
-      test $ tryCast @Integer @Float 16777217 `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Float (-16777216) `shouldBe` Right (-16777216)
-      test $ tryCast @Integer @Float (-16777217) `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Float 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Integer @Float 16777216 `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Float (-16777215) `shouldBe` Right (-16777215)
+      test $ tryCast @Integer @Float (-16777216) `shouldSatisfy` isLeft
 
     describe "TryCast Integer Double" $ do
       test $ tryCast @Integer @Double 0 `shouldBe` Right 0
-      test $ tryCast @Integer @Double 9007199254740992 `shouldBe` Right 9007199254740992
-      test $ tryCast @Integer @Double 9007199254740993 `shouldSatisfy` isLeft
-      test $ tryCast @Integer @Double (-9007199254740992) `shouldBe` Right (-9007199254740992)
-      test $ tryCast @Integer @Double (-9007199254740993) `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Double 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ tryCast @Integer @Double 9007199254740992 `shouldSatisfy` isLeft
+      test $ tryCast @Integer @Double (-9007199254740991) `shouldBe` Right (-9007199254740991)
+      test $ tryCast @Integer @Double (-9007199254740992) `shouldSatisfy` isLeft
 
     -- Word8
 
@@ -719,8 +719,8 @@ main = hspec . describe "Witch" $ do
 
     describe "TryCast Word32 Float" $ do
       test $ tryCast @Word32 @Float 0 `shouldBe` Right 0
-      test $ tryCast @Word32 @Float 16777216 `shouldBe` Right 16777216
-      test $ tryCast @Word32 @Float 16777217 `shouldSatisfy` isLeft
+      test $ tryCast @Word32 @Float 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Word32 @Float 16777216 `shouldSatisfy` isLeft
 
     describe "Cast Word32 Double" $ do
       test $ cast @Word32 @Double 0 `shouldBe` 0
@@ -787,13 +787,13 @@ main = hspec . describe "Witch" $ do
 
     describe "TryCast Word64 Float" $ do
       test $ tryCast @Word64 @Float 0 `shouldBe` Right 0
-      test $ tryCast @Word64 @Float 16777216 `shouldBe` Right 16777216
-      test $ tryCast @Word64 @Float 16777217 `shouldSatisfy` isLeft
+      test $ tryCast @Word64 @Float 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Word64 @Float 16777216 `shouldSatisfy` isLeft
 
     describe "TryCast Word64 Double" $ do
       test $ tryCast @Word64 @Double 0 `shouldBe` Right 0
-      test $ tryCast @Word64 @Double 9007199254740992 `shouldBe` Right 9007199254740992
-      test $ tryCast @Word64 @Double 9007199254740993 `shouldSatisfy` isLeft
+      test $ tryCast @Word64 @Double 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ tryCast @Word64 @Double 9007199254740992 `shouldSatisfy` isLeft
 
     -- Word
 
@@ -858,14 +858,14 @@ main = hspec . describe "Witch" $ do
 
     describe "TryCast Word Float" $ do
       test $ tryCast @Word @Float 0 `shouldBe` Right 0
-      test $ tryCast @Word @Float 16777216 `shouldBe` Right 16777216
-      test $ tryCast @Word @Float 16777217 `shouldSatisfy` isLeft
+      test $ tryCast @Word @Float 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Word @Float 16777216 `shouldSatisfy` isLeft
 
     describe "TryCast Word Double" $ do
-      when (toInteger (maxBound :: Word) <= 9007199254740992) untested
+      when (toInteger (maxBound :: Word) <= 9007199254740991) untested
       test $ tryCast @Word @Double 0 `shouldBe` Right 0
-      test $ tryCast @Word @Double 9007199254740992 `shouldBe` Right 9007199254740992
-      test $ tryCast @Word @Double 9007199254740993 `shouldSatisfy` isLeft
+      test $ tryCast @Word @Double 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ tryCast @Word @Double 9007199254740992 `shouldSatisfy` isLeft
 
     -- Natural
 
@@ -933,13 +933,130 @@ main = hspec . describe "Witch" $ do
 
     describe "TryCast Natural Float" $ do
       test $ tryCast @Natural @Float 0 `shouldBe` Right 0
-      test $ tryCast @Natural @Float 16777216 `shouldBe` Right 16777216
-      test $ tryCast @Natural @Float 16777217 `shouldSatisfy` isLeft
+      test $ tryCast @Natural @Float 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Natural @Float 16777216 `shouldSatisfy` isLeft
 
     describe "TryCast Natural Double" $ do
       test $ tryCast @Natural @Double 0 `shouldBe` Right 0
-      test $ tryCast @Natural @Double 9007199254740992 `shouldBe` Right 9007199254740992
-      test $ tryCast @Natural @Double 9007199254740993 `shouldSatisfy` isLeft
+      test $ tryCast @Natural @Double 9007199254740991 `shouldBe` Right 9007199254740991
+      test $ tryCast @Natural @Double 9007199254740992 `shouldSatisfy` isLeft
+
+    -- Float
+
+    describe "TryCast Float Int8" $ do
+      test $ tryCast @Float @Int8 0 `shouldBe` Right 0
+      test $ tryCast @Float @Int8 127 `shouldBe` Right 127
+      test $ tryCast @Float @Int8 128 `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int8 (-128) `shouldBe` Right (-128)
+      test $ tryCast @Float @Int8 (-129) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int8 (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int8 (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int8 (-1 / 0) `shouldSatisfy` isLeft
+
+    describe "TryCast Float Int16" $ do
+      test $ tryCast @Float @Int16 0 `shouldBe` Right 0
+      test $ tryCast @Float @Int16 32767 `shouldBe` Right 32767
+      test $ tryCast @Float @Int16 32768 `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int16 (-32768) `shouldBe` Right (-32768)
+      test $ tryCast @Float @Int16 (-32769) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int16 (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int16 (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int16 (-1 / 0) `shouldSatisfy` isLeft
+
+    describe "TryCast Float Int32" $ do
+      test $ tryCast @Float @Int32 0 `shouldBe` Right 0
+      test $ tryCast @Float @Int32 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Float @Int32 16777216 `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int32 (-16777215) `shouldBe` Right (-16777215)
+      test $ tryCast @Float @Int32 (-16777216) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int32 (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int32 (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int32 (-1 / 0) `shouldSatisfy` isLeft
+
+    describe "TryCast Float Int64" $ do
+      test $ tryCast @Float @Int64 0 `shouldBe` Right 0
+      test $ tryCast @Float @Int64 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Float @Int64 16777216 `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int64 (-16777215) `shouldBe` Right (-16777215)
+      test $ tryCast @Float @Int64 (-16777216) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int64 (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int64 (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int64 (-1 / 0) `shouldSatisfy` isLeft
+
+    describe "TryCast Float Int" $ do
+      test $ tryCast @Float @Int 0 `shouldBe` Right 0
+      test $ tryCast @Float @Int 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Float @Int 16777216 `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int (-16777215) `shouldBe` Right (-16777215)
+      test $ tryCast @Float @Int (-16777216) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Int (-1 / 0) `shouldSatisfy` isLeft
+
+    describe "TryCast Float Integer" $ do
+      test $ tryCast @Float @Integer 0 `shouldBe` Right 0
+      test $ tryCast @Float @Integer 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Float @Integer 16777216 `shouldSatisfy` isLeft
+      test $ tryCast @Float @Integer (-16777215) `shouldBe` Right (-16777215)
+      test $ tryCast @Float @Integer (-16777216) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Integer (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Integer (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Integer (-1 / 0) `shouldSatisfy` isLeft
+
+    describe "TryCast Float Word8" $ do
+      test $ tryCast @Float @Word8 0 `shouldBe` Right 0
+      test $ tryCast @Float @Word8 255 `shouldBe` Right 255
+      test $ tryCast @Float @Word8 256 `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word8 (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word8 (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word8 (-1 / 0) `shouldSatisfy` isLeft
+
+    describe "TryCast Float Word16" $ do
+      test $ tryCast @Float @Word16 0 `shouldBe` Right 0
+      test $ tryCast @Float @Word16 65535 `shouldBe` Right 65535
+      test $ tryCast @Float @Word16 65536 `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word16 (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word16 (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word16 (-1 / 0) `shouldSatisfy` isLeft
+
+    describe "TryCast Float Word32" $ do
+      test $ tryCast @Float @Word32 0 `shouldBe` Right 0
+      test $ tryCast @Float @Word32 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Float @Word32 16777216 `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word32 (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word32 (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word32 (-1 / 0) `shouldSatisfy` isLeft
+
+    describe "TryCast Float Word64" $ do
+      test $ tryCast @Float @Word64 0 `shouldBe` Right 0
+      test $ tryCast @Float @Word64 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Float @Word64 16777216 `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word64 (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word64 (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word64 (-1 / 0) `shouldSatisfy` isLeft
+
+    describe "TryCast Float Word" $ do
+      test $ tryCast @Float @Word 0 `shouldBe` Right 0
+      test $ tryCast @Float @Word 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Float @Word 16777216 `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Word (-1 / 0) `shouldSatisfy` isLeft
+
+    describe "TryCast Float Natural" $ do
+      test $ tryCast @Float @Natural 0 `shouldBe` Right 0
+      test $ tryCast @Float @Natural 16777215 `shouldBe` Right 16777215
+      test $ tryCast @Float @Natural 16777216 `shouldSatisfy` isLeft
+      test $ tryCast @Float @Natural (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Natural (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Natural (-1 / 0) `shouldSatisfy` isLeft
+
+    describe "TryCast Float Rational" $ do
+      test $ tryCast @Float @Rational 0 `shouldBe` Right 0
+      -- TODO
+      test $ tryCast @Float @Rational (0 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Rational (1 / 0) `shouldSatisfy` isLeft
+      test $ tryCast @Float @Rational (-1 / 0) `shouldSatisfy` isLeft
 
     -- NonEmpty
 
