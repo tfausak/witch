@@ -6,6 +6,9 @@ import qualified Control.Exception as Exception
 import qualified Data.Proxy as Proxy
 import qualified Data.Typeable as Typeable
 
+-- | This exception is thrown when a @TryCast@ conversion fails. It has the
+-- original @source@ value that caused the failure and it knows the @target@
+-- type it was trying to convert into.
 newtype TryCastException source target
   = TryCastException source
   deriving Eq
