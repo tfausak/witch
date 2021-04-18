@@ -24,7 +24,7 @@ import qualified Data.Text.Lazy as LazyText
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 import qualified Test.Hspec as Hspec
-import qualified Witch as Witch
+import qualified Witch
 
 main :: IO ()
 main = Hspec.hspec . Hspec.describe "Witch" $ do
@@ -82,7 +82,7 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ ($$(Witch.liftedFrom @Int.Int16 1) :: Int.Int8) `Hspec.shouldBe` 1
 
     Hspec.describe "liftedInto" $ do
-      test $ ($$(Witch.liftedInto @Int.Int8 (1 :: Int.Int16))) `Hspec.shouldBe` 1
+      test $ $$(Witch.liftedInto @Int.Int8 (1 :: Int.Int16)) `Hspec.shouldBe` 1
 
   Hspec.describe "Instances" $ do
 
@@ -1463,14 +1463,14 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
 
     Hspec.describe "Cast [(k, v)] (Map k v)" $ do
       let f = Witch.cast @[(Char, Int)] @(Map.Map Char Int)
-      test $ f [] `Hspec.shouldBe` Map.fromList []
+      test $ f [] `Hspec.shouldBe` Map.empty
       test $ f [('a', 1)] `Hspec.shouldBe` Map.fromList [('a', 1)]
       test $ f [('a', 1), ('b', 2)] `Hspec.shouldBe` Map.fromList [('a', 1), ('b', 2)]
       test $ f [('a', 1), ('a', 2)] `Hspec.shouldBe` Map.fromList [('a', 2)]
 
     Hspec.describe "Cast (Map k v) [(k, v)]" $ do
       let f = Witch.cast @(Map.Map Char Int) @[(Char, Int)]
-      test $ f (Map.fromList []) `Hspec.shouldBe` []
+      test $ f Map.empty `Hspec.shouldBe` []
       test $ f (Map.fromList [('a', 1)]) `Hspec.shouldBe` [('a', 1)]
       test $ f (Map.fromList [('a', 1), ('b', 2)]) `Hspec.shouldBe` [('a', 1), ('b', 2)]
 

@@ -148,8 +148,9 @@ instance TryCast.TryCast Int.Int32 Natural.Natural where
   tryCast = maybeTryCast fromNonNegativeIntegral
 
 instance TryCast.TryCast Int.Int32 Float where
-  tryCast = maybeTryCast $ \s ->
-    if -maxFloat <= s && s <= maxFloat then Just $ fromIntegral s else Nothing
+  tryCast = maybeTryCast $ \s -> if -maxFloat <= s && s <= maxFloat
+    then Just $ fromIntegral s
+    else Nothing
 
 instance Cast.Cast Int.Int32 Double where
   cast = fromIntegral
@@ -190,14 +191,14 @@ instance TryCast.TryCast Int.Int64 Natural.Natural where
   tryCast = maybeTryCast fromNonNegativeIntegral
 
 instance TryCast.TryCast Int.Int64 Float where
-  tryCast = maybeTryCast $ \s ->
-    if -maxFloat <= s && s <= maxFloat then Just $ fromIntegral s else Nothing
+  tryCast = maybeTryCast $ \s -> if -maxFloat <= s && s <= maxFloat
+    then Just $ fromIntegral s
+    else Nothing
 
 instance TryCast.TryCast Int.Int64 Double where
-  tryCast = maybeTryCast $ \s ->
-    if -maxDouble <= s && s <= maxDouble
-      then Just $ fromIntegral s
-      else Nothing
+  tryCast = maybeTryCast $ \s -> if -maxDouble <= s && s <= maxDouble
+    then Just $ fromIntegral s
+    else Nothing
 
 -- Int
 
@@ -235,16 +236,16 @@ instance TryCast.TryCast Int Natural.Natural where
   tryCast = maybeTryCast fromNonNegativeIntegral
 
 instance TryCast.TryCast Int Float where
-  tryCast = maybeTryCast $ \s ->
-    if -maxFloat <= s && s <= maxFloat then Just $ fromIntegral s else Nothing
+  tryCast = maybeTryCast $ \s -> if -maxFloat <= s && s <= maxFloat
+    then Just $ fromIntegral s
+    else Nothing
 
 instance TryCast.TryCast Int Double where
   tryCast = maybeTryCast $ \s ->
-    if toInteger (maxBound :: Int) <= maxDouble
+    if (toInteger (maxBound :: Int) <= maxDouble)
+        || (-maxDouble <= s && s <= maxDouble)
       then Just $ fromIntegral s
-      else if -maxDouble <= s && s <= maxDouble
-        then Just $ fromIntegral s
-        else Nothing
+      else Nothing
 
 -- Integer
 
@@ -287,14 +288,14 @@ instance TryCast.TryCast Integer Natural.Natural where
     maybeTryCast $ \s -> if s < 0 then Nothing else Just $ fromInteger s
 
 instance TryCast.TryCast Integer Float where
-  tryCast = maybeTryCast $ \s ->
-    if -maxFloat <= s && s <= maxFloat then Just $ fromIntegral s else Nothing
+  tryCast = maybeTryCast $ \s -> if -maxFloat <= s && s <= maxFloat
+    then Just $ fromIntegral s
+    else Nothing
 
 instance TryCast.TryCast Integer Double where
-  tryCast = maybeTryCast $ \s ->
-    if -maxDouble <= s && s <= maxDouble
-      then Just $ fromIntegral s
-      else Nothing
+  tryCast = maybeTryCast $ \s -> if -maxDouble <= s && s <= maxDouble
+    then Just $ fromIntegral s
+    else Nothing
 
 -- Word8
 
@@ -414,8 +415,8 @@ instance Cast.Cast Word.Word32 Integer where
   cast = fromIntegral
 
 instance TryCast.TryCast Word.Word32 Float where
-  tryCast = maybeTryCast $ \s ->
-    if s <= maxFloat then Just $ fromIntegral s else Nothing
+  tryCast = maybeTryCast
+    $ \s -> if s <= maxFloat then Just $ fromIntegral s else Nothing
 
 instance Cast.Cast Word.Word32 Double where
   cast = fromIntegral
@@ -456,12 +457,12 @@ instance Cast.Cast Word.Word64 Integer where
   cast = fromIntegral
 
 instance TryCast.TryCast Word.Word64 Float where
-  tryCast = maybeTryCast $ \s ->
-    if s <= maxFloat then Just $ fromIntegral s else Nothing
+  tryCast = maybeTryCast
+    $ \s -> if s <= maxFloat then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Word.Word64 Double where
-  tryCast = maybeTryCast $ \s ->
-    if s <= maxDouble then Just $ fromIntegral s else Nothing
+  tryCast = maybeTryCast
+    $ \s -> if s <= maxDouble then Just $ fromIntegral s else Nothing
 
 -- Word
 
@@ -499,14 +500,14 @@ instance Cast.Cast Word Integer where
   cast = fromIntegral
 
 instance TryCast.TryCast Word Float where
-  tryCast = maybeTryCast $ \s ->
-    if s <= maxFloat then Just $ fromIntegral s else Nothing
+  tryCast = maybeTryCast
+    $ \s -> if s <= maxFloat then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Word Double where
   tryCast = maybeTryCast $ \s ->
-    if toInteger (maxBound :: Word) <= maxDouble
+    if (toInteger (maxBound :: Word) <= maxDouble) || (s <= maxDouble)
       then Just $ fromIntegral s
-      else if s <= maxDouble then Just $ fromIntegral s else Nothing
+      else Nothing
 
 -- Natural
 
@@ -544,12 +545,12 @@ instance Cast.Cast Natural.Natural Integer where
   cast = fromIntegral
 
 instance TryCast.TryCast Natural.Natural Float where
-  tryCast = maybeTryCast $ \s ->
-    if s <= maxFloat then Just $ fromIntegral s else Nothing
+  tryCast = maybeTryCast
+    $ \s -> if s <= maxFloat then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Natural.Natural Double where
-  tryCast = maybeTryCast $ \s ->
-    if s <= maxDouble then Just $ fromIntegral s else Nothing
+  tryCast = maybeTryCast
+    $ \s -> if s <= maxDouble then Just $ fromIntegral s else Nothing
 
 -- Float
 
@@ -594,8 +595,8 @@ instance TryCast.TryCast Float Natural.Natural where
   tryCast = tryCastVia @Integer
 
 instance TryCast.TryCast Float Rational where
-  tryCast = maybeTryCast $ \s ->
-    if isNaN s || isInfinite s then Nothing else Just $ toRational s
+  tryCast = maybeTryCast
+    $ \s -> if isNaN s || isInfinite s then Nothing else Just $ toRational s
 
 instance Cast.Cast Float Double where
   cast = realToFrac
@@ -643,8 +644,8 @@ instance TryCast.TryCast Double Natural.Natural where
   tryCast = tryCastVia @Integer
 
 instance TryCast.TryCast Double Rational where
-  tryCast = maybeTryCast $ \s ->
-    if isNaN s || isInfinite s then Nothing else Just $ toRational s
+  tryCast = maybeTryCast
+    $ \s -> if isNaN s || isInfinite s then Nothing else Just $ toRational s
 
 instance Cast.Cast Double Float where
   cast = realToFrac
@@ -798,7 +799,7 @@ maybeTryCast f s = case f s of
 
 tryCastVia
   :: forall through source target
-  . (TryCast.TryCast source through, TryCast.TryCast through target)
+   . (TryCast.TryCast source through, TryCast.TryCast through target)
   => source
   -> Either (TryCastException.TryCastException source target) target
 tryCastVia s = case TryCast.tryCast s of
