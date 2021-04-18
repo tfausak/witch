@@ -1349,6 +1349,12 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldSatisfy` Either.isLeft
       test $ f (-1 / 0) `Hspec.shouldSatisfy` Either.isLeft
 
+    Hspec.describe "Cast Double Float" $ do
+      let f = Witch.cast @Double @Float
+      test $ f 0 `Hspec.shouldBe` 0
+      test $ f 0.5 `Hspec.shouldBe` 0.5
+      test $ f (-0.5) `Hspec.shouldBe` (-0.5)
+
     -- NonEmpty
 
     Hspec.describe "TryCast [a] (NonEmpty a)" $ do
@@ -1375,6 +1381,18 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       let f = Witch.tryCast @(Ratio.Ratio Int) @Int
       test $ f 0 `Hspec.shouldBe` Right 0
       test $ f 0.5 `Hspec.shouldSatisfy` Either.isLeft
+
+    Hspec.describe "Cast Rational Float" $ do
+      let f = Witch.cast @Rational @Float
+      test $ f 0 `Hspec.shouldBe` 0
+      test $ f 0.5 `Hspec.shouldBe` 0.5
+      test $ f (-0.5) `Hspec.shouldBe` (-0.5)
+
+    Hspec.describe "Cast Rational Double" $ do
+      let f = Witch.cast @Rational @Double
+      test $ f 0 `Hspec.shouldBe` 0
+      test $ f 0.5 `Hspec.shouldBe` 0.5
+      test $ f (-0.5) `Hspec.shouldBe` (-0.5)
 
     -- Fixed
 

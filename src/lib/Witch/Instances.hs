@@ -643,6 +643,9 @@ instance TryCast.TryCast Double Rational where
   tryCast = maybeTryCast $ \s ->
     if isNaN s || isInfinite s then Nothing else Just $ toRational s
 
+instance Cast.Cast Double Float where
+  cast = realToFrac
+
 -- Ratio
 
 instance Integral a => Cast.Cast a (Ratio.Ratio a) where
@@ -651,6 +654,12 @@ instance Integral a => Cast.Cast a (Ratio.Ratio a) where
 instance (Eq a, Num a) => TryCast.TryCast (Ratio.Ratio a) a where
   tryCast = maybeTryCast $ \s ->
     if Ratio.denominator s == 1 then Just $ Ratio.numerator s else Nothing
+
+instance Cast.Cast Rational Float where
+  cast = fromRational
+
+instance Cast.Cast Rational Double where
+  cast = fromRational
 
 -- Fixed
 
