@@ -9,8 +9,13 @@ import qualified Data.Complex as Complex
 import qualified Data.Either as Either
 import qualified Data.Fixed as Fixed
 import qualified Data.Int as Int
+import qualified Data.IntMap as IntMap
+import qualified Data.IntSet as IntSet
 import qualified Data.List.NonEmpty as NonEmpty
+import qualified Data.Map as Map
 import qualified Data.Ratio as Ratio
+import qualified Data.Sequence as Seq
+import qualified Data.Set as Set
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 import qualified Test.Hspec as Hspec
@@ -1355,19 +1360,6 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 0.5 `Hspec.shouldBe` 0.5
       test $ f (-0.5) `Hspec.shouldBe` (-0.5)
 
-    -- NonEmpty
-
-    Hspec.describe "TryCast [a] (NonEmpty a)" $ do
-      let f = Witch.tryCast @[Int] @(NonEmpty.NonEmpty Int)
-      test $ f [] `Hspec.shouldSatisfy` Either.isLeft
-      test $ f [1] `Hspec.shouldBe` Right (1 NonEmpty.:| [])
-      test $ f [1, 2] `Hspec.shouldBe` Right (1 NonEmpty.:| [2])
-
-    Hspec.describe "Cast (NonEmpty a) [a]" $ do
-      let f = Witch.cast @(NonEmpty.NonEmpty Int) @[Int]
-      test $ f (1 NonEmpty.:| []) `Hspec.shouldBe` [1]
-      test $ f (1 NonEmpty.:| [2]) `Hspec.shouldBe` [1, 2]
-
     -- Ratio
 
     Hspec.describe "Cast a (Ratio a)" $ do
@@ -1419,6 +1411,92 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       let f = Witch.tryCast @(Complex.Complex Float) @Float
       test $ f 1 `Hspec.shouldBe` Right 1
       test $ f (0 Complex.:+ 1) `Hspec.shouldSatisfy` Either.isLeft
+
+    -- NonEmpty
+
+    Hspec.describe "TryCast [a] (NonEmpty a)" $ do
+      let f = Witch.tryCast @[Int] @(NonEmpty.NonEmpty Int)
+      test $ f [] `Hspec.shouldSatisfy` Either.isLeft
+      test $ f [1] `Hspec.shouldBe` Right (1 NonEmpty.:| [])
+      test $ f [1, 2] `Hspec.shouldBe` Right (1 NonEmpty.:| [2])
+
+    Hspec.describe "Cast (NonEmpty a) [a]" $ do
+      let f = Witch.cast @(NonEmpty.NonEmpty Int) @[Int]
+      test $ f (1 NonEmpty.:| []) `Hspec.shouldBe` [1]
+      test $ f (1 NonEmpty.:| [2]) `Hspec.shouldBe` [1, 2]
+
+    -- Set
+
+    Hspec.describe "Cast [a] (Set a)" $ do
+      let f = Witch.cast @[Char] @(Set.Set Char)
+      test $ f [] `Hspec.shouldBe` Set.fromList []
+      test $ f ['a'] `Hspec.shouldBe` Set.fromList ['a']
+      test $ f ['a', 'b'] `Hspec.shouldBe` Set.fromList ['a', 'b']
+      test $ f ['a', 'a'] `Hspec.shouldBe` Set.fromList ['a']
+
+    Hspec.describe "Cast (Set a) [a]" $ do
+      let f = Witch.cast @(Set.Set Char) @[Char]
+      test $ f (Set.fromList []) `Hspec.shouldBe` []
+      test $ f (Set.fromList ['a']) `Hspec.shouldBe` ['a']
+      test $ f (Set.fromList ['a', 'b']) `Hspec.shouldBe` ['a', 'b']
+
+    -- IntSet
+
+    Hspec.describe "Cast [Int] IntSet" $ do
+      let f = Witch.cast @[Int] @IntSet.IntSet
+      test $ f [] `Hspec.shouldBe` IntSet.fromList []
+      test $ f [1] `Hspec.shouldBe` IntSet.fromList [1]
+      test $ f [1, 2] `Hspec.shouldBe` IntSet.fromList [1, 2]
+
+    Hspec.describe "Cast IntSet [Int]" $ do
+      let f = Witch.cast @IntSet.IntSet @[Int]
+      test $ f (IntSet.fromList []) `Hspec.shouldBe` []
+      test $ f (IntSet.fromList [1]) `Hspec.shouldBe` [1]
+      test $ f (IntSet.fromList [1, 2]) `Hspec.shouldBe` [1, 2]
+
+    -- Map
+
+    Hspec.describe "Cast [(k, v)] (Map k v)" $ do
+      let f = Witch.cast @[(Char, Int)] @(Map.Map Char Int)
+      test $ f [] `Hspec.shouldBe` Map.fromList []
+      test $ f [('a', 1)] `Hspec.shouldBe` Map.fromList [('a', 1)]
+      test $ f [('a', 1), ('b', 2)] `Hspec.shouldBe` Map.fromList [('a', 1), ('b', 2)]
+      test $ f [('a', 1), ('a', 2)] `Hspec.shouldBe` Map.fromList [('a', 2)]
+
+    Hspec.describe "Cast (Map k v) [(k, v)]" $ do
+      let f = Witch.cast @(Map.Map Char Int) @[(Char, Int)]
+      test $ f (Map.fromList []) `Hspec.shouldBe` []
+      test $ f (Map.fromList [('a', 1)]) `Hspec.shouldBe` [('a', 1)]
+      test $ f (Map.fromList [('a', 1), ('b', 2)]) `Hspec.shouldBe` [('a', 1), ('b', 2)]
+
+    -- IntMap
+
+    Hspec.describe "Cast [(Int, v)] (IntMap v)" $ do
+      let f = Witch.cast @[(Int, Char)] @(IntMap.IntMap Char)
+      test $ f [] `Hspec.shouldBe` IntMap.fromList []
+      test $ f [(1, 'a')] `Hspec.shouldBe` IntMap.fromList [(1, 'a')]
+      test $ f [(1, 'a'), (2, 'b')] `Hspec.shouldBe` IntMap.fromList [(1, 'a'), (2, 'b')]
+      test $ f [(1, 'a'), (1, 'b')] `Hspec.shouldBe` IntMap.fromList [(1, 'b')]
+
+    Hspec.describe "Cast (IntMap v) [(Int, v)]" $ do
+      let f = Witch.cast @(IntMap.IntMap Char) @[(Int, Char)]
+      test $ f (IntMap.fromList []) `Hspec.shouldBe` []
+      test $ f (IntMap.fromList [(1, 'a')]) `Hspec.shouldBe` [(1, 'a')]
+      test $ f (IntMap.fromList [(1, 'a'), (2, 'b')]) `Hspec.shouldBe` [(1, 'a'), (2, 'b')]
+
+    -- Seq
+
+    Hspec.describe "Cast [a] (Seq a)" $ do
+      let f = Witch.cast @[Int] @(Seq.Seq Int)
+      test $ f [] `Hspec.shouldBe` Seq.fromList []
+      test $ f [1] `Hspec.shouldBe` Seq.fromList [1]
+      test $ f [1, 2] `Hspec.shouldBe` Seq.fromList [1, 2]
+
+    Hspec.describe "Cast (Seq a) [a]" $ do
+      let f = Witch.cast @(Seq.Seq Int) @[Int]
+      test $ f (Seq.fromList []) `Hspec.shouldBe` []
+      test $ f (Seq.fromList [1]) `Hspec.shouldBe` [1]
+      test $ f (Seq.fromList [1, 2]) `Hspec.shouldBe` [1, 2]
 
 test :: Hspec.Example a => a -> Hspec.SpecWith (Hspec.Arg a)
 test = Hspec.it ""

@@ -10,22 +10,20 @@ module Witch.Instances where
 import qualified Data.Bits as Bits
 import qualified Data.Complex as Complex
 import qualified Data.Fixed as Fixed
+import qualified Data.Foldable as Foldable
 import qualified Data.Int as Int
+import qualified Data.IntMap as IntMap
+import qualified Data.IntSet as IntSet
 import qualified Data.List.NonEmpty as NonEmpty
+import qualified Data.Map as Map
 import qualified Data.Ratio as Ratio
+import qualified Data.Sequence as Seq
+import qualified Data.Set as Set
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 import qualified Witch.Cast as Cast
 import qualified Witch.TryCast as TryCast
 import qualified Witch.TryCastException as TryCastException
-
--- NonEmpty
-
-instance TryCast.TryCast [a] (NonEmpty.NonEmpty a) where
-  tryCast = maybeTryCast NonEmpty.nonEmpty
-
-instance Cast.Cast (NonEmpty.NonEmpty a) [a] where
-  cast = NonEmpty.toList
 
 -- Int8
 
@@ -677,6 +675,54 @@ instance Num a => Cast.Cast a (Complex.Complex a) where
 instance (Eq a, Num a) => TryCast.TryCast (Complex.Complex a) a where
   tryCast = maybeTryCast $ \s ->
     if Complex.imagPart s == 0 then Just $ Complex.realPart s else Nothing
+
+-- NonEmpty
+
+instance TryCast.TryCast [a] (NonEmpty.NonEmpty a) where
+  tryCast = maybeTryCast NonEmpty.nonEmpty
+
+instance Cast.Cast (NonEmpty.NonEmpty a) [a] where
+  cast = NonEmpty.toList
+
+-- Set
+
+instance Ord a => Cast.Cast [a] (Set.Set a) where
+  cast = Set.fromList
+
+instance Cast.Cast (Set.Set a) [a] where
+  cast = Set.toAscList
+
+-- IntSet
+
+instance Cast.Cast [Int] IntSet.IntSet where
+  cast = IntSet.fromList
+
+instance Cast.Cast IntSet.IntSet [Int] where
+  cast = IntSet.toAscList
+
+-- Map
+
+instance Ord k => Cast.Cast [(k, v)] (Map.Map k v) where
+  cast = Map.fromList
+
+instance Cast.Cast (Map.Map k v) [(k, v)] where
+  cast = Map.toAscList
+
+-- IntMap
+
+instance Cast.Cast [(Int, v)] (IntMap.IntMap v) where
+  cast = IntMap.fromList
+
+instance Cast.Cast (IntMap.IntMap v) [(Int, v)] where
+  cast = IntMap.toAscList
+
+-- Seq
+
+instance Cast.Cast [a] (Seq.Seq a) where
+  cast = Seq.fromList
+
+instance Cast.Cast (Seq.Seq a) [a] where
+  cast = Foldable.toList
 
 fromNonNegativeIntegral :: (Integral s, Num t) => s -> Maybe t
 fromNonNegativeIntegral x = if x < 0 then Nothing else Just $ fromIntegral x
