@@ -19,6 +19,8 @@ import qualified Data.Map as Map
 import qualified Data.Ratio as Ratio
 import qualified Data.Sequence as Seq
 import qualified Data.Set as Set
+import qualified Data.Text as Text
+import qualified Data.Text.Lazy as LazyText
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 import qualified Test.Hspec as Hspec
@@ -1566,6 +1568,46 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (ShortByteString.pack []) `Hspec.shouldBe` ByteString.pack []
       test $ f (ShortByteString.pack [0x00]) `Hspec.shouldBe` ByteString.pack [0x00]
       test $ f (ShortByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` ByteString.pack [0x0f, 0xf0]
+
+    -- Text
+
+    Hspec.describe "Cast String Text" $ do
+      let f = Witch.cast @String @Text.Text
+      test $ f "" `Hspec.shouldBe` Text.pack ""
+      test $ f "a" `Hspec.shouldBe` Text.pack "a"
+      test $ f "ab" `Hspec.shouldBe` Text.pack "ab"
+
+    Hspec.describe "Cast Text String" $ do
+      let f = Witch.cast @Text.Text @String
+      test $ f (Text.pack "") `Hspec.shouldBe` ""
+      test $ f (Text.pack "a") `Hspec.shouldBe` "a"
+      test $ f (Text.pack "ab") `Hspec.shouldBe` "ab"
+
+    Hspec.describe "Cast Text LazyText" $ do
+      let f = Witch.cast @Text.Text @LazyText.Text
+      test $ f (Text.pack "") `Hspec.shouldBe` LazyText.pack ""
+      test $ f (Text.pack "a") `Hspec.shouldBe` LazyText.pack "a"
+      test $ f (Text.pack "ab") `Hspec.shouldBe` LazyText.pack "ab"
+
+    -- LazyText
+
+    Hspec.describe "Cast String LazyText" $ do
+      let f = Witch.cast @String @LazyText.Text
+      test $ f "" `Hspec.shouldBe` LazyText.pack ""
+      test $ f "a" `Hspec.shouldBe` LazyText.pack "a"
+      test $ f "ab" `Hspec.shouldBe` LazyText.pack "ab"
+
+    Hspec.describe "Cast LazyText String" $ do
+      let f = Witch.cast @LazyText.Text @String
+      test $ f (LazyText.pack "") `Hspec.shouldBe` ""
+      test $ f (LazyText.pack "a") `Hspec.shouldBe` "a"
+      test $ f (LazyText.pack "ab") `Hspec.shouldBe` "ab"
+
+    Hspec.describe "Cast LazyText Text" $ do
+      let f = Witch.cast @LazyText.Text @Text.Text
+      test $ f (LazyText.pack "") `Hspec.shouldBe` Text.pack ""
+      test $ f (LazyText.pack "a") `Hspec.shouldBe` Text.pack "a"
+      test $ f (LazyText.pack "ab") `Hspec.shouldBe` Text.pack "ab"
 
 test :: Hspec.Example a => a -> Hspec.SpecWith (Hspec.Arg a)
 test = Hspec.it ""

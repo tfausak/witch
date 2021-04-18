@@ -22,6 +22,8 @@ import qualified Data.Map as Map
 import qualified Data.Ratio as Ratio
 import qualified Data.Sequence as Seq
 import qualified Data.Set as Set
+import qualified Data.Text as Text
+import qualified Data.Text.Lazy as LazyText
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 import qualified Witch.Cast as Cast
@@ -762,6 +764,28 @@ instance Cast.Cast ShortByteString.ShortByteString [Word.Word8] where
 
 instance Cast.Cast ShortByteString.ShortByteString ByteString.ByteString where
   cast = ShortByteString.fromShort
+
+-- Text
+
+instance Cast.Cast String Text.Text where
+  cast = Text.pack
+
+instance Cast.Cast Text.Text String where
+  cast = Text.unpack
+
+instance Cast.Cast Text.Text LazyText.Text where
+  cast = LazyText.fromStrict
+
+-- LazyText
+
+instance Cast.Cast String LazyText.Text where
+  cast = LazyText.pack
+
+instance Cast.Cast LazyText.Text String where
+  cast = LazyText.unpack
+
+instance Cast.Cast LazyText.Text Text.Text where
+  cast = LazyText.toStrict
 
 fromNonNegativeIntegral :: (Integral s, Num t) => s -> Maybe t
 fromNonNegativeIntegral x = if x < 0 then Nothing else Just $ fromIntegral x
