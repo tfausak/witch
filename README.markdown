@@ -5,3 +5,7 @@
 [![Stackage](https://www.stackage.org/package/witch/badge/nightly?label=stackage)](https://www.stackage.org/package/witch)
 
 :mage_woman: Convert values from one type into another.
+
+## To do
+
+- [ ] Add more instances ...

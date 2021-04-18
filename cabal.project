@@ -1,0 +1,6 @@
+jobs: $ncpus
+packages: .
+
+package witch
+  ghc-options: -Werror
+  tests: True

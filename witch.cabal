@@ -1,52 +1,77 @@
-cabal-version: >= 1.10
+cabal-version: 2.2
+
+name: witch
+version: 0.0.0.5
+synopsis: Convert values from one type into another.
+description: Witch converts values from one type into another.
 
 build-type: Simple
 category: Data
-description: Witch converts values from one type into another.
 extra-source-files: CHANGELOG.markdown README.markdown
 license-file: LICENSE.txt
 license: ISC
 maintainer: Taylor Fausak
-name: witch
-synopsis: Convert values from one type into another.
-version: 0.0.0.5
 
 source-repository head
   location: https://github.com/tfausak/witch
   type: git
 
-library
+common basics
   build-depends:
-    base >= 4.13.0 && < 4.16
-    , bytestring >= 0.10.10 && < 0.11
+    , base >= 4.13.0 && < 4.16
+    , bytestring >= 0.10.12 && < 0.11
     , containers >= 0.6.2 && < 0.7
     , text >= 1.2.4 && < 1.3
   default-language: Haskell2010
-  exposed-modules: Witch
   ghc-options:
     -Weverything
     -Wno-implicit-prelude
+    -Wno-missing-deriving-strategies
+    -Wno-missing-export-lists
+    -Wno-missing-exported-signatures
     -Wno-redundant-constraints
     -Wno-safe
     -Wno-unsafe
-  hs-source-dirs: src/lib
 
   if impl(ghc >= 8.10)
     ghc-options:
       -Wno-missing-safe-haskell-mode
       -Wno-prepositive-qualified-module
 
-test-suite test
+library
+  import: basics
+
   build-depends:
-    base
-    , bytestring
-    , containers
-    , hspec >= 2.7.6 && < 2.8
-    , QuickCheck >= 2.13.2 && < 2.15
-    , text
+    , template-haskell >= 2.15.0 && < 2.18
+  exposed-modules:
+    Witch
+    Witch.Cast
+    Witch.Identity
+    Witch.Instances
+    Witch.Lift
+    Witch.TryCast
+    Witch.TryCastException
+    Witch.Utility
+  hs-source-dirs: src/lib
+
+  if impl(ghc >= 9.0)
+    hs-source-dirs: src/ghc-9.0
+  else
+    if impl(ghc >= 8.10)
+      hs-source-dirs: src/ghc-8.10
+    else
+      hs-source-dirs: src/ghc-8.8
+
+test-suite test
+  import: basics
+
+  build-depends:
+    , hspec >= 2.7.9 && < 2.8
     , witch
-  default-language: Haskell2010
-  ghc-options: -rtsopts -threaded
+  ghc-options:
+    -rtsopts
+    -threaded
+    -Wno-all-missed-specialisations
   hs-source-dirs: src/test
   main-is: Main.hs
   type: exitcode-stdio-1.0

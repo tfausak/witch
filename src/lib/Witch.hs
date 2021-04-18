@@ -1,319 +1,161 @@
-{-# language AllowAmbiguousTypes #-}
-{-# language DefaultSignatures #-}
-{-# language FlexibleInstances #-}
-{-# language MultiParamTypeClasses #-}
-{-# language ScopedTypeVariables #-}
-{-# language TypeFamilies #-}
-
--- | This module provides the 'Cast' type class for converting values between
--- various types. This aims to be a common interface for the various @xToY@ or
--- @yFromX@ functions you might write instead. It is inspired by the
--- @std::convert::From@ trait that the Rust programming language provides.
+-- | The Witch package is a library that allows you to confidently convert
+-- values between various types. This module exports everything you need to
+-- perform conversions or define your own. It is designed to be imported
+-- unqualified, so getting started is as easy as:
 --
--- Many Haskell libraries already provide similar functionality. Here's how
--- this module compares to them:
---
--- - <https://hackage.haskell.org/package/base-4.14.0.0/docs/Data-Coerce.html>:
---   This type class is convenient because it's automatically inferred by the
---   compiler, but it only works for types that have the same runtime
---   representation.
---
--- - <https://hackage.haskell.org/package/convertible-1.1.1.0/docs/Data-Convertible-Base.html>:
---   This type class allows for conversions to fail.
---
--- - <https://hackage.haskell.org/package/basement-0.0.11/docs/Basement-From.html>:
---   This type class is essentially the same, but the @basement@ package is an
---   alternative standard library that some people may not want to depend on.
---
--- - <https://hackage.haskell.org/package/inj-base-0.2.0.0/docs/Inj-Base.html>:
---   This type class requires conversions to be injective, as opposed to merely
---   suggesting it. Also some conversions fail at runtime.
---
--- - <https://github.com/mbj/conversions/blob/6ac6c52/src/Data/Conversions/FromType.hs>:
---   This type class comes with many convenient helper functions, but some of
---   the provided instances fail at runtime.
---
--- - <https://github.com/kframework/kore/blob/626f230/kore/src/From.hs>:
---   This package is not available on Hackage, but otherwise is very similar to
---   this one.
-module Witch (Cast(cast), from, into, via) where
-
-import qualified Data.ByteString as ByteString
-import qualified Data.ByteString.Lazy as LazyByteString
-import qualified Data.Coerce as Coerce
-import qualified Data.Foldable as Foldable
-import qualified Data.Int as Int
-import qualified Data.List.NonEmpty as NonEmpty
-import qualified Data.Map as Map
-import qualified Data.Sequence as Seq
-import qualified Data.Set as Set
-import qualified Data.Text as Text
-import qualified Data.Text.Lazy as LazyText
-import qualified Data.Tuple as Tuple
-import qualified Data.Void as Void
-import qualified Data.Word as Word
-import qualified Numeric.Natural as Natural
-
--- | This type class represents a way to convert values from some type into
--- another type. The constraint @Cast a b@ means that you can convert from a
--- value of type @a@ into a value of type @b@.
---
--- This is primarily intended for "zero cost" conversions like @newtype@s. For
--- example if you wanted to have a type to represent someone's name, you could
--- say:
---
--- > newtype Name = Name String
--- > instance Cast String Name
--- > instance Cast Name String
---
--- And then you could convert back and forth between @Name@s and @String@s:
---
--- > let someString = "Taylor"
--- > let someName = Name someString
--- > into @Name someString -- convert from string to name
--- > into @String someName -- convert from name to string
---
--- This type class does not have any laws, but it does have some expectations:
---
--- - Conversions should be total. A conversion should never fail or crash.
---   Avoid writing instances like @Cast Int (Maybe Char)@. (It might be
---   worthwhile to have a separate @TryCast@ type class for this.)
---
--- - Conversions should be unambiguous. For example there are many ways to
---   decode a @ByteString@ into @Text@, so you shouldn't provide an instance
---   for that.
---
--- - Conversions should be cheap, ideally free. For example converting from
---   @String@ to @Text@ is probably fine, but converting from a UTF-8 encoded
---   @ByteString@ to @Text@ is problematic.
---
--- - Conversions should be lossless. In other words if you have @Cast a b@ then
---   no two @a@ values should be converted to the same @b@ value. For example
---   @Cast Int Integer@ is fine because every @Int@ can be mapped to a
---   corresponding @Integer@, but @Cast Integer Int@ is not good because some
---   @Integer@s are out of bounds and would need to be clamped.
---
--- - If you have both @Cast a b@ and @Cast b a@, then @cast . cast@ should be
---   the same as 'id'. In other words @a@ and @b@ are isomorphic.
---
--- - If you have both @Cast a b@ and @Cast b c@, then it's up to you if you
---   want to provide @Cast a c@. Sometimes using 'via' is ergonomic enough,
---   other times you want the extra instance. (It would be nice if we could
---   provide @instance (Cast a b, Cast b c) => Cast a c where cast = via \@b@.)
-class Cast source target where
-  -- | This method implements the conversion of a value between types. In
-  -- practice most instances don't need an explicit implementation. At call
-  -- sites you'll usually want to use 'from' or 'into' instead of 'cast'.
+-- >>> import Witch
+module Witch
+  ( -- * Motivation
+  -- | Haskell provides many ways to convert between common types, and core
+  -- libraries add even more. It can be challenging to know which function to
+  -- use when converting from some source type @a@ to some target type @b@. It
+  -- can be even harder to know if that conversion is safe or if there are any
+  -- pitfalls to watch out for.
   --
-  -- The default implementation of 'cast' simply calls 'Coerce.coerce', which
-  -- works for types that have the same runtime representation.
-  cast :: source -> target
-  default cast :: Coerce.Coercible source target => source -> target
-  cast = Coerce.coerce
+  -- This library tries to address that problem by providing a common
+  -- interface for converting between types. The 'Witch.Cast.Cast' type class
+  -- is for conversions that cannot fail, and the 'Witch.TryCast.TryCast' type
+  -- class is for conversions that can fail. These type classes are inspired
+  -- by the [@From@](https://doc.rust-lang.org/std/convert/trait.From.html)
+  -- trait in Rust.
 
--- This ugly hack is used to require type applications when calling 'from' and
--- 'into'. See <https://twitter.com/taylorfausak/status/1329084033003782148>.
-data Never
-type family Ambiguous a where
-  Ambiguous Never = ()
-  Ambiguous a = a
+  -- * Alternatives
+  -- | Many Haskell libraries already provide similar functionality. How is
+  -- this library different?
+  --
+  -- - [@Coercible@](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Coerce.html#t:Coercible):
+  --   This type class is solved by the compiler, but it only works for types
+  --   that have the same runtime representation. This is very convenient for
+  --   @newtype@s, but it does not work for converting between arbitrary types
+  --   like @Int8@ and @Int16@.
+  --
+  -- - [@Convertible@](https://hackage.haskell.org/package/convertible-1.1.1.0/docs/Data-Convertible-Base.html#t:Convertible):
+  --   This popular conversion type class is similar to what this library
+  --   provides. The main difference is that it does not differentiate between
+  --   conversions that can fail and those that cannot.
+  --
+  -- - [@From@](https://hackage.haskell.org/package/basement-0.0.11/docs/Basement-From.html#t:From):
+  --   This type class is almost identical to what this library provides.
+  --   Unfortunately it is part of the @basement@ package, which is an
+  --   alternative standard library that some people may not want to depend
+  --   on.
+  --
+  -- - [@Inj@](https://hackage.haskell.org/package/inj-1.0/docs/Inj.html#t:Inj):
+  --   This type class requires instances to be an injection, which means that
+  --   no two input values should map to the same output. That restriction
+  --   prohibits many useful instances. Also many instances throw impure
+  --   exceptions.
+  --
+  -- In addition to those general-purpose type classes, there are many
+  -- alternatives for more specific conversions. How does this library compare
+  -- to those?
+  --
+  -- - Monomorphic conversion functions like [@Data.Text.pack@](https://hackage.haskell.org/package/text-1.2.4.1/docs/Data-Text.html#v:pack)
+  --   are explicit but not necessarily convenient. It can be tedious to
+  --   manage the imports necessary to use the functions. And if you want to
+  --   put them in a custom prelude, you will have to come up with your own
+  --   names.
+  --
+  -- - Polymorphic conversion methods like 'toEnum' are more convenient but
+  --   may have unwanted semantics or runtime behavior. For example the 'Enum'
+  --   type class is more or less tied to the 'Int' data type and frequently
+  --   throws impure exceptions.
+  --
+  -- - Polymorphic conversion functions like 'fromIntegral' are very
+  --   convenient. Unfortunately it can be challenging to know which types
+  --   have the instances necessary to make the conversion possible. And even
+  --   if the conversion is possible, is it safe? For example converting a
+  --   negative 'Int' into a 'Word' will overflow, which may be surprising.
 
--- | This function converts a value from one type into another. This is
--- intended to be used with the @TypeApplications@ language extension. The
--- @Ambiguous@ type in the signature makes a type application required. If
--- you'd prefer not to provide a type application, use 'cast' instead.
---
--- As an example, here are a few ways to convert from an 'Int' into an
--- 'Integer':
---
--- > from @Int @Integer 123
--- > from @_ @Integer (123 :: Int)
--- > from @Int @_ 123 :: Integer
--- > from @Int 123 :: Integer
---
--- Often the context around an expression will make the explicit type
--- signatures unnecessary. If you find yourself using a partial type
--- signature, consider using 'into' instead. For example:
---
--- > let someInt = 123 :: Int
--- > from @_ @Integer someInt -- avoid this
--- > into @Integer someInt -- prefer this
---
-from :: forall s target source . (Ambiguous s ~ source, Cast source target) => source -> target
-from = cast
+  -- * Instances
+  -- | When should you add a 'Witch.Cast.Cast' (or 'Witch.TryCast.TryCast')
+  -- instance for some pair of types? This is a surprisingly tricky question
+  -- to answer precisely. Instances are driven more by guidelines than rules.
+  --
+  -- - Conversions must not throw impure exceptions. This means no 'undefined'
+  --   or anything equivalent to it.
+  --
+  -- - Conversions should be unambiguous. If there are multiple reasonable
+  --   ways to convert from @a@ to @b@, then you probably should not add a
+  --   @Cast@ instance for them.
+  --
+  -- - Conversions should be lossless. If you have @Cast a b@ then no two @a@
+  --   values should be converted to the same @b@ value.
+  --
+  -- - If you have both @Cast a b@ and @Cast b a@, then
+  --   @cast \@b \@a . cast \@a \@b@ should be the same as 'id'. In other
+  --   words, @a@ and @b@ are isomorphic.
+  --
+  -- - If you have both @Cast a b@ and @Cast b c@, then you could also have
+  --   @Cast a c@ and it should be the same as @cast \@b \@c . cast \@a \@b@.
+  --   In other words, @Cast@ is transitive.
+  --
+  -- In general if @s@ is a @t@, then you should add a 'Witch.Cast.Cast'
+  -- instance for it. But if @s@ merely can be a @t@, then you could add a
+  -- 'Witch.TryCast.TryCast' instance for it. And if it is technically
+  -- possible to convert from @s@ to @t@ but there are a lot of caveats, you
+  -- probably should not write any instances at all.
 
--- | This function converts a value from one type into another. This is the
--- same as 'from' except that the type variables are in the opposite order.
-into :: forall t source target . (Ambiguous t ~ target, Cast source target) => source -> target
-into = cast
+  -- * Type applications
+  -- | This library is designed to be used with the [@TypeApplications@](https://downloads.haskell.org/~ghc/9.0.1/docs/html/users_guide/exts/type_applications.html)
+  -- language extension. Although it is not required for basic functionality,
+  -- it is strongly encouraged. You can use 'Witch.Cast.cast',
+  -- 'Witch.TryCast.tryCast', 'Witch.Utility.unsafeCast', and
+  -- 'Witch.Lift.liftedCast' without type applications. Everything else
+  -- requires a type application.
 
--- | This function converts a value from one type into another by going through
--- some third type. This is the same as calling 'cast' (or 'from' or 'into')
--- twice, but can sometimes be more convenient.
---
--- Note that the type in the middle of the conversion is the first type
--- variable of this function. In other words, @via \@b \@a \@c@ first converts
--- from @a@ to @b@, and then from @b@ to @c@. Often both @a@ and @c@ will be
--- inferred from context, which means you can just write @via \@b@.
-via :: forall through source target . (Cast source through, Cast through target) => source -> target
-via = cast . (\ x -> x :: through) . cast
+  -- * Ambiguous types
+  -- | You may see @Identity@ show up in some type signatures. Anywhere you see
+  -- @Identity a@, you can mentally replace it with @a@. It is a type family
+  -- used to trick GHC into requiring type applications for certain functions.
+  -- If you forget to give a type application, you will see an error like
+  -- this:
+  --
+  -- >>> from (1 :: Int8) :: Int16
+  -- <interactive>:1:1: error:
+  --     * Couldn't match type `Identity s0' with `Int8'
+  --         arising from a use of `from'
+  --       The type variable `s0' is ambiguous
+  --     * In the expression: from (1 :: Int8) :: Int16
+  --       In an equation for `it': it = from (1 :: Int8) :: Int16
+  --
+  -- You can fix the problem by giving a type application:
+  --
+  -- >>> from @Int8 1 :: Int16
+  -- 1
 
--- | 'id'
-instance Cast a a where
-  cast = id
+  -- * Type classes
+  -- ** Cast
+    Witch.Cast.Cast(cast)
+  , Witch.Utility.from
+  , Witch.Utility.into
 
--- | 'const'
-instance Cast a (x -> a) where
-  cast = const
+  -- ** TryCast
+  , Witch.TryCast.TryCast(tryCast)
+  , Witch.Utility.tryFrom
+  , Witch.Utility.tryInto
+  , Witch.TryCastException.TryCastException(..)
 
--- | 'pure'
-instance Cast a [a] where
-  cast = pure
+  -- * Utilities
+  , Witch.Utility.as
+  , Witch.Utility.over
+  , Witch.Utility.via
+  , Witch.Utility.tryVia
 
--- | 'Just'
-instance Cast a (Maybe a) where
-  cast = Just
+  -- ** Unsafe
+  , Witch.Utility.unsafeCast
+  , Witch.Utility.unsafeFrom
+  , Witch.Utility.unsafeInto
 
--- | 'Left'
-instance Cast a (Either a x) where
-  cast = Left
+  -- ** Template Haskell
+  , Witch.Lift.liftedCast
+  , Witch.Lift.liftedFrom
+  , Witch.Lift.liftedInto
+  ) where
 
--- | 'Right'
-instance Cast a (Either x a) where
-  cast = Right
-
--- | 'Void.absurd'
-instance Cast Void.Void x where
-  cast = Void.absurd
-
--- | 'fst'
-instance Cast (a, x) a where
-  cast = fst
-
--- | 'snd'
-instance Cast (x, a) a where
-  cast = snd
-
--- | 'Tuple.swap'
-instance Cast (a, b) (b, a) where
-  cast = Tuple.swap
-
--- | 'NonEmpty.toList'
-instance Cast (NonEmpty.NonEmpty a) [a] where
-  cast = NonEmpty.toList
-
--- | 'fromIntegral'
-instance Cast Word.Word8 Word.Word16 where
-  cast = fromIntegral
-
--- | 'fromIntegral'
-instance Cast Word.Word16 Word.Word32 where
-  cast = fromIntegral
-
--- | 'fromIntegral'
-instance Cast Word.Word32 Word.Word64 where
-  cast = fromIntegral
-
--- | 'fromIntegral'
-instance Cast Word Natural.Natural where
-  cast = fromIntegral
-
--- | 'fromIntegral'
-instance Cast Natural.Natural Integer where
-  cast = fromIntegral
-
--- | 'fromIntegral'
-instance Cast Int.Int8 Int.Int16 where
-  cast = fromIntegral
-
--- | 'fromIntegral'
-instance Cast Int.Int16 Int.Int32 where
-  cast = fromIntegral
-
--- | 'fromIntegral'
-instance Cast Int.Int32 Int.Int64 where
-  cast = fromIntegral
-
--- | 'fromIntegral'
-instance Cast Int Integer where
-  cast = fromIntegral
-
--- | 'fromIntegral'
-instance Cast Integer Rational where
-  cast = fromIntegral
-
--- | 'realToFrac'
-instance Cast Float Double where
-  cast = realToFrac
-
--- | 'fromEnum'
-instance Cast Bool Int where
-  cast = fromEnum
-
--- | 'fromEnum'
-instance Cast Char Int where
-  cast = fromEnum
-
--- | 'ByteString.pack'
-instance Cast [Word.Word8] ByteString.ByteString where
-  cast = ByteString.pack
-
--- | 'ByteString.unpack'
-instance Cast ByteString.ByteString [Word.Word8] where
-  cast = ByteString.unpack
-
--- | 'LazyByteString.fromStrict'
-instance Cast ByteString.ByteString LazyByteString.ByteString where
-  cast = LazyByteString.fromStrict
-
--- | 'LazyByteString.toStrict'
-instance Cast LazyByteString.ByteString ByteString.ByteString where
-  cast = LazyByteString.toStrict
-
--- | 'Text.pack'
---
--- Note that some 'Char' values cannot be represented in 'Text' and will be
--- replaced by U+FFFD.
-instance Cast String Text.Text where
-  cast = Text.pack
-
--- | 'Text.unpack'
-instance Cast Text.Text String where
-  cast = Text.unpack
-
--- | 'LazyText.fromStrict'
-instance Cast Text.Text LazyText.Text where
-  cast = LazyText.fromStrict
-
--- | 'LazyText.toStrict'
-instance Cast LazyText.Text Text.Text where
-  cast = LazyText.toStrict
-
--- | 'Seq.fromList'
-instance Cast [a] (Seq.Seq a) where
-  cast = Seq.fromList
-
--- | 'Foldable.toList'
-instance Cast (Seq.Seq a) [a] where
-  cast = Foldable.toList
-
--- | 'Set.fromList'
---
--- Note that this will remove duplicate elements from the list.
-instance Ord a => Cast [a] (Set.Set a) where
-  cast = Set.fromList
-
--- | 'Set.toAscList'
-instance Cast (Set.Set a) [a] where
-  cast = Set.toAscList
-
--- | 'Map.fromList'
---
--- Note that if there are duplicate keys in the list, the one closest to the
--- end will win.
-instance Ord k => Cast [(k, v)] (Map.Map k v) where
-  cast = Map.fromList
-
--- | 'Map.toAscList'
-instance Cast (Map.Map k v) [(k, v)] where
-  cast = Map.toAscList
+import qualified Witch.Cast
+import Witch.Instances ()
+import qualified Witch.Lift
+import qualified Witch.TryCast
+import qualified Witch.TryCastException
+import qualified Witch.Utility
