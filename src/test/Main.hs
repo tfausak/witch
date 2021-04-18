@@ -5,6 +5,9 @@
 
 import qualified Control.Exception as Exception
 import qualified Control.Monad as Monad
+import qualified Data.ByteString as ByteString
+import qualified Data.ByteString.Lazy as LazyByteString
+import qualified Data.ByteString.Short as ShortByteString
 import qualified Data.Complex as Complex
 import qualified Data.Either as Either
 import qualified Data.Fixed as Fixed
@@ -1497,6 +1500,72 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (Seq.fromList []) `Hspec.shouldBe` []
       test $ f (Seq.fromList [1]) `Hspec.shouldBe` [1]
       test $ f (Seq.fromList [1, 2]) `Hspec.shouldBe` [1, 2]
+
+    -- ByteString
+
+    Hspec.describe "Cast [Word8] ByteString" $ do
+      let f = Witch.cast @[Word.Word8] @ByteString.ByteString
+      test $ f [] `Hspec.shouldBe` ByteString.pack []
+      test $ f [0x00] `Hspec.shouldBe` ByteString.pack [0x00]
+      test $ f [0x0f, 0xf0] `Hspec.shouldBe` ByteString.pack [0x0f, 0xf0]
+
+    Hspec.describe "Cast ByteString [Word8]" $ do
+      let f = Witch.cast @ByteString.ByteString @[Word.Word8]
+      test $ f (ByteString.pack []) `Hspec.shouldBe` []
+      test $ f (ByteString.pack [0x00]) `Hspec.shouldBe` [0x00]
+      test $ f (ByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` [0x0f, 0xf0]
+
+    Hspec.describe "Cast ByteString LazyByteString" $ do
+      let f = Witch.cast @ByteString.ByteString @LazyByteString.ByteString
+      test $ f (ByteString.pack []) `Hspec.shouldBe` LazyByteString.pack []
+      test $ f (ByteString.pack [0x00]) `Hspec.shouldBe` LazyByteString.pack [0x00]
+      test $ f (ByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` LazyByteString.pack [0x0f, 0xf0]
+
+    Hspec.describe "Cast ByteString ShortByteString" $ do
+      let f = Witch.cast @ByteString.ByteString @ShortByteString.ShortByteString
+      test $ f (ByteString.pack []) `Hspec.shouldBe` ShortByteString.pack []
+      test $ f (ByteString.pack [0x00]) `Hspec.shouldBe` ShortByteString.pack [0x00]
+      test $ f (ByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` ShortByteString.pack [0x0f, 0xf0]
+
+    -- LazyByteString
+
+    Hspec.describe "Cast [Word8] LazyByteString" $ do
+      let f = Witch.cast @[Word.Word8] @LazyByteString.ByteString
+      test $ f [] `Hspec.shouldBe` LazyByteString.pack []
+      test $ f [0x00] `Hspec.shouldBe` LazyByteString.pack [0x00]
+      test $ f [0x0f, 0xf0] `Hspec.shouldBe` LazyByteString.pack [0x0f, 0xf0]
+
+    Hspec.describe "Cast LazyByteString [Word8]" $ do
+      let f = Witch.cast @LazyByteString.ByteString @[Word.Word8]
+      test $ f (LazyByteString.pack []) `Hspec.shouldBe` []
+      test $ f (LazyByteString.pack [0x00]) `Hspec.shouldBe` [0x00]
+      test $ f (LazyByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` [0x0f, 0xf0]
+
+    Hspec.describe "Cast LazyByteString ByteString" $ do
+      let f = Witch.cast @LazyByteString.ByteString @ByteString.ByteString
+      test $ f (LazyByteString.pack []) `Hspec.shouldBe` ByteString.pack []
+      test $ f (LazyByteString.pack [0x00]) `Hspec.shouldBe` ByteString.pack [0x00]
+      test $ f (LazyByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` ByteString.pack [0x0f, 0xf0]
+
+    -- ShortByteString
+
+    Hspec.describe "Cast [Word8] ShortByteString" $ do
+      let f = Witch.cast @[Word.Word8] @ShortByteString.ShortByteString
+      test $ f [] `Hspec.shouldBe` ShortByteString.pack []
+      test $ f [0x00] `Hspec.shouldBe` ShortByteString.pack [0x00]
+      test $ f [0x0f, 0xf0] `Hspec.shouldBe` ShortByteString.pack [0x0f, 0xf0]
+
+    Hspec.describe "Cast ShortByteString [Word8]" $ do
+      let f = Witch.cast @ShortByteString.ShortByteString @[Word.Word8]
+      test $ f (ShortByteString.pack []) `Hspec.shouldBe` []
+      test $ f (ShortByteString.pack [0x00]) `Hspec.shouldBe` [0x00]
+      test $ f (ShortByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` [0x0f, 0xf0]
+
+    Hspec.describe "Cast ShortByteString ByteString" $ do
+      let f = Witch.cast @ShortByteString.ShortByteString @ByteString.ByteString
+      test $ f (ShortByteString.pack []) `Hspec.shouldBe` ByteString.pack []
+      test $ f (ShortByteString.pack [0x00]) `Hspec.shouldBe` ByteString.pack [0x00]
+      test $ f (ShortByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` ByteString.pack [0x0f, 0xf0]
 
 test :: Hspec.Example a => a -> Hspec.SpecWith (Hspec.Arg a)
 test = Hspec.it ""

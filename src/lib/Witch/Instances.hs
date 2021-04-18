@@ -8,6 +8,9 @@
 module Witch.Instances where
 
 import qualified Data.Bits as Bits
+import qualified Data.ByteString as ByteString
+import qualified Data.ByteString.Lazy as LazyByteString
+import qualified Data.ByteString.Short as ShortByteString
 import qualified Data.Complex as Complex
 import qualified Data.Fixed as Fixed
 import qualified Data.Foldable as Foldable
@@ -723,6 +726,42 @@ instance Cast.Cast [a] (Seq.Seq a) where
 
 instance Cast.Cast (Seq.Seq a) [a] where
   cast = Foldable.toList
+
+-- ByteString
+
+instance Cast.Cast [Word.Word8] ByteString.ByteString where
+  cast = ByteString.pack
+
+instance Cast.Cast ByteString.ByteString [Word.Word8] where
+  cast = ByteString.unpack
+
+instance Cast.Cast ByteString.ByteString LazyByteString.ByteString where
+  cast = LazyByteString.fromStrict
+
+instance Cast.Cast ByteString.ByteString ShortByteString.ShortByteString where
+  cast = ShortByteString.toShort
+
+-- LazyByteString
+
+instance Cast.Cast [Word.Word8] LazyByteString.ByteString where
+  cast = LazyByteString.pack
+
+instance Cast.Cast LazyByteString.ByteString [Word.Word8] where
+  cast = LazyByteString.unpack
+
+instance Cast.Cast LazyByteString.ByteString ByteString.ByteString where
+  cast = LazyByteString.toStrict
+
+-- ShortByteString
+
+instance Cast.Cast [Word.Word8] ShortByteString.ShortByteString where
+  cast = ShortByteString.pack
+
+instance Cast.Cast ShortByteString.ShortByteString [Word.Word8] where
+  cast = ShortByteString.unpack
+
+instance Cast.Cast ShortByteString.ShortByteString ByteString.ByteString where
+  cast = ShortByteString.fromShort
 
 fromNonNegativeIntegral :: (Integral s, Num t) => s -> Maybe t
 fromNonNegativeIntegral x = if x < 0 then Nothing else Just $ fromIntegral x
