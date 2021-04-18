@@ -6,6 +6,4 @@
 
 :mage_woman: Convert values from one type into another.
 
-## To do
-
-- [ ] Add more instances ...
+See the documentation on Hackage: <https://hackage.haskell.org/package/witch>.
