@@ -38,7 +38,7 @@ liftedCast = TH.liftTyped . Utility.unsafeCast
 -- > unsafeFrom @s "some literal"
 -- >
 -- > -- Prefer this:
--- > $$(liftedCast @s "some literal")
+-- > $$(liftedFrom @s "some literal")
 liftedFrom
   :: forall s target m source
    . ( Identity.Identity s ~ source
@@ -60,7 +60,7 @@ liftedFrom = liftedCast
 -- > unsafeInto @t "some literal"
 -- >
 -- > -- Prefer this:
--- > $$(liftedCast @t "some literal")
+-- > $$(liftedInto @t "some literal")
 liftedInto
   :: forall t source m target
    . ( Identity.Identity t ~ target

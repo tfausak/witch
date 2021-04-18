@@ -37,7 +37,7 @@ liftedCast s = TH.unsafeTExpCoerce $ TH.lift (Utility.unsafeCast s :: target)
 -- > unsafeFrom @s "some literal"
 -- >
 -- > -- Prefer this:
--- > $$(liftedCast @s "some literal")
+-- > $$(liftedFrom @s "some literal")
 liftedFrom
   :: forall s target source
    . ( Identity.Identity s ~ source
@@ -58,7 +58,7 @@ liftedFrom = liftedCast
 -- > unsafeInto @t "some literal"
 -- >
 -- > -- Prefer this:
--- > $$(liftedCast @t "some literal")
+-- > $$(liftedInto @t "some literal")
 liftedInto
   :: forall t source target
    . ( Identity.Identity t ~ target

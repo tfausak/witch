@@ -1018,7 +1018,7 @@ instance Cast.Cast ShortByteString.ShortByteString ByteString.ByteString where
 -- Text
 
 -- | Uses 'Text.pack'. Some 'Char' values cannot be represented in 'Text.Text'
--- and will be replaced with '\xFFFD'.
+-- and will be replaced with @'\\xFFFD'@.
 instance Cast.Cast String Text.Text where
   cast = Text.pack
 
@@ -1037,7 +1037,7 @@ instance Cast.Cast Text.Text ByteString.ByteString where
 -- LazyText
 
 -- | Uses 'LazyText.pack'. Some 'Char' values cannot be represented in
--- 'LazyText.Text' and will be replaced with '\xFFFD'.
+-- 'LazyText.Text' and will be replaced with @'\\xFFFD'@.
 instance Cast.Cast String LazyText.Text where
   cast = LazyText.pack
 
