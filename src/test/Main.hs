@@ -1535,6 +1535,12 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (ByteString.pack [0x00]) `Hspec.shouldBe` ShortByteString.pack [0x00]
       test $ f (ByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` ShortByteString.pack [0x0f, 0xf0]
 
+    Hspec.describe "TryCast ByteString Text" $ do
+      let f = Witch.tryCast @ByteString.ByteString @Text.Text
+      test $ f (ByteString.pack []) `Hspec.shouldBe` Right (Text.pack "")
+      test $ f (ByteString.pack [0x61]) `Hspec.shouldBe` Right (Text.pack "a")
+      test $ f (ByteString.pack [0xff]) `Hspec.shouldSatisfy` Either.isLeft
+
     -- LazyByteString
 
     Hspec.describe "Cast [Word8] LazyByteString" $ do
@@ -1554,6 +1560,12 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (LazyByteString.pack []) `Hspec.shouldBe` ByteString.pack []
       test $ f (LazyByteString.pack [0x00]) `Hspec.shouldBe` ByteString.pack [0x00]
       test $ f (LazyByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` ByteString.pack [0x0f, 0xf0]
+
+    Hspec.describe "TryCast LazyByteString LazyText" $ do
+      let f = Witch.tryCast @LazyByteString.ByteString @LazyText.Text
+      test $ f (LazyByteString.pack []) `Hspec.shouldBe` Right (LazyText.pack "")
+      test $ f (LazyByteString.pack [0x61]) `Hspec.shouldBe` Right (LazyText.pack "a")
+      test $ f (LazyByteString.pack [0xff]) `Hspec.shouldSatisfy` Either.isLeft
 
     -- ShortByteString
 
@@ -1595,6 +1607,11 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (Text.pack "a") `Hspec.shouldBe` LazyText.pack "a"
       test $ f (Text.pack "ab") `Hspec.shouldBe` LazyText.pack "ab"
 
+    Hspec.describe "Cast Text ByteString" $ do
+      let f = Witch.cast @Text.Text @ByteString.ByteString
+      test $ f (Text.pack "") `Hspec.shouldBe` ByteString.pack []
+      test $ f (Text.pack "a") `Hspec.shouldBe` ByteString.pack [0x61]
+
     -- LazyText
 
     Hspec.describe "Cast String LazyText" $ do
@@ -1614,6 +1631,11 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (LazyText.pack "") `Hspec.shouldBe` Text.pack ""
       test $ f (LazyText.pack "a") `Hspec.shouldBe` Text.pack "a"
       test $ f (LazyText.pack "ab") `Hspec.shouldBe` Text.pack "ab"
+
+    Hspec.describe "Cast LazyText LazyByteString" $ do
+      let f = Witch.cast @LazyText.Text @LazyByteString.ByteString
+      test $ f (LazyText.pack "") `Hspec.shouldBe` LazyByteString.pack []
+      test $ f (LazyText.pack "a") `Hspec.shouldBe` LazyByteString.pack [0x61]
 
 test :: Hspec.Example a => a -> Hspec.SpecWith (Hspec.Arg a)
 test = Hspec.it ""

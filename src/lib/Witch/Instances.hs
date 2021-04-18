@@ -23,7 +23,9 @@ import qualified Data.Ratio as Ratio
 import qualified Data.Sequence as Seq
 import qualified Data.Set as Set
 import qualified Data.Text as Text
+import qualified Data.Text.Encoding as Text
 import qualified Data.Text.Lazy as LazyText
+import qualified Data.Text.Lazy.Encoding as LazyText
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 import qualified Witch.Cast as Cast
@@ -973,6 +975,12 @@ instance Cast.Cast ByteString.ByteString LazyByteString.ByteString where
 instance Cast.Cast ByteString.ByteString ShortByteString.ShortByteString where
   cast = ShortByteString.toShort
 
+-- | Uses 'Text.decodeUtf8''.
+instance TryCast.TryCast ByteString.ByteString Text.Text where
+  tryCast s = case Text.decodeUtf8' s of
+    Left _ -> Left $ TryCastException.TryCastException s
+    Right t -> Right t
+
 -- LazyByteString
 
 -- | Uses 'LazyByteString.pack'.
@@ -986,6 +994,12 @@ instance Cast.Cast LazyByteString.ByteString [Word.Word8] where
 -- | Uses 'LazyByteString.toStrict'.
 instance Cast.Cast LazyByteString.ByteString ByteString.ByteString where
   cast = LazyByteString.toStrict
+
+-- | Uses 'LazyText.decodeUtf8''.
+instance TryCast.TryCast LazyByteString.ByteString LazyText.Text where
+  tryCast s = case LazyText.decodeUtf8' s of
+    Left _ -> Left $ TryCastException.TryCastException s
+    Right t -> Right t
 
 -- ShortByteString
 
@@ -1016,6 +1030,10 @@ instance Cast.Cast Text.Text String where
 instance Cast.Cast Text.Text LazyText.Text where
   cast = LazyText.fromStrict
 
+-- | Uses 'Text.encodeUtf8'.
+instance Cast.Cast Text.Text ByteString.ByteString where
+  cast = Text.encodeUtf8
+
 -- LazyText
 
 -- | Uses 'LazyText.pack'. Some 'Char' values cannot be represented in
@@ -1030,6 +1048,10 @@ instance Cast.Cast LazyText.Text String where
 -- | Uses 'LazyText.toStrict'.
 instance Cast.Cast LazyText.Text Text.Text where
   cast = LazyText.toStrict
+
+-- | Uses 'LazyText.encodeUtf8'.
+instance Cast.Cast LazyText.Text LazyByteString.ByteString where
+  cast = LazyText.encodeUtf8
 
 fromNonNegativeIntegral :: (Integral s, Num t) => s -> Maybe t
 fromNonNegativeIntegral x = if x < 0 then Nothing else Just $ fromIntegral x
