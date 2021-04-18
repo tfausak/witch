@@ -1382,7 +1382,7 @@ main = hspec . describe "Witch" $ do
       test $ f (-0.5) `shouldBe` (-0.5)
       prop $ \ x y -> if x == y then f x == f y else f x /= f y
 
-    -- Float
+    -- Double
 
     describe "TryCast Double Int8" $ do
       let f = tryCast @Double @Int8

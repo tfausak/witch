@@ -146,7 +146,7 @@ instance TryCast.TryCast Int.Int32 Natural.Natural where
 
 instance TryCast.TryCast Int.Int32 Float where
   tryCast = maybeTryCast $ \s ->
-    if -16777215 <= s && s <= 16777215 then Just $ fromIntegral s else Nothing
+    if -maxFloat <= s && s <= maxFloat then Just $ fromIntegral s else Nothing
 
 instance Cast.Cast Int.Int32 Double where
   cast = fromIntegral
@@ -188,11 +188,11 @@ instance TryCast.TryCast Int.Int64 Natural.Natural where
 
 instance TryCast.TryCast Int.Int64 Float where
   tryCast = maybeTryCast $ \s ->
-    if -16777215 <= s && s <= 16777215 then Just $ fromIntegral s else Nothing
+    if -maxFloat <= s && s <= maxFloat then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Int.Int64 Double where
   tryCast = maybeTryCast $ \s ->
-    if -9007199254740991 <= s && s <= 9007199254740991
+    if -maxDouble <= s && s <= maxDouble
       then Just $ fromIntegral s
       else Nothing
 
@@ -233,13 +233,13 @@ instance TryCast.TryCast Int Natural.Natural where
 
 instance TryCast.TryCast Int Float where
   tryCast = maybeTryCast $ \s ->
-    if -16777215 <= s && s <= 16777215 then Just $ fromIntegral s else Nothing
+    if -maxFloat <= s && s <= maxFloat then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Int Double where
   tryCast = maybeTryCast $ \s ->
-    if toInteger (maxBound :: Int) <= 9007199254740991
+    if toInteger (maxBound :: Int) <= maxDouble
       then Just $ fromIntegral s
-      else if -9007199254740991 <= s && s <= 9007199254740991
+      else if -maxDouble <= s && s <= maxDouble
         then Just $ fromIntegral s
         else Nothing
 
@@ -285,11 +285,11 @@ instance TryCast.TryCast Integer Natural.Natural where
 
 instance TryCast.TryCast Integer Float where
   tryCast = maybeTryCast $ \s ->
-    if -16777215 <= s && s <= 16777215 then Just $ fromIntegral s else Nothing
+    if -maxFloat <= s && s <= maxFloat then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Integer Double where
   tryCast = maybeTryCast $ \s ->
-    if -9007199254740991 <= s && s <= 9007199254740991
+    if -maxDouble <= s && s <= maxDouble
       then Just $ fromIntegral s
       else Nothing
 
@@ -412,7 +412,7 @@ instance Cast.Cast Word.Word32 Integer where
 
 instance TryCast.TryCast Word.Word32 Float where
   tryCast = maybeTryCast $ \s ->
-    if s <= 16777215 then Just $ fromIntegral s else Nothing
+    if s <= maxFloat then Just $ fromIntegral s else Nothing
 
 instance Cast.Cast Word.Word32 Double where
   cast = fromIntegral
@@ -454,11 +454,11 @@ instance Cast.Cast Word.Word64 Integer where
 
 instance TryCast.TryCast Word.Word64 Float where
   tryCast = maybeTryCast $ \s ->
-    if s <= 16777215 then Just $ fromIntegral s else Nothing
+    if s <= maxFloat then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Word.Word64 Double where
   tryCast = maybeTryCast $ \s ->
-    if s <= 9007199254740991 then Just $ fromIntegral s else Nothing
+    if s <= maxDouble then Just $ fromIntegral s else Nothing
 
 -- Word
 
@@ -497,13 +497,13 @@ instance Cast.Cast Word Integer where
 
 instance TryCast.TryCast Word Float where
   tryCast = maybeTryCast $ \s ->
-    if s <= 16777215 then Just $ fromIntegral s else Nothing
+    if s <= maxFloat then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Word Double where
   tryCast = maybeTryCast $ \s ->
-    if toInteger (maxBound :: Word) <= 9007199254740991
+    if toInteger (maxBound :: Word) <= maxDouble
       then Just $ fromIntegral s
-      else if s <= 9007199254740991 then Just $ fromIntegral s else Nothing
+      else if s <= maxDouble then Just $ fromIntegral s else Nothing
 
 -- Natural
 
@@ -542,11 +542,11 @@ instance Cast.Cast Natural.Natural Integer where
 
 instance TryCast.TryCast Natural.Natural Float where
   tryCast = maybeTryCast $ \s ->
-    if s <= 16777215 then Just $ fromIntegral s else Nothing
+    if s <= maxFloat then Just $ fromIntegral s else Nothing
 
 instance TryCast.TryCast Natural.Natural Double where
   tryCast = maybeTryCast $ \s ->
-    if s <= 9007199254740991 then Just $ fromIntegral s else Nothing
+    if s <= maxDouble then Just $ fromIntegral s else Nothing
 
 -- Float
 
@@ -568,7 +568,7 @@ instance TryCast.TryCast Float Int where
 instance TryCast.TryCast Float Integer where
   tryCast s = case tryCastVia @Rational s of
     Left e -> Left e
-    Right t -> if -16777215 <= t && t <= 16777215
+    Right t -> if -maxFloat <= t && t <= maxFloat
       then Right t
       else Left $ TryCastException.TryCastException s
 
@@ -617,7 +617,7 @@ instance TryCast.TryCast Double Int where
 instance TryCast.TryCast Double Integer where
   tryCast s = case tryCastVia @Rational s of
     Left e -> Left e
-    Right t -> if -9007199254740991 <= t && t <= 9007199254740991
+    Right t -> if -maxDouble <= t && t <= maxDouble
       then Right t
       else Left $ TryCastException.TryCastException s
 
@@ -688,3 +688,9 @@ tryCastVia s = case TryCast.tryCast s of
   Right u -> case TryCast.tryCast (u :: through) of
     Left _ -> Left $ TryCastException.TryCastException s
     Right t -> Right t
+
+maxFloat :: Num a => a
+maxFloat = 16777215
+
+maxDouble :: Num a => a
+maxDouble = 9007199254740991
