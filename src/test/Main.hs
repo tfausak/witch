@@ -1220,6 +1220,9 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 0 `Hspec.shouldBe` 0
       test $ f 0.5 `Hspec.shouldBe` 0.5
       test $ f (-0.5) `Hspec.shouldBe` (-0.5)
+      test $ f (0 / 0) `Hspec.shouldSatisfy` isNaN
+      test $ f (1 / 0) `Hspec.shouldBe` (1 / 0)
+      test $ f (-1 / 0) `Hspec.shouldBe` (-1 / 0)
 
     -- Double
 
@@ -1364,6 +1367,9 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 0 `Hspec.shouldBe` 0
       test $ f 0.5 `Hspec.shouldBe` 0.5
       test $ f (-0.5) `Hspec.shouldBe` (-0.5)
+      test $ f (0 / 0) `Hspec.shouldSatisfy` isNaN
+      test $ f (1 / 0) `Hspec.shouldBe` (1 / 0)
+      test $ f (-1 / 0) `Hspec.shouldBe` (-1 / 0)
 
     -- Ratio
 
