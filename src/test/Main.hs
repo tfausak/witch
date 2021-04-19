@@ -1637,6 +1637,12 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (LazyText.pack "") `Hspec.shouldBe` LazyByteString.pack []
       test $ f (LazyText.pack "a") `Hspec.shouldBe` LazyByteString.pack [0x61]
 
+    -- TryCastException
+
+    Hspec.describe "Cast (TryCastException s t0) (TryCastException s t1)" $ do
+      let f = Witch.cast @(Witch.TryCastException () Int) @(Witch.TryCastException () Word)
+      test $ f (Witch.TryCastException ()) `Hspec.shouldBe` Witch.TryCastException ()
+
 test :: Hspec.Example a => a -> Hspec.SpecWith (Hspec.Arg a)
 test = Hspec.it ""
 

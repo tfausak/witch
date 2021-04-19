@@ -1053,6 +1053,8 @@ instance Cast.Cast LazyText.Text Text.Text where
 instance Cast.Cast LazyText.Text LazyByteString.ByteString where
   cast = LazyText.encodeUtf8
 
+instance Cast.Cast (TryCastException.TryCastException s t0) (TryCastException.TryCastException s t1)
+
 fromNonNegativeIntegral :: (Integral s, Num t) => s -> Maybe t
 fromNonNegativeIntegral x = if x < 0 then Nothing else Just $ fromIntegral x
 
