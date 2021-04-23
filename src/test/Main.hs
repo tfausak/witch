@@ -1643,6 +1643,18 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       let f = Witch.cast @(Witch.TryCastException () Int) @(Witch.TryCastException () Word)
       test $ f (Witch.TryCastException ()) `Hspec.shouldBe` Witch.TryCastException ()
 
+    Hspec.describe "Cast (TryCastException s t) String" $ do
+      let f = Witch.cast @(Witch.TryCastException Bool Int) @String
+      test $ f (Witch.TryCastException False) `Hspec.shouldBe` "TryCastException {- Bool -> Int -} False"
+
+    Hspec.describe "Cast (TryCastException s t) Text" $ do
+      let f = Witch.cast @(Witch.TryCastException Bool Int) @Text.Text
+      test $ f (Witch.TryCastException False) `Hspec.shouldBe` Text.pack "TryCastException {- Bool -> Int -} False"
+
+    Hspec.describe "Cast (TryCastException s t) LazyText" $ do
+      let f = Witch.cast @(Witch.TryCastException Bool Int) @LazyText.Text
+      test $ f (Witch.TryCastException False) `Hspec.shouldBe` LazyText.pack "TryCastException {- Bool -> Int -} False"
+
 test :: Hspec.Example a => a -> Hspec.SpecWith (Hspec.Arg a)
 test = Hspec.it ""
 
