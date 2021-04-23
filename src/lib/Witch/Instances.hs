@@ -59,27 +59,27 @@ instance Cast.Cast Int.Int8 Integer where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int8 Word.Word8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int8 Word.Word16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int8 Word.Word32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int8 Word.Word64 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int8 Word where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
--- | Uses 'fromIntegral' when the input is non-negative.
+-- | Uses 'fromIntegral' when the input is not negative.
 instance TryCast.TryCast Int.Int8 Natural.Natural where
-  tryCast = maybeTryCast fromNonNegativeIntegral
+  tryCast = Utility.eitherTryCast fromNonNegativeIntegral
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Int.Int8 Float where
@@ -93,7 +93,7 @@ instance Cast.Cast Int.Int8 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int16 Int.Int8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Int.Int16 Int.Int32 where
@@ -113,27 +113,27 @@ instance Cast.Cast Int.Int16 Integer where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int16 Word.Word8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int16 Word.Word16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int16 Word.Word32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int16 Word.Word64 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int16 Word where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
--- | Uses 'fromIntegral' when the input is non-negative.
+-- | Uses 'fromIntegral' when the input is not negative.
 instance TryCast.TryCast Int.Int16 Natural.Natural where
-  tryCast = maybeTryCast fromNonNegativeIntegral
+  tryCast = Utility.eitherTryCast fromNonNegativeIntegral
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Int.Int16 Float where
@@ -147,11 +147,11 @@ instance Cast.Cast Int.Int16 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int32 Int.Int8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int32 Int.Int16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Int.Int32 Int.Int64 where
@@ -159,7 +159,7 @@ instance Cast.Cast Int.Int32 Int.Int64 where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int32 Int where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Int.Int32 Integer where
@@ -167,34 +167,35 @@ instance Cast.Cast Int.Int32 Integer where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int32 Word.Word8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int32 Word.Word16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int32 Word.Word32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int32 Word.Word64 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int32 Word where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
--- | Uses 'fromIntegral' when the input is non-negative.
+-- | Uses 'fromIntegral' when the input is not negative.
 instance TryCast.TryCast Int.Int32 Natural.Natural where
-  tryCast = maybeTryCast fromNonNegativeIntegral
+  tryCast = Utility.eitherTryCast fromNonNegativeIntegral
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryCast.TryCast Int.Int32 Float where
-  tryCast = maybeTryCast $ \s -> if -maxFloat <= s && s <= maxFloat
-    then Just $ fromIntegral s
-    else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s < -maxFloat then Left Exception.Underflow
+    else if s > maxFloat then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Int.Int32 Double where
@@ -204,19 +205,19 @@ instance Cast.Cast Int.Int32 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int64 Int.Int8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int64 Int.Int16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int64 Int.Int32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int64 Int where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Int.Int64 Integer where
@@ -224,55 +225,57 @@ instance Cast.Cast Int.Int64 Integer where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int64 Word.Word8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int64 Word.Word16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int64 Word.Word32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int64 Word.Word64 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int64 Word where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
--- | Uses 'fromIntegral' when the input is non-negative.
+-- | Uses 'fromIntegral' when the input is not negative.
 instance TryCast.TryCast Int.Int64 Natural.Natural where
-  tryCast = maybeTryCast fromNonNegativeIntegral
+  tryCast = Utility.eitherTryCast fromNonNegativeIntegral
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryCast.TryCast Int.Int64 Float where
-  tryCast = maybeTryCast $ \s -> if -maxFloat <= s && s <= maxFloat
-    then Just $ fromIntegral s
-    else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s < -maxFloat then Left Exception.Underflow
+    else if s > maxFloat then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryCast.TryCast Int.Int64 Double where
-  tryCast = maybeTryCast $ \s -> if -maxDouble <= s && s <= maxDouble
-    then Just $ fromIntegral s
-    else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s < -maxDouble then Left Exception.Underflow
+    else if s > maxDouble then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- Int
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int Int.Int8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int Int.Int16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int Int.Int32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Int Int.Int64 where
@@ -284,108 +287,111 @@ instance Cast.Cast Int Integer where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int Word.Word8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int Word.Word16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int Word.Word32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int Word.Word64 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int Word where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
--- | Uses 'fromIntegral' when the input is non-negative.
+-- | Uses 'fromIntegral' when the input is not negative.
 instance TryCast.TryCast Int Natural.Natural where
-  tryCast = maybeTryCast fromNonNegativeIntegral
+  tryCast = Utility.eitherTryCast fromNonNegativeIntegral
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryCast.TryCast Int Float where
-  tryCast = maybeTryCast $ \s -> if -maxFloat <= s && s <= maxFloat
-    then Just $ fromIntegral s
-    else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s < -maxFloat then Left Exception.Underflow
+    else if s > maxFloat then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryCast.TryCast Int Double where
-  tryCast = maybeTryCast $ \s ->
-    if (toInteger (maxBound :: Int) <= maxDouble)
-        || (-maxDouble <= s && s <= maxDouble)
-      then Just $ fromIntegral s
-      else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if toInteger (maxBound :: Int) <= maxDouble then Right $ fromIntegral s
+    else if s < -maxDouble then Left Exception.Underflow
+    else if s > maxDouble then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- Integer
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Integer Int.Int8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Integer Int.Int16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Integer Int.Int32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Integer Int.Int64 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Integer Int where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Integer Word.Word8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Integer Word.Word16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Integer Word.Word32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Integer Word.Word64 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Integer Word where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
--- | Uses 'fromInteger' when the input is non-negative.
+-- | Uses 'fromInteger' when the input is not negative.
 instance TryCast.TryCast Integer Natural.Natural where
-  -- This should use @maybeTryCast fromNonNegativeIntegral@, but that causes a
-  -- bug in GHC 9.0.1. By inlining @fromNonNegativeIntegral@ and replacing
+  -- This should use @eitherTryCast fromNonNegativeIntegral@, but that causes
+  -- a bug in GHC 9.0.1. By inlining @fromNonNegativeIntegral@ and replacing
   -- @fromIntegral@ with @fromInteger@, we can work around the bug.
   -- https://mail.haskell.org/pipermail/haskell-cafe/2021-March/133540.html
   tryCast =
-    maybeTryCast $ \s -> if s < 0 then Nothing else Just $ fromInteger s
+    Utility.eitherTryCast $ \s -> if s < 0 then Left Exception.Underflow else Right $ fromInteger s
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryCast.TryCast Integer Float where
-  tryCast = maybeTryCast $ \s -> if -maxFloat <= s && s <= maxFloat
-    then Just $ fromIntegral s
-    else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s < -maxFloat then Left Exception.Underflow
+    else if s > maxFloat then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryCast.TryCast Integer Double where
-  tryCast = maybeTryCast $ \s -> if -maxDouble <= s && s <= maxDouble
-    then Just $ fromIntegral s
-    else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s < -maxDouble then Left Exception.Underflow
+    else if s > maxDouble then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- Word8
 
@@ -411,7 +417,7 @@ instance Cast.Cast Word.Word8 Natural.Natural where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word8 Int.Int8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word.Word8 Int.Int16 where
@@ -445,7 +451,7 @@ instance Cast.Cast Word.Word8 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word16 Word.Word8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word.Word16 Word.Word32 where
@@ -465,11 +471,11 @@ instance Cast.Cast Word.Word16 Natural.Natural where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word16 Int.Int8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word16 Int.Int16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word.Word16 Int.Int32 where
@@ -499,11 +505,11 @@ instance Cast.Cast Word.Word16 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word32 Word.Word8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word32 Word.Word16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word.Word32 Word.Word64 where
@@ -511,7 +517,7 @@ instance Cast.Cast Word.Word32 Word.Word64 where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word32 Word where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word.Word32 Natural.Natural where
@@ -519,15 +525,15 @@ instance Cast.Cast Word.Word32 Natural.Natural where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word32 Int.Int8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word32 Int.Int16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word32 Int.Int32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word.Word32 Int.Int64 where
@@ -535,17 +541,16 @@ instance Cast.Cast Word.Word32 Int.Int64 where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word32 Int where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word.Word32 Integer where
   cast = fromIntegral
 
--- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
--- inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Word.Word32 Float where
-  tryCast = maybeTryCast
-    $ \s -> if s <= maxFloat then Just $ fromIntegral s else Nothing
+  tryCast = Utility.eitherTryCast
+    $ \s -> if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word.Word32 Double where
@@ -555,19 +560,19 @@ instance Cast.Cast Word.Word32 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word64 Word.Word8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word64 Word.Word16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word64 Word.Word32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word64 Word where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word.Word64 Natural.Natural where
@@ -575,53 +580,52 @@ instance Cast.Cast Word.Word64 Natural.Natural where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word64 Int.Int8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word64 Int.Int16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word64 Int.Int32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word64 Int.Int64 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word64 Int where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word.Word64 Integer where
   cast = fromIntegral
 
--- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
--- inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Word.Word64 Float where
-  tryCast = maybeTryCast
-    $ \s -> if s <= maxFloat then Just $ fromIntegral s else Nothing
+  tryCast = Utility.eitherTryCast
+    $ \s -> if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
--- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
--- 9,007,199,254,740,991 inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to
+-- 9,007,199,254,740,991.
 instance TryCast.TryCast Word.Word64 Double where
-  tryCast = maybeTryCast
-    $ \s -> if s <= maxDouble then Just $ fromIntegral s else Nothing
+  tryCast = Utility.eitherTryCast
+    $ \s -> if s <= maxDouble then Right $ fromIntegral s else Left Exception.Overflow
 
 -- Word
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word Word.Word8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word Word.Word16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word Word.Word32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word Word.Word64 where
@@ -633,99 +637,97 @@ instance Cast.Cast Word Natural.Natural where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word Int.Int8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word Int.Int16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word Int.Int32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word Int.Int64 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word Int where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word Integer where
   cast = fromIntegral
 
--- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
--- inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Word Float where
-  tryCast = maybeTryCast
-    $ \s -> if s <= maxFloat then Just $ fromIntegral s else Nothing
+  tryCast = Utility.eitherTryCast
+    $ \s -> if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
--- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
--- 9,007,199,254,740,991 inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to
+-- 9,007,199,254,740,991.
 instance TryCast.TryCast Word Double where
-  tryCast = maybeTryCast $ \s ->
+  tryCast = Utility.eitherTryCast $ \s ->
     if (toInteger (maxBound :: Word) <= maxDouble) || (s <= maxDouble)
-      then Just $ fromIntegral s
-      else Nothing
+      then Right $ fromIntegral s
+      else Left Exception.Overflow
 
 -- Natural
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Natural.Natural Word.Word8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Natural.Natural Word.Word16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Natural.Natural Word.Word32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Natural.Natural Word.Word64 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Natural.Natural Word where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Natural.Natural Int.Int8 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Natural.Natural Int.Int16 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Natural.Natural Int.Int32 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Natural.Natural Int.Int64 where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Natural.Natural Int where
-  tryCast = maybeTryCast Bits.toIntegralSized
+  tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Natural.Natural Integer where
   cast = fromIntegral
 
--- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
--- inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Natural.Natural Float where
-  tryCast = maybeTryCast
-    $ \s -> if s <= maxFloat then Just $ fromIntegral s else Nothing
+  tryCast = Utility.eitherTryCast
+    $ \s -> if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
--- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
--- 9,007,199,254,740,991 inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to
+-- 9,007,199,254,740,991.
 instance TryCast.TryCast Natural.Natural Double where
-  tryCast = maybeTryCast
-    $ \s -> if s <= maxDouble then Just $ fromIntegral s else Nothing
+  tryCast = Utility.eitherTryCast
+    $ \s -> if s <= maxDouble then Right $ fromIntegral s else Left Exception.Overflow
 
 -- Float
 
@@ -752,11 +754,11 @@ instance TryCast.TryCast Float Int where
 -- | Converts via 'Rational' when the input is between -16,777,215 and
 -- 16,777,215 inclusive.
 instance TryCast.TryCast Float Integer where
-  tryCast s = case Utility.tryVia @Rational s of
-    Left e -> Left e
+  tryCast = Utility.eitherTryCast $ \s -> case Utility.tryVia @Rational s of
+    Left e -> Left $ Exception.toException e
     Right t
-      | t < -maxFloat -> Left . TryCastException.TryCastException s . Just $ Exception.toException Exception.Underflow
-      | t > maxFloat -> Left . TryCastException.TryCastException s . Just $ Exception.toException Exception.Overflow
+      | t < -maxFloat -> Left $ Exception.toException Exception.Underflow
+      | t > maxFloat -> Left $ Exception.toException Exception.Overflow
       | otherwise -> Right t
 
 -- | Converts via 'Integer'.
@@ -785,8 +787,10 @@ instance TryCast.TryCast Float Natural.Natural where
 
 -- | Uses 'toRational' when the input is not NaN or infinity.
 instance TryCast.TryCast Float Rational where
-  tryCast = maybeTryCast
-    $ \s -> if isNaN s || isInfinite s then Nothing else Just $ toRational s
+  tryCast = Utility.eitherTryCast $ \s ->
+    if isNaN s then Left Exception.LossOfPrecision
+    else if isInfinite s then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
+    else Right $ toRational s
 
 -- | Uses 'realToFrac'.
 instance Cast.Cast Float Double where
@@ -817,11 +821,11 @@ instance TryCast.TryCast Double Int where
 -- | Converts via 'Rational' when the input is between -9,007,199,254,740,991
 -- and 9,007,199,254,740,991 inclusive.
 instance TryCast.TryCast Double Integer where
-  tryCast s = case Utility.tryVia @Rational s of
-    Left e -> Left e
+  tryCast = Utility.eitherTryCast $ \s -> case Utility.tryVia @Rational s of
+    Left e -> Left $ Exception.toException e
     Right t
-      | t < -maxDouble -> Left . TryCastException.TryCastException s . Just $ Exception.toException Exception.Underflow
-      | t > maxDouble -> Left . TryCastException.TryCastException s . Just $ Exception.toException Exception.Overflow
+      | t < -maxDouble -> Left $ Exception.toException Exception.Underflow
+      | t > maxDouble -> Left $ Exception.toException Exception.Overflow
       | otherwise -> Right t
 
 -- | Converts via 'Integer'.
@@ -850,8 +854,10 @@ instance TryCast.TryCast Double Natural.Natural where
 
 -- | Uses 'toRational' when the input is not NaN or infinity.
 instance TryCast.TryCast Double Rational where
-  tryCast = maybeTryCast
-    $ \s -> if isNaN s || isInfinite s then Nothing else Just $ toRational s
+  tryCast = Utility.eitherTryCast $ \s ->
+    if isNaN s then Left Exception.LossOfPrecision
+    else if isInfinite s then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
+    else Right $ toRational s
 
 -- | Uses 'realToFrac'. This necessarily loses some precision.
 instance Cast.Cast Double Float where
@@ -865,8 +871,8 @@ instance Integral a => Cast.Cast a (Ratio.Ratio a) where
 
 -- | Uses 'Ratio.numerator' when the denominator is 1.
 instance (Eq a, Num a) => TryCast.TryCast (Ratio.Ratio a) a where
-  tryCast = maybeTryCast $ \s ->
-    if Ratio.denominator s == 1 then Just $ Ratio.numerator s else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if Ratio.denominator s == 1 then Right $ Ratio.numerator s else Left Exception.LossOfPrecision
 
 -- | Uses 'fromRational'. This necessarily loses some precision.
 instance Cast.Cast Rational Float where
@@ -896,14 +902,14 @@ instance Num a => Cast.Cast a (Complex.Complex a) where
 
 -- | Uses 'Complex.realPart' when the imaginary part is 0.
 instance (Eq a, Num a) => TryCast.TryCast (Complex.Complex a) a where
-  tryCast = maybeTryCast $ \s ->
-    if Complex.imagPart s == 0 then Just $ Complex.realPart s else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if Complex.imagPart s == 0 then Right $ Complex.realPart s else Left Exception.LossOfPrecision
 
 -- NonEmpty
 
 -- | Uses 'NonEmpty.nonEmpty'.
 instance TryCast.TryCast [a] (NonEmpty.NonEmpty a) where
-  tryCast = maybeTryCast NonEmpty.nonEmpty
+  tryCast = Utility.maybeTryCast NonEmpty.nonEmpty
 
 -- | Uses 'NonEmpty.toList'.
 instance Cast.Cast (NonEmpty.NonEmpty a) [a] where
@@ -981,9 +987,7 @@ instance Cast.Cast ByteString.ByteString ShortByteString.ShortByteString where
 
 -- | Uses 'Text.decodeUtf8''.
 instance TryCast.TryCast ByteString.ByteString Text.Text where
-  tryCast s = case Text.decodeUtf8' s of
-    Left e -> Left . TryCastException.TryCastException s . Just $ Exception.toException e
-    Right t -> Right t
+  tryCast = Utility.eitherTryCast Text.decodeUtf8'
 
 -- LazyByteString
 
@@ -1001,9 +1005,7 @@ instance Cast.Cast LazyByteString.ByteString ByteString.ByteString where
 
 -- | Uses 'LazyText.decodeUtf8''.
 instance TryCast.TryCast LazyByteString.ByteString LazyText.Text where
-  tryCast s = case LazyText.decodeUtf8' s of
-    Left e -> Left . TryCastException.TryCastException s . Just $ Exception.toException e
-    Right t -> Right t
+  tryCast = Utility.eitherTryCast LazyText.decodeUtf8'
 
 -- ShortByteString
 
@@ -1082,14 +1084,8 @@ instance
   ) => Cast.Cast (TryCastException.TryCastException s t) LazyText.Text where
   cast = Utility.via @String
 
-fromNonNegativeIntegral :: (Integral s, Num t) => s -> Maybe t
-fromNonNegativeIntegral x = if x < 0 then Nothing else Just $ fromIntegral x
-
-maybeTryCast
-  :: (s -> Maybe t) -> s -> Either (TryCastException.TryCastException s t) t
-maybeTryCast f s = case f s of
-  Nothing -> Left $ TryCastException.TryCastException s Nothing
-  Just t -> Right t
+fromNonNegativeIntegral :: (Integral s, Num t) => s -> Either Exception.ArithException t
+fromNonNegativeIntegral x = if x < 0 then Left Exception.Underflow else Right $ fromIntegral x
 
 -- | The maximum integral value that can be unambiguously represented as a
 -- 'Float'. Equal to 16,777,215.
