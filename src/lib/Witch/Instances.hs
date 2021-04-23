@@ -77,7 +77,7 @@ instance TryCast.TryCast Int.Int8 Word.Word64 where
 instance TryCast.TryCast Int.Int8 Word where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
--- | Uses 'fromIntegral' when the input is non-negative.
+-- | Uses 'fromIntegral' when the input is not negative.
 instance TryCast.TryCast Int.Int8 Natural.Natural where
   tryCast = Utility.maybeTryCast fromNonNegativeIntegral
 
@@ -131,7 +131,7 @@ instance TryCast.TryCast Int.Int16 Word.Word64 where
 instance TryCast.TryCast Int.Int16 Word where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
--- | Uses 'fromIntegral' when the input is non-negative.
+-- | Uses 'fromIntegral' when the input is not negative.
 instance TryCast.TryCast Int.Int16 Natural.Natural where
   tryCast = Utility.maybeTryCast fromNonNegativeIntegral
 
@@ -185,7 +185,7 @@ instance TryCast.TryCast Int.Int32 Word.Word64 where
 instance TryCast.TryCast Int.Int32 Word where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
--- | Uses 'fromIntegral' when the input is non-negative.
+-- | Uses 'fromIntegral' when the input is not negative.
 instance TryCast.TryCast Int.Int32 Natural.Natural where
   tryCast = Utility.maybeTryCast fromNonNegativeIntegral
 
@@ -243,7 +243,7 @@ instance TryCast.TryCast Int.Int64 Word.Word64 where
 instance TryCast.TryCast Int.Int64 Word where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
--- | Uses 'fromIntegral' when the input is non-negative.
+-- | Uses 'fromIntegral' when the input is not negative.
 instance TryCast.TryCast Int.Int64 Natural.Natural where
   tryCast = Utility.maybeTryCast fromNonNegativeIntegral
 
@@ -305,7 +305,7 @@ instance TryCast.TryCast Int Word.Word64 where
 instance TryCast.TryCast Int Word where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
--- | Uses 'fromIntegral' when the input is non-negative.
+-- | Uses 'fromIntegral' when the input is not negative.
 instance TryCast.TryCast Int Natural.Natural where
   tryCast = Utility.maybeTryCast fromNonNegativeIntegral
 
@@ -368,7 +368,7 @@ instance TryCast.TryCast Integer Word.Word64 where
 instance TryCast.TryCast Integer Word where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
--- | Uses 'fromInteger' when the input is non-negative.
+-- | Uses 'fromInteger' when the input is not negative.
 instance TryCast.TryCast Integer Natural.Natural where
   -- This should use @maybeTryCast fromNonNegativeIntegral@, but that causes a
   -- bug in GHC 9.0.1. By inlining @fromNonNegativeIntegral@ and replacing
@@ -547,8 +547,7 @@ instance TryCast.TryCast Word.Word32 Int where
 instance Cast.Cast Word.Word32 Integer where
   cast = fromIntegral
 
--- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
--- inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Word.Word32 Float where
   tryCast = Utility.maybeTryCast
     $ \s -> if s <= maxFloat then Just $ fromIntegral s else Nothing
@@ -603,14 +602,13 @@ instance TryCast.TryCast Word.Word64 Int where
 instance Cast.Cast Word.Word64 Integer where
   cast = fromIntegral
 
--- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
--- inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Word.Word64 Float where
   tryCast = Utility.maybeTryCast
     $ \s -> if s <= maxFloat then Just $ fromIntegral s else Nothing
 
--- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
--- 9,007,199,254,740,991 inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to
+-- 9,007,199,254,740,991.
 instance TryCast.TryCast Word.Word64 Double where
   tryCast = Utility.maybeTryCast
     $ \s -> if s <= maxDouble then Just $ fromIntegral s else Nothing
@@ -661,14 +659,13 @@ instance TryCast.TryCast Word Int where
 instance Cast.Cast Word Integer where
   cast = fromIntegral
 
--- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
--- inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Word Float where
   tryCast = Utility.maybeTryCast
     $ \s -> if s <= maxFloat then Just $ fromIntegral s else Nothing
 
--- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
--- 9,007,199,254,740,991 inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to
+-- 9,007,199,254,740,991.
 instance TryCast.TryCast Word Double where
   tryCast = Utility.maybeTryCast $ \s ->
     if (toInteger (maxBound :: Word) <= maxDouble) || (s <= maxDouble)
@@ -721,14 +718,13 @@ instance TryCast.TryCast Natural.Natural Int where
 instance Cast.Cast Natural.Natural Integer where
   cast = fromIntegral
 
--- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
--- inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Natural.Natural Float where
   tryCast = Utility.maybeTryCast
     $ \s -> if s <= maxFloat then Just $ fromIntegral s else Nothing
 
--- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
--- 9,007,199,254,740,991 inclusive.
+-- | Uses 'fromIntegral' when the input is less than or equal to
+-- 9,007,199,254,740,991.
 instance TryCast.TryCast Natural.Natural Double where
   tryCast = Utility.maybeTryCast
     $ \s -> if s <= maxDouble then Just $ fromIntegral s else Nothing
