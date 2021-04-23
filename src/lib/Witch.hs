@@ -140,6 +140,7 @@ module Witch
   , Witch.Utility.as
   , Witch.Utility.over
   , Witch.Utility.via
+  , Witch.Utility.maybeTryCast
   , Witch.Utility.tryVia
 
   -- ** Unsafe

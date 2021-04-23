@@ -125,6 +125,24 @@ tryInto
   -> Either (TryCastException.TryCastException source target) target
 tryInto = TryCast.tryCast
 
+-- | This function can be used to implement 'TryCast.tryCast' with a function
+-- that returns 'Maybe'. For example:
+--
+-- > -- Avoid this:
+-- > tryCast x = case f x of
+-- >   Nothing -> Left $ TryCastException x Nothing
+-- >   Just y -> Right y
+-- >
+-- > -- Prefer this:
+-- > tryCast = maybeTryCast f
+maybeTryCast
+  :: (source -> Maybe target)
+  -> source
+  -> Either (TryCastException.TryCastException source target) target
+maybeTryCast f s = case f s of
+  Nothing -> Left $ TryCastException.TryCastException s Nothing
+  Just t -> Right t
+
 -- | This is similar to 'via' except that it works with 'TryCast.TryCast'
 -- instances instead. This function is especially convenient because juggling
 -- the types in the 'TryCastException.TryCastException' can be tedious.
