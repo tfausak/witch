@@ -143,9 +143,9 @@ tryVia
   => source
   -> Either (TryCastException.TryCastException source target) target
 tryVia s = case TryCast.tryCast s of
-  Left _ -> Left $ TryCastException.TryCastException s
+  Left (TryCastException.TryCastException _ e) -> Left $ TryCastException.TryCastException s e
   Right u -> case TryCast.tryCast (u :: through) of
-    Left _ -> Left $ TryCastException.TryCastException s
+    Left (TryCastException.TryCastException _ e) -> Left $ TryCastException.TryCastException s e
     Right t -> Right t
 
 -- | This function is like 'TryCast.tryCast' except that it will throw an
