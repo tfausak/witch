@@ -148,6 +148,12 @@ module Witch
   , Witch.Utility.unsafeInto
 
   -- ** Template Haskell
+  -- | This library uses /typed/ Template Haskell, which may be a little
+  -- different than what you're used to. Normally Template Haskell uses the
+  -- @$(...)@ syntax for splicing in things to run at compile time. The typed
+  -- variant uses the @$$(...)@ syntax for splices, doubling up on the dollar
+  -- signs. Other than that, using typed Template Haskell should be pretty
+  -- much the same as using regular Template Haskell.
   , Witch.Lift.liftedCast
   , Witch.Lift.liftedFrom
   , Witch.Lift.liftedInto
