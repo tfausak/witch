@@ -129,9 +129,9 @@ tryInto = TryCast.tryCast
 -- that returns 'Maybe'. For example:
 --
 -- > -- Avoid this:
--- > tryCast x = case f x of
--- >   Nothing -> Left $ TryCastException x Nothing
--- >   Just y -> Right y
+-- > tryCast s = case f s of
+-- >   Nothing -> Left $ TryCastException s Nothing
+-- >   Just t -> Right t
 -- >
 -- > -- Prefer this:
 -- > tryCast = maybeTryCast f
@@ -142,6 +142,25 @@ maybeTryCast
 maybeTryCast f s = case f s of
   Nothing -> Left $ TryCastException.TryCastException s Nothing
   Just t -> Right t
+
+-- | This function can be used to implement 'TryCast.tryCast' with a function
+-- that returns 'Either'. For example:
+--
+-- > -- Avoid this:
+-- > tryCast s = case f s of
+-- >   Left e -> Left . TryCastException s . Just $ toException e
+-- >   Right t -> Right t
+-- >
+-- > -- Prefer this:
+-- > tryCast = eitherTryCast f
+eitherTryCast
+  :: Exception.Exception exception
+  => (source -> Either exception target)
+  -> source
+  -> Either (TryCastException.TryCastException source target) target
+eitherTryCast f s = case f s of
+  Left e -> Left . TryCastException.TryCastException s . Just $ Exception.toException e
+  Right t -> Right t
 
 -- | This is similar to 'via' except that it works with 'TryCast.TryCast'
 -- instances instead. This function is especially convenient because juggling

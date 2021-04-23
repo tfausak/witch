@@ -192,9 +192,10 @@ instance TryCast.TryCast Int.Int32 Natural.Natural where
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryCast.TryCast Int.Int32 Float where
-  tryCast = Utility.maybeTryCast $ \s -> if -maxFloat <= s && s <= maxFloat
-    then Just $ fromIntegral s
-    else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s < -maxFloat then Left Exception.Underflow
+    else if s > maxFloat then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Int.Int32 Double where
@@ -249,16 +250,18 @@ instance TryCast.TryCast Int.Int64 Natural.Natural where
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryCast.TryCast Int.Int64 Float where
-  tryCast = Utility.maybeTryCast $ \s -> if -maxFloat <= s && s <= maxFloat
-    then Just $ fromIntegral s
-    else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s < -maxFloat then Left Exception.Underflow
+    else if s > maxFloat then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryCast.TryCast Int.Int64 Double where
-  tryCast = Utility.maybeTryCast $ \s -> if -maxDouble <= s && s <= maxDouble
-    then Just $ fromIntegral s
-    else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s < -maxDouble then Left Exception.Underflow
+    else if s > maxDouble then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- Int
 
@@ -309,18 +312,19 @@ instance TryCast.TryCast Int Natural.Natural where
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryCast.TryCast Int Float where
-  tryCast = Utility.maybeTryCast $ \s -> if -maxFloat <= s && s <= maxFloat
-    then Just $ fromIntegral s
-    else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s < -maxFloat then Left Exception.Underflow
+    else if s > maxFloat then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryCast.TryCast Int Double where
-  tryCast = Utility.maybeTryCast $ \s ->
-    if (toInteger (maxBound :: Int) <= maxDouble)
-        || (-maxDouble <= s && s <= maxDouble)
-      then Just $ fromIntegral s
-      else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if toInteger (maxBound :: Int) <= maxDouble then Right $ fromIntegral s
+    else if s < -maxDouble then Left Exception.Underflow
+    else if s > maxDouble then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- Integer
 
@@ -376,16 +380,18 @@ instance TryCast.TryCast Integer Natural.Natural where
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryCast.TryCast Integer Float where
-  tryCast = Utility.maybeTryCast $ \s -> if -maxFloat <= s && s <= maxFloat
-    then Just $ fromIntegral s
-    else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s < -maxFloat then Left Exception.Underflow
+    else if s > maxFloat then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryCast.TryCast Integer Double where
-  tryCast = Utility.maybeTryCast $ \s -> if -maxDouble <= s && s <= maxDouble
-    then Just $ fromIntegral s
-    else Nothing
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s < -maxDouble then Left Exception.Underflow
+    else if s > maxDouble then Left Exception.Overflow
+    else Right $ fromIntegral s
 
 -- Word8
 
@@ -752,11 +758,11 @@ instance TryCast.TryCast Float Int where
 -- | Converts via 'Rational' when the input is between -16,777,215 and
 -- 16,777,215 inclusive.
 instance TryCast.TryCast Float Integer where
-  tryCast s = case Utility.tryVia @Rational s of
-    Left e -> Left e
+  tryCast = Utility.eitherTryCast $ \s -> case Utility.tryVia @Rational s of
+    Left e -> Left $ Exception.toException e
     Right t
-      | t < -maxFloat -> Left . TryCastException.TryCastException s . Just $ Exception.toException Exception.Underflow
-      | t > maxFloat -> Left . TryCastException.TryCastException s . Just $ Exception.toException Exception.Overflow
+      | t < -maxFloat -> Left $ Exception.toException Exception.Underflow
+      | t > maxFloat -> Left $ Exception.toException Exception.Overflow
       | otherwise -> Right t
 
 -- | Converts via 'Integer'.
@@ -817,11 +823,11 @@ instance TryCast.TryCast Double Int where
 -- | Converts via 'Rational' when the input is between -9,007,199,254,740,991
 -- and 9,007,199,254,740,991 inclusive.
 instance TryCast.TryCast Double Integer where
-  tryCast s = case Utility.tryVia @Rational s of
-    Left e -> Left e
+  tryCast = Utility.eitherTryCast $ \s -> case Utility.tryVia @Rational s of
+    Left e -> Left $ Exception.toException e
     Right t
-      | t < -maxDouble -> Left . TryCastException.TryCastException s . Just $ Exception.toException Exception.Underflow
-      | t > maxDouble -> Left . TryCastException.TryCastException s . Just $ Exception.toException Exception.Overflow
+      | t < -maxDouble -> Left $ Exception.toException Exception.Underflow
+      | t > maxDouble -> Left $ Exception.toException Exception.Overflow
       | otherwise -> Right t
 
 -- | Converts via 'Integer'.
@@ -981,9 +987,7 @@ instance Cast.Cast ByteString.ByteString ShortByteString.ShortByteString where
 
 -- | Uses 'Text.decodeUtf8''.
 instance TryCast.TryCast ByteString.ByteString Text.Text where
-  tryCast s = case Text.decodeUtf8' s of
-    Left e -> Left . TryCastException.TryCastException s . Just $ Exception.toException e
-    Right t -> Right t
+  tryCast = Utility.eitherTryCast Text.decodeUtf8'
 
 -- LazyByteString
 
@@ -1001,9 +1005,7 @@ instance Cast.Cast LazyByteString.ByteString ByteString.ByteString where
 
 -- | Uses 'LazyText.decodeUtf8''.
 instance TryCast.TryCast LazyByteString.ByteString LazyText.Text where
-  tryCast s = case LazyText.decodeUtf8' s of
-    Left e -> Left . TryCastException.TryCastException s . Just $ Exception.toException e
-    Right t -> Right t
+  tryCast = Utility.eitherTryCast LazyText.decodeUtf8'
 
 -- ShortByteString
 
