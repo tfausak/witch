@@ -192,10 +192,11 @@ instance TryCast.TryCast Int.Int32 Natural.Natural where
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryCast.TryCast Int.Int32 Float where
-  tryCast = Utility.eitherTryCast $ \s ->
-    if s < -maxFloat then Left Exception.Underflow
-    else if s > maxFloat then Left Exception.Overflow
-    else Right $ fromIntegral s
+  tryCast = Utility.eitherTryCast $ \s -> if s < -maxFloat
+    then Left Exception.Underflow
+    else if s > maxFloat
+      then Left Exception.Overflow
+      else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Int.Int32 Double where
@@ -250,18 +251,20 @@ instance TryCast.TryCast Int.Int64 Natural.Natural where
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryCast.TryCast Int.Int64 Float where
-  tryCast = Utility.eitherTryCast $ \s ->
-    if s < -maxFloat then Left Exception.Underflow
-    else if s > maxFloat then Left Exception.Overflow
-    else Right $ fromIntegral s
+  tryCast = Utility.eitherTryCast $ \s -> if s < -maxFloat
+    then Left Exception.Underflow
+    else if s > maxFloat
+      then Left Exception.Overflow
+      else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryCast.TryCast Int.Int64 Double where
-  tryCast = Utility.eitherTryCast $ \s ->
-    if s < -maxDouble then Left Exception.Underflow
-    else if s > maxDouble then Left Exception.Overflow
-    else Right $ fromIntegral s
+  tryCast = Utility.eitherTryCast $ \s -> if s < -maxDouble
+    then Left Exception.Underflow
+    else if s > maxDouble
+      then Left Exception.Overflow
+      else Right $ fromIntegral s
 
 -- Int
 
@@ -312,19 +315,23 @@ instance TryCast.TryCast Int Natural.Natural where
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryCast.TryCast Int Float where
-  tryCast = Utility.eitherTryCast $ \s ->
-    if s < -maxFloat then Left Exception.Underflow
-    else if s > maxFloat then Left Exception.Overflow
-    else Right $ fromIntegral s
+  tryCast = Utility.eitherTryCast $ \s -> if s < -maxFloat
+    then Left Exception.Underflow
+    else if s > maxFloat
+      then Left Exception.Overflow
+      else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryCast.TryCast Int Double where
   tryCast = Utility.eitherTryCast $ \s ->
-    if toInteger (maxBound :: Int) <= maxDouble then Right $ fromIntegral s
-    else if s < -maxDouble then Left Exception.Underflow
-    else if s > maxDouble then Left Exception.Overflow
-    else Right $ fromIntegral s
+    if toInteger (maxBound :: Int) <= maxDouble
+      then Right $ fromIntegral s
+      else if s < -maxDouble
+        then Left Exception.Underflow
+        else if s > maxDouble
+          then Left Exception.Overflow
+          else Right $ fromIntegral s
 
 -- Integer
 
@@ -374,24 +381,26 @@ instance TryCast.TryCast Integer Natural.Natural where
   -- a bug in GHC 9.0.1. By inlining @fromNonNegativeIntegral@ and replacing
   -- @fromIntegral@ with @fromInteger@, we can work around the bug.
   -- https://mail.haskell.org/pipermail/haskell-cafe/2021-March/133540.html
-  tryCast =
-    Utility.eitherTryCast $ \s -> if s < 0 then Left Exception.Underflow else Right $ fromInteger s
+  tryCast = Utility.eitherTryCast
+    $ \s -> if s < 0 then Left Exception.Underflow else Right $ fromInteger s
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryCast.TryCast Integer Float where
-  tryCast = Utility.eitherTryCast $ \s ->
-    if s < -maxFloat then Left Exception.Underflow
-    else if s > maxFloat then Left Exception.Overflow
-    else Right $ fromIntegral s
+  tryCast = Utility.eitherTryCast $ \s -> if s < -maxFloat
+    then Left Exception.Underflow
+    else if s > maxFloat
+      then Left Exception.Overflow
+      else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryCast.TryCast Integer Double where
-  tryCast = Utility.eitherTryCast $ \s ->
-    if s < -maxDouble then Left Exception.Underflow
-    else if s > maxDouble then Left Exception.Overflow
-    else Right $ fromIntegral s
+  tryCast = Utility.eitherTryCast $ \s -> if s < -maxDouble
+    then Left Exception.Underflow
+    else if s > maxDouble
+      then Left Exception.Overflow
+      else Right $ fromIntegral s
 
 -- Word8
 
@@ -549,8 +558,8 @@ instance Cast.Cast Word.Word32 Integer where
 
 -- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Word.Word32 Float where
-  tryCast = Utility.eitherTryCast
-    $ \s -> if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
 -- | Uses 'fromIntegral'.
 instance Cast.Cast Word.Word32 Double where
@@ -604,14 +613,15 @@ instance Cast.Cast Word.Word64 Integer where
 
 -- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Word.Word64 Float where
-  tryCast = Utility.eitherTryCast
-    $ \s -> if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
 -- | Uses 'fromIntegral' when the input is less than or equal to
 -- 9,007,199,254,740,991.
 instance TryCast.TryCast Word.Word64 Double where
-  tryCast = Utility.eitherTryCast
-    $ \s -> if s <= maxDouble then Right $ fromIntegral s else Left Exception.Overflow
+  tryCast = Utility.eitherTryCast $ \s -> if s <= maxDouble
+    then Right $ fromIntegral s
+    else Left Exception.Overflow
 
 -- Word
 
@@ -661,8 +671,8 @@ instance Cast.Cast Word Integer where
 
 -- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Word Float where
-  tryCast = Utility.eitherTryCast
-    $ \s -> if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
 -- | Uses 'fromIntegral' when the input is less than or equal to
 -- 9,007,199,254,740,991.
@@ -720,14 +730,15 @@ instance Cast.Cast Natural.Natural Integer where
 
 -- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Natural.Natural Float where
-  tryCast = Utility.eitherTryCast
-    $ \s -> if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
+  tryCast = Utility.eitherTryCast $ \s ->
+    if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
 -- | Uses 'fromIntegral' when the input is less than or equal to
 -- 9,007,199,254,740,991.
 instance TryCast.TryCast Natural.Natural Double where
-  tryCast = Utility.eitherTryCast
-    $ \s -> if s <= maxDouble then Right $ fromIntegral s else Left Exception.Overflow
+  tryCast = Utility.eitherTryCast $ \s -> if s <= maxDouble
+    then Right $ fromIntegral s
+    else Left Exception.Overflow
 
 -- Float
 
@@ -787,10 +798,11 @@ instance TryCast.TryCast Float Natural.Natural where
 
 -- | Uses 'toRational' when the input is not NaN or infinity.
 instance TryCast.TryCast Float Rational where
-  tryCast = Utility.eitherTryCast $ \s ->
-    if isNaN s then Left Exception.LossOfPrecision
-    else if isInfinite s then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
-    else Right $ toRational s
+  tryCast = Utility.eitherTryCast $ \s -> if isNaN s
+    then Left Exception.LossOfPrecision
+    else if isInfinite s
+      then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
+      else Right $ toRational s
 
 -- | Uses 'realToFrac'.
 instance Cast.Cast Float Double where
@@ -854,10 +866,11 @@ instance TryCast.TryCast Double Natural.Natural where
 
 -- | Uses 'toRational' when the input is not NaN or infinity.
 instance TryCast.TryCast Double Rational where
-  tryCast = Utility.eitherTryCast $ \s ->
-    if isNaN s then Left Exception.LossOfPrecision
-    else if isInfinite s then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
-    else Right $ toRational s
+  tryCast = Utility.eitherTryCast $ \s -> if isNaN s
+    then Left Exception.LossOfPrecision
+    else if isInfinite s
+      then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
+      else Right $ toRational s
 
 -- | Uses 'realToFrac'. This necessarily loses some precision.
 instance Cast.Cast Double Float where
@@ -871,8 +884,9 @@ instance Integral a => Cast.Cast a (Ratio.Ratio a) where
 
 -- | Uses 'Ratio.numerator' when the denominator is 1.
 instance (Eq a, Num a) => TryCast.TryCast (Ratio.Ratio a) a where
-  tryCast = Utility.eitherTryCast $ \s ->
-    if Ratio.denominator s == 1 then Right $ Ratio.numerator s else Left Exception.LossOfPrecision
+  tryCast = Utility.eitherTryCast $ \s -> if Ratio.denominator s == 1
+    then Right $ Ratio.numerator s
+    else Left Exception.LossOfPrecision
 
 -- | Uses 'fromRational'. This necessarily loses some precision.
 instance Cast.Cast Rational Float where
@@ -902,8 +916,9 @@ instance Num a => Cast.Cast a (Complex.Complex a) where
 
 -- | Uses 'Complex.realPart' when the imaginary part is 0.
 instance (Eq a, Num a) => TryCast.TryCast (Complex.Complex a) a where
-  tryCast = Utility.eitherTryCast $ \s ->
-    if Complex.imagPart s == 0 then Right $ Complex.realPart s else Left Exception.LossOfPrecision
+  tryCast = Utility.eitherTryCast $ \s -> if Complex.imagPart s == 0
+    then Right $ Complex.realPart s
+    else Left Exception.LossOfPrecision
 
 -- NonEmpty
 
@@ -1084,8 +1099,10 @@ instance
   ) => Cast.Cast (TryCastException.TryCastException s t) LazyText.Text where
   cast = Utility.via @String
 
-fromNonNegativeIntegral :: (Integral s, Num t) => s -> Either Exception.ArithException t
-fromNonNegativeIntegral x = if x < 0 then Left Exception.Underflow else Right $ fromIntegral x
+fromNonNegativeIntegral
+  :: (Integral s, Num t) => s -> Either Exception.ArithException t
+fromNonNegativeIntegral x =
+  if x < 0 then Left Exception.Underflow else Right $ fromIntegral x
 
 -- | The maximum integral value that can be unambiguously represented as a
 -- 'Float'. Equal to 16,777,215.
