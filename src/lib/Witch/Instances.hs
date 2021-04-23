@@ -26,6 +26,7 @@ import qualified Data.Text as Text
 import qualified Data.Text.Encoding as Text
 import qualified Data.Text.Lazy as LazyText
 import qualified Data.Text.Lazy.Encoding as LazyText
+import qualified Data.Typeable as Typeable
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 import qualified Witch.Cast as Cast
@@ -1053,7 +1054,30 @@ instance Cast.Cast LazyText.Text Text.Text where
 instance Cast.Cast LazyText.Text LazyByteString.ByteString where
   cast = LazyText.encodeUtf8
 
+-- TryCastException
+
 instance Cast.Cast (TryCastException.TryCastException s t0) (TryCastException.TryCastException s t1)
+
+instance
+  ( Show s
+  , Typeable.Typeable s
+  , Typeable.Typeable t
+  ) => Cast.Cast (TryCastException.TryCastException s t) String where
+  cast = show
+
+instance
+  ( Show s
+  , Typeable.Typeable s
+  , Typeable.Typeable t
+  ) => Cast.Cast (TryCastException.TryCastException s t) Text.Text where
+  cast = Utility.via @String
+
+instance
+  ( Show s
+  , Typeable.Typeable s
+  , Typeable.Typeable t
+  ) => Cast.Cast (TryCastException.TryCastException s t) LazyText.Text where
+  cast = Utility.via @String
 
 fromNonNegativeIntegral :: (Integral s, Num t) => s -> Maybe t
 fromNonNegativeIntegral x = if x < 0 then Nothing else Just $ fromIntegral x
