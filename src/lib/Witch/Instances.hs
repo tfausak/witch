@@ -7,6 +7,7 @@
 
 module Witch.Instances where
 
+import qualified Control.Exception as Exception
 import qualified Data.Bits as Bits
 import qualified Data.ByteString as ByteString
 import qualified Data.ByteString.Lazy as LazyByteString
@@ -753,9 +754,10 @@ instance TryCast.TryCast Float Int where
 instance TryCast.TryCast Float Integer where
   tryCast s = case Utility.tryVia @Rational s of
     Left e -> Left e
-    Right t -> if -maxFloat <= t && t <= maxFloat
-      then Right t
-      else Left $ TryCastException.TryCastException s
+    Right t
+      | t < -maxFloat -> Left . TryCastException.TryCastException s . Just $ Exception.toException Exception.Underflow
+      | t > maxFloat -> Left . TryCastException.TryCastException s . Just $ Exception.toException Exception.Overflow
+      | otherwise -> Right t
 
 -- | Converts via 'Integer'.
 instance TryCast.TryCast Float Word.Word8 where
@@ -817,9 +819,10 @@ instance TryCast.TryCast Double Int where
 instance TryCast.TryCast Double Integer where
   tryCast s = case Utility.tryVia @Rational s of
     Left e -> Left e
-    Right t -> if -maxDouble <= t && t <= maxDouble
-      then Right t
-      else Left $ TryCastException.TryCastException s
+    Right t
+      | t < -maxDouble -> Left . TryCastException.TryCastException s . Just $ Exception.toException Exception.Underflow
+      | t > maxDouble -> Left . TryCastException.TryCastException s . Just $ Exception.toException Exception.Overflow
+      | otherwise -> Right t
 
 -- | Converts via 'Integer'.
 instance TryCast.TryCast Double Word.Word8 where
@@ -979,7 +982,7 @@ instance Cast.Cast ByteString.ByteString ShortByteString.ShortByteString where
 -- | Uses 'Text.decodeUtf8''.
 instance TryCast.TryCast ByteString.ByteString Text.Text where
   tryCast s = case Text.decodeUtf8' s of
-    Left _ -> Left $ TryCastException.TryCastException s
+    Left e -> Left . TryCastException.TryCastException s . Just $ Exception.toException e
     Right t -> Right t
 
 -- LazyByteString
@@ -999,7 +1002,7 @@ instance Cast.Cast LazyByteString.ByteString ByteString.ByteString where
 -- | Uses 'LazyText.decodeUtf8''.
 instance TryCast.TryCast LazyByteString.ByteString LazyText.Text where
   tryCast s = case LazyText.decodeUtf8' s of
-    Left _ -> Left $ TryCastException.TryCastException s
+    Left e -> Left . TryCastException.TryCastException s . Just $ Exception.toException e
     Right t -> Right t
 
 -- ShortByteString
@@ -1085,7 +1088,7 @@ fromNonNegativeIntegral x = if x < 0 then Nothing else Just $ fromIntegral x
 maybeTryCast
   :: (s -> Maybe t) -> s -> Either (TryCastException.TryCastException s t) t
 maybeTryCast f s = case f s of
-  Nothing -> Left $ TryCastException.TryCastException s
+  Nothing -> Left $ TryCastException.TryCastException s Nothing
   Just t -> Right t
 
 -- | The maximum integral value that can be unambiguously represented as a
