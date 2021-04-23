@@ -8,7 +8,9 @@ import qualified Data.Typeable as Typeable
 
 -- | This exception is thrown when a @TryCast@ conversion fails. It has the
 -- original @source@ value that caused the failure and it knows the @target@
--- type it was trying to convert into.
+-- type it was trying to convert into. It also has an optional
+-- 'Exception.SomeException' for communicating what went wrong while
+-- converting.
 data TryCastException source target = TryCastException
   source
   (Maybe Exception.SomeException)

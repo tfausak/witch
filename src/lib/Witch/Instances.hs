@@ -1076,8 +1076,12 @@ instance Cast.Cast LazyText.Text LazyByteString.ByteString where
 
 -- TryCastException
 
-instance Cast.Cast (TryCastException.TryCastException s t0) (TryCastException.TryCastException s t1)
+-- | Uses @coerce@.
+instance Cast.Cast
+  (TryCastException.TryCastException s u)
+  (TryCastException.TryCastException s t)
 
+-- | Uses 'show'.
 instance
   ( Show s
   , Typeable.Typeable s
@@ -1085,6 +1089,7 @@ instance
   ) => Cast.Cast (TryCastException.TryCastException s t) String where
   cast = show
 
+-- | Converts via 'String'.
 instance
   ( Show s
   , Typeable.Typeable s
@@ -1092,6 +1097,7 @@ instance
   ) => Cast.Cast (TryCastException.TryCastException s t) Text.Text where
   cast = Utility.via @String
 
+-- | Converts via 'String'.
 instance
   ( Show s
   , Typeable.Typeable s
