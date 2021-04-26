@@ -29,6 +29,7 @@ import qualified Data.Text.Lazy as LazyText
 import qualified Data.Text.Lazy.Encoding as LazyText
 import qualified Data.Typeable as Typeable
 import qualified Data.Word as Word
+import qualified GHC.Float as Float
 import qualified Numeric.Natural as Natural
 import qualified Witch.Cast as Cast
 import qualified Witch.TryCast as TryCast
@@ -804,9 +805,9 @@ instance TryCast.TryCast Float Rational where
       then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
       else Right $ toRational s
 
--- | Uses 'realToFrac'.
+-- | Uses 'Float.double2Float'.
 instance Cast.Cast Float Double where
-  cast = realToFrac
+  cast = Float.float2Double
 
 -- Double
 
@@ -872,9 +873,9 @@ instance TryCast.TryCast Double Rational where
       then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
       else Right $ toRational s
 
--- | Uses 'realToFrac'. This necessarily loses some precision.
+-- | Uses 'Float.double2Float'. This necessarily loses some precision.
 instance Cast.Cast Double Float where
-  cast = realToFrac
+  cast = Float.double2Float
 
 -- Ratio
 
