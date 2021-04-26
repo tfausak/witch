@@ -22,10 +22,11 @@ instance
   ) => Show (TryCastException source target) where
   showsPrec d (TryCastException x e) =
     showParen (d > 10)
-      $ showString "TryCastException {- "
-      . shows
-          (Typeable.typeRep (Proxy.Proxy :: Proxy.Proxy (source -> target)))
-      . showString " -} "
+      $ showString "TryCastException @"
+      . showsPrec 11 (Typeable.typeRep (Proxy.Proxy :: Proxy.Proxy source))
+      . showString " @"
+      . showsPrec 11 (Typeable.typeRep (Proxy.Proxy :: Proxy.Proxy target))
+      . showChar ' '
       . showsPrec 11 x
       . showChar ' '
       . showsPrec 11 e
