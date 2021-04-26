@@ -1643,16 +1643,17 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       Hspec.it "needs tests" Hspec.pending
 
     Hspec.describe "Cast (TryCastException s t) String" $ do
+      test $ Witch.cast (Witch.TryCastException Nothing Nothing :: Witch.TryCastException (Maybe Bool) (Maybe Int)) `Hspec.shouldBe` "TryCastException @(Maybe Bool) @(Maybe Int) Nothing Nothing"
       let f = Witch.cast @(Witch.TryCastException Bool Int) @String
-      test $ f (Witch.TryCastException False Nothing) `Hspec.shouldBe` "TryCastException {- Bool -> Int -} False Nothing"
+      test $ f (Witch.TryCastException False Nothing) `Hspec.shouldBe` "TryCastException @Bool @Int False Nothing"
 
     Hspec.describe "Cast (TryCastException s t) Text" $ do
       let f = Witch.cast @(Witch.TryCastException Bool Int) @Text.Text
-      test $ f (Witch.TryCastException False Nothing) `Hspec.shouldBe` Text.pack "TryCastException {- Bool -> Int -} False Nothing"
+      test $ f (Witch.TryCastException False Nothing) `Hspec.shouldBe` Text.pack "TryCastException @Bool @Int False Nothing"
 
     Hspec.describe "Cast (TryCastException s t) LazyText" $ do
       let f = Witch.cast @(Witch.TryCastException Bool Int) @LazyText.Text
-      test $ f (Witch.TryCastException False Nothing) `Hspec.shouldBe` LazyText.pack "TryCastException {- Bool -> Int -} False Nothing"
+      test $ f (Witch.TryCastException False Nothing) `Hspec.shouldBe` LazyText.pack "TryCastException @Bool @Int False Nothing"
 
 test :: Hspec.Example a => a -> Hspec.SpecWith (Hspec.Arg a)
 test = Hspec.it ""
