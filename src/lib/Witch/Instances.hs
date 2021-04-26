@@ -805,7 +805,7 @@ instance TryCast.TryCast Float Rational where
       then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
       else Right $ toRational s
 
--- | Uses 'Float.double2Float'.
+-- | Uses 'Float.float2Double'.
 instance Cast.Cast Float Double where
   cast = Float.float2Double
 
