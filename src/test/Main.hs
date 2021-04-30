@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -23,6 +24,9 @@ import qualified Data.Text.Lazy as LazyText
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 import qualified Test.Hspec as Hspec
+import qualified Test.Hspec.QuickCheck as Hspec
+import Test.QuickCheck ((===))
+import qualified Text.Read as Read
 import qualified Witch
 
 main :: IO ()
@@ -52,7 +56,7 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ Witch.into @Int.Int16 (1 :: Int.Int8) `Hspec.shouldBe` 1
 
     Hspec.describe "over" $ do
-      test $ Witch.over @String (<> "!") (Name "Kiki") `Hspec.shouldBe` Name "Kiki!"
+      test $ Witch.over @Int.Int8 (+ 1) (Age 1) `Hspec.shouldBe` Age 2
 
     Hspec.describe "via" $ do
       test $ Witch.via @Int.Int16 (1 :: Int.Int8) `Hspec.shouldBe` (1 :: Int.Int32)
@@ -1655,6 +1659,46 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       let f = Witch.cast @(Witch.TryCastException Bool Int) @LazyText.Text
       test $ f (Witch.TryCastException False Nothing) `Hspec.shouldBe` LazyText.pack "TryCastException @Bool @Int False Nothing"
 
+  -- Casting
+
+  Hspec.describe "Casting" $ do
+
+    Hspec.describe "Bounded" $ do
+
+      Hspec.it "maxBound" $ do
+        maxBound `Hspec.shouldBe` Age maxBound
+
+      Hspec.it "minBound" $ do
+        minBound `Hspec.shouldBe` Age minBound
+
+    Hspec.describe "Enum" $ do
+
+      Hspec.prop "fromEnum" $ \x ->
+        fromEnum (Age x) === fromEnum x
+
+      Hspec.prop "toEnum" $ \x ->
+        toEnum x === Age (toEnum x)
+
+    Hspec.describe "Eq" $ do
+
+      Hspec.prop "==" $ \x ->
+        Age x === Age x
+
+    Hspec.describe "Ord" $ do
+
+      Hspec.prop "compare" $ \x y ->
+        compare (Age x) (Age y) === compare x y
+
+    Hspec.describe "Read" $ do
+
+      Hspec.prop "readMaybe" $ \x ->
+        Read.readMaybe x === fmap Age (Read.readMaybe x)
+
+    Hspec.describe "Show" $ do
+
+      Hspec.prop "show" $ \x ->
+        show (Age x) === show x
+
 test :: Hspec.Example a => a -> Hspec.SpecWith (Hspec.Arg a)
 test = Hspec.it ""
 
@@ -1670,10 +1714,10 @@ data Untested
 
 instance Exception.Exception Untested
 
-newtype Name
-  = Name String
-  deriving (Eq, Show)
+newtype Age
+  = Age Int.Int8
+  deriving (Bounded, Enum, Eq, Ord, Read, Show) via Witch.Casting Age Int.Int8
 
-instance Witch.Cast Name String
+instance Witch.Cast Age Int.Int8
 
-instance Witch.Cast String Name
+instance Witch.Cast Int.Int8 Age
