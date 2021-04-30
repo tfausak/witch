@@ -60,7 +60,7 @@ into = Cast.cast
 -- that only works with one of them.
 --
 -- > -- Avoid this:
--- > from @t . f . from @s
+-- > from @t . f . into @t
 -- >
 -- > -- Prefer this:
 -- > over @t f
