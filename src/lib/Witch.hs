@@ -159,9 +159,14 @@ module Witch
   , Witch.Lift.liftedCast
   , Witch.Lift.liftedFrom
   , Witch.Lift.liftedInto
+
+  -- * Data types
+  -- ** Casting
+  , Witch.Casting.Casting(Casting)
   ) where
 
 import qualified Witch.Cast
+import qualified Witch.Casting
 import Witch.Instances ()
 import qualified Witch.Lift
 import qualified Witch.TryCast
