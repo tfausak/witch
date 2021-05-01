@@ -125,6 +125,31 @@ tryInto
   -> Either (TryCastException.TryCastException source target) target
 tryInto = TryCast.tryCast
 
+-- | This is similar to 'via' except that it works with 'TryCast.TryCast'
+-- instances instead. This function is especially convenient because juggling
+-- the types in the 'TryCastException.TryCastException' can be tedious.
+--
+-- > -- Avoid this:
+-- > fmap (tryFrom @u) . tryInto @u
+-- >
+-- > -- Prefer this:
+-- > tryVia @u
+tryVia
+  :: forall u source target through
+   . ( Identity.Identity u ~ through
+     , TryCast.TryCast source through
+     , TryCast.TryCast through target
+     )
+  => source
+  -> Either (TryCastException.TryCastException source target) target
+tryVia s = case TryCast.tryCast s of
+  Left (TryCastException.TryCastException _ e) ->
+    Left $ TryCastException.TryCastException s e
+  Right u -> case TryCast.tryCast (u :: through) of
+    Left (TryCastException.TryCastException _ e) ->
+      Left $ TryCastException.TryCastException s e
+    Right t -> Right t
+
 -- | This function can be used to implement 'TryCast.tryCast' with a function
 -- that returns 'Maybe'. For example:
 --
@@ -162,31 +187,6 @@ eitherTryCast f s = case f s of
   Left e ->
     Left . TryCastException.TryCastException s . Just $ Exception.toException e
   Right t -> Right t
-
--- | This is similar to 'via' except that it works with 'TryCast.TryCast'
--- instances instead. This function is especially convenient because juggling
--- the types in the 'TryCastException.TryCastException' can be tedious.
---
--- > -- Avoid this:
--- > fmap (tryFrom @u) . tryInto @u
--- >
--- > -- Prefer this:
--- > tryVia @u
-tryVia
-  :: forall u source target through
-   . ( Identity.Identity u ~ through
-     , TryCast.TryCast source through
-     , TryCast.TryCast through target
-     )
-  => source
-  -> Either (TryCastException.TryCastException source target) target
-tryVia s = case TryCast.tryCast s of
-  Left (TryCastException.TryCastException _ e) ->
-    Left $ TryCastException.TryCastException s e
-  Right u -> case TryCast.tryCast (u :: through) of
-    Left (TryCastException.TryCastException _ e) ->
-      Left $ TryCastException.TryCastException s e
-    Right t -> Right t
 
 -- | This function is like 'TryCast.tryCast' except that it will throw an
 -- impure exception if the conversion fails.
