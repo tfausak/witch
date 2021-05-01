@@ -21,9 +21,9 @@ module Witch
   , Witch.Utility.as
   , Witch.Utility.over
   , Witch.Utility.via
+  , Witch.Utility.tryVia
   , Witch.Utility.maybeTryCast
   , Witch.Utility.eitherTryCast
-  , Witch.Utility.tryVia
 
   -- ** Unsafe
   -- | These functions should only be used in two circumstances: When you know
