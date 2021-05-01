@@ -6,6 +6,7 @@
 -- >>> import Witch
 module Witch
   ( -- * Type classes
+
   -- ** Cast
     Witch.Cast.Cast(cast)
   , Witch.Utility.from
@@ -15,7 +16,6 @@ module Witch
   , Witch.TryCast.TryCast(tryCast)
   , Witch.Utility.tryFrom
   , Witch.Utility.tryInto
-  , Witch.TryCastException.TryCastException(..)
 
   -- * Utilities
   , Witch.Utility.as
@@ -49,6 +49,8 @@ module Witch
   , Witch.Lift.liftedInto
 
   -- * Data types
+  , Witch.TryCastException.TryCastException(..)
+
   -- ** Casting
   , Witch.Casting.Casting(Casting)
 
