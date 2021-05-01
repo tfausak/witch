@@ -58,7 +58,9 @@ module Witch
   -- ** Casting
   , Witch.Casting.Casting(Casting)
 
-  -- * Motivation
+  -- * Notes
+
+  -- ** Motivation
   -- | Haskell provides many ways to convert between common types, and core
   -- libraries add even more. It can be challenging to know which function to
   -- use when converting from some source type @a@ to some target type @b@. It
@@ -72,7 +74,7 @@ module Witch
   -- by the [@From@](https://doc.rust-lang.org/std/convert/trait.From.html)
   -- trait in Rust.
 
-  -- * Alternatives
+  -- ** Alternatives
   -- | Many Haskell libraries already provide similar functionality. How is
   -- this library different?
   --
@@ -120,7 +122,7 @@ module Witch
   --   if the conversion is possible, is it safe? For example converting a
   --   negative 'Int' into a 'Word' will overflow, which may be surprising.
 
-  -- * Instances
+  -- ** Instances
   -- | When should you add a 'Witch.Cast.Cast' (or 'Witch.TryCast.TryCast')
   -- instance for some pair of types? This is a surprisingly tricky question
   -- to answer precisely. Instances are driven more by guidelines than rules.
@@ -149,7 +151,7 @@ module Witch
   -- possible to convert from @s@ to @t@ but there are a lot of caveats, you
   -- probably should not write any instances at all.
 
-  -- * Type applications
+  -- ** Type applications
   -- | This library is designed to be used with the [@TypeApplications@](https://downloads.haskell.org/~ghc/9.0.1/docs/html/users_guide/exts/type_applications.html)
   -- language extension. Although it is not required for basic functionality,
   -- it is strongly encouraged. You can use 'Witch.Cast.cast',
@@ -157,7 +159,7 @@ module Witch
   -- 'Witch.Lift.liftedCast' without type applications. Everything else
   -- requires a type application.
 
-  -- * Ambiguous types
+  -- ** Ambiguous types
   -- | You may see @Identity@ show up in some type signatures. Anywhere you see
   -- @Identity a@, you can mentally replace it with @a@. It is a type family
   -- used to trick GHC into requiring type applications for certain functions.
