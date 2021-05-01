@@ -137,16 +137,28 @@ module Witch
   -- - Conversions should be lossless. If you have @Cast a b@ then no two @a@
   --   values should be converted to the same @b@ value.
   --
+  --   - Some conversions necessarily lose information, like converting from a
+  --     list into a set.
+  --
   -- - If you have both @Cast a b@ and @Cast b a@, then
   --   @cast \@b \@a . cast \@a \@b@ should be the same as 'id'. In other
   --   words, @a@ and @b@ are isomorphic.
+  --
+  --   - This often true, but not always. For example, converting a list into
+  --     a set will remove duplicates. And then converting back into a list
+  --     will put the elements in ascending order.
   --
   -- - If you have both @Cast a b@ and @Cast b c@, then you could also have
   --   @Cast a c@ and it should be the same as @cast \@b \@c . cast \@a \@b@.
   --   In other words, @Cast@ is transitive.
   --
-  -- In general if @s@ is a @t@, then you should add a 'Witch.Cast.Cast'
-  -- instance for it. But if @s@ merely can be a @t@, then you could add a
+  --   - This is not always true. For example an @Int8@ may be represented as
+  --     a number in JSON, whereas an @Int64@ might be represented as a
+  --     string. That means @into \@JSON (into \@Int64 int8)@ would not be the
+  --     same as @into \@JSON int8@.
+  --
+  -- In general if @s@ /is/ a @t@, then you should add a 'Witch.Cast.Cast'
+  -- instance for it. But if @s@ merely /can be/ a @t@, then you could add a
   -- 'Witch.TryCast.TryCast' instance for it. And if it is technically
   -- possible to convert from @s@ to @t@ but there are a lot of caveats, you
   -- probably should not write any instances at all.
