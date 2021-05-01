@@ -4,6 +4,10 @@
 -- unqualified, so getting started is as easy as:
 --
 -- >>> import Witch
+--
+-- In typical usage, you will most likely use 'Witch.Utility.into' for
+-- 'Witch.Cast.Cast' instances and 'With.Utility.tryInto' for
+-- 'Witch.TryCast.TryCast' instances.
 module Witch
   ( -- * Type classes
 
