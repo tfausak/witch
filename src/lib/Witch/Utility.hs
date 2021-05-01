@@ -130,7 +130,11 @@ tryInto = TryCast.tryCast
 -- the types in the 'TryCastException.TryCastException' can be tedious.
 --
 -- > -- Avoid this:
--- > fmap (tryFrom @u) . tryInto @u
+-- > case tryInto @u x of
+-- >   Left _ -> Left ...
+-- >   Right y -> case tryFrom @u y of
+-- >     Left _ -> Left ...
+-- >     Right z -> ...
 -- >
 -- > -- Prefer this:
 -- > tryVia @u
