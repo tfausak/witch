@@ -5,7 +5,47 @@
 --
 -- >>> import Witch
 module Witch
-  ( -- * Motivation
+  ( -- * Type classes
+  -- ** Cast
+    Witch.Cast.Cast(cast)
+  , Witch.Utility.from
+  , Witch.Utility.into
+
+  -- ** TryCast
+  , Witch.TryCast.TryCast(tryCast)
+  , Witch.Utility.tryFrom
+  , Witch.Utility.tryInto
+  , Witch.TryCastException.TryCastException(..)
+
+  -- * Utilities
+  , Witch.Utility.as
+  , Witch.Utility.over
+  , Witch.Utility.via
+  , Witch.Utility.maybeTryCast
+  , Witch.Utility.eitherTryCast
+  , Witch.Utility.tryVia
+
+  -- ** Unsafe
+  , Witch.Utility.unsafeCast
+  , Witch.Utility.unsafeFrom
+  , Witch.Utility.unsafeInto
+
+  -- ** Template Haskell
+  -- | This library uses /typed/ Template Haskell, which may be a little
+  -- different than what you're used to. Normally Template Haskell uses the
+  -- @$(...)@ syntax for splicing in things to run at compile time. The typed
+  -- variant uses the @$$(...)@ syntax for splices, doubling up on the dollar
+  -- signs. Other than that, using typed Template Haskell should be pretty
+  -- much the same as using regular Template Haskell.
+  , Witch.Lift.liftedCast
+  , Witch.Lift.liftedFrom
+  , Witch.Lift.liftedInto
+
+  -- * Data types
+  -- ** Casting
+  , Witch.Casting.Casting(Casting)
+
+  -- * Motivation
   -- | Haskell provides many ways to convert between common types, and core
   -- libraries add even more. It can be challenging to know which function to
   -- use when converting from some source type @a@ to some target type @b@. It
@@ -123,46 +163,6 @@ module Witch
   --
   -- >>> from @Int8 1 :: Int16
   -- 1
-
-  -- * Type classes
-  -- ** Cast
-    Witch.Cast.Cast(cast)
-  , Witch.Utility.from
-  , Witch.Utility.into
-
-  -- ** TryCast
-  , Witch.TryCast.TryCast(tryCast)
-  , Witch.Utility.tryFrom
-  , Witch.Utility.tryInto
-  , Witch.TryCastException.TryCastException(..)
-
-  -- * Utilities
-  , Witch.Utility.as
-  , Witch.Utility.over
-  , Witch.Utility.via
-  , Witch.Utility.maybeTryCast
-  , Witch.Utility.eitherTryCast
-  , Witch.Utility.tryVia
-
-  -- ** Unsafe
-  , Witch.Utility.unsafeCast
-  , Witch.Utility.unsafeFrom
-  , Witch.Utility.unsafeInto
-
-  -- ** Template Haskell
-  -- | This library uses /typed/ Template Haskell, which may be a little
-  -- different than what you're used to. Normally Template Haskell uses the
-  -- @$(...)@ syntax for splicing in things to run at compile time. The typed
-  -- variant uses the @$$(...)@ syntax for splices, doubling up on the dollar
-  -- signs. Other than that, using typed Template Haskell should be pretty
-  -- much the same as using regular Template Haskell.
-  , Witch.Lift.liftedCast
-  , Witch.Lift.liftedFrom
-  , Witch.Lift.liftedInto
-
-  -- * Data types
-  -- ** Casting
-  , Witch.Casting.Casting(Casting)
   ) where
 
 import qualified Witch.Cast
