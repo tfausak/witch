@@ -15,4 +15,7 @@ class TryCast source target where
   -- | This method implements the conversion of a value between types. At call
   -- sites you will usually want to use @tryFrom@ or @tryInto@ instead of this
   -- method.
+  --
+  -- Consider using @maybeTryCast@ or @eitherTryCast@ to implement this
+  -- method.
   tryCast :: source -> Either (TryCastException.TryCastException source target) target

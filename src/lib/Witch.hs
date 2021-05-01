@@ -4,8 +4,63 @@
 -- unqualified, so getting started is as easy as:
 --
 -- >>> import Witch
+--
+-- In typical usage, you will most likely use 'Witch.Utility.into' for
+-- 'Witch.Cast.Cast' instances and 'With.Utility.tryInto' for
+-- 'Witch.TryCast.TryCast' instances.
 module Witch
-  ( -- * Motivation
+  ( -- * Type classes
+
+  -- ** Cast
+    Witch.Cast.Cast(cast)
+  , Witch.Utility.from
+  , Witch.Utility.into
+
+  -- ** TryCast
+  , Witch.TryCast.TryCast(tryCast)
+  , Witch.Utility.tryFrom
+  , Witch.Utility.tryInto
+
+  -- * Utilities
+  , Witch.Utility.as
+  , Witch.Utility.over
+  , Witch.Utility.via
+  , Witch.Utility.tryVia
+  , Witch.Utility.maybeTryCast
+  , Witch.Utility.eitherTryCast
+
+  -- ** Unsafe
+  -- | These functions should only be used in two circumstances: When you know
+  -- a conversion is safe even though you can't prove it to the compiler, and
+  -- when you're alright with your program crashing if the conversion fails.
+  -- In all other cases you should prefer the normal conversion functions like
+  -- 'Witch.Cast.cast'. And if you're converting a literal value, consider
+  -- using the Template Haskell conversion functions like
+  -- 'Witch.Lift.liftedCast'.
+  , Witch.Utility.unsafeCast
+  , Witch.Utility.unsafeFrom
+  , Witch.Utility.unsafeInto
+
+  -- ** Template Haskell
+  -- | This library uses /typed/ Template Haskell, which may be a little
+  -- different than what you're used to. Normally Template Haskell uses the
+  -- @$(...)@ syntax for splicing in things to run at compile time. The typed
+  -- variant uses the @$$(...)@ syntax for splices, doubling up on the dollar
+  -- signs. Other than that, using typed Template Haskell should be pretty
+  -- much the same as using regular Template Haskell.
+  , Witch.Lift.liftedCast
+  , Witch.Lift.liftedFrom
+  , Witch.Lift.liftedInto
+
+  -- * Data types
+  , Witch.TryCastException.TryCastException(..)
+
+  -- ** Casting
+  , Witch.Casting.Casting(Casting)
+
+  -- * Notes
+
+  -- ** Motivation
   -- | Haskell provides many ways to convert between common types, and core
   -- libraries add even more. It can be challenging to know which function to
   -- use when converting from some source type @a@ to some target type @b@. It
@@ -19,7 +74,7 @@ module Witch
   -- by the [@From@](https://doc.rust-lang.org/std/convert/trait.From.html)
   -- trait in Rust.
 
-  -- * Alternatives
+  -- ** Alternatives
   -- | Many Haskell libraries already provide similar functionality. How is
   -- this library different?
   --
@@ -67,7 +122,7 @@ module Witch
   --   if the conversion is possible, is it safe? For example converting a
   --   negative 'Int' into a 'Word' will overflow, which may be surprising.
 
-  -- * Instances
+  -- ** Instances
   -- | When should you add a 'Witch.Cast.Cast' (or 'Witch.TryCast.TryCast')
   -- instance for some pair of types? This is a surprisingly tricky question
   -- to answer precisely. Instances are driven more by guidelines than rules.
@@ -82,21 +137,33 @@ module Witch
   -- - Conversions should be lossless. If you have @Cast a b@ then no two @a@
   --   values should be converted to the same @b@ value.
   --
+  --   - Some conversions necessarily lose information, like converting from a
+  --     list into a set.
+  --
   -- - If you have both @Cast a b@ and @Cast b a@, then
   --   @cast \@b \@a . cast \@a \@b@ should be the same as 'id'. In other
   --   words, @a@ and @b@ are isomorphic.
+  --
+  --   - This often true, but not always. For example, converting a list into
+  --     a set will remove duplicates. And then converting back into a list
+  --     will put the elements in ascending order.
   --
   -- - If you have both @Cast a b@ and @Cast b c@, then you could also have
   --   @Cast a c@ and it should be the same as @cast \@b \@c . cast \@a \@b@.
   --   In other words, @Cast@ is transitive.
   --
-  -- In general if @s@ is a @t@, then you should add a 'Witch.Cast.Cast'
-  -- instance for it. But if @s@ merely can be a @t@, then you could add a
+  --   - This is not always true. For example an @Int8@ may be represented as
+  --     a number in JSON, whereas an @Int64@ might be represented as a
+  --     string. That means @into \@JSON (into \@Int64 int8)@ would not be the
+  --     same as @into \@JSON int8@.
+  --
+  -- In general if @s@ /is/ a @t@, then you should add a 'Witch.Cast.Cast'
+  -- instance for it. But if @s@ merely /can be/ a @t@, then you could add a
   -- 'Witch.TryCast.TryCast' instance for it. And if it is technically
   -- possible to convert from @s@ to @t@ but there are a lot of caveats, you
   -- probably should not write any instances at all.
 
-  -- * Type applications
+  -- ** Type applications
   -- | This library is designed to be used with the [@TypeApplications@](https://downloads.haskell.org/~ghc/9.0.1/docs/html/users_guide/exts/type_applications.html)
   -- language extension. Although it is not required for basic functionality,
   -- it is strongly encouraged. You can use 'Witch.Cast.cast',
@@ -104,7 +171,7 @@ module Witch
   -- 'Witch.Lift.liftedCast' without type applications. Everything else
   -- requires a type application.
 
-  -- * Ambiguous types
+  -- ** Ambiguous types
   -- | You may see @Identity@ show up in some type signatures. Anywhere you see
   -- @Identity a@, you can mentally replace it with @a@. It is a type family
   -- used to trick GHC into requiring type applications for certain functions.
@@ -123,46 +190,6 @@ module Witch
   --
   -- >>> from @Int8 1 :: Int16
   -- 1
-
-  -- * Type classes
-  -- ** Cast
-    Witch.Cast.Cast(cast)
-  , Witch.Utility.from
-  , Witch.Utility.into
-
-  -- ** TryCast
-  , Witch.TryCast.TryCast(tryCast)
-  , Witch.Utility.tryFrom
-  , Witch.Utility.tryInto
-  , Witch.TryCastException.TryCastException(..)
-
-  -- * Utilities
-  , Witch.Utility.as
-  , Witch.Utility.over
-  , Witch.Utility.via
-  , Witch.Utility.maybeTryCast
-  , Witch.Utility.eitherTryCast
-  , Witch.Utility.tryVia
-
-  -- ** Unsafe
-  , Witch.Utility.unsafeCast
-  , Witch.Utility.unsafeFrom
-  , Witch.Utility.unsafeInto
-
-  -- ** Template Haskell
-  -- | This library uses /typed/ Template Haskell, which may be a little
-  -- different than what you're used to. Normally Template Haskell uses the
-  -- @$(...)@ syntax for splicing in things to run at compile time. The typed
-  -- variant uses the @$$(...)@ syntax for splices, doubling up on the dollar
-  -- signs. Other than that, using typed Template Haskell should be pretty
-  -- much the same as using regular Template Haskell.
-  , Witch.Lift.liftedCast
-  , Witch.Lift.liftedFrom
-  , Witch.Lift.liftedInto
-
-  -- * Data types
-  -- ** Casting
-  , Witch.Casting.Casting(Casting)
   ) where
 
 import qualified Witch.Cast
