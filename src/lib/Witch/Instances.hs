@@ -31,7 +31,7 @@ import qualified GHC.Float as Float
 import qualified Numeric.Natural as Natural
 import qualified Witch.From as From
 import qualified Witch.TryFrom as TryFrom
-import qualified Witch.TryCastException as TryCastException
+import qualified Witch.TryFromException as TryFromException
 import qualified Witch.Utility as Utility
 
 -- Int8
@@ -1073,19 +1073,19 @@ instance From.From LazyText.Text Text.Text where
 instance From.From LazyText.Text LazyByteString.ByteString where
   from = LazyText.encodeUtf8
 
--- TryCastException
+-- TryFromException
 
 -- | Uses @coerce@.
 instance From.From
-  (TryCastException.TryCastException s u)
-  (TryCastException.TryCastException s t)
+  (TryFromException.TryFromException s u)
+  (TryFromException.TryFromException s t)
 
 -- | Uses 'show'.
 instance
   ( Show s
   , Typeable.Typeable s
   , Typeable.Typeable t
-  ) => From.From (TryCastException.TryCastException s t) String where
+  ) => From.From (TryFromException.TryFromException s t) String where
   from = show
 
 -- | Converts via 'String'.
@@ -1093,7 +1093,7 @@ instance
   ( Show s
   , Typeable.Typeable s
   , Typeable.Typeable t
-  ) => From.From (TryCastException.TryCastException s t) Text.Text where
+  ) => From.From (TryFromException.TryFromException s t) Text.Text where
   from = Utility.via @String
 
 -- | Converts via 'String'.
@@ -1101,7 +1101,7 @@ instance
   ( Show s
   , Typeable.Typeable s
   , Typeable.Typeable t
-  ) => From.From (TryCastException.TryCastException s t) LazyText.Text where
+  ) => From.From (TryFromException.TryFromException s t) LazyText.Text where
   from = Utility.via @String
 
 fromNonNegativeIntegral

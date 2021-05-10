@@ -2,7 +2,7 @@
 
 module Witch.TryFrom where
 
-import qualified Witch.TryCastException as TryCastException
+import qualified Witch.TryFromException as TryFromException
 
 -- | This type class is for converting values from some @source@ type into
 -- some other @target@ type. The constraint @TryFrom source target@ means that
@@ -18,4 +18,4 @@ class TryFrom source target where
   --
   -- Consider using @maybeTryCast@ or @eitherTryCast@ to implement this
   -- method.
-  tryFrom :: source -> Either (TryCastException.TryCastException source target) target
+  tryFrom :: source -> Either (TryFromException.TryFromException source target) target

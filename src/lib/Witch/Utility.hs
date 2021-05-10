@@ -8,7 +8,7 @@ import qualified Data.Typeable as Typeable
 import qualified GHC.Stack as Stack
 import qualified Witch.From as From
 import qualified Witch.TryFrom as TryFrom
-import qualified Witch.TryCastException as TryCastException
+import qualified Witch.TryFromException as TryFromException
 
 -- | This is the same as 'id' except that it requires a type application. This
 -- can be an ergonomic way to pin down a polymorphic type in a function
@@ -80,7 +80,7 @@ via = From.from . (\x -> x :: through) . From.from
 -- application for the @target@ type.
 --
 -- > -- Avoid this:
--- > tryFrom x :: Either (TryCastException s t) t
+-- > tryFrom x :: Either (TryFromException s t) t
 -- >
 -- > -- Prefer this:
 -- > tryInto @t x
@@ -88,12 +88,12 @@ tryInto
   :: forall target source
    . TryFrom.TryFrom source target
   => source
-  -> Either (TryCastException.TryCastException source target) target
+  -> Either (TryFromException.TryFromException source target) target
 tryInto = TryFrom.tryFrom
 
 -- | This is similar to 'via' except that it works with 'TryFrom.TryFrom'
 -- instances instead. This function is especially convenient because juggling
--- the types in the 'TryCastException.TryCastException' can be tedious.
+-- the types in the 'TryFromException.TryFromException' can be tedious.
 --
 -- > -- Avoid this:
 -- > case tryInto @u x of
@@ -110,13 +110,13 @@ tryVia
      , TryFrom.TryFrom through target
      )
   => source
-  -> Either (TryCastException.TryCastException source target) target
+  -> Either (TryFromException.TryFromException source target) target
 tryVia s = case TryFrom.tryFrom s of
-  Left (TryCastException.TryCastException _ e) ->
-    Left $ TryCastException.TryCastException s e
+  Left (TryFromException.TryFromException _ e) ->
+    Left $ TryFromException.TryFromException s e
   Right u -> case TryFrom.tryFrom (u :: through) of
-    Left (TryCastException.TryCastException _ e) ->
-      Left $ TryCastException.TryCastException s e
+    Left (TryFromException.TryFromException _ e) ->
+      Left $ TryFromException.TryFromException s e
     Right t -> Right t
 
 -- | This function can be used to implement 'TryFrom.tryFrom' with a function
@@ -124,7 +124,7 @@ tryVia s = case TryFrom.tryFrom s of
 --
 -- > -- Avoid this:
 -- > tryFrom s = case f s of
--- >   Nothing -> Left $ TryCastException s Nothing
+-- >   Nothing -> Left $ TryFromException s Nothing
 -- >   Just t -> Right t
 -- >
 -- > -- Prefer this:
@@ -132,9 +132,9 @@ tryVia s = case TryFrom.tryFrom s of
 maybeTryCast
   :: (source -> Maybe target)
   -> source
-  -> Either (TryCastException.TryCastException source target) target
+  -> Either (TryFromException.TryFromException source target) target
 maybeTryCast f s = case f s of
-  Nothing -> Left $ TryCastException.TryCastException s Nothing
+  Nothing -> Left $ TryFromException.TryFromException s Nothing
   Just t -> Right t
 
 -- | This function can be used to implement 'TryFrom.tryFrom' with a function
@@ -142,7 +142,7 @@ maybeTryCast f s = case f s of
 --
 -- > -- Avoid this:
 -- > tryFrom s = case f s of
--- >   Left e -> Left . TryCastException s . Just $ toException e
+-- >   Left e -> Left . TryFromException s . Just $ toException e
 -- >   Right t -> Right t
 -- >
 -- > -- Prefer this:
@@ -151,10 +151,10 @@ eitherTryCast
   :: Exception.Exception exception
   => (source -> Either exception target)
   -> source
-  -> Either (TryCastException.TryCastException source target) target
+  -> Either (TryFromException.TryFromException source target) target
 eitherTryCast f s = case f s of
   Left e ->
-    Left . TryCastException.TryCastException s . Just $ Exception.toException e
+    Left . TryFromException.TryFromException s . Just $ Exception.toException e
   Right t -> Right t
 
 -- | This function is like 'TryFrom.tryFrom' except that it will throw an

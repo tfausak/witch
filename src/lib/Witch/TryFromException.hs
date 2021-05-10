@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Witch.TryCastException where
+module Witch.TryFromException where
 
 import qualified Control.Exception as Exception
 import qualified Data.Proxy as Proxy
@@ -11,7 +11,7 @@ import qualified Data.Typeable as Typeable
 -- type it was trying to convert into. It also has an optional
 -- 'Exception.SomeException' for communicating what went wrong while
 -- converting.
-data TryCastException source target = TryCastException
+data TryFromException source target = TryFromException
   source
   (Maybe Exception.SomeException)
 
@@ -19,10 +19,10 @@ instance
   ( Show source
   , Typeable.Typeable source
   , Typeable.Typeable target
-  ) => Show (TryCastException source target) where
-  showsPrec d (TryCastException x e) =
+  ) => Show (TryFromException source target) where
+  showsPrec d (TryFromException x e) =
     showParen (d > 10)
-      $ showString "TryCastException @"
+      $ showString "TryFromException @"
       . showsPrec 11 (Typeable.typeRep (Proxy.Proxy :: Proxy.Proxy source))
       . showString " @"
       . showsPrec 11 (Typeable.typeRep (Proxy.Proxy :: Proxy.Proxy target))
@@ -35,4 +35,4 @@ instance
   ( Show source
   , Typeable.Typeable source
   , Typeable.Typeable target
-  ) => Exception.Exception (TryCastException source target)
+  ) => Exception.Exception (TryFromException source target)

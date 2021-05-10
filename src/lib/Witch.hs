@@ -51,7 +51,7 @@ module Witch
   , Witch.Lift.liftedInto
 
   -- * Data types
-  , Witch.TryCastException.TryCastException(..)
+  , Witch.TryFromException.TryFromException(..)
 
   -- * Notes
 
@@ -163,5 +163,5 @@ import qualified Witch.From
 import Witch.Instances ()
 import qualified Witch.Lift
 import qualified Witch.TryFrom
-import qualified Witch.TryCastException
+import qualified Witch.TryFromException
 import qualified Witch.Utility
