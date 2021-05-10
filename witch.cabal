@@ -68,7 +68,6 @@ test-suite test
 
   build-depends:
     , hspec >= 2.7.9 && < 2.8
-    , QuickCheck >= 2.14.2 && < 2.15
     , witch
   ghc-options:
     -rtsopts

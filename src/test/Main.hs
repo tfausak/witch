@@ -24,9 +24,6 @@ import qualified Data.Text.Lazy as LazyText
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 import qualified Test.Hspec as Hspec
-import qualified Test.Hspec.QuickCheck as Hspec
-import Test.QuickCheck ((===))
-import qualified Text.Read as Read
 import qualified Witch
 
 main :: IO ()
