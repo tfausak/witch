@@ -11,7 +11,7 @@ import qualified Data.Coerce as Coerce
 -- @target@.
 --
 -- This type class is for conversions that cannot fail. If your conversion can
--- fail, consider implementing @TryCast@ instead.
+-- fail, consider implementing @TryFrom@ instead.
 class From source target where
   -- | This method implements the conversion of a value between types. At call
   -- sites you will usually want to use @from@ or @into@ instead of this

@@ -7,7 +7,7 @@
 --
 -- In typical usage, you will most likely use 'Witch.Utility.into' for
 -- 'Witch.From.From' instances and 'With.Utility.tryInto' for
--- 'Witch.TryCast.TryCast' instances.
+-- 'Witch.TryFrom.TryFrom' instances.
 module Witch
   ( -- * Type classes
 
@@ -15,9 +15,8 @@ module Witch
     Witch.From.From(from)
   , Witch.Utility.into
 
-  -- ** TryCast
-  , Witch.TryCast.TryCast(tryCast)
-  , Witch.Utility.tryFrom
+  -- ** TryFrom
+  , Witch.TryFrom.TryFrom(tryFrom)
   , Witch.Utility.tryInto
 
   -- * Utilities
@@ -65,7 +64,7 @@ module Witch
   --
   -- This library tries to address that problem by providing a common
   -- interface for converting between types. The 'Witch.From.From' type class
-  -- is for conversions that cannot fail, and the 'Witch.TryCast.TryCast' type
+  -- is for conversions that cannot fail, and the 'Witch.TryFrom.TryFrom' type
   -- class is for conversions that can fail. These type classes are inspired
   -- by the [@From@](https://doc.rust-lang.org/std/convert/trait.From.html)
   -- trait in Rust.
@@ -119,7 +118,7 @@ module Witch
   --   negative 'Int' into a 'Word' will overflow, which may be surprising.
 
   -- ** Instances
-  -- | When should you add a 'Witch.From.From' (or 'Witch.TryCast.TryCast')
+  -- | When should you add a 'Witch.From.From' (or 'Witch.TryFrom.TryFrom')
   -- instance for some pair of types? This is a surprisingly tricky question
   -- to answer precisely. Instances are driven more by guidelines than rules.
   --
@@ -155,7 +154,7 @@ module Witch
   --
   -- In general if @s@ /is/ a @t@, then you should add a 'Witch.From.From'
   -- instance for it. But if @s@ merely /can be/ a @t@, then you could add a
-  -- 'Witch.TryCast.TryCast' instance for it. And if it is technically
+  -- 'Witch.TryFrom.TryFrom' instance for it. And if it is technically
   -- possible to convert from @s@ to @t@ but there are a lot of caveats, you
   -- probably should not write any instances at all.
   ) where
@@ -163,6 +162,6 @@ module Witch
 import qualified Witch.From
 import Witch.Instances ()
 import qualified Witch.Lift
-import qualified Witch.TryCast
+import qualified Witch.TryFrom
 import qualified Witch.TryCastException
 import qualified Witch.Utility

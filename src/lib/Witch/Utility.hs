@@ -7,7 +7,7 @@ import qualified Control.Exception as Exception
 import qualified Data.Typeable as Typeable
 import qualified GHC.Stack as Stack
 import qualified Witch.From as From
-import qualified Witch.TryCast as TryCast
+import qualified Witch.TryFrom as TryFrom
 import qualified Witch.TryCastException as TryCastException
 
 -- | This is the same as 'id' except that it requires a type application. This
@@ -76,37 +76,22 @@ via
   -> target
 via = From.from . (\x -> x :: through) . From.from
 
--- | This is the same as 'TryCast.tryCast' except that it requires a type
--- application for the @source@ type.
---
--- > -- Avoid this:
--- > tryCast (x :: s)
--- >
--- > -- Prefer this:
--- > tryFrom @s x
-tryFrom
-  :: forall source target
-   . TryCast.TryCast source target
-  => source
-  -> Either (TryCastException.TryCastException source target) target
-tryFrom = TryCast.tryCast
-
--- | This is the same as 'TryCast.tryCast' except that it requires a type
+-- | This is the same as 'TryFrom.tryFrom' except that it requires a type
 -- application for the @target@ type.
 --
 -- > -- Avoid this:
--- > tryCast x :: Either (TryCastException s t) t
+-- > tryFrom x :: Either (TryCastException s t) t
 -- >
 -- > -- Prefer this:
 -- > tryInto @t x
 tryInto
   :: forall target source
-   . TryCast.TryCast source target
+   . TryFrom.TryFrom source target
   => source
   -> Either (TryCastException.TryCastException source target) target
-tryInto = TryCast.tryCast
+tryInto = TryFrom.tryFrom
 
--- | This is similar to 'via' except that it works with 'TryCast.TryCast'
+-- | This is similar to 'via' except that it works with 'TryFrom.TryFrom'
 -- instances instead. This function is especially convenient because juggling
 -- the types in the 'TryCastException.TryCastException' can be tedious.
 --
@@ -121,29 +106,29 @@ tryInto = TryCast.tryCast
 -- > tryVia @u
 tryVia
   :: forall through source target
-   . ( TryCast.TryCast source through
-     , TryCast.TryCast through target
+   . ( TryFrom.TryFrom source through
+     , TryFrom.TryFrom through target
      )
   => source
   -> Either (TryCastException.TryCastException source target) target
-tryVia s = case TryCast.tryCast s of
+tryVia s = case TryFrom.tryFrom s of
   Left (TryCastException.TryCastException _ e) ->
     Left $ TryCastException.TryCastException s e
-  Right u -> case TryCast.tryCast (u :: through) of
+  Right u -> case TryFrom.tryFrom (u :: through) of
     Left (TryCastException.TryCastException _ e) ->
       Left $ TryCastException.TryCastException s e
     Right t -> Right t
 
--- | This function can be used to implement 'TryCast.tryCast' with a function
+-- | This function can be used to implement 'TryFrom.tryFrom' with a function
 -- that returns 'Maybe'. For example:
 --
 -- > -- Avoid this:
--- > tryCast s = case f s of
+-- > tryFrom s = case f s of
 -- >   Nothing -> Left $ TryCastException s Nothing
 -- >   Just t -> Right t
 -- >
 -- > -- Prefer this:
--- > tryCast = maybeTryCast f
+-- > tryFrom = maybeTryCast f
 maybeTryCast
   :: (source -> Maybe target)
   -> source
@@ -152,16 +137,16 @@ maybeTryCast f s = case f s of
   Nothing -> Left $ TryCastException.TryCastException s Nothing
   Just t -> Right t
 
--- | This function can be used to implement 'TryCast.tryCast' with a function
+-- | This function can be used to implement 'TryFrom.tryFrom' with a function
 -- that returns 'Either'. For example:
 --
 -- > -- Avoid this:
--- > tryCast s = case f s of
+-- > tryFrom s = case f s of
 -- >   Left e -> Left . TryCastException s . Just $ toException e
 -- >   Right t -> Right t
 -- >
 -- > -- Prefer this:
--- > tryCast = eitherTryCast f
+-- > tryFrom = eitherTryCast f
 eitherTryCast
   :: Exception.Exception exception
   => (source -> Either exception target)
@@ -172,7 +157,7 @@ eitherTryCast f s = case f s of
     Left . TryCastException.TryCastException s . Just $ Exception.toException e
   Right t -> Right t
 
--- | This function is like 'TryCast.tryCast' except that it will throw an
+-- | This function is like 'TryFrom.tryFrom' except that it will throw an
 -- impure exception if the conversion fails.
 --
 -- > -- Avoid this:
@@ -183,14 +168,14 @@ eitherTryCast f s = case f s of
 unsafeCast
   :: forall source target
    . ( Stack.HasCallStack
-     , TryCast.TryCast source target
+     , TryFrom.TryFrom source target
      , Show source
      , Typeable.Typeable source
      , Typeable.Typeable target
      )
   => source
   -> target
-unsafeCast = either Exception.throw id . TryCast.tryCast
+unsafeCast = either Exception.throw id . TryFrom.tryFrom
 
 -- | This function is like 'from' except that it will throw an impure
 -- exception if the conversion fails.
@@ -203,7 +188,7 @@ unsafeCast = either Exception.throw id . TryCast.tryCast
 unsafeFrom
   :: forall source target
    . ( Stack.HasCallStack
-     , TryCast.TryCast source target
+     , TryFrom.TryFrom source target
      , Show source
      , Typeable.Typeable source
      , Typeable.Typeable target
@@ -223,7 +208,7 @@ unsafeFrom = unsafeCast
 unsafeInto
   :: forall target source
    . ( Stack.HasCallStack
-     , TryCast.TryCast source target
+     , TryFrom.TryFrom source target
      , Show source
      , Typeable.Typeable source
      , Typeable.Typeable target

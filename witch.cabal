@@ -49,8 +49,8 @@ library
     Witch.From
     Witch.Instances
     Witch.Lift
-    Witch.TryCast
     Witch.TryCastException
+    Witch.TryFrom
     Witch.Utility
   hs-source-dirs: src/lib
 

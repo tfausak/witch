@@ -4,7 +4,7 @@ module Witch.Lift where
 
 import qualified Data.Typeable as Typeable
 import qualified Language.Haskell.TH.Syntax as TH
-import qualified Witch.TryCast as TryCast
+import qualified Witch.TryFrom as TryFrom
 import qualified Witch.Utility as Utility
 
 -- | This is like 'Utility.unsafeCast' except that it works at compile time
@@ -17,7 +17,7 @@ import qualified Witch.Utility as Utility
 -- > $$(liftedCast "some literal")
 liftedCast
   :: forall source target
-   . ( TryCast.TryCast source target
+   . ( TryFrom.TryFrom source target
      , TH.Lift target
      , Show source
      , Typeable.Typeable source
@@ -37,7 +37,7 @@ liftedCast = TH.liftTyped . Utility.unsafeCast
 -- > $$(liftedFrom @s "some literal")
 liftedFrom
   :: forall source target
-   . ( TryCast.TryCast source target
+   . ( TryFrom.TryFrom source target
      , TH.Lift target
      , Show source
      , Typeable.Typeable source
@@ -57,7 +57,7 @@ liftedFrom = liftedCast
 -- > $$(liftedInto @t "some literal")
 liftedInto
   :: forall target source
-   . ( TryCast.TryCast source target
+   . ( TryFrom.TryFrom source target
      , TH.Lift target
      , Show source
      , Typeable.Typeable source

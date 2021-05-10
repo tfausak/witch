@@ -32,10 +32,10 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
     Hspec.describe "from" $ do
       test $ Witch.from (1 :: Int.Int8) `Hspec.shouldBe` (1 :: Int.Int16)
 
-  Hspec.describe "TryCast" $ do
+  Hspec.describe "TryFrom" $ do
 
-    Hspec.describe "tryCast" $ do
-      let f = hush . Witch.tryCast @Int.Int16 @Int.Int8
+    Hspec.describe "tryFrom" $ do
+      let f = hush . Witch.tryFrom @Int.Int16 @Int.Int8
       test $ f 1 `Hspec.shouldBe` Just 1
       test $ f 128 `Hspec.shouldBe` Nothing
 
@@ -117,38 +117,38 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 127 `Hspec.shouldBe` 127
       test $ f (-128) `Hspec.shouldBe` (-128)
 
-    Hspec.describe "TryCast Int8 Word8" $ do
-      let f = hush . Witch.tryCast @Int.Int8 @Word.Word8
+    Hspec.describe "TryFrom Int8 Word8" $ do
+      let f = hush . Witch.tryFrom @Int.Int8 @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int8 Word16" $ do
-      let f = hush . Witch.tryCast @Int.Int8 @Word.Word16
+    Hspec.describe "TryFrom Int8 Word16" $ do
+      let f = hush . Witch.tryFrom @Int.Int8 @Word.Word16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int8 Word32" $ do
-      let f = hush . Witch.tryCast @Int.Int8 @Word.Word32
+    Hspec.describe "TryFrom Int8 Word32" $ do
+      let f = hush . Witch.tryFrom @Int.Int8 @Word.Word32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int8 Word64" $ do
-      let f = hush . Witch.tryCast @Int.Int8 @Word.Word64
+    Hspec.describe "TryFrom Int8 Word64" $ do
+      let f = hush . Witch.tryFrom @Int.Int8 @Word.Word64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int8 Word" $ do
-      let f = hush . Witch.tryCast @Int.Int8 @Word
+    Hspec.describe "TryFrom Int8 Word" $ do
+      let f = hush . Witch.tryFrom @Int.Int8 @Word
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int8 Natural" $ do
-      let f = hush . Witch.tryCast @Int.Int8 @Natural.Natural
+    Hspec.describe "TryFrom Int8 Natural" $ do
+      let f = hush . Witch.tryFrom @Int.Int8 @Natural.Natural
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f (-1) `Hspec.shouldBe` Nothing
@@ -167,8 +167,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
 
     -- Int16
 
-    Hspec.describe "TryCast Int16 Int8" $ do
-      let f = hush . Witch.tryCast @Int.Int16 @Int.Int8
+    Hspec.describe "TryFrom Int16 Int8" $ do
+      let f = hush . Witch.tryFrom @Int.Int16 @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
@@ -199,39 +199,39 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 32767 `Hspec.shouldBe` 32767
       test $ f (-32768) `Hspec.shouldBe` (-32768)
 
-    Hspec.describe "TryCast Int16 Word8" $ do
-      let f = hush . Witch.tryCast @Int.Int16 @Word.Word8
+    Hspec.describe "TryFrom Int16 Word8" $ do
+      let f = hush . Witch.tryFrom @Int.Int16 @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 255 `Hspec.shouldBe` Just 255
       test $ f 256 `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int16 Word16" $ do
-      let f = hush . Witch.tryCast @Int.Int16 @Word.Word16
+    Hspec.describe "TryFrom Int16 Word16" $ do
+      let f = hush . Witch.tryFrom @Int.Int16 @Word.Word16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int16 Word32" $ do
-      let f = hush . Witch.tryCast @Int.Int16 @Word.Word32
+    Hspec.describe "TryFrom Int16 Word32" $ do
+      let f = hush . Witch.tryFrom @Int.Int16 @Word.Word32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int16 Word64" $ do
-      let f = hush . Witch.tryCast @Int.Int16 @Word.Word64
+    Hspec.describe "TryFrom Int16 Word64" $ do
+      let f = hush . Witch.tryFrom @Int.Int16 @Word.Word64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int16 Word" $ do
-      let f = hush . Witch.tryCast @Int.Int16 @Word
+    Hspec.describe "TryFrom Int16 Word" $ do
+      let f = hush . Witch.tryFrom @Int.Int16 @Word
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int16 Natural" $ do
-      let f = hush . Witch.tryCast @Int.Int16 @Natural.Natural
+    Hspec.describe "TryFrom Int16 Natural" $ do
+      let f = hush . Witch.tryFrom @Int.Int16 @Natural.Natural
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f (-1) `Hspec.shouldBe` Nothing
@@ -250,16 +250,16 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
 
     -- Int32
 
-    Hspec.describe "TryCast Int32 Int8" $ do
-      let f = hush . Witch.tryCast @Int.Int32 @Int.Int8
+    Hspec.describe "TryFrom Int32 Int8" $ do
+      let f = hush . Witch.tryFrom @Int.Int32 @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
       test $ f (-128) `Hspec.shouldBe` Just (-128)
       test $ f (-129) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int32 Int16" $ do
-      let f = hush . Witch.tryCast @Int.Int32 @Int.Int16
+    Hspec.describe "TryFrom Int32 Int16" $ do
+      let f = hush . Witch.tryFrom @Int.Int32 @Int.Int16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f 32768 `Hspec.shouldBe` Nothing
@@ -272,9 +272,9 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 2147483647 `Hspec.shouldBe` 2147483647
       test $ f (-2147483648) `Hspec.shouldBe` (-2147483648)
 
-    Hspec.describe "TryCast Int32 Int" $ do
+    Hspec.describe "TryFrom Int32 Int" $ do
       Monad.when (toInteger (maxBound :: Int) < 2147483647) untested
-      let f = hush . Witch.tryCast @Int.Int32 @Int
+      let f = hush . Witch.tryFrom @Int.Int32 @Int
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f (-2147483648) `Hspec.shouldBe` Just (-2147483648)
@@ -285,47 +285,47 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 2147483647 `Hspec.shouldBe` 2147483647
       test $ f (-2147483648) `Hspec.shouldBe` (-2147483648)
 
-    Hspec.describe "TryCast Int32 Word8" $ do
-      let f = hush . Witch.tryCast @Int.Int32 @Word.Word8
+    Hspec.describe "TryFrom Int32 Word8" $ do
+      let f = hush . Witch.tryFrom @Int.Int32 @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 255 `Hspec.shouldBe` Just 255
       test $ f 256 `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int32 Word16" $ do
-      let f = hush . Witch.tryCast @Int.Int32 @Word.Word16
+    Hspec.describe "TryFrom Int32 Word16" $ do
+      let f = hush . Witch.tryFrom @Int.Int32 @Word.Word16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 65535 `Hspec.shouldBe` Just 65535
       test $ f 65536 `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int32 Word32" $ do
-      let f = hush . Witch.tryCast @Int.Int32 @Word.Word32
+    Hspec.describe "TryFrom Int32 Word32" $ do
+      let f = hush . Witch.tryFrom @Int.Int32 @Word.Word32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int32 Word64" $ do
-      let f = hush . Witch.tryCast @Int.Int32 @Word.Word64
+    Hspec.describe "TryFrom Int32 Word64" $ do
+      let f = hush . Witch.tryFrom @Int.Int32 @Word.Word64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int32 Word" $ do
+    Hspec.describe "TryFrom Int32 Word" $ do
       Monad.when (toInteger (maxBound :: Word) < 2147483647) untested
-      let f = hush . Witch.tryCast @Int.Int32 @Word
+      let f = hush . Witch.tryFrom @Int.Int32 @Word
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int32 Natural" $ do
-      let f = hush . Witch.tryCast @Int.Int32 @Natural.Natural
+    Hspec.describe "TryFrom Int32 Natural" $ do
+      let f = hush . Witch.tryFrom @Int.Int32 @Natural.Natural
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int32 Float" $ do
-      let f = hush . Witch.tryCast @Int.Int32 @Float
+    Hspec.describe "TryFrom Int32 Float" $ do
+      let f = hush . Witch.tryFrom @Int.Int32 @Float
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
@@ -340,33 +340,33 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
 
     -- Int64
 
-    Hspec.describe "TryCast Int64 Int8" $ do
-      let f = hush . Witch.tryCast @Int.Int64 @Int.Int8
+    Hspec.describe "TryFrom Int64 Int8" $ do
+      let f = hush . Witch.tryFrom @Int.Int64 @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
       test $ f (-128) `Hspec.shouldBe` Just (-128)
       test $ f (-129) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int64 Int16" $ do
-      let f = hush . Witch.tryCast @Int.Int64 @Int.Int16
+    Hspec.describe "TryFrom Int64 Int16" $ do
+      let f = hush . Witch.tryFrom @Int.Int64 @Int.Int16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f 32768 `Hspec.shouldBe` Nothing
       test $ f (-32768) `Hspec.shouldBe` Just (-32768)
       test $ f (-32769) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int64 Int32" $ do
-      let f = hush . Witch.tryCast @Int.Int64 @Int.Int32
+    Hspec.describe "TryFrom Int64 Int32" $ do
+      let f = hush . Witch.tryFrom @Int.Int64 @Int.Int32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f 2147483648 `Hspec.shouldBe` Nothing
       test $ f (-2147483648) `Hspec.shouldBe` Just (-2147483648)
       test $ f (-2147483649) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int64 Int" $ do
+    Hspec.describe "TryFrom Int64 Int" $ do
       Monad.when (toInteger (maxBound :: Int) < 9223372036854775807) untested
-      let f = hush . Witch.tryCast @Int.Int64 @Int
+      let f = hush . Witch.tryFrom @Int.Int64 @Int
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
       test $ f (-9223372036854775808) `Hspec.shouldBe` Just (-9223372036854775808)
@@ -377,55 +377,55 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 9223372036854775807 `Hspec.shouldBe` 9223372036854775807
       test $ f (-9223372036854775808) `Hspec.shouldBe` (-9223372036854775808)
 
-    Hspec.describe "TryCast Int64 Word8" $ do
-      let f = hush . Witch.tryCast @Int.Int64 @Word.Word8
+    Hspec.describe "TryFrom Int64 Word8" $ do
+      let f = hush . Witch.tryFrom @Int.Int64 @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 255 `Hspec.shouldBe` Just 255
       test $ f 256 `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int64 Word16" $ do
-      let f = hush . Witch.tryCast @Int.Int64 @Word.Word16
+    Hspec.describe "TryFrom Int64 Word16" $ do
+      let f = hush . Witch.tryFrom @Int.Int64 @Word.Word16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 65535 `Hspec.shouldBe` Just 65535
       test $ f 65536 `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int64 Word32" $ do
-      let f = hush . Witch.tryCast @Int.Int64 @Word.Word32
+    Hspec.describe "TryFrom Int64 Word32" $ do
+      let f = hush . Witch.tryFrom @Int.Int64 @Word.Word32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int64 Word64" $ do
-      let f = hush . Witch.tryCast @Int.Int64 @Word.Word64
+    Hspec.describe "TryFrom Int64 Word64" $ do
+      let f = hush . Witch.tryFrom @Int.Int64 @Word.Word64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int64 Word" $ do
+    Hspec.describe "TryFrom Int64 Word" $ do
       Monad.when (toInteger (maxBound :: Word) < 9223372036854775807) untested
-      let f = hush . Witch.tryCast @Int.Int64 @Word
+      let f = hush . Witch.tryFrom @Int.Int64 @Word
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int64 Natural" $ do
-      let f = hush . Witch.tryCast @Int.Int64 @Natural.Natural
+    Hspec.describe "TryFrom Int64 Natural" $ do
+      let f = hush . Witch.tryFrom @Int.Int64 @Natural.Natural
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int64 Float" $ do
-      let f = hush . Witch.tryCast @Int.Int64 @Float
+    Hspec.describe "TryFrom Int64 Float" $ do
+      let f = hush . Witch.tryFrom @Int.Int64 @Float
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
       test $ f (-16777215) `Hspec.shouldBe` Just (-16777215)
       test $ f (-16777216) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int64 Double" $ do
-      let f = hush . Witch.tryCast @Int.Int64 @Double
+    Hspec.describe "TryFrom Int64 Double" $ do
+      let f = hush . Witch.tryFrom @Int.Int64 @Double
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
       test $ f 9007199254740992 `Hspec.shouldBe` Nothing
@@ -434,25 +434,25 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
 
     -- Int
 
-    Hspec.describe "TryCast Int Int8" $ do
-      let f = hush . Witch.tryCast @Int @Int.Int8
+    Hspec.describe "TryFrom Int Int8" $ do
+      let f = hush . Witch.tryFrom @Int @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
       test $ f (-128) `Hspec.shouldBe` Just (-128)
       test $ f (-129) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int Int16" $ do
-      let f = hush . Witch.tryCast @Int @Int.Int16
+    Hspec.describe "TryFrom Int Int16" $ do
+      let f = hush . Witch.tryFrom @Int @Int.Int16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f 32768 `Hspec.shouldBe` Nothing
       test $ f (-32768) `Hspec.shouldBe` Just (-32768)
       test $ f (-32769) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int Int32" $ do
+    Hspec.describe "TryFrom Int Int32" $ do
       Monad.when (toInteger (maxBound :: Int) < 2147483647) untested
-      let f = hush . Witch.tryCast @Int @Int.Int32
+      let f = hush . Witch.tryFrom @Int @Int.Int32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f 2147483648 `Hspec.shouldBe` Nothing
@@ -471,57 +471,57 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f maxBound `Hspec.shouldBe` fromIntegral (maxBound :: Int)
       test $ f minBound `Hspec.shouldBe` fromIntegral (minBound :: Int)
 
-    Hspec.describe "TryCast Int Word8" $ do
-      let f = hush . Witch.tryCast @Int @Word.Word8
+    Hspec.describe "TryFrom Int Word8" $ do
+      let f = hush . Witch.tryFrom @Int @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 255 `Hspec.shouldBe` Just 255
       test $ f 256 `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int Word16" $ do
-      let f = hush . Witch.tryCast @Int @Word.Word16
+    Hspec.describe "TryFrom Int Word16" $ do
+      let f = hush . Witch.tryFrom @Int @Word.Word16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 65535 `Hspec.shouldBe` Just 65535
       test $ f 65536 `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int Word32" $ do
+    Hspec.describe "TryFrom Int Word32" $ do
       Monad.when (toInteger (maxBound :: Int) < 4294967295) untested
-      let f = hush . Witch.tryCast @Int @Word.Word32
+      let f = hush . Witch.tryFrom @Int @Word.Word32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
       test $ f 4294967296 `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int Word64" $ do
-      let f = hush . Witch.tryCast @Int @Word.Word64
+    Hspec.describe "TryFrom Int Word64" $ do
+      let f = hush . Witch.tryFrom @Int @Word.Word64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f maxBound `Hspec.shouldBe` Just (fromIntegral (maxBound :: Int))
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int Word" $ do
-      let f = hush . Witch.tryCast @Int @Word
+    Hspec.describe "TryFrom Int Word" $ do
+      let f = hush . Witch.tryFrom @Int @Word
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f maxBound `Hspec.shouldBe` Just (fromIntegral (maxBound :: Int))
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int Natural" $ do
-      let f = hush . Witch.tryCast @Int @Natural.Natural
+    Hspec.describe "TryFrom Int Natural" $ do
+      let f = hush . Witch.tryFrom @Int @Natural.Natural
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f maxBound `Hspec.shouldBe` Just (fromIntegral (maxBound :: Int))
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int Float" $ do
-      let f = hush . Witch.tryCast @Int @Float
+    Hspec.describe "TryFrom Int Float" $ do
+      let f = hush . Witch.tryFrom @Int @Float
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
       test $ f (-16777215) `Hspec.shouldBe` Just (-16777215)
       test $ f (-16777216) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Int Double" $ do
+    Hspec.describe "TryFrom Int Double" $ do
       Monad.when (toInteger (maxBound :: Int) < 9007199254740991) untested
-      let f = hush . Witch.tryCast @Int @Double
+      let f = hush . Witch.tryFrom @Int @Double
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
       test $ f 9007199254740992 `Hspec.shouldBe` Nothing
@@ -530,97 +530,97 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
 
     -- Integer
 
-    Hspec.describe "TryCast Integer Int8" $ do
-      let f = hush . Witch.tryCast @Integer @Int.Int8
+    Hspec.describe "TryFrom Integer Int8" $ do
+      let f = hush . Witch.tryFrom @Integer @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
       test $ f (-128) `Hspec.shouldBe` Just (-128)
       test $ f (-129) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Integer Int16" $ do
-      let f = hush . Witch.tryCast @Integer @Int.Int16
+    Hspec.describe "TryFrom Integer Int16" $ do
+      let f = hush . Witch.tryFrom @Integer @Int.Int16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f 32768 `Hspec.shouldBe` Nothing
       test $ f (-32768) `Hspec.shouldBe` Just (-32768)
       test $ f (-32769) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Integer Int32" $ do
-      let f = hush . Witch.tryCast @Integer @Int.Int32
+    Hspec.describe "TryFrom Integer Int32" $ do
+      let f = hush . Witch.tryFrom @Integer @Int.Int32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f 2147483648 `Hspec.shouldBe` Nothing
       test $ f (-2147483648) `Hspec.shouldBe` Just (-2147483648)
       test $ f (-2147483649) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Integer Int64" $ do
-      let f = hush . Witch.tryCast @Integer @Int.Int64
+    Hspec.describe "TryFrom Integer Int64" $ do
+      let f = hush . Witch.tryFrom @Integer @Int.Int64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
       test $ f 9223372036854775808 `Hspec.shouldBe` Nothing
       test $ f (-9223372036854775808) `Hspec.shouldBe` Just (-9223372036854775808)
       test $ f (-9223372036854775809) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Integer Int" $ do
-      let f = hush . Witch.tryCast @Integer @Int
+    Hspec.describe "TryFrom Integer Int" $ do
+      let f = hush . Witch.tryFrom @Integer @Int
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ let x = maxBound :: Int in f (fromIntegral x) `Hspec.shouldBe` Just x
       test $ let x = toInteger (maxBound :: Int) + 1 in f x `Hspec.shouldBe` Nothing
       test $ let x = minBound :: Int in f (fromIntegral x) `Hspec.shouldBe` Just x
       test $ let x = toInteger (minBound :: Int) - 1 in f x `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Integer Word8" $ do
-      let f = hush . Witch.tryCast @Integer @Word.Word8
+    Hspec.describe "TryFrom Integer Word8" $ do
+      let f = hush . Witch.tryFrom @Integer @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 255 `Hspec.shouldBe` Just 255
       test $ f 256 `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Integer Word16" $ do
-      let f = hush . Witch.tryCast @Integer @Word.Word16
+    Hspec.describe "TryFrom Integer Word16" $ do
+      let f = hush . Witch.tryFrom @Integer @Word.Word16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 65535 `Hspec.shouldBe` Just 65535
       test $ f 65536 `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Integer Word32" $ do
-      let f = hush . Witch.tryCast @Integer @Word.Word32
+    Hspec.describe "TryFrom Integer Word32" $ do
+      let f = hush . Witch.tryFrom @Integer @Word.Word32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
       test $ f 4294967296 `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Integer Word64" $ do
-      let f = hush . Witch.tryCast @Integer @Word.Word64
+    Hspec.describe "TryFrom Integer Word64" $ do
+      let f = hush . Witch.tryFrom @Integer @Word.Word64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 18446744073709551615 `Hspec.shouldBe` Just 18446744073709551615
       test $ f 18446744073709551616 `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Integer Word" $ do
-      let f = hush . Witch.tryCast @Integer @Word
+    Hspec.describe "TryFrom Integer Word" $ do
+      let f = hush . Witch.tryFrom @Integer @Word
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ let x = maxBound :: Word in f (fromIntegral x) `Hspec.shouldBe` Just x
       test $ let x = toInteger (maxBound :: Word) + 1 in f x `Hspec.shouldBe` Nothing
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Integer Natural" $ do
-      let f = hush . Witch.tryCast @Integer @Natural.Natural
+    Hspec.describe "TryFrom Integer Natural" $ do
+      let f = hush . Witch.tryFrom @Integer @Natural.Natural
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 18446744073709551616 `Hspec.shouldBe` Just 18446744073709551616
       test $ f (-1) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Integer Float" $ do
-      let f = hush . Witch.tryCast @Integer @Float
+    Hspec.describe "TryFrom Integer Float" $ do
+      let f = hush . Witch.tryFrom @Integer @Float
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
       test $ f (-16777215) `Hspec.shouldBe` Just (-16777215)
       test $ f (-16777216) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Integer Double" $ do
-      let f = hush . Witch.tryCast @Integer @Double
+    Hspec.describe "TryFrom Integer Double" $ do
+      let f = hush . Witch.tryFrom @Integer @Double
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
       test $ f 9007199254740992 `Hspec.shouldBe` Nothing
@@ -654,8 +654,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 0 `Hspec.shouldBe` 0
       test $ f 255 `Hspec.shouldBe` 255
 
-    Hspec.describe "TryCast Word8 Int8" $ do
-      let f = hush . Witch.tryCast @Word.Word8 @Int.Int8
+    Hspec.describe "TryFrom Word8 Int8" $ do
+      let f = hush . Witch.tryFrom @Word.Word8 @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
@@ -697,8 +697,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
 
     -- Word16
 
-    Hspec.describe "TryCast Word16 Word8" $ do
-      let f = hush . Witch.tryCast @Word.Word16 @Word.Word8
+    Hspec.describe "TryFrom Word16 Word8" $ do
+      let f = hush . Witch.tryFrom @Word.Word16 @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 255 `Hspec.shouldBe` Just 255
       test $ f 256 `Hspec.shouldBe` Nothing
@@ -723,14 +723,14 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 0 `Hspec.shouldBe` 0
       test $ f 65535 `Hspec.shouldBe` 65535
 
-    Hspec.describe "TryCast Word16 Int8" $ do
-      let f = hush . Witch.tryCast @Word.Word16 @Int.Int8
+    Hspec.describe "TryFrom Word16 Int8" $ do
+      let f = hush . Witch.tryFrom @Word.Word16 @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word16 Int16" $ do
-      let f = hush . Witch.tryCast @Word.Word16 @Int.Int16
+    Hspec.describe "TryFrom Word16 Int16" $ do
+      let f = hush . Witch.tryFrom @Word.Word16 @Int.Int16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f 32768 `Hspec.shouldBe` Nothing
@@ -767,14 +767,14 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
 
     -- Word32
 
-    Hspec.describe "TryCast Word32 Word8" $ do
-      let f = hush . Witch.tryCast @Word.Word32 @Word.Word8
+    Hspec.describe "TryFrom Word32 Word8" $ do
+      let f = hush . Witch.tryFrom @Word.Word32 @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 255 `Hspec.shouldBe` Just 255
       test $ f 256 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word32 Word16" $ do
-      let f = hush . Witch.tryCast @Word.Word32 @Word.Word16
+    Hspec.describe "TryFrom Word32 Word16" $ do
+      let f = hush . Witch.tryFrom @Word.Word32 @Word.Word16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 65535 `Hspec.shouldBe` Just 65535
       test $ f 65536 `Hspec.shouldBe` Nothing
@@ -784,9 +784,9 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 0 `Hspec.shouldBe` 0
       test $ f 4294967295 `Hspec.shouldBe` 4294967295
 
-    Hspec.describe "TryCast Word32 Word" $ do
+    Hspec.describe "TryFrom Word32 Word" $ do
       Monad.when (toInteger (maxBound :: Word) < 4294967295) untested
-      let f = hush . Witch.tryCast @Word.Word32 @Word
+      let f = hush . Witch.tryFrom @Word.Word32 @Word
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
 
@@ -795,20 +795,20 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 0 `Hspec.shouldBe` 0
       test $ f 4294967295 `Hspec.shouldBe` 4294967295
 
-    Hspec.describe "TryCast Word32 Int8" $ do
-      let f = hush . Witch.tryCast @Word.Word32 @Int.Int8
+    Hspec.describe "TryFrom Word32 Int8" $ do
+      let f = hush . Witch.tryFrom @Word.Word32 @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word32 Int16" $ do
-      let f = hush . Witch.tryCast @Word.Word32 @Int.Int16
+    Hspec.describe "TryFrom Word32 Int16" $ do
+      let f = hush . Witch.tryFrom @Word.Word32 @Int.Int16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f 32768 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word32 Int32" $ do
-      let f = hush . Witch.tryCast @Word.Word32 @Int.Int32
+    Hspec.describe "TryFrom Word32 Int32" $ do
+      let f = hush . Witch.tryFrom @Word.Word32 @Int.Int32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f 2147483648 `Hspec.shouldBe` Nothing
@@ -818,9 +818,9 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 0 `Hspec.shouldBe` 0
       test $ f 4294967295 `Hspec.shouldBe` 4294967295
 
-    Hspec.describe "TryCast Word32 Int" $ do
+    Hspec.describe "TryFrom Word32 Int" $ do
       Monad.when (toInteger (maxBound :: Int) < 4294967295) untested
-      let f = hush . Witch.tryCast @Word.Word32 @Int
+      let f = hush . Witch.tryFrom @Word.Word32 @Int
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
 
@@ -829,8 +829,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 0 `Hspec.shouldBe` 0
       test $ f 4294967295 `Hspec.shouldBe` 4294967295
 
-    Hspec.describe "TryCast Word32 Float" $ do
-      let f = hush . Witch.tryCast @Word.Word32 @Float
+    Hspec.describe "TryFrom Word32 Float" $ do
+      let f = hush . Witch.tryFrom @Word.Word32 @Float
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
@@ -842,27 +842,27 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
 
     -- Word64
 
-    Hspec.describe "TryCast Word64 Word8" $ do
-      let f = hush . Witch.tryCast @Word.Word64 @Word.Word8
+    Hspec.describe "TryFrom Word64 Word8" $ do
+      let f = hush . Witch.tryFrom @Word.Word64 @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 255 `Hspec.shouldBe` Just 255
       test $ f 256 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word64 Word16" $ do
-      let f = hush . Witch.tryCast @Word.Word64 @Word.Word16
+    Hspec.describe "TryFrom Word64 Word16" $ do
+      let f = hush . Witch.tryFrom @Word.Word64 @Word.Word16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 65535 `Hspec.shouldBe` Just 65535
       test $ f 65536 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word64 Word32" $ do
-      let f = hush . Witch.tryCast @Word.Word64 @Word.Word32
+    Hspec.describe "TryFrom Word64 Word32" $ do
+      let f = hush . Witch.tryFrom @Word.Word64 @Word.Word32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
       test $ f 4294967296 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word64 Word" $ do
+    Hspec.describe "TryFrom Word64 Word" $ do
       Monad.when (toInteger (maxBound :: Word) < 18446744073709551615) untested
-      let f = hush . Witch.tryCast @Word.Word64 @Word
+      let f = hush . Witch.tryFrom @Word.Word64 @Word
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 18446744073709551615 `Hspec.shouldBe` Just 18446744073709551615
 
@@ -871,70 +871,70 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 0 `Hspec.shouldBe` 0
       test $ f 18446744073709551615 `Hspec.shouldBe` 18446744073709551615
 
-    Hspec.describe "TryCast Word64 Int8" $ do
-      let f = hush . Witch.tryCast @Word.Word64 @Int.Int8
+    Hspec.describe "TryFrom Word64 Int8" $ do
+      let f = hush . Witch.tryFrom @Word.Word64 @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word64 Int16" $ do
-      let f = hush . Witch.tryCast @Word.Word64 @Int.Int16
+    Hspec.describe "TryFrom Word64 Int16" $ do
+      let f = hush . Witch.tryFrom @Word.Word64 @Int.Int16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f 32768 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word64 Int32" $ do
-      let f = hush . Witch.tryCast @Word.Word64 @Int.Int32
+    Hspec.describe "TryFrom Word64 Int32" $ do
+      let f = hush . Witch.tryFrom @Word.Word64 @Int.Int32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f 2147483648 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word64 Int64" $ do
-      let f = hush . Witch.tryCast @Word.Word64 @Int.Int64
+    Hspec.describe "TryFrom Word64 Int64" $ do
+      let f = hush . Witch.tryFrom @Word.Word64 @Int.Int64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
       test $ f 9223372036854775808 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word64 Int" $ do
-      let f = hush . Witch.tryCast @Word.Word64 @Int
+    Hspec.describe "TryFrom Word64 Int" $ do
+      let f = hush . Witch.tryFrom @Word.Word64 @Int
       test $ f 0 `Hspec.shouldBe` Just 0
-      test $ let x = maxBound :: Int in hush (Witch.tryCast @Word.Word64 @Int (fromIntegral x)) `Hspec.shouldBe` Just x
-      test $ let x = fromIntegral (maxBound :: Int) + 1 :: Word.Word64 in hush (Witch.tryCast @Word.Word64 @Int x) `Hspec.shouldBe` Nothing
+      test $ let x = maxBound :: Int in hush (Witch.tryFrom @Word.Word64 @Int (fromIntegral x)) `Hspec.shouldBe` Just x
+      test $ let x = fromIntegral (maxBound :: Int) + 1 :: Word.Word64 in hush (Witch.tryFrom @Word.Word64 @Int x) `Hspec.shouldBe` Nothing
 
     Hspec.describe "From Word64 Integer" $ do
       let f = Witch.from @Word.Word64 @Integer
       test $ f 0 `Hspec.shouldBe` 0
       test $ f 18446744073709551615 `Hspec.shouldBe` 18446744073709551615
 
-    Hspec.describe "TryCast Word64 Float" $ do
-      let f = hush . Witch.tryCast @Word.Word64 @Float
+    Hspec.describe "TryFrom Word64 Float" $ do
+      let f = hush . Witch.tryFrom @Word.Word64 @Float
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word64 Double" $ do
-      let f = hush . Witch.tryCast @Word.Word64 @Double
+    Hspec.describe "TryFrom Word64 Double" $ do
+      let f = hush . Witch.tryFrom @Word.Word64 @Double
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
       test $ f 9007199254740992 `Hspec.shouldBe` Nothing
 
     -- Word
 
-    Hspec.describe "TryCast Word Word8" $ do
-      let f = hush . Witch.tryCast @Word @Word.Word8
+    Hspec.describe "TryFrom Word Word8" $ do
+      let f = hush . Witch.tryFrom @Word @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 255 `Hspec.shouldBe` Just 255
       test $ f 256 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word Word16" $ do
-      let f = hush . Witch.tryCast @Word @Word.Word16
+    Hspec.describe "TryFrom Word Word16" $ do
+      let f = hush . Witch.tryFrom @Word @Word.Word16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 65535 `Hspec.shouldBe` Just 65535
       test $ f 65536 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word Word32" $ do
+    Hspec.describe "TryFrom Word Word32" $ do
       Monad.when (toInteger (maxBound :: Word) < 4294967295) untested
-      let f = hush . Witch.tryCast @Word @Word.Word32
+      let f = hush . Witch.tryFrom @Word @Word.Word32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
       test $ f 4294967296 `Hspec.shouldBe` Nothing
@@ -949,139 +949,139 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f 0 `Hspec.shouldBe` 0
       test $ f maxBound `Hspec.shouldBe` fromIntegral (maxBound :: Word)
 
-    Hspec.describe "TryCast Word Int8" $ do
-      let f = hush . Witch.tryCast @Word @Int.Int8
+    Hspec.describe "TryFrom Word Int8" $ do
+      let f = hush . Witch.tryFrom @Word @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word Int16" $ do
-      let f = hush . Witch.tryCast @Word @Int.Int16
+    Hspec.describe "TryFrom Word Int16" $ do
+      let f = hush . Witch.tryFrom @Word @Int.Int16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f 32768 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word Int32" $ do
+    Hspec.describe "TryFrom Word Int32" $ do
       Monad.when (toInteger (maxBound :: Word) < 2147483647) untested
-      let f = hush . Witch.tryCast @Word @Int.Int32
+      let f = hush . Witch.tryFrom @Word @Int.Int32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f 2147483648 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word Int64" $ do
+    Hspec.describe "TryFrom Word Int64" $ do
       Monad.when (toInteger (maxBound :: Word) < 9223372036854775807) untested
-      let f = hush . Witch.tryCast @Word @Int.Int64
+      let f = hush . Witch.tryFrom @Word @Int.Int64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
       test $ f 9223372036854775808 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word Int" $ do
-      let f = hush . Witch.tryCast @Word @Int
+    Hspec.describe "TryFrom Word Int" $ do
+      let f = hush . Witch.tryFrom @Word @Int
       test $ f 0 `Hspec.shouldBe` Just 0
-      test $ let x = maxBound :: Int in hush (Witch.tryCast @Word @Int (fromIntegral x)) `Hspec.shouldBe` Just x
-      test $ let x = fromIntegral (maxBound :: Int) + 1 :: Word in hush (Witch.tryCast @Word @Int x) `Hspec.shouldBe` Nothing
+      test $ let x = maxBound :: Int in hush (Witch.tryFrom @Word @Int (fromIntegral x)) `Hspec.shouldBe` Just x
+      test $ let x = fromIntegral (maxBound :: Int) + 1 :: Word in hush (Witch.tryFrom @Word @Int x) `Hspec.shouldBe` Nothing
 
     Hspec.describe "From Word Integer" $ do
       let f = Witch.from @Word @Integer
       test $ f 0 `Hspec.shouldBe` 0
       test $ f maxBound `Hspec.shouldBe` fromIntegral (maxBound :: Word)
 
-    Hspec.describe "TryCast Word Float" $ do
-      let f = hush . Witch.tryCast @Word @Float
+    Hspec.describe "TryFrom Word Float" $ do
+      let f = hush . Witch.tryFrom @Word @Float
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Word Double" $ do
+    Hspec.describe "TryFrom Word Double" $ do
       Monad.when (toInteger (maxBound :: Word) < 9007199254740991) untested
-      let f = hush . Witch.tryCast @Word @Double
+      let f = hush . Witch.tryFrom @Word @Double
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
       test $ f 9007199254740992 `Hspec.shouldBe` Nothing
 
     -- Natural
 
-    Hspec.describe "TryCast Natural Word8" $ do
-      let f = hush . Witch.tryCast @Natural.Natural @Word.Word8
+    Hspec.describe "TryFrom Natural Word8" $ do
+      let f = hush . Witch.tryFrom @Natural.Natural @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 255 `Hspec.shouldBe` Just 255
       test $ f 256 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Natural Word16" $ do
-      let f = hush . Witch.tryCast @Natural.Natural @Word.Word16
+    Hspec.describe "TryFrom Natural Word16" $ do
+      let f = hush . Witch.tryFrom @Natural.Natural @Word.Word16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 65535 `Hspec.shouldBe` Just 65535
       test $ f 65536 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Natural Word32" $ do
-      let f = hush . Witch.tryCast @Natural.Natural @Word.Word32
+    Hspec.describe "TryFrom Natural Word32" $ do
+      let f = hush . Witch.tryFrom @Natural.Natural @Word.Word32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
       test $ f 4294967296 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Natural Word64" $ do
-      let f = hush . Witch.tryCast @Natural.Natural @Word.Word64
+    Hspec.describe "TryFrom Natural Word64" $ do
+      let f = hush . Witch.tryFrom @Natural.Natural @Word.Word64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 18446744073709551615 `Hspec.shouldBe` Just 18446744073709551615
       test $ f 18446744073709551616 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Natural Word" $ do
-      let f = hush . Witch.tryCast @Natural.Natural @Word
+    Hspec.describe "TryFrom Natural Word" $ do
+      let f = hush . Witch.tryFrom @Natural.Natural @Word
       test $ f 0 `Hspec.shouldBe` Just 0
-      test $ let x = maxBound :: Word in hush (Witch.tryCast @Natural.Natural @Word (fromIntegral x)) `Hspec.shouldBe` Just x
-      test $ let x = fromIntegral (maxBound :: Word) + 1 :: Natural.Natural in hush (Witch.tryCast @Natural.Natural @Word x) `Hspec.shouldBe` Nothing
+      test $ let x = maxBound :: Word in hush (Witch.tryFrom @Natural.Natural @Word (fromIntegral x)) `Hspec.shouldBe` Just x
+      test $ let x = fromIntegral (maxBound :: Word) + 1 :: Natural.Natural in hush (Witch.tryFrom @Natural.Natural @Word x) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Natural Int8" $ do
-      let f = hush . Witch.tryCast @Natural.Natural @Int.Int8
+    Hspec.describe "TryFrom Natural Int8" $ do
+      let f = hush . Witch.tryFrom @Natural.Natural @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Natural Int16" $ do
-      let f = hush . Witch.tryCast @Natural.Natural @Int.Int16
+    Hspec.describe "TryFrom Natural Int16" $ do
+      let f = hush . Witch.tryFrom @Natural.Natural @Int.Int16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f 32768 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Natural Int32" $ do
-      let f = hush . Witch.tryCast @Natural.Natural @Int.Int32
+    Hspec.describe "TryFrom Natural Int32" $ do
+      let f = hush . Witch.tryFrom @Natural.Natural @Int.Int32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f 2147483648 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Natural Int64" $ do
-      let f = hush . Witch.tryCast @Natural.Natural @Int.Int64
+    Hspec.describe "TryFrom Natural Int64" $ do
+      let f = hush . Witch.tryFrom @Natural.Natural @Int.Int64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
       test $ f 9223372036854775808 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Natural Int" $ do
-      let f = hush . Witch.tryCast @Natural.Natural @Int
+    Hspec.describe "TryFrom Natural Int" $ do
+      let f = hush . Witch.tryFrom @Natural.Natural @Int
       test $ f 0 `Hspec.shouldBe` Just 0
-      test $ let x = maxBound :: Int in hush (Witch.tryCast @Natural.Natural @Int (fromIntegral x)) `Hspec.shouldBe` Just x
-      test $ let x = fromIntegral (maxBound :: Int) + 1 :: Natural.Natural in hush (Witch.tryCast @Natural.Natural @Int x) `Hspec.shouldBe` Nothing
+      test $ let x = maxBound :: Int in hush (Witch.tryFrom @Natural.Natural @Int (fromIntegral x)) `Hspec.shouldBe` Just x
+      test $ let x = fromIntegral (maxBound :: Int) + 1 :: Natural.Natural in hush (Witch.tryFrom @Natural.Natural @Int x) `Hspec.shouldBe` Nothing
 
     Hspec.describe "From Natural Integer" $ do
       let f = Witch.from @Natural.Natural @Integer
       test $ f 0 `Hspec.shouldBe` 0
       test $ f 9223372036854775808 `Hspec.shouldBe` 9223372036854775808
 
-    Hspec.describe "TryCast Natural Float" $ do
-      let f = hush . Witch.tryCast @Natural.Natural @Float
+    Hspec.describe "TryFrom Natural Float" $ do
+      let f = hush . Witch.tryFrom @Natural.Natural @Float
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Natural Double" $ do
-      let f = hush . Witch.tryCast @Natural.Natural @Double
+    Hspec.describe "TryFrom Natural Double" $ do
+      let f = hush . Witch.tryFrom @Natural.Natural @Double
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
       test $ f 9007199254740992 `Hspec.shouldBe` Nothing
 
     -- Float
 
-    Hspec.describe "TryCast Float Int8" $ do
-      let f = hush . Witch.tryCast @Float @Int.Int8
+    Hspec.describe "TryFrom Float Int8" $ do
+      let f = hush . Witch.tryFrom @Float @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
@@ -1091,8 +1091,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Float Int16" $ do
-      let f = hush . Witch.tryCast @Float @Int.Int16
+    Hspec.describe "TryFrom Float Int16" $ do
+      let f = hush . Witch.tryFrom @Float @Int.Int16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f 32768 `Hspec.shouldBe` Nothing
@@ -1102,8 +1102,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Float Int32" $ do
-      let f = hush . Witch.tryCast @Float @Int.Int32
+    Hspec.describe "TryFrom Float Int32" $ do
+      let f = hush . Witch.tryFrom @Float @Int.Int32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
@@ -1113,8 +1113,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Float Int64" $ do
-      let f = hush . Witch.tryCast @Float @Int.Int64
+    Hspec.describe "TryFrom Float Int64" $ do
+      let f = hush . Witch.tryFrom @Float @Int.Int64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
@@ -1124,8 +1124,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Float Int" $ do
-      let f = hush . Witch.tryCast @Float @Int
+    Hspec.describe "TryFrom Float Int" $ do
+      let f = hush . Witch.tryFrom @Float @Int
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
@@ -1135,8 +1135,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Float Integer" $ do
-      let f = hush . Witch.tryCast @Float @Integer
+    Hspec.describe "TryFrom Float Integer" $ do
+      let f = hush . Witch.tryFrom @Float @Integer
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
@@ -1146,8 +1146,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Float Word8" $ do
-      let f = hush . Witch.tryCast @Float @Word.Word8
+    Hspec.describe "TryFrom Float Word8" $ do
+      let f = hush . Witch.tryFrom @Float @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 255 `Hspec.shouldBe` Just 255
       test $ f 256 `Hspec.shouldBe` Nothing
@@ -1155,8 +1155,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Float Word16" $ do
-      let f = hush . Witch.tryCast @Float @Word.Word16
+    Hspec.describe "TryFrom Float Word16" $ do
+      let f = hush . Witch.tryFrom @Float @Word.Word16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 65535 `Hspec.shouldBe` Just 65535
       test $ f 65536 `Hspec.shouldBe` Nothing
@@ -1164,8 +1164,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Float Word32" $ do
-      let f = hush . Witch.tryCast @Float @Word.Word32
+    Hspec.describe "TryFrom Float Word32" $ do
+      let f = hush . Witch.tryFrom @Float @Word.Word32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
@@ -1173,8 +1173,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Float Word64" $ do
-      let f = hush . Witch.tryCast @Float @Word.Word64
+    Hspec.describe "TryFrom Float Word64" $ do
+      let f = hush . Witch.tryFrom @Float @Word.Word64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
@@ -1182,8 +1182,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Float Word" $ do
-      let f = hush . Witch.tryCast @Float @Word
+    Hspec.describe "TryFrom Float Word" $ do
+      let f = hush . Witch.tryFrom @Float @Word
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
@@ -1191,8 +1191,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Float Natural" $ do
-      let f = hush . Witch.tryCast @Float @Natural.Natural
+    Hspec.describe "TryFrom Float Natural" $ do
+      let f = hush . Witch.tryFrom @Float @Natural.Natural
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 16777215 `Hspec.shouldBe` Just 16777215
       test $ f 16777216 `Hspec.shouldBe` Nothing
@@ -1200,8 +1200,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Float Rational" $ do
-      let f = hush . Witch.tryCast @Float @Rational
+    Hspec.describe "TryFrom Float Rational" $ do
+      let f = hush . Witch.tryFrom @Float @Rational
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f (-0) `Hspec.shouldBe` Just 0
       test $ f 0.5 `Hspec.shouldBe` Just 0.5
@@ -1225,8 +1225,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
 
     -- Double
 
-    Hspec.describe "TryCast Double Int8" $ do
-      let f = hush . Witch.tryCast @Double @Int.Int8
+    Hspec.describe "TryFrom Double Int8" $ do
+      let f = hush . Witch.tryFrom @Double @Int.Int8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 127 `Hspec.shouldBe` Just 127
       test $ f 128 `Hspec.shouldBe` Nothing
@@ -1236,8 +1236,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Double Int16" $ do
-      let f = hush . Witch.tryCast @Double @Int.Int16
+    Hspec.describe "TryFrom Double Int16" $ do
+      let f = hush . Witch.tryFrom @Double @Int.Int16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 32767 `Hspec.shouldBe` Just 32767
       test $ f 32768 `Hspec.shouldBe` Nothing
@@ -1247,8 +1247,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Double Int32" $ do
-      let f = hush . Witch.tryCast @Double @Int.Int32
+    Hspec.describe "TryFrom Double Int32" $ do
+      let f = hush . Witch.tryFrom @Double @Int.Int32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
       test $ f 2147483648 `Hspec.shouldBe` Nothing
@@ -1258,8 +1258,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Double Int64" $ do
-      let f = hush . Witch.tryCast @Double @Int.Int64
+    Hspec.describe "TryFrom Double Int64" $ do
+      let f = hush . Witch.tryFrom @Double @Int.Int64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
       test $ f 9007199254740992 `Hspec.shouldBe` Nothing
@@ -1269,9 +1269,9 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Double Int" $ do
+    Hspec.describe "TryFrom Double Int" $ do
       Monad.when (toInteger (maxBound :: Int) < 9007199254740991) untested
-      let f = hush . Witch.tryCast @Double @Int
+      let f = hush . Witch.tryFrom @Double @Int
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
       test $ f 9007199254740992 `Hspec.shouldBe` Nothing
@@ -1281,8 +1281,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Double Integer" $ do
-      let f = hush . Witch.tryCast @Double @Integer
+    Hspec.describe "TryFrom Double Integer" $ do
+      let f = hush . Witch.tryFrom @Double @Integer
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
       test $ f 9007199254740992 `Hspec.shouldBe` Nothing
@@ -1292,8 +1292,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Double Word8" $ do
-      let f = hush . Witch.tryCast @Double @Word.Word8
+    Hspec.describe "TryFrom Double Word8" $ do
+      let f = hush . Witch.tryFrom @Double @Word.Word8
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 255 `Hspec.shouldBe` Just 255
       test $ f 256 `Hspec.shouldBe` Nothing
@@ -1301,8 +1301,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Double Word16" $ do
-      let f = hush . Witch.tryCast @Double @Word.Word16
+    Hspec.describe "TryFrom Double Word16" $ do
+      let f = hush . Witch.tryFrom @Double @Word.Word16
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 65535 `Hspec.shouldBe` Just 65535
       test $ f 65536 `Hspec.shouldBe` Nothing
@@ -1310,8 +1310,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Double Word32" $ do
-      let f = hush . Witch.tryCast @Double @Word.Word32
+    Hspec.describe "TryFrom Double Word32" $ do
+      let f = hush . Witch.tryFrom @Double @Word.Word32
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
       test $ f 4294967296 `Hspec.shouldBe` Nothing
@@ -1319,8 +1319,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Double Word64" $ do
-      let f = hush . Witch.tryCast @Double @Word.Word64
+    Hspec.describe "TryFrom Double Word64" $ do
+      let f = hush . Witch.tryFrom @Double @Word.Word64
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
       test $ f 9007199254740992 `Hspec.shouldBe` Nothing
@@ -1328,9 +1328,9 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Double Word" $ do
+    Hspec.describe "TryFrom Double Word" $ do
       Monad.when (toInteger (maxBound :: Word) < 9007199254740991) untested
-      let f = hush . Witch.tryCast @Double @Word
+      let f = hush . Witch.tryFrom @Double @Word
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
       test $ f 9007199254740992 `Hspec.shouldBe` Nothing
@@ -1338,8 +1338,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Double Natural" $ do
-      let f = hush . Witch.tryCast @Double @Natural.Natural
+    Hspec.describe "TryFrom Double Natural" $ do
+      let f = hush . Witch.tryFrom @Double @Natural.Natural
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
       test $ f 9007199254740992 `Hspec.shouldBe` Nothing
@@ -1347,8 +1347,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
-    Hspec.describe "TryCast Double Rational" $ do
-      let f = hush . Witch.tryCast @Double @Rational
+    Hspec.describe "TryFrom Double Rational" $ do
+      let f = hush . Witch.tryFrom @Double @Rational
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f (-0) `Hspec.shouldBe` Just 0
       test $ f 0.5 `Hspec.shouldBe` Just 0.5
@@ -1377,10 +1377,10 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       let f = Witch.from @Int @(Ratio.Ratio Int)
       test $ f 0 `Hspec.shouldBe` 0
 
-    Hspec.describe "TryCast (Ratio a) a" $ do
-      test $ hush (Witch.tryCast @Rational @Integer 0) `Hspec.shouldBe` Just 0
-      test $ hush (Witch.tryCast @Rational @Integer 0.5) `Hspec.shouldBe` Nothing
-      let f = hush . Witch.tryCast @(Ratio.Ratio Int) @Int
+    Hspec.describe "TryFrom (Ratio a) a" $ do
+      test $ hush (Witch.tryFrom @Rational @Integer 0) `Hspec.shouldBe` Just 0
+      test $ hush (Witch.tryFrom @Rational @Integer 0.5) `Hspec.shouldBe` Nothing
+      let f = hush . Witch.tryFrom @(Ratio.Ratio Int) @Int
       test $ f 0 `Hspec.shouldBe` Just 0
       test $ f 0.5 `Hspec.shouldBe` Nothing
 
@@ -1415,17 +1415,17 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       let f = Witch.from @Float @(Complex.Complex Float)
       test $ f 1 `Hspec.shouldBe` 1
 
-    Hspec.describe "TryCast (Complex a) a" $ do
-      test $ hush (Witch.tryCast @(Complex.Complex Double) @Double 1) `Hspec.shouldBe` Just 1
-      test $ hush (Witch.tryCast @(Complex.Complex Double) @Double (0 Complex.:+ 1)) `Hspec.shouldBe` Nothing
-      let f = hush . Witch.tryCast @(Complex.Complex Float) @Float
+    Hspec.describe "TryFrom (Complex a) a" $ do
+      test $ hush (Witch.tryFrom @(Complex.Complex Double) @Double 1) `Hspec.shouldBe` Just 1
+      test $ hush (Witch.tryFrom @(Complex.Complex Double) @Double (0 Complex.:+ 1)) `Hspec.shouldBe` Nothing
+      let f = hush . Witch.tryFrom @(Complex.Complex Float) @Float
       test $ f 1 `Hspec.shouldBe` Just 1
       test $ f (0 Complex.:+ 1) `Hspec.shouldBe` Nothing
 
     -- NonEmpty
 
-    Hspec.describe "TryCast [a] (NonEmpty a)" $ do
-      let f = hush . Witch.tryCast @[Int] @(NonEmpty.NonEmpty Int)
+    Hspec.describe "TryFrom [a] (NonEmpty a)" $ do
+      let f = hush . Witch.tryFrom @[Int] @(NonEmpty.NonEmpty Int)
       test $ f [] `Hspec.shouldBe` Nothing
       test $ f [1] `Hspec.shouldBe` Just (1 NonEmpty.:| [])
       test $ f [1, 2] `Hspec.shouldBe` Just (1 NonEmpty.:| [2])
@@ -1534,8 +1534,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (ByteString.pack [0x00]) `Hspec.shouldBe` ShortByteString.pack [0x00]
       test $ f (ByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` ShortByteString.pack [0x0f, 0xf0]
 
-    Hspec.describe "TryCast ByteString Text" $ do
-      let f = hush . Witch.tryCast @ByteString.ByteString @Text.Text
+    Hspec.describe "TryFrom ByteString Text" $ do
+      let f = hush . Witch.tryFrom @ByteString.ByteString @Text.Text
       test $ f (ByteString.pack []) `Hspec.shouldBe` Just (Text.pack "")
       test $ f (ByteString.pack [0x61]) `Hspec.shouldBe` Just (Text.pack "a")
       test $ f (ByteString.pack [0xff]) `Hspec.shouldBe` Nothing
@@ -1560,8 +1560,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (LazyByteString.pack [0x00]) `Hspec.shouldBe` ByteString.pack [0x00]
       test $ f (LazyByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` ByteString.pack [0x0f, 0xf0]
 
-    Hspec.describe "TryCast LazyByteString LazyText" $ do
-      let f = hush . Witch.tryCast @LazyByteString.ByteString @LazyText.Text
+    Hspec.describe "TryFrom LazyByteString LazyText" $ do
+      let f = hush . Witch.tryFrom @LazyByteString.ByteString @LazyText.Text
       test $ f (LazyByteString.pack []) `Hspec.shouldBe` Just (LazyText.pack "")
       test $ f (LazyByteString.pack [0x61]) `Hspec.shouldBe` Just (LazyText.pack "a")
       test $ f (LazyByteString.pack [0xff]) `Hspec.shouldBe` Nothing
