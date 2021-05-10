@@ -47,7 +47,6 @@ library
   exposed-modules:
     Witch
     Witch.Cast
-    Witch.Casting
     Witch.Identity
     Witch.Instances
     Witch.Lift

@@ -1659,46 +1659,6 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       let f = Witch.cast @(Witch.TryCastException Bool Int) @LazyText.Text
       test $ f (Witch.TryCastException False Nothing) `Hspec.shouldBe` LazyText.pack "TryCastException @Bool @Int False Nothing"
 
-  -- Casting
-
-  Hspec.describe "Casting" $ do
-
-    Hspec.describe "Bounded" $ do
-
-      Hspec.it "maxBound" $ do
-        maxBound `Hspec.shouldBe` Age maxBound
-
-      Hspec.it "minBound" $ do
-        minBound `Hspec.shouldBe` Age minBound
-
-    Hspec.describe "Enum" $ do
-
-      Hspec.prop "fromEnum" $ \x ->
-        fromEnum (Age x) === fromEnum x
-
-      Hspec.prop "toEnum" $ \x ->
-        toEnum x === Age (toEnum x)
-
-    Hspec.describe "Eq" $ do
-
-      Hspec.prop "==" $ \x ->
-        Age x === Age x
-
-    Hspec.describe "Ord" $ do
-
-      Hspec.prop "compare" $ \x y ->
-        compare (Age x) (Age y) === compare x y
-
-    Hspec.describe "Read" $ do
-
-      Hspec.prop "readMaybe" $ \x ->
-        Read.readMaybe x === fmap Age (Read.readMaybe x)
-
-    Hspec.describe "Show" $ do
-
-      Hspec.prop "show" $ \x ->
-        show (Age x) === show x
-
 test :: Hspec.Example a => a -> Hspec.SpecWith (Hspec.Arg a)
 test = Hspec.it ""
 
@@ -1716,7 +1676,7 @@ instance Exception.Exception Untested
 
 newtype Age
   = Age Int.Int8
-  deriving (Bounded, Enum, Eq, Ord, Read, Show) via Witch.Casting Age Int.Int8
+  deriving (Eq, Show)
 
 instance Witch.Cast Age Int.Int8
 

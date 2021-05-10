@@ -55,9 +55,6 @@ module Witch
   -- * Data types
   , Witch.TryCastException.TryCastException(..)
 
-  -- ** Casting
-  , Witch.Casting.Casting(Casting)
-
   -- * Notes
 
   -- ** Motivation
@@ -193,7 +190,6 @@ module Witch
   ) where
 
 import qualified Witch.Cast
-import qualified Witch.Casting
 import Witch.Instances ()
 import qualified Witch.Lift
 import qualified Witch.TryCast
