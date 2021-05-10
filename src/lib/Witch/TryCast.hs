@@ -10,7 +10,7 @@ import qualified Witch.TryCastException as TryCastException
 -- type @target@, but that conversion may fail at runtime.
 --
 -- This type class is for conversions that can fail. If your conversion cannot
--- fail, consider implementing @Cast@ instead.
+-- fail, consider implementing @From@ instead.
 class TryCast source target where
   -- | This method implements the conversion of a value between types. At call
   -- sites you will usually want to use @tryFrom@ or @tryInto@ instead of this

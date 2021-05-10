@@ -29,7 +29,7 @@ import qualified Data.Typeable as Typeable
 import qualified Data.Word as Word
 import qualified GHC.Float as Float
 import qualified Numeric.Natural as Natural
-import qualified Witch.Cast as Cast
+import qualified Witch.From as From
 import qualified Witch.TryCast as TryCast
 import qualified Witch.TryCastException as TryCastException
 import qualified Witch.Utility as Utility
@@ -37,24 +37,24 @@ import qualified Witch.Utility as Utility
 -- Int8
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int8 Int.Int16 where
-  cast = fromIntegral
+instance From.From Int.Int8 Int.Int16 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int8 Int.Int32 where
-  cast = fromIntegral
+instance From.From Int.Int8 Int.Int32 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int8 Int.Int64 where
-  cast = fromIntegral
+instance From.From Int.Int8 Int.Int64 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int8 Int where
-  cast = fromIntegral
+instance From.From Int.Int8 Int where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int8 Integer where
-  cast = fromIntegral
+instance From.From Int.Int8 Integer where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int8 Word.Word8 where
@@ -81,12 +81,12 @@ instance TryCast.TryCast Int.Int8 Natural.Natural where
   tryCast = Utility.eitherTryCast fromNonNegativeIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int8 Float where
-  cast = fromIntegral
+instance From.From Int.Int8 Float where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int8 Double where
-  cast = fromIntegral
+instance From.From Int.Int8 Double where
+  from = fromIntegral
 
 -- Int16
 
@@ -95,20 +95,20 @@ instance TryCast.TryCast Int.Int16 Int.Int8 where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int16 Int.Int32 where
-  cast = fromIntegral
+instance From.From Int.Int16 Int.Int32 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int16 Int.Int64 where
-  cast = fromIntegral
+instance From.From Int.Int16 Int.Int64 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int16 Int where
-  cast = fromIntegral
+instance From.From Int.Int16 Int where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int16 Integer where
-  cast = fromIntegral
+instance From.From Int.Int16 Integer where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int16 Word.Word8 where
@@ -135,12 +135,12 @@ instance TryCast.TryCast Int.Int16 Natural.Natural where
   tryCast = Utility.eitherTryCast fromNonNegativeIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int16 Float where
-  cast = fromIntegral
+instance From.From Int.Int16 Float where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int16 Double where
-  cast = fromIntegral
+instance From.From Int.Int16 Double where
+  from = fromIntegral
 
 -- Int32
 
@@ -153,16 +153,16 @@ instance TryCast.TryCast Int.Int32 Int.Int16 where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int32 Int.Int64 where
-  cast = fromIntegral
+instance From.From Int.Int32 Int.Int64 where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int32 Int where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int32 Integer where
-  cast = fromIntegral
+instance From.From Int.Int32 Integer where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int32 Word.Word8 where
@@ -198,8 +198,8 @@ instance TryCast.TryCast Int.Int32 Float where
       else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int32 Double where
-  cast = fromIntegral
+instance From.From Int.Int32 Double where
+  from = fromIntegral
 
 -- Int64
 
@@ -220,8 +220,8 @@ instance TryCast.TryCast Int.Int64 Int where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int.Int64 Integer where
-  cast = fromIntegral
+instance From.From Int.Int64 Integer where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int.Int64 Word.Word8 where
@@ -280,12 +280,12 @@ instance TryCast.TryCast Int Int.Int32 where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int Int.Int64 where
-  cast = fromIntegral
+instance From.From Int Int.Int64 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Int Integer where
-  cast = fromIntegral
+instance From.From Int Integer where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Int Word.Word8 where
@@ -404,56 +404,56 @@ instance TryCast.TryCast Integer Double where
 -- Word8
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word8 Word.Word16 where
-  cast = fromIntegral
+instance From.From Word.Word8 Word.Word16 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word8 Word.Word32 where
-  cast = fromIntegral
+instance From.From Word.Word8 Word.Word32 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word8 Word.Word64 where
-  cast = fromIntegral
+instance From.From Word.Word8 Word.Word64 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word8 Word where
-  cast = fromIntegral
+instance From.From Word.Word8 Word where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word8 Natural.Natural where
-  cast = fromIntegral
+instance From.From Word.Word8 Natural.Natural where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word8 Int.Int8 where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word8 Int.Int16 where
-  cast = fromIntegral
+instance From.From Word.Word8 Int.Int16 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word8 Int.Int32 where
-  cast = fromIntegral
+instance From.From Word.Word8 Int.Int32 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word8 Int.Int64 where
-  cast = fromIntegral
+instance From.From Word.Word8 Int.Int64 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word8 Int where
-  cast = fromIntegral
+instance From.From Word.Word8 Int where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word8 Integer where
-  cast = fromIntegral
+instance From.From Word.Word8 Integer where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word8 Float where
-  cast = fromIntegral
+instance From.From Word.Word8 Float where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word8 Double where
-  cast = fromIntegral
+instance From.From Word.Word8 Double where
+  from = fromIntegral
 
 -- Word16
 
@@ -462,20 +462,20 @@ instance TryCast.TryCast Word.Word16 Word.Word8 where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word16 Word.Word32 where
-  cast = fromIntegral
+instance From.From Word.Word16 Word.Word32 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word16 Word.Word64 where
-  cast = fromIntegral
+instance From.From Word.Word16 Word.Word64 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word16 Word where
-  cast = fromIntegral
+instance From.From Word.Word16 Word where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word16 Natural.Natural where
-  cast = fromIntegral
+instance From.From Word.Word16 Natural.Natural where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word16 Int.Int8 where
@@ -486,28 +486,28 @@ instance TryCast.TryCast Word.Word16 Int.Int16 where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word16 Int.Int32 where
-  cast = fromIntegral
+instance From.From Word.Word16 Int.Int32 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word16 Int.Int64 where
-  cast = fromIntegral
+instance From.From Word.Word16 Int.Int64 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word16 Int where
-  cast = fromIntegral
+instance From.From Word.Word16 Int where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word16 Integer where
-  cast = fromIntegral
+instance From.From Word.Word16 Integer where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word16 Float where
-  cast = fromIntegral
+instance From.From Word.Word16 Float where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word16 Double where
-  cast = fromIntegral
+instance From.From Word.Word16 Double where
+  from = fromIntegral
 
 -- Word32
 
@@ -520,16 +520,16 @@ instance TryCast.TryCast Word.Word32 Word.Word16 where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word32 Word.Word64 where
-  cast = fromIntegral
+instance From.From Word.Word32 Word.Word64 where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word32 Word where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word32 Natural.Natural where
-  cast = fromIntegral
+instance From.From Word.Word32 Natural.Natural where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word32 Int.Int8 where
@@ -544,16 +544,16 @@ instance TryCast.TryCast Word.Word32 Int.Int32 where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word32 Int.Int64 where
-  cast = fromIntegral
+instance From.From Word.Word32 Int.Int64 where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word32 Int where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word32 Integer where
-  cast = fromIntegral
+instance From.From Word.Word32 Integer where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Word.Word32 Float where
@@ -561,8 +561,8 @@ instance TryCast.TryCast Word.Word32 Float where
     if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word32 Double where
-  cast = fromIntegral
+instance From.From Word.Word32 Double where
+  from = fromIntegral
 
 -- Word64
 
@@ -583,8 +583,8 @@ instance TryCast.TryCast Word.Word64 Word where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word64 Natural.Natural where
-  cast = fromIntegral
+instance From.From Word.Word64 Natural.Natural where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word.Word64 Int.Int8 where
@@ -607,8 +607,8 @@ instance TryCast.TryCast Word.Word64 Int where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word.Word64 Integer where
-  cast = fromIntegral
+instance From.From Word.Word64 Integer where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Word.Word64 Float where
@@ -637,12 +637,12 @@ instance TryCast.TryCast Word Word.Word32 where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word Word.Word64 where
-  cast = fromIntegral
+instance From.From Word Word.Word64 where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word Natural.Natural where
-  cast = fromIntegral
+instance From.From Word Natural.Natural where
+  from = fromIntegral
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryCast.TryCast Word Int.Int8 where
@@ -665,8 +665,8 @@ instance TryCast.TryCast Word Int where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Word Integer where
-  cast = fromIntegral
+instance From.From Word Integer where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Word Float where
@@ -724,8 +724,8 @@ instance TryCast.TryCast Natural.Natural Int where
   tryCast = Utility.maybeTryCast Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
-instance Cast.Cast Natural.Natural Integer where
-  cast = fromIntegral
+instance From.From Natural.Natural Integer where
+  from = fromIntegral
 
 -- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryCast.TryCast Natural.Natural Float where
@@ -804,8 +804,8 @@ instance TryCast.TryCast Float Rational where
       else Right $ toRational s
 
 -- | Uses 'Float.float2Double'.
-instance Cast.Cast Float Double where
-  cast = Float.float2Double
+instance From.From Float Double where
+  from = Float.float2Double
 
 -- Double
 
@@ -872,14 +872,14 @@ instance TryCast.TryCast Double Rational where
       else Right $ toRational s
 
 -- | Uses 'Float.double2Float'. This necessarily loses some precision.
-instance Cast.Cast Double Float where
-  cast = Float.double2Float
+instance From.From Double Float where
+  from = Float.double2Float
 
 -- Ratio
 
 -- | Uses '(Ratio.%)' with a denominator of 1.
-instance Integral a => Cast.Cast a (Ratio.Ratio a) where
-  cast = (Ratio.% 1)
+instance Integral a => From.From a (Ratio.Ratio a) where
+  from = (Ratio.% 1)
 
 -- | Uses 'Ratio.numerator' when the denominator is 1.
 instance (Eq a, Num a) => TryCast.TryCast (Ratio.Ratio a) a where
@@ -888,30 +888,30 @@ instance (Eq a, Num a) => TryCast.TryCast (Ratio.Ratio a) a where
     else Left Exception.LossOfPrecision
 
 -- | Uses 'fromRational'. This necessarily loses some precision.
-instance Cast.Cast Rational Float where
-  cast = fromRational
+instance From.From Rational Float where
+  from = fromRational
 
 -- | Uses 'fromRational'. This necessarily loses some precision.
-instance Cast.Cast Rational Double where
-  cast = fromRational
+instance From.From Rational Double where
+  from = fromRational
 
 -- Fixed
 
--- | Uses 'Fixed.MkFixed'. This means @cast 2 :: Centi@ is @0.02@ rather than
+-- | Uses 'Fixed.MkFixed'. This means @from 2 :: Centi@ is @0.02@ rather than
 -- @2.00@.
-instance Cast.Cast Integer (Fixed.Fixed a) where
-  cast = Fixed.MkFixed
+instance From.From Integer (Fixed.Fixed a) where
+  from = Fixed.MkFixed
 
--- | Uses 'Fixed.MkFixed'. This means @cast (3.00 :: Centi)@ is @300@ rather
+-- | Uses 'Fixed.MkFixed'. This means @from (3.00 :: Centi)@ is @300@ rather
 -- than @3@.
-instance Cast.Cast (Fixed.Fixed a) Integer where
-  cast (Fixed.MkFixed t) = t
+instance From.From (Fixed.Fixed a) Integer where
+  from (Fixed.MkFixed t) = t
 
 -- Complex
 
 -- | Uses '(Complex.:+)' with an imaginary part of 0.
-instance Num a => Cast.Cast a (Complex.Complex a) where
-  cast = (Complex.:+ 0)
+instance Num a => From.From a (Complex.Complex a) where
+  from = (Complex.:+ 0)
 
 -- | Uses 'Complex.realPart' when the imaginary part is 0.
 instance (Eq a, Num a) => TryCast.TryCast (Complex.Complex a) a where
@@ -926,78 +926,78 @@ instance TryCast.TryCast [a] (NonEmpty.NonEmpty a) where
   tryCast = Utility.maybeTryCast NonEmpty.nonEmpty
 
 -- | Uses 'NonEmpty.toList'.
-instance Cast.Cast (NonEmpty.NonEmpty a) [a] where
-  cast = NonEmpty.toList
+instance From.From (NonEmpty.NonEmpty a) [a] where
+  from = NonEmpty.toList
 
 -- Set
 
 -- | Uses 'Set.fromList'.
-instance Ord a => Cast.Cast [a] (Set.Set a) where
-  cast = Set.fromList
+instance Ord a => From.From [a] (Set.Set a) where
+  from = Set.fromList
 
 -- | Uses 'Set.toAscList'.
-instance Cast.Cast (Set.Set a) [a] where
-  cast = Set.toAscList
+instance From.From (Set.Set a) [a] where
+  from = Set.toAscList
 
 -- IntSet
 
 -- | Uses 'IntSet.fromList'.
-instance Cast.Cast [Int] IntSet.IntSet where
-  cast = IntSet.fromList
+instance From.From [Int] IntSet.IntSet where
+  from = IntSet.fromList
 
 -- | Uses 'IntSet.toAscList'.
-instance Cast.Cast IntSet.IntSet [Int] where
-  cast = IntSet.toAscList
+instance From.From IntSet.IntSet [Int] where
+  from = IntSet.toAscList
 
 -- Map
 
 -- | Uses 'Map.fromList'. If there are duplicate keys, later values will
 -- overwrite earlier ones.
-instance Ord k => Cast.Cast [(k, v)] (Map.Map k v) where
-  cast = Map.fromList
+instance Ord k => From.From [(k, v)] (Map.Map k v) where
+  from = Map.fromList
 
 -- | Uses 'Map.toAscList'.
-instance Cast.Cast (Map.Map k v) [(k, v)] where
-  cast = Map.toAscList
+instance From.From (Map.Map k v) [(k, v)] where
+  from = Map.toAscList
 
 -- IntMap
 
 -- | Uses 'IntMap.fromList'. If there are duplicate keys, later values will
 -- overwrite earlier ones.
-instance Cast.Cast [(Int, v)] (IntMap.IntMap v) where
-  cast = IntMap.fromList
+instance From.From [(Int, v)] (IntMap.IntMap v) where
+  from = IntMap.fromList
 
 -- | Uses 'IntMap.toAscList'.
-instance Cast.Cast (IntMap.IntMap v) [(Int, v)] where
-  cast = IntMap.toAscList
+instance From.From (IntMap.IntMap v) [(Int, v)] where
+  from = IntMap.toAscList
 
 -- Seq
 
 -- | Uses 'Seq.fromList'.
-instance Cast.Cast [a] (Seq.Seq a) where
-  cast = Seq.fromList
+instance From.From [a] (Seq.Seq a) where
+  from = Seq.fromList
 
 -- | Uses 'Foldable.toList'.
-instance Cast.Cast (Seq.Seq a) [a] where
-  cast = Foldable.toList
+instance From.From (Seq.Seq a) [a] where
+  from = Foldable.toList
 
 -- ByteString
 
 -- | Uses 'ByteString.pack'.
-instance Cast.Cast [Word.Word8] ByteString.ByteString where
-  cast = ByteString.pack
+instance From.From [Word.Word8] ByteString.ByteString where
+  from = ByteString.pack
 
 -- | Uses 'ByteString.unpack'.
-instance Cast.Cast ByteString.ByteString [Word.Word8] where
-  cast = ByteString.unpack
+instance From.From ByteString.ByteString [Word.Word8] where
+  from = ByteString.unpack
 
 -- | Uses 'LazyByteString.fromStrict'.
-instance Cast.Cast ByteString.ByteString LazyByteString.ByteString where
-  cast = LazyByteString.fromStrict
+instance From.From ByteString.ByteString LazyByteString.ByteString where
+  from = LazyByteString.fromStrict
 
 -- | Uses 'ShortByteString.toShort'.
-instance Cast.Cast ByteString.ByteString ShortByteString.ShortByteString where
-  cast = ShortByteString.toShort
+instance From.From ByteString.ByteString ShortByteString.ShortByteString where
+  from = ShortByteString.toShort
 
 -- | Uses 'Text.decodeUtf8''.
 instance TryCast.TryCast ByteString.ByteString Text.Text where
@@ -1006,16 +1006,16 @@ instance TryCast.TryCast ByteString.ByteString Text.Text where
 -- LazyByteString
 
 -- | Uses 'LazyByteString.pack'.
-instance Cast.Cast [Word.Word8] LazyByteString.ByteString where
-  cast = LazyByteString.pack
+instance From.From [Word.Word8] LazyByteString.ByteString where
+  from = LazyByteString.pack
 
 -- | Uses 'LazyByteString.unpack'.
-instance Cast.Cast LazyByteString.ByteString [Word.Word8] where
-  cast = LazyByteString.unpack
+instance From.From LazyByteString.ByteString [Word.Word8] where
+  from = LazyByteString.unpack
 
 -- | Uses 'LazyByteString.toStrict'.
-instance Cast.Cast LazyByteString.ByteString ByteString.ByteString where
-  cast = LazyByteString.toStrict
+instance From.From LazyByteString.ByteString ByteString.ByteString where
+  from = LazyByteString.toStrict
 
 -- | Uses 'LazyText.decodeUtf8''.
 instance TryCast.TryCast LazyByteString.ByteString LazyText.Text where
@@ -1024,59 +1024,59 @@ instance TryCast.TryCast LazyByteString.ByteString LazyText.Text where
 -- ShortByteString
 
 -- | Uses 'ShortByteString.pack'.
-instance Cast.Cast [Word.Word8] ShortByteString.ShortByteString where
-  cast = ShortByteString.pack
+instance From.From [Word.Word8] ShortByteString.ShortByteString where
+  from = ShortByteString.pack
 
 -- | Uses 'ShortByteString.unpack'.
-instance Cast.Cast ShortByteString.ShortByteString [Word.Word8] where
-  cast = ShortByteString.unpack
+instance From.From ShortByteString.ShortByteString [Word.Word8] where
+  from = ShortByteString.unpack
 
 -- | Uses 'ShortByteString.fromShort'.
-instance Cast.Cast ShortByteString.ShortByteString ByteString.ByteString where
-  cast = ShortByteString.fromShort
+instance From.From ShortByteString.ShortByteString ByteString.ByteString where
+  from = ShortByteString.fromShort
 
 -- Text
 
 -- | Uses 'Text.pack'. Some 'Char' values cannot be represented in 'Text.Text'
 -- and will be replaced with @'\\xFFFD'@.
-instance Cast.Cast String Text.Text where
-  cast = Text.pack
+instance From.From String Text.Text where
+  from = Text.pack
 
 -- | Uses 'Text.unpack'.
-instance Cast.Cast Text.Text String where
-  cast = Text.unpack
+instance From.From Text.Text String where
+  from = Text.unpack
 
 -- | Uses 'LazyText.fromStrict'.
-instance Cast.Cast Text.Text LazyText.Text where
-  cast = LazyText.fromStrict
+instance From.From Text.Text LazyText.Text where
+  from = LazyText.fromStrict
 
 -- | Uses 'Text.encodeUtf8'.
-instance Cast.Cast Text.Text ByteString.ByteString where
-  cast = Text.encodeUtf8
+instance From.From Text.Text ByteString.ByteString where
+  from = Text.encodeUtf8
 
 -- LazyText
 
 -- | Uses 'LazyText.pack'. Some 'Char' values cannot be represented in
 -- 'LazyText.Text' and will be replaced with @'\\xFFFD'@.
-instance Cast.Cast String LazyText.Text where
-  cast = LazyText.pack
+instance From.From String LazyText.Text where
+  from = LazyText.pack
 
 -- | Uses 'LazyText.unpack'.
-instance Cast.Cast LazyText.Text String where
-  cast = LazyText.unpack
+instance From.From LazyText.Text String where
+  from = LazyText.unpack
 
 -- | Uses 'LazyText.toStrict'.
-instance Cast.Cast LazyText.Text Text.Text where
-  cast = LazyText.toStrict
+instance From.From LazyText.Text Text.Text where
+  from = LazyText.toStrict
 
 -- | Uses 'LazyText.encodeUtf8'.
-instance Cast.Cast LazyText.Text LazyByteString.ByteString where
-  cast = LazyText.encodeUtf8
+instance From.From LazyText.Text LazyByteString.ByteString where
+  from = LazyText.encodeUtf8
 
 -- TryCastException
 
 -- | Uses @coerce@.
-instance Cast.Cast
+instance From.From
   (TryCastException.TryCastException s u)
   (TryCastException.TryCastException s t)
 
@@ -1085,24 +1085,24 @@ instance
   ( Show s
   , Typeable.Typeable s
   , Typeable.Typeable t
-  ) => Cast.Cast (TryCastException.TryCastException s t) String where
-  cast = show
+  ) => From.From (TryCastException.TryCastException s t) String where
+  from = show
 
 -- | Converts via 'String'.
 instance
   ( Show s
   , Typeable.Typeable s
   , Typeable.Typeable t
-  ) => Cast.Cast (TryCastException.TryCastException s t) Text.Text where
-  cast = Utility.via @String
+  ) => From.From (TryCastException.TryCastException s t) Text.Text where
+  from = Utility.via @String
 
 -- | Converts via 'String'.
 instance
   ( Show s
   , Typeable.Typeable s
   , Typeable.Typeable t
-  ) => Cast.Cast (TryCastException.TryCastException s t) LazyText.Text where
-  cast = Utility.via @String
+  ) => From.From (TryCastException.TryCastException s t) LazyText.Text where
+  from = Utility.via @String
 
 fromNonNegativeIntegral
   :: (Integral s, Num t) => s -> Either Exception.ArithException t

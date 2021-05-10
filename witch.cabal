@@ -46,7 +46,7 @@ library
     , template-haskell >= 2.15.0 && < 2.18
   exposed-modules:
     Witch
-    Witch.Cast
+    Witch.From
     Witch.Instances
     Witch.Lift
     Witch.TryCast

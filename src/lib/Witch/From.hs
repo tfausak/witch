@@ -1,18 +1,18 @@
 {-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Witch.Cast where
+module Witch.From where
 
 import qualified Data.Coerce as Coerce
 
 -- | This type class is for converting values from some @source@ type into
--- some other @target@ type. The constraint @Cast source target@ measn that
+-- some other @target@ type. The constraint @From source target@ measn that
 -- you can convert from a value of type @source@ into a value of type
 -- @target@.
 --
 -- This type class is for conversions that cannot fail. If your conversion can
 -- fail, consider implementing @TryCast@ instead.
-class Cast source target where
+class From source target where
   -- | This method implements the conversion of a value between types. At call
   -- sites you will usually want to use @from@ or @into@ instead of this
   -- method.
@@ -23,9 +23,9 @@ class Cast source target where
   -- all. For example:
   --
   -- >>> newtype Name = Name String
-  -- >>> instance Cast Name String
-  -- >>> instance Cast String Name
-  cast :: source -> target
+  -- >>> instance From Name String
+  -- >>> instance From String Name
+  from :: source -> target
 
-  default cast :: Coerce.Coercible source target => source -> target
-  cast = Coerce.coerce
+  default from :: Coerce.Coercible source target => source -> target
+  from = Coerce.coerce

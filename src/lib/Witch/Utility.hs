@@ -6,7 +6,7 @@ module Witch.Utility where
 import qualified Control.Exception as Exception
 import qualified Data.Typeable as Typeable
 import qualified GHC.Stack as Stack
-import qualified Witch.Cast as Cast
+import qualified Witch.From as From
 import qualified Witch.TryCast as TryCast
 import qualified Witch.TryCastException as TryCastException
 
@@ -22,35 +22,20 @@ import qualified Witch.TryCastException as TryCastException
 as :: forall source . source -> source
 as = id
 
--- | This is the same as 'Cast.cast' except that it requires a type
--- application for the @source@ type.
---
--- > -- Avoid this:
--- > cast (x :: s)
--- >
--- > -- Prefer this:
--- > from @s x
-from
-  :: forall source target
-   . Cast.Cast source target
-  => source
-  -> target
-from = Cast.cast
-
--- | This is the same as 'Cast.cast' except that it requires a type
+-- | This is the same as 'From.from' except that it requires a type
 -- application for the @target@ type.
 --
 -- > -- Avoid this:
--- > cast x :: t
+-- > from x :: t
 -- >
 -- > -- Prefer this:
 -- > into @t x
 into
   :: forall target source
-   . Cast.Cast source target
+   . From.From source target
   => source
   -> target
-into = Cast.cast
+into = From.from
 
 -- | This function converts from some @source@ type into some @target@ type,
 -- applies the given function, then converts back into the @source@ type. This
@@ -64,17 +49,17 @@ into = Cast.cast
 -- > over @t f
 over
   :: forall target source
-   . ( Cast.Cast source target
-     , Cast.Cast target source
+   . ( From.From source target
+     , From.From target source
      )
   => (target -> target)
   -> source
   -> source
-over f = Cast.cast . f . Cast.cast
+over f = From.from . f . From.from
 
 -- | This function first converts from some @source@ type into some @through@
 -- type, and then converts that into some @target@ type. Usually this is used
--- when writing 'Cast.Cast' instances. Sometimes this can be used to work
+-- when writing 'From.From' instances. Sometimes this can be used to work
 -- around the lack of an instance that should probably exist.
 --
 -- > -- Avoid this:
@@ -84,12 +69,12 @@ over f = Cast.cast . f . Cast.cast
 -- > via @u
 via
   :: forall through source target
-   . ( Cast.Cast source through
-     , Cast.Cast through target
+   . ( From.From source through
+     , From.From through target
      )
   => source
   -> target
-via = Cast.cast . (\x -> x :: through) . Cast.cast
+via = From.from . (\x -> x :: through) . From.from
 
 -- | This is the same as 'TryCast.tryCast' except that it requires a type
 -- application for the @source@ type.
@@ -191,7 +176,7 @@ eitherTryCast f s = case f s of
 -- impure exception if the conversion fails.
 --
 -- > -- Avoid this:
--- > either throw id . cast
+-- > either throw id . from
 -- >
 -- > -- Prefer this:
 -- > unsafeCast
