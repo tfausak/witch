@@ -1,6 +1,5 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeFamilies #-}
 
 module Witch.Utility where
 
@@ -8,7 +7,6 @@ import qualified Control.Exception as Exception
 import qualified Data.Typeable as Typeable
 import qualified GHC.Stack as Stack
 import qualified Witch.Cast as Cast
-import qualified Witch.Identity as Identity
 import qualified Witch.TryCast as TryCast
 import qualified Witch.TryCastException as TryCastException
 
@@ -21,7 +19,7 @@ import qualified Witch.TryCastException as TryCastException
 -- >
 -- > -- Prefer this:
 -- > f . as @Int . g
-as :: forall s source . Identity.Identity s ~ source => source -> source
+as :: forall source . source -> source
 as = id
 
 -- | This is the same as 'Cast.cast' except that it requires a type
@@ -33,8 +31,8 @@ as = id
 -- > -- Prefer this:
 -- > from @s x
 from
-  :: forall s target source
-   . (Identity.Identity s ~ source, Cast.Cast source target)
+  :: forall source target
+   . Cast.Cast source target
   => source
   -> target
 from = Cast.cast
@@ -48,8 +46,8 @@ from = Cast.cast
 -- > -- Prefer this:
 -- > into @t x
 into
-  :: forall t source target
-   . (Identity.Identity t ~ target, Cast.Cast source target)
+  :: forall target source
+   . Cast.Cast source target
   => source
   -> target
 into = Cast.cast
@@ -65,9 +63,8 @@ into = Cast.cast
 -- > -- Prefer this:
 -- > over @t f
 over
-  :: forall t source target
-   . ( Identity.Identity t ~ target
-     , Cast.Cast source target
+  :: forall target source
+   . ( Cast.Cast source target
      , Cast.Cast target source
      )
   => (target -> target)
@@ -86,9 +83,8 @@ over f = Cast.cast . f . Cast.cast
 -- > -- Prefer this:
 -- > via @u
 via
-  :: forall u source target through
-   . ( Identity.Identity u ~ through
-     , Cast.Cast source through
+  :: forall through source target
+   . ( Cast.Cast source through
      , Cast.Cast through target
      )
   => source
@@ -104,8 +100,8 @@ via = Cast.cast . (\x -> x :: through) . Cast.cast
 -- > -- Prefer this:
 -- > tryFrom @s x
 tryFrom
-  :: forall s target source
-   . (Identity.Identity s ~ source, TryCast.TryCast source target)
+  :: forall source target
+   . TryCast.TryCast source target
   => source
   -> Either (TryCastException.TryCastException source target) target
 tryFrom = TryCast.tryCast
@@ -119,8 +115,8 @@ tryFrom = TryCast.tryCast
 -- > -- Prefer this:
 -- > tryInto @t x
 tryInto
-  :: forall t source target
-   . (Identity.Identity t ~ target, TryCast.TryCast source target)
+  :: forall target source
+   . TryCast.TryCast source target
   => source
   -> Either (TryCastException.TryCastException source target) target
 tryInto = TryCast.tryCast
@@ -139,9 +135,8 @@ tryInto = TryCast.tryCast
 -- > -- Prefer this:
 -- > tryVia @u
 tryVia
-  :: forall u source target through
-   . ( Identity.Identity u ~ through
-     , TryCast.TryCast source through
+  :: forall through source target
+   . ( TryCast.TryCast source through
      , TryCast.TryCast through target
      )
   => source
@@ -221,9 +216,8 @@ unsafeCast = either Exception.throw id . TryCast.tryCast
 -- > -- Prefer this:
 -- > unsafeFrom @s
 unsafeFrom
-  :: forall s target source
-   . ( Identity.Identity s ~ source
-     , Stack.HasCallStack
+  :: forall source target
+   . ( Stack.HasCallStack
      , TryCast.TryCast source target
      , Show source
      , Typeable.Typeable source
@@ -242,9 +236,8 @@ unsafeFrom = unsafeCast
 -- > -- Prefer this:
 -- > unsafeInto @t
 unsafeInto
-  :: forall t source target
-   . ( Identity.Identity t ~ target
-     , Stack.HasCallStack
+  :: forall target source
+   . ( Stack.HasCallStack
      , TryCast.TryCast source target
      , Show source
      , Typeable.Typeable source

@@ -159,34 +159,6 @@ module Witch
   -- 'Witch.TryCast.TryCast' instance for it. And if it is technically
   -- possible to convert from @s@ to @t@ but there are a lot of caveats, you
   -- probably should not write any instances at all.
-
-  -- ** Type applications
-  -- | This library is designed to be used with the [@TypeApplications@](https://downloads.haskell.org/~ghc/9.0.1/docs/html/users_guide/exts/type_applications.html)
-  -- language extension. Although it is not required for basic functionality,
-  -- it is strongly encouraged. You can use 'Witch.Cast.cast',
-  -- 'Witch.TryCast.tryCast', 'Witch.Utility.unsafeCast', and
-  -- 'Witch.Lift.liftedCast' without type applications. Everything else
-  -- requires a type application.
-
-  -- ** Ambiguous types
-  -- | You may see @Identity@ show up in some type signatures. Anywhere you see
-  -- @Identity a@, you can mentally replace it with @a@. It is a type family
-  -- used to trick GHC into requiring type applications for certain functions.
-  -- If you forget to give a type application, you will see an error like
-  -- this:
-  --
-  -- >>> from (1 :: Int8) :: Int16
-  -- <interactive>:1:1: error:
-  --     * Couldn't match type `Identity s0' with `Int8'
-  --         arising from a use of `from'
-  --       The type variable `s0' is ambiguous
-  --     * In the expression: from (1 :: Int8) :: Int16
-  --       In an equation for `it': it = from (1 :: Int8) :: Int16
-  --
-  -- You can fix the problem by giving a type application:
-  --
-  -- >>> from @Int8 1 :: Int16
-  -- 1
   ) where
 
 import qualified Witch.Cast

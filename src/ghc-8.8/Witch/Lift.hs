@@ -1,12 +1,9 @@
-{-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeFamilies #-}
 
 module Witch.Lift where
 
 import qualified Data.Typeable as Typeable
 import qualified Language.Haskell.TH.Syntax as TH
-import qualified Witch.Identity as Identity
 import qualified Witch.TryCast as TryCast
 import qualified Witch.Utility as Utility
 
@@ -39,9 +36,8 @@ liftedCast s = TH.unsafeTExpCoerce $ TH.lift (Utility.unsafeCast s :: target)
 -- > -- Prefer this:
 -- > $$(liftedFrom @s "some literal")
 liftedFrom
-  :: forall s target source
-   . ( Identity.Identity s ~ source
-     , TryCast.TryCast source target
+  :: forall source target
+   . ( TryCast.TryCast source target
      , TH.Lift target
      , Show source
      , Typeable.Typeable source
@@ -60,9 +56,8 @@ liftedFrom = liftedCast
 -- > -- Prefer this:
 -- > $$(liftedInto @t "some literal")
 liftedInto
-  :: forall t source target
-   . ( Identity.Identity t ~ target
-     , TryCast.TryCast source target
+  :: forall target source
+   . ( TryCast.TryCast source target
      , TH.Lift target
      , Show source
      , Typeable.Typeable source
