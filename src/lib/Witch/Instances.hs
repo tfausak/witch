@@ -25,7 +25,6 @@ import qualified Data.Text as Text
 import qualified Data.Text.Encoding as Text
 import qualified Data.Text.Lazy as LazyText
 import qualified Data.Text.Lazy.Encoding as LazyText
-import qualified Data.Typeable as Typeable
 import qualified Data.Word as Word
 import qualified GHC.Float as Float
 import qualified Numeric.Natural as Natural
@@ -1079,30 +1078,6 @@ instance From.From LazyText.Text LazyByteString.ByteString where
 instance From.From
   (TryFromException.TryFromException s u)
   (TryFromException.TryFromException s t)
-
--- | Uses 'show'.
-instance
-  ( Show s
-  , Typeable.Typeable s
-  , Typeable.Typeable t
-  ) => From.From (TryFromException.TryFromException s t) String where
-  from = show
-
--- | Converts via 'String'.
-instance
-  ( Show s
-  , Typeable.Typeable s
-  , Typeable.Typeable t
-  ) => From.From (TryFromException.TryFromException s t) Text.Text where
-  from = Utility.via @String
-
--- | Converts via 'String'.
-instance
-  ( Show s
-  , Typeable.Typeable s
-  , Typeable.Typeable t
-  ) => From.From (TryFromException.TryFromException s t) LazyText.Text where
-  from = Utility.via @String
 
 fromNonNegativeIntegral
   :: (Integral s, Num t) => s -> Either Exception.ArithException t
