@@ -62,6 +62,12 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
     Hspec.describe "tryInto" $ do
       test $ hush (Witch.tryInto @Int.Int8 (1 :: Int.Int16)) `Hspec.shouldBe` Just 1
 
+    Hspec.describe "tryVia" $ do
+      let f = Witch.tryVia @Int.Int16 @Int.Int32 @Int.Int8
+      test $ hush (f 1) `Hspec.shouldBe` Just 1
+      test $ hush (f 128) `Hspec.shouldBe` Nothing
+      test $ hush (f 32768) `Hspec.shouldBe` Nothing
+
     Hspec.describe "unsafeFrom" $ do
       test $ Witch.unsafeFrom (1 :: Int.Int16) `Hspec.shouldBe` (1 :: Int.Int8)
       test $ Exception.evaluate (Witch.unsafeFrom @Int.Int16 @Int.Int8 128) `Hspec.shouldThrow` Hspec.anyException
