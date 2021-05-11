@@ -11,10 +11,10 @@ import qualified Witch.Utility as Utility
 -- rather than runtime.
 --
 -- > -- Avoid this:
--- > unsafeFrom "some literal"
+-- > unsafeFrom @s "some literal"
 -- >
 -- > -- Prefer this:
--- > $$(liftedFrom "some literal")
+-- > $$(liftedFrom @s "some literal")
 liftedFrom
   :: forall source target m
    . ( TryFrom.TryFrom source target

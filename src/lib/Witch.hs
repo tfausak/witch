@@ -32,8 +32,8 @@ module Witch
   -- a conversion is safe even though you can't prove it to the compiler, and
   -- when you're alright with your program crashing if the conversion fails.
   -- In all other cases you should prefer the normal conversion functions like
-  -- 'Witch.From.from'. And if you're converting a literal value, consider
-  -- using the Template Haskell conversion functions like
+  -- 'Witch.TryFrom.tryFrom'. And if you're converting a literal value,
+  -- consider using the Template Haskell conversion functions like
   -- 'Witch.Lift.liftedFrom'.
   , Witch.Utility.unsafeFrom
   , Witch.Utility.unsafeInto

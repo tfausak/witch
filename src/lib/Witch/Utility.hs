@@ -10,9 +10,8 @@ import qualified Witch.From as From
 import qualified Witch.TryFrom as TryFrom
 import qualified Witch.TryFromException as TryFromException
 
--- | This is the same as 'id' except that it requires a type application. This
--- can be an ergonomic way to pin down a polymorphic type in a function
--- pipeline. For example:
+-- | This is the same as 'id'. This can be an ergonomic way to pin down a
+-- polymorphic type in a function pipeline. For example:
 --
 -- > -- Avoid this:
 -- > f . (\ x -> x :: Int) . g
@@ -22,8 +21,8 @@ import qualified Witch.TryFromException as TryFromException
 as :: forall source . source -> source
 as = id
 
--- | This is the same as 'From.from' except that it requires a type
--- application for the @target@ type.
+-- | This is the same as 'From.from' except that the type variables are in the
+-- opposite order.
 --
 -- > -- Avoid this:
 -- > from x :: t
@@ -76,8 +75,8 @@ via
   -> target
 via = From.from . (\x -> x :: through) . From.from
 
--- | This is the same as 'TryFrom.tryFrom' except that it requires a type
--- application for the @target@ type.
+-- | This is the same as 'TryFrom.tryFrom' except that the type variables are
+-- in the opposite order.
 --
 -- > -- Avoid this:
 -- > tryFrom x :: Either (TryFromException s t) t
@@ -100,7 +99,7 @@ tryInto = TryFrom.tryFrom
 -- >   Left _ -> Left ...
 -- >   Right y -> case tryFrom @u y of
 -- >     Left _ -> Left ...
--- >     Right z -> ...
+-- >     Right z -> Right z
 -- >
 -- > -- Prefer this:
 -- > tryVia @u
@@ -161,10 +160,10 @@ eitherTryFrom f s = case f s of
 -- impure exception if the conversion fails.
 --
 -- > -- Avoid this:
--- > either throw id . from
+-- > either throw id . tryFrom @s
 -- >
 -- > -- Prefer this:
--- > unsafeFrom
+-- > unsafeFrom @s
 unsafeFrom
   :: forall source target
    . ( Stack.HasCallStack
@@ -177,11 +176,11 @@ unsafeFrom
   -> target
 unsafeFrom = either Exception.throw id . TryFrom.tryFrom
 
--- | This function is like 'into' except that it will throw an impure
+-- | This function is like 'tryInto' except that it will throw an impure
 -- exception if the conversion fails.
 --
 -- > -- Avoid this:
--- > either throw id . into @t
+-- > either throw id . tryInto @t
 -- >
 -- > -- Prefer this:
 -- > unsafeInto @t

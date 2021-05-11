@@ -897,13 +897,13 @@ instance From.From Rational Double where
 
 -- Fixed
 
--- | Uses 'Fixed.MkFixed'. This means @from 2 :: Centi@ is @0.02@ rather than
--- @2.00@.
+-- | Uses 'Fixed.MkFixed'. This means @from \@Integer \@Centi 2@ is @0.02@
+-- rather than @2.00@.
 instance From.From Integer (Fixed.Fixed a) where
   from = Fixed.MkFixed
 
--- | Uses 'Fixed.MkFixed'. This means @from (3.00 :: Centi)@ is @300@ rather
--- than @3@.
+-- | Uses 'Fixed.MkFixed'. This means @from \@Centi \@Integer 3.00@ is @300@
+-- rather than @3@.
 instance From.From (Fixed.Fixed a) Integer where
   from (Fixed.MkFixed t) = t
 
