@@ -128,12 +128,12 @@ tryVia s = case TryFrom.tryFrom s of
 -- >   Just t -> Right t
 -- >
 -- > -- Prefer this:
--- > tryFrom = maybeTryCast f
-maybeTryCast
+-- > tryFrom = maybeTryFrom f
+maybeTryFrom
   :: (source -> Maybe target)
   -> source
   -> Either (TryFromException.TryFromException source target) target
-maybeTryCast f s = case f s of
+maybeTryFrom f s = case f s of
   Nothing -> Left $ TryFromException.TryFromException s Nothing
   Just t -> Right t
 
@@ -146,13 +146,13 @@ maybeTryCast f s = case f s of
 -- >   Right t -> Right t
 -- >
 -- > -- Prefer this:
--- > tryFrom = eitherTryCast f
-eitherTryCast
+-- > tryFrom = eitherTryFrom f
+eitherTryFrom
   :: Exception.Exception exception
   => (source -> Either exception target)
   -> source
   -> Either (TryFromException.TryFromException source target) target
-eitherTryCast f s = case f s of
+eitherTryFrom f s = case f s of
   Left e ->
     Left . TryFromException.TryFromException s . Just $ Exception.toException e
   Right t -> Right t
@@ -164,27 +164,7 @@ eitherTryCast f s = case f s of
 -- > either throw id . from
 -- >
 -- > -- Prefer this:
--- > unsafeCast
-unsafeCast
-  :: forall source target
-   . ( Stack.HasCallStack
-     , TryFrom.TryFrom source target
-     , Show source
-     , Typeable.Typeable source
-     , Typeable.Typeable target
-     )
-  => source
-  -> target
-unsafeCast = either Exception.throw id . TryFrom.tryFrom
-
--- | This function is like 'from' except that it will throw an impure
--- exception if the conversion fails.
---
--- > -- Avoid this:
--- > either throw id . from @s
--- >
--- > -- Prefer this:
--- > unsafeFrom @s
+-- > unsafeFrom
 unsafeFrom
   :: forall source target
    . ( Stack.HasCallStack
@@ -195,7 +175,7 @@ unsafeFrom
      )
   => source
   -> target
-unsafeFrom = unsafeCast
+unsafeFrom = either Exception.throw id . TryFrom.tryFrom
 
 -- | This function is like 'into' except that it will throw an impure
 -- exception if the conversion fails.
@@ -215,4 +195,4 @@ unsafeInto
      )
   => source
   -> target
-unsafeInto = unsafeCast
+unsafeInto = unsafeFrom

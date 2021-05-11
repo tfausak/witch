@@ -58,27 +58,27 @@ instance From.From Int.Int8 Integer where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int8 Word.Word8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int8 Word.Word16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int8 Word.Word32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int8 Word.Word64 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int8 Word where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral' when the input is not negative.
 instance TryFrom.TryFrom Int.Int8 Natural.Natural where
-  tryFrom = Utility.eitherTryCast fromNonNegativeIntegral
+  tryFrom = Utility.eitherTryFrom fromNonNegativeIntegral
 
 -- | Uses 'fromIntegral'.
 instance From.From Int.Int8 Float where
@@ -92,7 +92,7 @@ instance From.From Int.Int8 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int16 Int.Int8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Int.Int16 Int.Int32 where
@@ -112,27 +112,27 @@ instance From.From Int.Int16 Integer where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int16 Word.Word8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int16 Word.Word16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int16 Word.Word32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int16 Word.Word64 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int16 Word where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral' when the input is not negative.
 instance TryFrom.TryFrom Int.Int16 Natural.Natural where
-  tryFrom = Utility.eitherTryCast fromNonNegativeIntegral
+  tryFrom = Utility.eitherTryFrom fromNonNegativeIntegral
 
 -- | Uses 'fromIntegral'.
 instance From.From Int.Int16 Float where
@@ -146,11 +146,11 @@ instance From.From Int.Int16 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int32 Int.Int8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int32 Int.Int16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Int.Int32 Int.Int64 where
@@ -158,7 +158,7 @@ instance From.From Int.Int32 Int.Int64 where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int32 Int where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Int.Int32 Integer where
@@ -166,32 +166,32 @@ instance From.From Int.Int32 Integer where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int32 Word.Word8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int32 Word.Word16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int32 Word.Word32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int32 Word.Word64 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int32 Word where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral' when the input is not negative.
 instance TryFrom.TryFrom Int.Int32 Natural.Natural where
-  tryFrom = Utility.eitherTryCast fromNonNegativeIntegral
+  tryFrom = Utility.eitherTryFrom fromNonNegativeIntegral
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryFrom.TryFrom Int.Int32 Float where
-  tryFrom = Utility.eitherTryCast $ \s -> if s < -maxFloat
+  tryFrom = Utility.eitherTryFrom $ \s -> if s < -maxFloat
     then Left Exception.Underflow
     else if s > maxFloat
       then Left Exception.Overflow
@@ -205,19 +205,19 @@ instance From.From Int.Int32 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int64 Int.Int8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int64 Int.Int16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int64 Int.Int32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int64 Int where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Int.Int64 Integer where
@@ -225,32 +225,32 @@ instance From.From Int.Int64 Integer where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int64 Word.Word8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int64 Word.Word16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int64 Word.Word32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int64 Word.Word64 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int.Int64 Word where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral' when the input is not negative.
 instance TryFrom.TryFrom Int.Int64 Natural.Natural where
-  tryFrom = Utility.eitherTryCast fromNonNegativeIntegral
+  tryFrom = Utility.eitherTryFrom fromNonNegativeIntegral
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryFrom.TryFrom Int.Int64 Float where
-  tryFrom = Utility.eitherTryCast $ \s -> if s < -maxFloat
+  tryFrom = Utility.eitherTryFrom $ \s -> if s < -maxFloat
     then Left Exception.Underflow
     else if s > maxFloat
       then Left Exception.Overflow
@@ -259,7 +259,7 @@ instance TryFrom.TryFrom Int.Int64 Float where
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryFrom.TryFrom Int.Int64 Double where
-  tryFrom = Utility.eitherTryCast $ \s -> if s < -maxDouble
+  tryFrom = Utility.eitherTryFrom $ \s -> if s < -maxDouble
     then Left Exception.Underflow
     else if s > maxDouble
       then Left Exception.Overflow
@@ -269,15 +269,15 @@ instance TryFrom.TryFrom Int.Int64 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int Int.Int8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int Int.Int16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int Int.Int32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Int Int.Int64 where
@@ -289,32 +289,32 @@ instance From.From Int Integer where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int Word.Word8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int Word.Word16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int Word.Word32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int Word.Word64 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Int Word where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral' when the input is not negative.
 instance TryFrom.TryFrom Int Natural.Natural where
-  tryFrom = Utility.eitherTryCast fromNonNegativeIntegral
+  tryFrom = Utility.eitherTryFrom fromNonNegativeIntegral
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryFrom.TryFrom Int Float where
-  tryFrom = Utility.eitherTryCast $ \s -> if s < -maxFloat
+  tryFrom = Utility.eitherTryFrom $ \s -> if s < -maxFloat
     then Left Exception.Underflow
     else if s > maxFloat
       then Left Exception.Overflow
@@ -323,7 +323,7 @@ instance TryFrom.TryFrom Int Float where
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryFrom.TryFrom Int Double where
-  tryFrom = Utility.eitherTryCast $ \s ->
+  tryFrom = Utility.eitherTryFrom $ \s ->
     if toInteger (maxBound :: Int) <= maxDouble
       then Right $ fromIntegral s
       else if s < -maxDouble
@@ -336,57 +336,57 @@ instance TryFrom.TryFrom Int Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Integer Int.Int8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Integer Int.Int16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Integer Int.Int32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Integer Int.Int64 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Integer Int where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Integer Word.Word8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Integer Word.Word16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Integer Word.Word32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Integer Word.Word64 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Integer Word where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromInteger' when the input is not negative.
 instance TryFrom.TryFrom Integer Natural.Natural where
-  -- This should use @eitherTryCast fromNonNegativeIntegral@, but that causes
+  -- This should use @eitherTryFrom fromNonNegativeIntegral@, but that causes
   -- a bug in GHC 9.0.1. By inlining @fromNonNegativeIntegral@ and replacing
   -- @fromIntegral@ with @fromInteger@, we can work around the bug.
   -- https://mail.haskell.org/pipermail/haskell-cafe/2021-March/133540.html
-  tryFrom = Utility.eitherTryCast
+  tryFrom = Utility.eitherTryFrom
     $ \s -> if s < 0 then Left Exception.Underflow else Right $ fromInteger s
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryFrom.TryFrom Integer Float where
-  tryFrom = Utility.eitherTryCast $ \s -> if s < -maxFloat
+  tryFrom = Utility.eitherTryFrom $ \s -> if s < -maxFloat
     then Left Exception.Underflow
     else if s > maxFloat
       then Left Exception.Overflow
@@ -395,7 +395,7 @@ instance TryFrom.TryFrom Integer Float where
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryFrom.TryFrom Integer Double where
-  tryFrom = Utility.eitherTryCast $ \s -> if s < -maxDouble
+  tryFrom = Utility.eitherTryFrom $ \s -> if s < -maxDouble
     then Left Exception.Underflow
     else if s > maxDouble
       then Left Exception.Overflow
@@ -425,7 +425,7 @@ instance From.From Word.Word8 Natural.Natural where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word8 Int.Int8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Word.Word8 Int.Int16 where
@@ -459,7 +459,7 @@ instance From.From Word.Word8 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word16 Word.Word8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Word.Word16 Word.Word32 where
@@ -479,11 +479,11 @@ instance From.From Word.Word16 Natural.Natural where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word16 Int.Int8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word16 Int.Int16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Word.Word16 Int.Int32 where
@@ -513,11 +513,11 @@ instance From.From Word.Word16 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word32 Word.Word8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word32 Word.Word16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Word.Word32 Word.Word64 where
@@ -525,7 +525,7 @@ instance From.From Word.Word32 Word.Word64 where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word32 Word where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Word.Word32 Natural.Natural where
@@ -533,15 +533,15 @@ instance From.From Word.Word32 Natural.Natural where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word32 Int.Int8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word32 Int.Int16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word32 Int.Int32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Word.Word32 Int.Int64 where
@@ -549,7 +549,7 @@ instance From.From Word.Word32 Int.Int64 where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word32 Int where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Word.Word32 Integer where
@@ -557,7 +557,7 @@ instance From.From Word.Word32 Integer where
 
 -- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryFrom.TryFrom Word.Word32 Float where
-  tryFrom = Utility.eitherTryCast $ \s ->
+  tryFrom = Utility.eitherTryFrom $ \s ->
     if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
 -- | Uses 'fromIntegral'.
@@ -568,19 +568,19 @@ instance From.From Word.Word32 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word64 Word.Word8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word64 Word.Word16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word64 Word.Word32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word64 Word where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Word.Word64 Natural.Natural where
@@ -588,23 +588,23 @@ instance From.From Word.Word64 Natural.Natural where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word64 Int.Int8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word64 Int.Int16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word64 Int.Int32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word64 Int.Int64 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word64 Int where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Word.Word64 Integer where
@@ -612,13 +612,13 @@ instance From.From Word.Word64 Integer where
 
 -- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryFrom.TryFrom Word.Word64 Float where
-  tryFrom = Utility.eitherTryCast $ \s ->
+  tryFrom = Utility.eitherTryFrom $ \s ->
     if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
 -- | Uses 'fromIntegral' when the input is less than or equal to
 -- 9,007,199,254,740,991.
 instance TryFrom.TryFrom Word.Word64 Double where
-  tryFrom = Utility.eitherTryCast $ \s -> if s <= maxDouble
+  tryFrom = Utility.eitherTryFrom $ \s -> if s <= maxDouble
     then Right $ fromIntegral s
     else Left Exception.Overflow
 
@@ -626,15 +626,15 @@ instance TryFrom.TryFrom Word.Word64 Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word Word.Word8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word Word.Word16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word Word.Word32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Word Word.Word64 where
@@ -646,23 +646,23 @@ instance From.From Word Natural.Natural where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word Int.Int8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word Int.Int16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word Int.Int32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word Int.Int64 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word Int where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Word Integer where
@@ -670,13 +670,13 @@ instance From.From Word Integer where
 
 -- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryFrom.TryFrom Word Float where
-  tryFrom = Utility.eitherTryCast $ \s ->
+  tryFrom = Utility.eitherTryFrom $ \s ->
     if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
 -- | Uses 'fromIntegral' when the input is less than or equal to
 -- 9,007,199,254,740,991.
 instance TryFrom.TryFrom Word Double where
-  tryFrom = Utility.eitherTryCast $ \s ->
+  tryFrom = Utility.eitherTryFrom $ \s ->
     if (toInteger (maxBound :: Word) <= maxDouble) || (s <= maxDouble)
       then Right $ fromIntegral s
       else Left Exception.Overflow
@@ -685,43 +685,43 @@ instance TryFrom.TryFrom Word Double where
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Natural.Natural Word.Word8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Natural.Natural Word.Word16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Natural.Natural Word.Word32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Natural.Natural Word.Word64 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Natural.Natural Word where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Natural.Natural Int.Int8 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Natural.Natural Int.Int16 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Natural.Natural Int.Int32 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Natural.Natural Int.Int64 where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Natural.Natural Int where
-  tryFrom = Utility.maybeTryCast Bits.toIntegralSized
+  tryFrom = Utility.maybeTryFrom Bits.toIntegralSized
 
 -- | Uses 'fromIntegral'.
 instance From.From Natural.Natural Integer where
@@ -729,13 +729,13 @@ instance From.From Natural.Natural Integer where
 
 -- | Uses 'fromIntegral' when the input is less than or equal to 16,777,215.
 instance TryFrom.TryFrom Natural.Natural Float where
-  tryFrom = Utility.eitherTryCast $ \s ->
+  tryFrom = Utility.eitherTryFrom $ \s ->
     if s <= maxFloat then Right $ fromIntegral s else Left Exception.Overflow
 
 -- | Uses 'fromIntegral' when the input is less than or equal to
 -- 9,007,199,254,740,991.
 instance TryFrom.TryFrom Natural.Natural Double where
-  tryFrom = Utility.eitherTryCast $ \s -> if s <= maxDouble
+  tryFrom = Utility.eitherTryFrom $ \s -> if s <= maxDouble
     then Right $ fromIntegral s
     else Left Exception.Overflow
 
@@ -764,7 +764,7 @@ instance TryFrom.TryFrom Float Int where
 -- | Converts via 'Rational' when the input is between -16,777,215 and
 -- 16,777,215 inclusive.
 instance TryFrom.TryFrom Float Integer where
-  tryFrom = Utility.eitherTryCast $ \s -> case Utility.tryVia @Rational s of
+  tryFrom = Utility.eitherTryFrom $ \s -> case Utility.tryVia @Rational s of
     Left e -> Left $ Exception.toException e
     Right t
       | t < -maxFloat -> Left $ Exception.toException Exception.Underflow
@@ -797,7 +797,7 @@ instance TryFrom.TryFrom Float Natural.Natural where
 
 -- | Uses 'toRational' when the input is not NaN or infinity.
 instance TryFrom.TryFrom Float Rational where
-  tryFrom = Utility.eitherTryCast $ \s -> if isNaN s
+  tryFrom = Utility.eitherTryFrom $ \s -> if isNaN s
     then Left Exception.LossOfPrecision
     else if isInfinite s
       then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
@@ -832,7 +832,7 @@ instance TryFrom.TryFrom Double Int where
 -- | Converts via 'Rational' when the input is between -9,007,199,254,740,991
 -- and 9,007,199,254,740,991 inclusive.
 instance TryFrom.TryFrom Double Integer where
-  tryFrom = Utility.eitherTryCast $ \s -> case Utility.tryVia @Rational s of
+  tryFrom = Utility.eitherTryFrom $ \s -> case Utility.tryVia @Rational s of
     Left e -> Left $ Exception.toException e
     Right t
       | t < -maxDouble -> Left $ Exception.toException Exception.Underflow
@@ -865,7 +865,7 @@ instance TryFrom.TryFrom Double Natural.Natural where
 
 -- | Uses 'toRational' when the input is not NaN or infinity.
 instance TryFrom.TryFrom Double Rational where
-  tryFrom = Utility.eitherTryCast $ \s -> if isNaN s
+  tryFrom = Utility.eitherTryFrom $ \s -> if isNaN s
     then Left Exception.LossOfPrecision
     else if isInfinite s
       then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
@@ -883,7 +883,7 @@ instance Integral a => From.From a (Ratio.Ratio a) where
 
 -- | Uses 'Ratio.numerator' when the denominator is 1.
 instance (Eq a, Num a) => TryFrom.TryFrom (Ratio.Ratio a) a where
-  tryFrom = Utility.eitherTryCast $ \s -> if Ratio.denominator s == 1
+  tryFrom = Utility.eitherTryFrom $ \s -> if Ratio.denominator s == 1
     then Right $ Ratio.numerator s
     else Left Exception.LossOfPrecision
 
@@ -915,7 +915,7 @@ instance Num a => From.From a (Complex.Complex a) where
 
 -- | Uses 'Complex.realPart' when the imaginary part is 0.
 instance (Eq a, Num a) => TryFrom.TryFrom (Complex.Complex a) a where
-  tryFrom = Utility.eitherTryCast $ \s -> if Complex.imagPart s == 0
+  tryFrom = Utility.eitherTryFrom $ \s -> if Complex.imagPart s == 0
     then Right $ Complex.realPart s
     else Left Exception.LossOfPrecision
 
@@ -923,7 +923,7 @@ instance (Eq a, Num a) => TryFrom.TryFrom (Complex.Complex a) a where
 
 -- | Uses 'NonEmpty.nonEmpty'.
 instance TryFrom.TryFrom [a] (NonEmpty.NonEmpty a) where
-  tryFrom = Utility.maybeTryCast NonEmpty.nonEmpty
+  tryFrom = Utility.maybeTryFrom NonEmpty.nonEmpty
 
 -- | Uses 'NonEmpty.toList'.
 instance From.From (NonEmpty.NonEmpty a) [a] where
@@ -1001,7 +1001,7 @@ instance From.From ByteString.ByteString ShortByteString.ShortByteString where
 
 -- | Uses 'Text.decodeUtf8''.
 instance TryFrom.TryFrom ByteString.ByteString Text.Text where
-  tryFrom = Utility.eitherTryCast Text.decodeUtf8'
+  tryFrom = Utility.eitherTryFrom Text.decodeUtf8'
 
 -- LazyByteString
 
@@ -1019,7 +1019,7 @@ instance From.From LazyByteString.ByteString ByteString.ByteString where
 
 -- | Uses 'LazyText.decodeUtf8''.
 instance TryFrom.TryFrom LazyByteString.ByteString LazyText.Text where
-  tryFrom = Utility.eitherTryCast LazyText.decodeUtf8'
+  tryFrom = Utility.eitherTryFrom LazyText.decodeUtf8'
 
 -- ShortByteString
 

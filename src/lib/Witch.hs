@@ -24,8 +24,8 @@ module Witch
   , Witch.Utility.over
   , Witch.Utility.via
   , Witch.Utility.tryVia
-  , Witch.Utility.maybeTryCast
-  , Witch.Utility.eitherTryCast
+  , Witch.Utility.maybeTryFrom
+  , Witch.Utility.eitherTryFrom
 
   -- ** Unsafe
   -- | These functions should only be used in two circumstances: When you know
@@ -34,8 +34,7 @@ module Witch
   -- In all other cases you should prefer the normal conversion functions like
   -- 'Witch.From.from'. And if you're converting a literal value, consider
   -- using the Template Haskell conversion functions like
-  -- 'Witch.Lift.liftedCast'.
-  , Witch.Utility.unsafeCast
+  -- 'Witch.Lift.liftedFrom'.
   , Witch.Utility.unsafeFrom
   , Witch.Utility.unsafeInto
 
@@ -46,7 +45,6 @@ module Witch
   -- variant uses the @$$(...)@ syntax for splices, doubling up on the dollar
   -- signs. Other than that, using typed Template Haskell should be pretty
   -- much the same as using regular Template Haskell.
-  , Witch.Lift.liftedCast
   , Witch.Lift.liftedFrom
   , Witch.Lift.liftedInto
 

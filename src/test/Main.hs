@@ -62,23 +62,17 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
     Hspec.describe "tryInto" $ do
       test $ hush (Witch.tryInto @Int.Int8 (1 :: Int.Int16)) `Hspec.shouldBe` Just 1
 
-    Hspec.describe "unsafeCast" $ do
-      test $ Witch.unsafeCast (1 :: Int.Int16) `Hspec.shouldBe` (1 :: Int.Int8)
-      test $ Exception.evaluate (Witch.unsafeCast @Int.Int16 @Int.Int8 128) `Hspec.shouldThrow` Hspec.anyException
-
     Hspec.describe "unsafeFrom" $ do
-      test $ Witch.unsafeFrom @Int.Int16 1 `Hspec.shouldBe` (1 :: Int.Int8)
+      test $ Witch.unsafeFrom (1 :: Int.Int16) `Hspec.shouldBe` (1 :: Int.Int8)
+      test $ Exception.evaluate (Witch.unsafeFrom @Int.Int16 @Int.Int8 128) `Hspec.shouldThrow` Hspec.anyException
 
     Hspec.describe "unsafeInto" $ do
       test $ Witch.unsafeInto @Int.Int8 (1 :: Int.Int16) `Hspec.shouldBe` 1
 
   Hspec.describe "Lift" $ do
 
-    Hspec.describe "liftedCast" $ do
-      test $ ($$(Witch.liftedCast (1 :: Int.Int16)) :: Int.Int8) `Hspec.shouldBe` 1
-
     Hspec.describe "liftedFrom" $ do
-      test $ ($$(Witch.liftedFrom @Int.Int16 1) :: Int.Int8) `Hspec.shouldBe` 1
+      test $ ($$(Witch.liftedFrom (1 :: Int.Int16)) :: Int.Int8) `Hspec.shouldBe` 1
 
     Hspec.describe "liftedInto" $ do
       test $ $$(Witch.liftedInto @Int.Int8 (1 :: Int.Int16)) `Hspec.shouldBe` 1

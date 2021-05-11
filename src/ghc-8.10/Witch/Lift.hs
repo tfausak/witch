@@ -7,34 +7,14 @@ import qualified Language.Haskell.TH.Syntax as TH
 import qualified Witch.TryFrom as TryFrom
 import qualified Witch.Utility as Utility
 
--- | This is like 'Utility.unsafeCast' except that it works at compile time
--- rather than runtime.
---
--- > -- Avoid this:
--- > unsafeCast "some literal"
--- >
--- > -- Prefer this:
--- > $$(liftedCast "some literal")
-liftedCast
-  :: forall source target
-   . ( TryFrom.TryFrom source target
-     , TH.Lift target
-     , Show source
-     , Typeable.Typeable source
-     , Typeable.Typeable target
-     )
-  => source
-  -> TH.Q (TH.TExp target)
-liftedCast = TH.liftTyped . Utility.unsafeCast
-
 -- | This is like 'Utility.unsafeFrom' except that it works at compile time
 -- rather than runtime.
 --
 -- > -- Avoid this:
--- > unsafeFrom @s "some literal"
+-- > unsafeFrom "some literal"
 -- >
 -- > -- Prefer this:
--- > $$(liftedFrom @s "some literal")
+-- > $$(liftedFrom "some literal")
 liftedFrom
   :: forall source target
    . ( TryFrom.TryFrom source target
@@ -45,7 +25,7 @@ liftedFrom
      )
   => source
   -> TH.Q (TH.TExp target)
-liftedFrom = liftedCast
+liftedFrom = TH.liftTyped . Utility.unsafeFrom
 
 -- | This is like 'Utility.unsafeInto' except that it works at compile time
 -- rather than runtime.
@@ -65,4 +45,4 @@ liftedInto
      )
   => source
   -> TH.Q (TH.TExp target)
-liftedInto = liftedCast
+liftedInto = liftedFrom

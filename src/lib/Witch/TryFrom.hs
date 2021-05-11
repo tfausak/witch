@@ -16,6 +16,6 @@ class TryFrom source target where
   -- sites you will usually want to use @tryFrom@ or @tryInto@ instead of this
   -- method.
   --
-  -- Consider using @maybeTryCast@ or @eitherTryCast@ to implement this
+  -- Consider using @maybeTryFrom@ or @eitherTryFrom@ to implement this
   -- method.
   tryFrom :: source -> Either (TryFromException.TryFromException source target) target
