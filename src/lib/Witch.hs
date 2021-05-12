@@ -6,19 +6,17 @@
 -- >>> import Witch
 --
 -- In typical usage, you will most likely use 'Witch.Utility.into' for
--- 'Witch.Cast.Cast' instances and 'With.Utility.tryInto' for
--- 'Witch.TryCast.TryCast' instances.
+-- 'Witch.From.From' instances and 'With.Utility.tryInto' for
+-- 'Witch.TryFrom.TryFrom' instances.
 module Witch
   ( -- * Type classes
 
-  -- ** Cast
-    Witch.Cast.Cast(cast)
-  , Witch.Utility.from
+  -- ** From
+    Witch.From.From(from)
   , Witch.Utility.into
 
-  -- ** TryCast
-  , Witch.TryCast.TryCast(tryCast)
-  , Witch.Utility.tryFrom
+  -- ** TryFrom
+  , Witch.TryFrom.TryFrom(tryFrom)
   , Witch.Utility.tryInto
 
   -- * Utilities
@@ -26,18 +24,17 @@ module Witch
   , Witch.Utility.over
   , Witch.Utility.via
   , Witch.Utility.tryVia
-  , Witch.Utility.maybeTryCast
-  , Witch.Utility.eitherTryCast
+  , Witch.Utility.maybeTryFrom
+  , Witch.Utility.eitherTryFrom
 
   -- ** Unsafe
   -- | These functions should only be used in two circumstances: When you know
   -- a conversion is safe even though you can't prove it to the compiler, and
   -- when you're alright with your program crashing if the conversion fails.
   -- In all other cases you should prefer the normal conversion functions like
-  -- 'Witch.Cast.cast'. And if you're converting a literal value, consider
-  -- using the Template Haskell conversion functions like
-  -- 'Witch.Lift.liftedCast'.
-  , Witch.Utility.unsafeCast
+  -- 'Witch.TryFrom.tryFrom'. And if you're converting a literal value,
+  -- consider using the Template Haskell conversion functions like
+  -- 'Witch.Lift.liftedFrom'.
   , Witch.Utility.unsafeFrom
   , Witch.Utility.unsafeInto
 
@@ -48,15 +45,11 @@ module Witch
   -- variant uses the @$$(...)@ syntax for splices, doubling up on the dollar
   -- signs. Other than that, using typed Template Haskell should be pretty
   -- much the same as using regular Template Haskell.
-  , Witch.Lift.liftedCast
   , Witch.Lift.liftedFrom
   , Witch.Lift.liftedInto
 
   -- * Data types
-  , Witch.TryCastException.TryCastException(..)
-
-  -- ** Casting
-  , Witch.Casting.Casting(Casting)
+  , Witch.TryFromException.TryFromException(..)
 
   -- * Notes
 
@@ -68,8 +61,8 @@ module Witch
   -- pitfalls to watch out for.
   --
   -- This library tries to address that problem by providing a common
-  -- interface for converting between types. The 'Witch.Cast.Cast' type class
-  -- is for conversions that cannot fail, and the 'Witch.TryCast.TryCast' type
+  -- interface for converting between types. The 'Witch.From.From' type class
+  -- is for conversions that cannot fail, and the 'Witch.TryFrom.TryFrom' type
   -- class is for conversions that can fail. These type classes are inspired
   -- by the [@From@](https://doc.rust-lang.org/std/convert/trait.From.html)
   -- trait in Rust.
@@ -123,7 +116,7 @@ module Witch
   --   negative 'Int' into a 'Word' will overflow, which may be surprising.
 
   -- ** Instances
-  -- | When should you add a 'Witch.Cast.Cast' (or 'Witch.TryCast.TryCast')
+  -- | When should you add a 'Witch.From.From' (or 'Witch.TryFrom.TryFrom')
   -- instance for some pair of types? This is a surprisingly tricky question
   -- to answer precisely. Instances are driven more by guidelines than rules.
   --
@@ -132,70 +125,41 @@ module Witch
   --
   -- - Conversions should be unambiguous. If there are multiple reasonable
   --   ways to convert from @a@ to @b@, then you probably should not add a
-  --   @Cast@ instance for them.
+  --   'Witch.From.From' instance for them.
   --
-  -- - Conversions should be lossless. If you have @Cast a b@ then no two @a@
+  -- - Conversions should be lossless. If you have @From a b@ then no two @a@
   --   values should be converted to the same @b@ value.
   --
   --   - Some conversions necessarily lose information, like converting from a
   --     list into a set.
   --
-  -- - If you have both @Cast a b@ and @Cast b a@, then
-  --   @cast \@b \@a . cast \@a \@b@ should be the same as 'id'. In other
+  -- - If you have both @From a b@ and @From b a@, then
+  --   @from \@b \@a . from \@a \@b@ should be the same as 'id'. In other
   --   words, @a@ and @b@ are isomorphic.
   --
   --   - This often true, but not always. For example, converting a list into
   --     a set will remove duplicates. And then converting back into a list
   --     will put the elements in ascending order.
   --
-  -- - If you have both @Cast a b@ and @Cast b c@, then you could also have
-  --   @Cast a c@ and it should be the same as @cast \@b \@c . cast \@a \@b@.
-  --   In other words, @Cast@ is transitive.
+  -- - If you have both @From a b@ and @From b c@, then you could also have
+  --   @From a c@ and it should be the same as @from \@b \@c . from \@a \@b@.
+  --   In other words, @From@ is transitive.
   --
   --   - This is not always true. For example an @Int8@ may be represented as
   --     a number in JSON, whereas an @Int64@ might be represented as a
   --     string. That means @into \@JSON (into \@Int64 int8)@ would not be the
   --     same as @into \@JSON int8@.
   --
-  -- In general if @s@ /is/ a @t@, then you should add a 'Witch.Cast.Cast'
+  -- In general if @s@ /is/ a @t@, then you should add a 'Witch.From.From'
   -- instance for it. But if @s@ merely /can be/ a @t@, then you could add a
-  -- 'Witch.TryCast.TryCast' instance for it. And if it is technically
+  -- 'Witch.TryFrom.TryFrom' instance for it. And if it is technically
   -- possible to convert from @s@ to @t@ but there are a lot of caveats, you
   -- probably should not write any instances at all.
-
-  -- ** Type applications
-  -- | This library is designed to be used with the [@TypeApplications@](https://downloads.haskell.org/~ghc/9.0.1/docs/html/users_guide/exts/type_applications.html)
-  -- language extension. Although it is not required for basic functionality,
-  -- it is strongly encouraged. You can use 'Witch.Cast.cast',
-  -- 'Witch.TryCast.tryCast', 'Witch.Utility.unsafeCast', and
-  -- 'Witch.Lift.liftedCast' without type applications. Everything else
-  -- requires a type application.
-
-  -- ** Ambiguous types
-  -- | You may see @Identity@ show up in some type signatures. Anywhere you see
-  -- @Identity a@, you can mentally replace it with @a@. It is a type family
-  -- used to trick GHC into requiring type applications for certain functions.
-  -- If you forget to give a type application, you will see an error like
-  -- this:
-  --
-  -- >>> from (1 :: Int8) :: Int16
-  -- <interactive>:1:1: error:
-  --     * Couldn't match type `Identity s0' with `Int8'
-  --         arising from a use of `from'
-  --       The type variable `s0' is ambiguous
-  --     * In the expression: from (1 :: Int8) :: Int16
-  --       In an equation for `it': it = from (1 :: Int8) :: Int16
-  --
-  -- You can fix the problem by giving a type application:
-  --
-  -- >>> from @Int8 1 :: Int16
-  -- 1
   ) where
 
-import qualified Witch.Cast
-import qualified Witch.Casting
+import qualified Witch.From
 import Witch.Instances ()
 import qualified Witch.Lift
-import qualified Witch.TryCast
-import qualified Witch.TryCastException
+import qualified Witch.TryFrom
+import qualified Witch.TryFromException
 import qualified Witch.Utility

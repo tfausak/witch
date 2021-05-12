@@ -25,6 +25,7 @@ common basics
   default-language: Haskell2010
   ghc-options:
     -Weverything
+    -Wno-all-missed-specialisations
     -Wno-implicit-prelude
     -Wno-missing-deriving-strategies
     -Wno-missing-export-lists
@@ -45,13 +46,11 @@ library
     , template-haskell >= 2.15.0 && < 2.18
   exposed-modules:
     Witch
-    Witch.Cast
-    Witch.Casting
-    Witch.Identity
+    Witch.From
     Witch.Instances
     Witch.Lift
-    Witch.TryCast
-    Witch.TryCastException
+    Witch.TryFrom
+    Witch.TryFromException
     Witch.Utility
   hs-source-dirs: src/lib
 
@@ -68,7 +67,6 @@ test-suite test
 
   build-depends:
     , hspec >= 2.7.9 && < 2.8
-    , QuickCheck >= 2.14.2 && < 2.15
     , witch
   ghc-options:
     -rtsopts
