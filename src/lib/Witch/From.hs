@@ -22,8 +22,8 @@ class From source target where
   -- all. For example:
   --
   -- >>> newtype Name = Name String
-  -- >>> instance 'From' Name String
-  -- >>> instance 'From' String Name
+  -- >>> instance From Name String
+  -- >>> instance From String Name
   from :: source -> target
 
   default from :: Coerce.Coercible source target => source -> target
