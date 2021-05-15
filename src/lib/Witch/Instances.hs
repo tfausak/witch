@@ -25,6 +25,10 @@ import qualified Data.Text as Text
 import qualified Data.Text.Encoding as Text
 import qualified Data.Text.Lazy as LazyText
 import qualified Data.Text.Lazy.Encoding as LazyText
+import qualified Data.Time as Time
+import qualified Data.Time.Clock.POSIX as Time
+import qualified Data.Time.Clock.System as Time
+import qualified Data.Time.Clock.TAI as Time
 import qualified Data.Word as Word
 import qualified GHC.Float as Float
 import qualified Numeric.Natural as Natural
@@ -1078,6 +1082,114 @@ instance From.From LazyText.Text LazyByteString.ByteString where
 instance From.From
   (TryFromException.TryFromException s u)
   (TryFromException.TryFromException s t)
+
+-- Day
+
+-- | Uses 'Time.ModifiedJulianDay'.
+instance From.From Integer Time.Day where
+  from = Time.ModifiedJulianDay
+
+-- | Uses 'Time.toModifiedJulianDay'.
+instance From.From Time.Day Integer where
+  from = Time.toModifiedJulianDay
+
+-- DayOfWeek
+
+-- | Uses 'Time.dayOfWeek'.
+instance From.From Time.Day Time.DayOfWeek where
+  from = Time.dayOfWeek
+
+-- UniversalTime
+
+-- | Uses 'Time.ModJulianDate'.
+instance From.From Rational Time.UniversalTime where
+  from = Time.ModJulianDate
+
+-- | Uses 'Time.getModJulianDate'.
+instance From.From Time.UniversalTime Rational where
+  from = Time.getModJulianDate
+
+-- DiffTime
+
+-- | Uses 'realToFrac'.
+instance From.From Fixed.Pico Time.DiffTime where
+  from = realToFrac
+
+-- | Uses 'realToFrac'.
+instance From.From Time.DiffTime Fixed.Pico where
+  from = realToFrac
+
+-- NominalDiffTime
+
+-- | Uses 'Time.secondsToNominalDiffTime'.
+instance From.From Fixed.Pico Time.NominalDiffTime where
+  from = Time.secondsToNominalDiffTime
+
+-- | Uses 'Time.nominalDiffTimeToSeconds'.
+instance From.From Time.NominalDiffTime Fixed.Pico where
+  from = Time.nominalDiffTimeToSeconds
+
+-- POSIXTime
+
+-- | Uses 'Time.systemToPOSIXTime'.
+instance From.From Time.SystemTime Time.POSIXTime where
+  from = Time.systemToPOSIXTime
+
+-- | Uses 'Time.utcTimeToPOSIXSeconds'.
+instance From.From Time.UTCTime Time.POSIXTime where
+  from = Time.utcTimeToPOSIXSeconds
+
+-- | Uses 'Time.posixSecondsToUTCTime'.
+instance From.From Time.POSIXTime Time.UTCTime where
+  from = Time.posixSecondsToUTCTime
+
+-- SystemTime
+
+-- | Uses 'Time.utcToSystemTime'.
+instance From.From Time.UTCTime Time.SystemTime where
+  from = Time.utcToSystemTime
+
+-- | Uses 'Time.systemToTAITime'.
+instance From.From Time.SystemTime Time.AbsoluteTime where
+  from = Time.systemToTAITime
+
+-- | Uses 'Time.systemToUTCTime'.
+instance From.From Time.SystemTime Time.UTCTime where
+  from = Time.systemToUTCTime
+
+-- TimeOfDay
+
+-- | Uses 'Time.timeToTimeOfDay'.
+instance From.From Time.DiffTime Time.TimeOfDay where
+  from = Time.timeToTimeOfDay
+
+-- | Uses 'Time.dayFractionToTimeOfDay'.
+instance From.From Rational Time.TimeOfDay where
+  from = Time.dayFractionToTimeOfDay
+
+-- | Uses 'Time.timeOfDayToTime'.
+instance From.From Time.TimeOfDay Time.DiffTime where
+  from = Time.timeOfDayToTime
+
+-- | Uses 'Time.timeOfDayToDayFraction'.
+instance From.From Time.TimeOfDay Rational where
+  from = Time.timeOfDayToDayFraction
+
+-- CalendarDiffTime
+
+-- | Uses 'Time.calendarTimeDays'.
+instance From.From Time.CalendarDiffDays Time.CalendarDiffTime where
+  from = Time.calendarTimeDays
+
+-- | Uses 'Time.calendarTimeTime'.
+instance From.From Time.NominalDiffTime Time.CalendarDiffTime where
+  from = Time.calendarTimeTime
+
+-- ZonedTime
+
+-- | Uses 'Time.zonedTimeToUTC'.
+instance From.From Time.ZonedTime Time.UTCTime where
+  from = Time.zonedTimeToUTC
 
 fromNonNegativeIntegral
   :: (Integral s, Num t) => s -> Either Exception.ArithException t

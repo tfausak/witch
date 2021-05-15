@@ -19,6 +19,10 @@ import qualified Data.Sequence as Seq
 import qualified Data.Set as Set
 import qualified Data.Text as Text
 import qualified Data.Text.Lazy as LazyText
+import qualified Data.Time as Time
+import qualified Data.Time.Clock.POSIX as Time
+import qualified Data.Time.Clock.System as Time
+import qualified Data.Time.Clock.TAI as Time
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 import qualified Test.Hspec as Hspec
@@ -1641,6 +1645,114 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
     Hspec.describe "From (TryFromException s t0) (TryFromException s t1)" $ do
       Hspec.it "needs tests" Hspec.pending
 
+    -- Day
+
+    Hspec.describe "From Integer Day" $ do
+      let f = Witch.from @Integer @Time.Day
+      test $ f 0 `Hspec.shouldBe` Time.ModifiedJulianDay 0
+
+    Hspec.describe "From Day Integer" $ do
+      let f = Witch.from @Time.Day @Integer
+      test $ f (Time.ModifiedJulianDay 0) `Hspec.shouldBe` 0
+
+    -- DayOfWeek
+
+    Hspec.describe "From Day DayOfWeek" $ do
+      let f = Witch.from @Time.Day @Time.DayOfWeek
+      test $ f (Time.ModifiedJulianDay 0) `Hspec.shouldBe` Time.Wednesday
+
+    -- UniversalTime
+
+    Hspec.describe "From Rational UniversalTime" $ do
+      let f = Witch.from @Rational @Time.UniversalTime
+      test $ f 0 `Hspec.shouldBe` Time.ModJulianDate 0
+
+    Hspec.describe "From UniversalTime Rational" $ do
+      let f = Witch.from @Time.UniversalTime @Rational
+      test $ f (Time.ModJulianDate 0) `Hspec.shouldBe` 0
+
+    -- DiffTime
+
+    Hspec.describe "From Pico DiffTime" $ do
+      let f = Witch.from @Fixed.Pico @Time.DiffTime
+      test $ f 0 `Hspec.shouldBe` 0
+
+    Hspec.describe "From DiffTime Pico" $ do
+      let f = Witch.from @Time.DiffTime @Fixed.Pico
+      test $ f 0 `Hspec.shouldBe` 0
+
+    -- NominalDiffTime
+
+    Hspec.describe "From Pico NominalDiffTime" $ do
+      let f = Witch.from @Fixed.Pico @Time.NominalDiffTime
+      test $ f 0 `Hspec.shouldBe` 0
+
+    Hspec.describe "From NominalDiffTime Pico" $ do
+      let f = Witch.from @Time.NominalDiffTime @Fixed.Pico
+      test $ f 0 `Hspec.shouldBe` 0
+
+    -- POSIXTime
+
+    Hspec.describe "From SystemTime POSIXTime" $ do
+      let f = Witch.from @Time.SystemTime @Time.POSIXTime
+      test $ f (Time.MkSystemTime 0 0) `Hspec.shouldBe` 0
+
+    Hspec.describe "From UTCTime POSIXTime" $ do
+      let f = Witch.from @Time.UTCTime @Time.POSIXTime
+      test $ f unixEpoch `Hspec.shouldBe` 0
+
+    Hspec.describe "From POSIXTime UTCTime" $ do
+      let f = Witch.from @Time.POSIXTime @Time.UTCTime
+      test $ f 0 `Hspec.shouldBe` unixEpoch
+
+    -- SystemTime
+
+    Hspec.describe "From UTCTime SystemTime" $ do
+      let f = Witch.from @Time.UTCTime @Time.SystemTime
+      test $ f unixEpoch `Hspec.shouldBe` Time.MkSystemTime 0 0
+
+    Hspec.describe "From SystemTime AbsoluteTime" $ do
+      let f = Witch.from @Time.SystemTime @Time.AbsoluteTime
+      test $ f (Time.MkSystemTime (-3506716800) 0) `Hspec.shouldBe` Time.taiEpoch
+
+    Hspec.describe "From SystemTime UTCTime" $ do
+      let f = Witch.from @Time.SystemTime @Time.UTCTime
+      test $ f (Time.MkSystemTime 0 0) `Hspec.shouldBe` unixEpoch
+
+    -- TimeOfDay
+
+    Hspec.describe "From DiffTime TimeOfDay" $ do
+      let f = Witch.from @Time.DiffTime @Time.TimeOfDay
+      test $ f 0 `Hspec.shouldBe` Time.TimeOfDay 0 0 0
+
+    Hspec.describe "From Rational TimeOfDay" $ do
+      let f = Witch.from @Rational @Time.TimeOfDay
+      test $ f 0 `Hspec.shouldBe` Time.TimeOfDay 0 0 0
+
+    Hspec.describe "From TimeOfDay DiffTime" $ do
+      let f = Witch.from @Time.TimeOfDay @Time.DiffTime
+      test $ f (Time.TimeOfDay 0 0 0) `Hspec.shouldBe` 0
+
+    Hspec.describe "From TimeOfDay Rational" $ do
+      let f = Witch.from @Time.TimeOfDay @Rational
+      test $ f (Time.TimeOfDay 0 0 0) `Hspec.shouldBe` 0
+
+    -- CalendarDiffTime
+
+    Hspec.describe "From CalendarDiffDays CalendarDiffTime" $ do
+      let f = Witch.from @Time.CalendarDiffDays @Time.CalendarDiffTime
+      test $ f (Time.CalendarDiffDays 0 0) `Hspec.shouldBe` Time.CalendarDiffTime 0 0
+
+    Hspec.describe "From NominalDiffTime CalendarDiffTime" $ do
+      let f = Witch.from @Time.NominalDiffTime @Time.CalendarDiffTime
+      test $ f 0 `Hspec.shouldBe` Time.CalendarDiffTime 0 0
+
+    -- ZonedTime
+
+    Hspec.describe "From ZonedTime UTCTime" $ do
+      let f = Witch.from @Time.ZonedTime @Time.UTCTime
+      test $ f (Time.ZonedTime (Time.LocalTime (Time.ModifiedJulianDay 0) (Time.TimeOfDay 0 0 0)) Time.utc) `Hspec.shouldBe` Time.UTCTime (Time.ModifiedJulianDay 0) 0
+
 test :: Hspec.Example a => a -> Hspec.SpecWith (Hspec.Arg a)
 test = Hspec.it ""
 
@@ -1649,6 +1761,9 @@ untested = Hspec.runIO $ Exception.throwIO Untested
 
 hush :: Either x a -> Maybe a
 hush = either (const Nothing) Just
+
+unixEpoch :: Time.UTCTime
+unixEpoch = Time.UTCTime (Time.ModifiedJulianDay 40587) 0
 
 data Untested
   = Untested
