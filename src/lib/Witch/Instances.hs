@@ -1089,7 +1089,7 @@ instance From.From
 instance From.From Integer Time.Day where
   from = Time.ModifiedJulianDay
 
--- | Uses 'Time.nominalDiffTimeToSeconds'.
+-- | Uses 'Time.toModifiedJulianDay'.
 instance From.From Time.Day Integer where
   from = Time.toModifiedJulianDay
 
