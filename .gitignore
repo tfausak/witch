@@ -1,4 +1,6 @@
+/.ghc.environment*
 /.stack-work/
 /cabal.project.freeze
 /dist-newstyle/
+/dist/
 /stack.yaml.lock
