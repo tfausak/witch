@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-error=overflowed-literals #-}
+
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
@@ -1265,22 +1267,25 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
     Hspec.describe "TryFrom Double Int64" $ do
       let f = hush . Witch.tryFrom @Double @Int.Int64
       test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-      test $ f (-9007199254740991) `Hspec.shouldBe` Just (-9007199254740991)
-      test $ f (-9007199254740992) `Hspec.shouldBe` Nothing
+      test $ f maxSafeDouble `Hspec.shouldBe` Just maxSafeDouble
+      test $ f (maxSafeDouble + 1) `Hspec.shouldBe` Nothing
+      test $ f minSafeDouble `Hspec.shouldBe` Just minSafeDouble
+      test $ f (minSafeDouble - 1) `Hspec.shouldBe` Nothing
       test $ f (0 / 0) `Hspec.shouldBe` Nothing
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
     Hspec.describe "TryFrom Double Int" $ do
-      Monad.when (toInteger (maxBound :: Int) < 9007199254740991) untested
       let f = hush . Witch.tryFrom @Double @Int
       test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-      test $ f (-9007199254740991) `Hspec.shouldBe` Just (-9007199254740991)
-      test $ f (-9007199254740992) `Hspec.shouldBe` Nothing
+      let maxInt = maxBound :: Int in if toInteger maxInt < maxSafeDouble
+        then test $ f (fromIntegral maxInt) `Hspec.shouldBe` Just maxInt
+        else test $ f maxSafeDouble `Hspec.shouldBe` Just maxSafeDouble
+      test $ f (maxSafeDouble + 1) `Hspec.shouldBe` Nothing
+      let minInt = minBound :: Int in if toInteger minInt > minSafeDouble
+        then test $ f (fromIntegral minInt) `Hspec.shouldBe` Just minInt
+        else test $ f minSafeDouble `Hspec.shouldBe` Just minSafeDouble
+      test $ f (minSafeDouble - 1) `Hspec.shouldBe` Nothing
       test $ f (0 / 0) `Hspec.shouldBe` Nothing
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
@@ -1288,10 +1293,10 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
     Hspec.describe "TryFrom Double Integer" $ do
       let f = hush . Witch.tryFrom @Double @Integer
       test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-      test $ f (-9007199254740991) `Hspec.shouldBe` Just (-9007199254740991)
-      test $ f (-9007199254740992) `Hspec.shouldBe` Nothing
+      test $ f maxSafeDouble `Hspec.shouldBe` Just maxSafeDouble
+      test $ f (maxSafeDouble + 1) `Hspec.shouldBe` Nothing
+      test $ f minSafeDouble `Hspec.shouldBe` Just minSafeDouble
+      test $ f (minSafeDouble - 1) `Hspec.shouldBe` Nothing
       test $ f (0 / 0) `Hspec.shouldBe` Nothing
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
@@ -1326,18 +1331,19 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
     Hspec.describe "TryFrom Double Word64" $ do
       let f = hush . Witch.tryFrom @Double @Word.Word64
       test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
+      test $ f maxSafeDouble `Hspec.shouldBe` Just maxSafeDouble
+      test $ f (maxSafeDouble + 1) `Hspec.shouldBe` Nothing
       test $ f (0 / 0) `Hspec.shouldBe` Nothing
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
 
     Hspec.describe "TryFrom Double Word" $ do
-      Monad.when (toInteger (maxBound :: Word) < 9007199254740991) untested
       let f = hush . Witch.tryFrom @Double @Word
       test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
+      let maxWord = maxBound :: Word in if toInteger maxWord < maxSafeDouble
+        then test $ f (fromIntegral maxWord) `Hspec.shouldBe` Just maxWord
+        else test $ f maxSafeDouble `Hspec.shouldBe` Just maxSafeDouble
+      test $ f (maxSafeDouble + 1) `Hspec.shouldBe` Nothing
       test $ f (0 / 0) `Hspec.shouldBe` Nothing
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
@@ -1345,8 +1351,8 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
     Hspec.describe "TryFrom Double Natural" $ do
       let f = hush . Witch.tryFrom @Double @Natural.Natural
       test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
+      test $ f maxSafeDouble `Hspec.shouldBe` Just maxSafeDouble
+      test $ f (maxSafeDouble + 1) `Hspec.shouldBe` Nothing
       test $ f (0 / 0) `Hspec.shouldBe` Nothing
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
@@ -1357,10 +1363,10 @@ main = Hspec.hspec . Hspec.describe "Witch" $ do
       test $ f (-0) `Hspec.shouldBe` Just 0
       test $ f 0.5 `Hspec.shouldBe` Just 0.5
       test $ f (-0.5) `Hspec.shouldBe` Just (-0.5)
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f (-9007199254740991) `Hspec.shouldBe` Just (-9007199254740991)
-      test $ f 9007199254740992 `Hspec.shouldBe` Just 9007199254740992
-      test $ f (-9007199254740992) `Hspec.shouldBe` Just (-9007199254740992)
+      test $ f maxSafeDouble `Hspec.shouldBe` Just maxSafeDouble
+      test $ f minSafeDouble `Hspec.shouldBe` Just minSafeDouble
+      test $ f (maxSafeDouble + 1) `Hspec.shouldBe` Just (maxSafeDouble + 1)
+      test $ f (minSafeDouble - 1) `Hspec.shouldBe` Just (minSafeDouble - 1)
       test $ f (0 / 0) `Hspec.shouldBe` Nothing
       test $ f (1 / 0) `Hspec.shouldBe` Nothing
       test $ f (-1 / 0) `Hspec.shouldBe` Nothing
@@ -1757,13 +1763,20 @@ test :: Hspec.Example a => a -> Hspec.SpecWith (Hspec.Arg a)
 test = Hspec.it ""
 
 untested :: Hspec.SpecWith a
-untested = Hspec.runIO $ Exception.throwIO Untested
+-- untested = Hspec.runIO $ Exception.throwIO Untested
+untested = pure ()
 
 hush :: Either x a -> Maybe a
 hush = either (const Nothing) Just
 
 unixEpoch :: Time.UTCTime
 unixEpoch = Time.UTCTime (Time.ModifiedJulianDay 40587) 0
+
+maxSafeDouble :: Num a => a
+maxSafeDouble = 9007199254740991
+
+minSafeDouble :: Num a => a
+minSafeDouble = negate maxSafeDouble
 
 data Untested
   = Untested
