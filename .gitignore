@@ -1,6 +1,8 @@
+/.cabal-sandbox/
 /.ghc.environment*
 /.stack-work/
 /cabal.project.freeze
+/cabal.sandbox.config
 /dist-newstyle/
 /dist/
 /stack.yaml.lock
