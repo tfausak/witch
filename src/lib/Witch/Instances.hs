@@ -254,9 +254,7 @@ instance TryFrom.TryFrom Int.Int64 Natural.Natural where
   -- This should use @eitherTryFrom fromNonNegativeIntegral@, but that causes
   -- a bug in GHC 9.0.1.
   -- https://mail.haskell.org/pipermail/haskell-cafe/2021-March/133540.html
-  tryFrom s = case TryFrom.tryFrom (From.from s :: Integer) of
-    Left (TryFromException.TryFromException _ e) -> Left $ TryFromException.TryFromException s e
-    Right t -> Right t
+  tryFrom = Utility.eitherTryFrom $ \ s -> TryFrom.tryFrom (From.from s :: Integer)
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
