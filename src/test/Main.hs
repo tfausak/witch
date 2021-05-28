@@ -1003,8 +1003,8 @@ main = runTestTTAndExit $ "Witch" ~:
       , let x = maxBound :: Word in if toInteger x >= 9007199254740991
         then f 9007199254740991 ~?= Just 9007199254740991
         else f x ~?= Just (fromIntegral x)
-      , let x = maxBound :: Word in if toInteger x >= 9007199254740991
-        then f 9007199254740991 ~?= Nothing
+      , let x = maxBound :: Word in if toInteger x >= 9007199254740992
+        then f 9007199254740992 ~?= Nothing
         else f x ~?= Just (fromIntegral x)
       ]
     , "TryFrom Natural Word8" ~:
@@ -1278,7 +1278,7 @@ main = runTestTTAndExit $ "Witch" ~:
         then f 9007199254740991 ~?= Just 9007199254740991
         else f (fromIntegral x) ~?= Just x
       , f 9007199254740992 ~?= Nothing
-      , let x = maxBound :: Int in if toInteger x <= (-9007199254740991)
+      , let x = minBound :: Int in if toInteger x <= (-9007199254740991)
         then f (-9007199254740991) ~?= Just (-9007199254740991)
         else f (fromIntegral x) ~?= Just x
       , f (-9007199254740992) ~?= Nothing
