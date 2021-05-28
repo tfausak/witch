@@ -190,6 +190,25 @@ module Witch
   -- possible to convert from @s@ to @t@ but there are a lot of caveats, you
   -- probably should not write any instances at all.
 
+  -- ** Integral types
+  -- | There are a lot of types that represent various different ranges of
+  -- integers, and Witch may not provide the instances you want. In particular
+  -- it does not provide a total way to convert from an @Int32@ into an @Int@.
+  -- Why is that?
+  --
+  -- The Haskell Language Report only demands that @Int@s have at least 30
+  -- bits of precision. That means a reasonable Haskell implementation could
+  -- have an @Int@ type that's smaller than the @Int32@ type.
+  --
+  -- However in practice everyone uses the same Haskell implementation: GHC.
+  -- And with GHC the @Int@ type always has 32 bits of precision, even on
+  -- 32-bit architectures. So for almost everybody, it's probably safe to use
+  -- @unsafeFrom \@Int32 \@Int@. Similarly most software these days runs on
+  -- machines with 64-bit architectures. That means it's also probably safe
+  -- for you to use @unsafeFrom \@Int64 \@Int@.
+  --
+  -- All of the above also applies for @Word@, @Word32@, and @Word64@.
+
   --  ** Downsides
   -- | As the author of this library, I obviously think that everyone should
   -- use it because it's the greatest thing since sliced bread. But nothing is
