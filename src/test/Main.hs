@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-error=overflowed-literals #-}
+
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
@@ -363,8 +365,12 @@ main = runTestTTAndExit $ "Witch" ~:
     , "TryFrom Int64 Int" ~:
       let f = hush . Witch.tryFrom @Int.Int64 @Int in
       [ f 0 ~?= Just 0
-      -- , f 9223372036854775807 ~?= Just 9223372036854775807
-      -- , f (-9223372036854775808) ~?= Just (-9223372036854775808)
+      , let x = maxBound :: Int in if toInteger x >= 9223372036854775807
+        then f 9223372036854775807 ~?= Just 9223372036854775807
+        else f (fromIntegral x) ~?= Just x
+      , let x = minBound :: Int in if toInteger x <= (-9223372036854775808)
+        then f (-9223372036854775808) ~?= Just (-9223372036854775808)
+        else f (fromIntegral x) ~?= Just x
       ]
     , "From Int64 Integer" ~:
       let f = Witch.from @Int.Int64 @Integer in
@@ -401,7 +407,9 @@ main = runTestTTAndExit $ "Witch" ~:
     , "TryFrom Int64 Word" ~:
       let f = hush . Witch.tryFrom @Int.Int64 @Word in
       [ f 0 ~?= Just 0
-      -- , f 9223372036854775807 ~?= Just 9223372036854775807
+      , let x = maxBound :: Word in if toInteger x >= 9223372036854775807
+        then f 9223372036854775807 ~?= Just 9223372036854775807
+        else f (fromIntegral x) ~?= Just x
       , f (-1) ~?= Nothing
       ]
     , "TryFrom Int64 Natural" ~:
@@ -446,9 +454,13 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = hush . Witch.tryFrom @Int @Int.Int32 in
       [ f 0 ~?= Just 0
       , f 2147483647 ~?= Just 2147483647
-      -- , f 2147483648 ~?= Nothing
+      , let x = maxBound :: Int in if toInteger x >= 2147483648
+        then f 2147483648 ~?= Nothing
+        else f x ~?= Just (fromIntegral x)
       , f (-2147483648) ~?= Just (-2147483648)
-      -- , f (-2147483649) ~?= Nothing
+      , let x = minBound :: Int in if toInteger x <= (-2147483649)
+        then f (-2147483649) ~?= Nothing
+        else f x ~?= Just (fromIntegral x)
       ]
     , "From Int Int64" ~:
       let f = Witch.from @Int @Int.Int64 in
@@ -479,8 +491,12 @@ main = runTestTTAndExit $ "Witch" ~:
     , "TryFrom Int Word32" ~:
       let f = hush . Witch.tryFrom @Int @Word.Word32 in
       [ f 0 ~?= Just 0
-      -- , f 4294967295 ~?= Just 4294967295
-      -- , f 4294967296 ~?= Nothing
+      , let x = maxBound :: Int in if toInteger x >= 4294967295
+        then f 4294967295 ~?= Just 4294967295
+        else f x ~?= Just (fromIntegral x)
+      , let x = maxBound :: Int in if toInteger x >= 4294967296
+        then f 4294967296 ~?= Nothing
+        else f x ~?= Just (fromIntegral x)
       , f (-1) ~?= Nothing
       ]
     , "TryFrom Int Word64" ~:
@@ -512,10 +528,18 @@ main = runTestTTAndExit $ "Witch" ~:
     , "TryFrom Int Double" ~:
       let f = hush . Witch.tryFrom @Int @Double in
       [ f 0 ~?= Just 0
-      -- , f 9007199254740991 ~?= Just 9007199254740991
-      -- , f 9007199254740992 ~?= Nothing
-      -- , f (-9007199254740991) ~?= Just (-9007199254740991)
-      -- , f (-9007199254740992) ~?= Nothing
+      , let x = maxBound :: Int in if toInteger x >= 9007199254740991
+        then f 9007199254740991 ~?= Just 9007199254740991
+        else f x ~?= Just (fromIntegral x)
+      , let x = maxBound :: Int in if toInteger x >= 9007199254740992
+        then f 9007199254740992 ~?= Nothing
+        else f x ~?= Just (fromIntegral x)
+      , let x = minBound :: Int in if toInteger x <= (-9007199254740991)
+        then f (-9007199254740991) ~?= Just (-9007199254740991)
+        else f x ~?= Just (fromIntegral x)
+      , let x = minBound :: Int in if toInteger x <= (-9007199254740992)
+        then f (-9007199254740992) ~?= Nothing
+        else f x ~?= Just (fromIntegral x)
       ]
     , "TryFrom Integer Int8" ~:
       let f = hush . Witch.tryFrom @Integer @Int.Int8 in
@@ -801,7 +825,9 @@ main = runTestTTAndExit $ "Witch" ~:
     , "TryFrom Word32 Int" ~:
       let f = hush . Witch.tryFrom @Word.Word32 @Int in
       [ f 0 ~?= Just 0
-      -- , f 4294967295 ~?= Just 4294967295
+      , let x = maxBound :: Int in if toInteger x >= 4294967295
+        then f 4294967295 ~?= Just 4294967295
+        else f (fromIntegral x) ~?= Just x
       ]
     , "From Word32 Integer" ~:
       let f = Witch.from @Word.Word32 @Integer in
@@ -840,7 +866,9 @@ main = runTestTTAndExit $ "Witch" ~:
     , "TryFrom Word64 Word" ~:
       let f = hush . Witch.tryFrom @Word.Word64 @Word in
       [ f 0 ~?= Just 0
-      -- , f 18446744073709551615 ~?= Just 18446744073709551615
+      , let x = maxBound :: Word in if toInteger x >= 18446744073709551615
+        then f 18446744073709551615 ~?= Just 18446744073709551615
+        else f (fromIntegral x) ~?= Just x
       ]
     , "From Word64 Natural" ~:
       let f = Witch.from @Word.Word64 @Natural.Natural in
@@ -910,7 +938,9 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = hush . Witch.tryFrom @Word @Word.Word32 in
       [ f 0 ~?= Just 0
       , f 4294967295 ~?= Just 4294967295
-      -- , f 4294967296 ~?= Nothing
+      , let x = maxBound :: Word in if toInteger x >= 4294967296
+        then f 4294967296 ~?= Nothing
+        else f x ~?= Just (fromIntegral x)
       ]
     , "From Word Word64" ~:
       let f = Witch.from @Word @Word.Word64 in
@@ -943,8 +973,12 @@ main = runTestTTAndExit $ "Witch" ~:
     , "TryFrom Word Int64" ~:
       let f = hush . Witch.tryFrom @Word @Int.Int64 in
       [ f 0 ~?= Just 0
-      -- , f 9223372036854775807 ~?= Just 9223372036854775807
-      -- , f 9223372036854775808 ~?= Nothing
+      , let x = maxBound :: Word in if toInteger x >= 9223372036854775807
+        then f 9223372036854775807 ~?= Just 9223372036854775807
+        else f x ~?= Just (fromIntegral x)
+      , let x = maxBound :: Word in if toInteger x >= 9223372036854775808
+        then f 9223372036854775808 ~?= Nothing
+        else f x ~?= Just (fromIntegral x)
       ]
     , "TryFrom Word Int" ~:
       let f = hush . Witch.tryFrom @Word @Int in
@@ -966,8 +1000,12 @@ main = runTestTTAndExit $ "Witch" ~:
     , "TryFrom Word Double" ~:
       let f = hush . Witch.tryFrom @Word @Double in
       [ f 0 ~?= Just 0
-      -- , f 9007199254740991 ~?= Just 9007199254740991
-      -- , f 9007199254740992 ~?= Nothing
+      , let x = maxBound :: Word in if toInteger x >= 9007199254740991
+        then f 9007199254740991 ~?= Just 9007199254740991
+        else f x ~?= Just (fromIntegral x)
+      , let x = maxBound :: Word in if toInteger x >= 9007199254740991
+        then f 9007199254740991 ~?= Nothing
+        else f x ~?= Just (fromIntegral x)
       ]
     , "TryFrom Natural Word8" ~:
       let f = hush . Witch.tryFrom @Natural.Natural @Word.Word8 in
@@ -1236,9 +1274,13 @@ main = runTestTTAndExit $ "Witch" ~:
     , "TryFrom Double Int" ~:
       let f = hush . Witch.tryFrom @Double @Int in
       [ f 0 ~?= Just 0
-      -- , f 9007199254740991 ~?= Just 9007199254740991
+      , let x = maxBound :: Int in if toInteger x >= 9007199254740991
+        then f 9007199254740991 ~?= Just 9007199254740991
+        else f (fromIntegral x) ~?= Just x
       , f 9007199254740992 ~?= Nothing
-      -- , f (-9007199254740991) ~?= Just (-9007199254740991)
+      , let x = maxBound :: Int in if toInteger x <= (-9007199254740991)
+        then f (-9007199254740991) ~?= Just (-9007199254740991)
+        else f (fromIntegral x) ~?= Just x
       , f (-9007199254740992) ~?= Nothing
       , f (0 / 0) ~?= Nothing
       , f (1 / 0) ~?= Nothing
@@ -1294,7 +1336,9 @@ main = runTestTTAndExit $ "Witch" ~:
     , "TryFrom Double Word" ~:
       let f = hush . Witch.tryFrom @Double @Word in
       [ f 0 ~?= Just 0
-      -- , f 9007199254740991 ~?= Just 9007199254740991
+      , let x = maxBound :: Word in if toInteger x >= 9007199254740991
+        then f 9007199254740991 ~?= Just 9007199254740991
+        else f (fromIntegral x) ~?= Just x
       , f 9007199254740992 ~?= Nothing
       , f (0 / 0) ~?= Nothing
       , f (1 / 0) ~?= Nothing
