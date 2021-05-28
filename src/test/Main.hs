@@ -8,6 +8,7 @@ import qualified Data.ByteString as ByteString
 import qualified Data.ByteString.Lazy as LazyByteString
 import qualified Data.ByteString.Short as ShortByteString
 import qualified Data.Complex as Complex
+import qualified Data.Either as Either
 import qualified Data.Fixed as Fixed
 import qualified Data.Int as Int
 import qualified Data.IntMap as IntMap
@@ -25,83 +26,87 @@ import qualified Data.Time.Clock.System as Time
 import qualified Data.Time.Clock.TAI as Time
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
-import qualified Test.Hspec as Hspec
+import Test.HUnit (Test(TestCase), assertBool, runTestTTAndExit, (~:), (~?=))
 import qualified Witch
 
 main :: IO ()
-main = Hspec.hspec . Hspec.describe "Witch" $ do
+main = runTestTTAndExit $ "Witch" ~:
+  [ "From" ~:
+    [ "from" ~:
+      [ Witch.from (1 :: Int.Int8) ~?= (1 :: Int.Int16)
+      ]
+    ]
+  , "TryFrom" ~:
+    [ "tryFrom" ~:
+      let f = hush . Witch.tryFrom @Int.Int16 @Int.Int8 in
+      [ f 1 ~?= Just 1
+      , f 128 ~?= Nothing
+      ]
+    ]
+  , "Utility" ~:
+    [ "as" ~:
+      [ Witch.as @Int.Int8 1 ~?= 1
+      ]
+    , "from" ~:
+      [ Witch.from @Int.Int8 1 ~?= (1 :: Int.Int16)
+      ]
+    , "into" ~:
+      [ Witch.into @Int.Int16 (1 :: Int.Int8) ~?= 1
+      ]
+    , "over" ~:
+      [ Witch.over @Int.Int8 (+ 1) (Age 1) ~?= Age 2
+      ]
+    , "via" ~:
+      [ Witch.via @Int.Int16 (1 :: Int.Int8) ~?= (1 :: Int.Int32)
+      ]
+    , "tryFrom" ~:
+      [ hush (Witch.tryFrom @Int.Int16 1) ~?= Just (1 :: Int.Int8)
+      ]
+    , "tryInto" ~:
+      [ hush (Witch.tryInto @Int.Int8 (1 :: Int.Int16)) ~?= Just 1
+      ]
+    , "tryVia" ~:
+      let f = Witch.tryVia @Int.Int16 @Int.Int32 @Int.Int8 in
+      [ hush (f 1) ~?= Just 1
+      , hush (f 128) ~?= Nothing
+      , hush (f 32768) ~?= Nothing
+      ]
+    , "unsafeFrom" ~:
+      let f = Witch.unsafeFrom @Int.Int16 @Int.Int8 in
+      [ f 1 ~?= 1
+      , TestCase $ do
+        result <- Exception.try @Exception.SomeException . Exception.evaluate $ f 128
+        assertBool (show result) $ Either.isLeft result
+      ]
+    , "unsafeInto" ~:
+      [ Witch.unsafeInto @Int.Int8 (1 :: Int.Int16) ~?= 1
+      ]
+    ]
+  , "Lift" ~:
+    [ "liftedFrom" ~:
+      [ ($$(Witch.liftedFrom (1 :: Int.Int16)) :: Int.Int8) ~?= 1
+      ]
+    , "liftedInto" ~:
+      [ $$(Witch.liftedInto @Int.Int8 (1 :: Int.Int16)) ~?= 1
+      ]
+    ]
+  , "Instances" ~:
+    [ "From Int8 Int16" ~:
+      let f = Witch.from @Int.Int8 @Int.Int16 in
+      [ f 0 ~?= 0
+      , f 127 ~?= 127
+      , f (-128) ~?= (-128)
+      ]
+    , "From Int8 Int32" ~:
+      let f = Witch.from @Int.Int8 @Int.Int32 in
+      [ f 0 ~?= 0
+      , f 127 ~?= 127
+      , f (-128) ~?= (-128)
+      ]
+    ]
+  ]
 
-  Hspec.describe "From" $ do
-
-    Hspec.describe "from" $ do
-      test $ Witch.from (1 :: Int.Int8) `Hspec.shouldBe` (1 :: Int.Int16)
-
-  Hspec.describe "TryFrom" $ do
-
-    Hspec.describe "tryFrom" $ do
-      let f = hush . Witch.tryFrom @Int.Int16 @Int.Int8
-      test $ f 1 `Hspec.shouldBe` Just 1
-      test $ f 128 `Hspec.shouldBe` Nothing
-
-  Hspec.describe "Utility" $ do
-
-    Hspec.describe "as" $ do
-      test $ Witch.as @Int.Int8 1 `Hspec.shouldBe` 1
-
-    Hspec.describe "from" $ do
-      test $ Witch.from @Int.Int8 1 `Hspec.shouldBe` (1 :: Int.Int16)
-
-    Hspec.describe "into" $ do
-      test $ Witch.into @Int.Int16 (1 :: Int.Int8) `Hspec.shouldBe` 1
-
-    Hspec.describe "over" $ do
-      test $ Witch.over @Int.Int8 (+ 1) (Age 1) `Hspec.shouldBe` Age 2
-
-    Hspec.describe "via" $ do
-      test $ Witch.via @Int.Int16 (1 :: Int.Int8) `Hspec.shouldBe` (1 :: Int.Int32)
-
-    Hspec.describe "tryFrom" $ do
-      test $ hush (Witch.tryFrom @Int.Int16 1) `Hspec.shouldBe` Just (1 :: Int.Int8)
-
-    Hspec.describe "tryInto" $ do
-      test $ hush (Witch.tryInto @Int.Int8 (1 :: Int.Int16)) `Hspec.shouldBe` Just 1
-
-    Hspec.describe "tryVia" $ do
-      let f = Witch.tryVia @Int.Int16 @Int.Int32 @Int.Int8
-      test $ hush (f 1) `Hspec.shouldBe` Just 1
-      test $ hush (f 128) `Hspec.shouldBe` Nothing
-      test $ hush (f 32768) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "unsafeFrom" $ do
-      test $ Witch.unsafeFrom (1 :: Int.Int16) `Hspec.shouldBe` (1 :: Int.Int8)
-      test $ Exception.evaluate (Witch.unsafeFrom @Int.Int16 @Int.Int8 128) `Hspec.shouldThrow` Hspec.anyException
-
-    Hspec.describe "unsafeInto" $ do
-      test $ Witch.unsafeInto @Int.Int8 (1 :: Int.Int16) `Hspec.shouldBe` 1
-
-  Hspec.describe "Lift" $ do
-
-    Hspec.describe "liftedFrom" $ do
-      test $ ($$(Witch.liftedFrom (1 :: Int.Int16)) :: Int.Int8) `Hspec.shouldBe` 1
-
-    Hspec.describe "liftedInto" $ do
-      test $ $$(Witch.liftedInto @Int.Int8 (1 :: Int.Int16)) `Hspec.shouldBe` 1
-
-  Hspec.describe "Instances" $ do
-
-    -- Int8
-
-    Hspec.describe "From Int8 Int16" $ do
-      let f = Witch.from @Int.Int8 @Int.Int16
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 127 `Hspec.shouldBe` 127
-      test $ f (-128) `Hspec.shouldBe` (-128)
-
-    Hspec.describe "From Int8 Int32" $ do
-      let f = Witch.from @Int.Int8 @Int.Int32
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 127 `Hspec.shouldBe` 127
-      test $ f (-128) `Hspec.shouldBe` (-128)
+{-
 
     Hspec.describe "From Int8 Int64" $ do
       let f = Witch.from @Int.Int8 @Int.Int64
@@ -1759,9 +1764,6 @@ test = Hspec.it ""
 untested :: Hspec.SpecWith a
 untested = Hspec.runIO $ Exception.throwIO Untested
 
-hush :: Either x a -> Maybe a
-hush = either (const Nothing) Just
-
 unixEpoch :: Time.UTCTime
 unixEpoch = Time.UTCTime (Time.ModifiedJulianDay 40587) 0
 
@@ -1770,6 +1772,11 @@ data Untested
   deriving (Eq, Show)
 
 instance Exception.Exception Untested
+
+-}
+
+hush :: Either x a -> Maybe a
+hush = either (const Nothing) Just
 
 newtype Age
   = Age Int.Int8
