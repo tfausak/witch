@@ -221,7 +221,7 @@ module Witch
   --
   -- - The @From@ type class works great for specific pairs of types, but can
   --   get confusing when it's polymorphic. For example if you have some
-  --   function with a `From s t` constraint, that doesn't really tell you
+  --   function with a @From s t@ constraint, that doesn't really tell you
   --   anything about what it's doing.
   ) where
 
