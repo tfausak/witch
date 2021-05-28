@@ -251,7 +251,10 @@ instance TryFrom.TryFrom Int.Int64 Word where
 
 -- | Uses 'fromIntegral' when the input is not negative.
 instance TryFrom.TryFrom Int.Int64 Natural.Natural where
-  tryFrom = Utility.eitherTryFrom fromNonNegativeIntegral
+  -- This should use @eitherTryFrom fromNonNegativeIntegral@, but that causes
+  -- a bug in GHC 9.0.1.
+  -- https://mail.haskell.org/pipermail/haskell-cafe/2021-March/133540.html
+  tryFrom = Utility.eitherTryFrom $ \ s -> TryFrom.tryFrom (From.from s :: Integer)
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
@@ -590,7 +593,9 @@ instance TryFrom.TryFrom Word.Word64 Word where
 
 -- | Uses 'fromIntegral'.
 instance From.From Word.Word64 Natural.Natural where
-  from = fromIntegral
+  -- This should use @fromIntegral@, but that causes a bug in GHC 9.0.1.
+  -- https://mail.haskell.org/pipermail/haskell-cafe/2021-March/133540.html
+  from s = Utility.unsafeFrom (From.from s :: Integer)
 
 -- | Uses 'Bits.toIntegralSized'.
 instance TryFrom.TryFrom Word.Word64 Int.Int8 where

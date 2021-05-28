@@ -12,7 +12,6 @@ on:
 jobs:
   build:
     strategy:
-      fail-fast: false
       matrix:
         include:
           - { os: ubuntu-20.04, ghc: 9.0.1, cabal: 3.4.0.0 }
@@ -48,3 +47,8 @@ jobs:
       - run: cabal check
       - if: github.event_name == 'release' && matrix.os == 'ubuntu-20.04' && matrix.ghc == '9.0.1'
         run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' dist-newstyle/sdist/witch-*.tar.gz
+  i386:
+     runs-on: ubuntu-20.04
+     steps:
+       - uses: actions/checkout@v2
+       - run: docker run --rm --user 0 --volume "$PWD:$PWD" --workdir "$PWD" taylorfausak/i386-haskell@sha256:450720742fa69258c0a8589dcac28c3c6d5d34718172d935b385520f4ee9128e sh -c 'cabal update && cabal test --test-show-details direct'
