@@ -37,6 +37,7 @@ import qualified Witch.TryFrom as TryFrom
 import qualified Witch.TryFromException as TryFromException
 import qualified Witch.Utility as Utility
 
+-- | Uses 'id'.
 instance From.From a a where
   from = id
 

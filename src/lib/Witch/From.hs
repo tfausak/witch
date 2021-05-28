@@ -10,11 +10,17 @@ import qualified Data.Coerce as Coerce
 -- you can convert from a value of type @source@ into a value of type
 -- @target@.
 --
--- This type class is for conversions that cannot fail. If your conversion can
--- fail, consider implementing @TryFrom@ instead.
+-- This type class is for conversions that always succeed. If your conversion
+-- sometimes fails, consider implementing @TryFrom@ instead.
 class From source target where
   -- | This method implements the conversion of a value between types. At call
-  -- sites you will usually want to use @into@ instead of this method.
+  -- sites you may prefer to use @into@ instead.
+  --
+  -- > -- Avoid this:
+  -- > from (x :: s)
+  -- >
+  -- > -- Prefer this:
+  -- > from @s x
   --
   -- The default implementation of this method simply calls 'Coerce.coerce',
   -- which works for types that have the same runtime representation. This

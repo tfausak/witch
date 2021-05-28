@@ -96,9 +96,9 @@ tryInto = TryFrom.tryFrom
 --
 -- > -- Avoid this:
 -- > case tryInto @u x of
--- >   Left _ -> Left ...
+-- >   Left (TryFromException _ e) -> Left $ TryFromException x e
 -- >   Right y -> case tryFrom @u y of
--- >     Left _ -> Left ...
+-- >     Left (TryFromException _ e) -> Left $ TryFromException x e
 -- >     Right z -> Right z
 -- >
 -- > -- Prefer this:

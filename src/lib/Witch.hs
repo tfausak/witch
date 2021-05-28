@@ -5,9 +5,9 @@
 --
 -- >>> import Witch
 --
--- In typical usage, you will most likely use 'Witch.Utility.into' for
--- 'Witch.From.From' instances and 'With.Utility.tryInto' for
--- 'Witch.TryFrom.TryFrom' instances.
+-- In typical usage, the functions that you will use most often are
+-- 'Witch.Utility.into' for conversions that always succeed and
+-- 'Witch.Utility.tryInto' for conversions that sometimes fail.
 module Witch
   ( -- * Type classes
 
@@ -18,6 +18,9 @@ module Witch
   -- ** TryFrom
   , Witch.TryFrom.TryFrom(tryFrom)
   , Witch.Utility.tryInto
+
+  -- * Data types
+  , Witch.TryFromException.TryFromException(..)
 
   -- * Utilities
   , Witch.Utility.as
@@ -48,9 +51,6 @@ module Witch
   , Witch.Lift.liftedFrom
   , Witch.Lift.liftedInto
 
-  -- * Data types
-  , Witch.TryFromException.TryFromException(..)
-
   -- * Notes
 
   -- ** Motivation
@@ -66,6 +66,37 @@ module Witch
   -- class is for conversions that can fail. These type classes are inspired
   -- by the [@From@](https://doc.rust-lang.org/std/convert/trait.From.html)
   -- trait in Rust.
+
+  -- ** Type applications
+  -- | Although you can use this library without the [@TypeApplication@](https://downloads.haskell.org/~ghc/9.0.1/docs/html/users_guide/exts/type_applications.html)
+  -- language extension, the extension is strongly recommended. Since most
+  -- functions provided by this library are polymorphic in at least one type
+  -- variable, it's easy to use them in a situation that would be ambiguous.
+  -- Normally you could resolve the ambiguity with an explicit type signature,
+  -- but type applications are much more ergonomic. For example:
+  --
+  -- > -- Avoid this:
+  -- > f . (from :: Int8 -> Int16) . g
+  -- >
+  -- > -- Prefer this:
+  -- > f . from @Int8 @Int16 . g
+  --
+  -- Most functions in this library have two versions with their type
+  -- variables in opposite orders. That's because usually one side of the
+  -- conversion or the other already has its type inferred by context. In
+  -- those situations it makes sense to only provide one type argument.
+  --
+  -- > -- Avoid this: (assuming f :: Int16 -> ...)
+  -- > f $ from @Int8 @Int16 0
+  -- >
+  -- > -- Prefer this:
+  -- > f $ from @Int8 0
+  --
+  -- > -- Avoid this: (assuming x :: Int8)
+  -- > g $ from @Int8 @Int16 x
+  -- >
+  -- > -- Prefer this:
+  -- > g $ into @Int16 x
 
   -- ** Alternatives
   -- | Many Haskell libraries already provide similar functionality. How is
@@ -137,24 +168,42 @@ module Witch
   --   @from \@b \@a . from \@a \@b@ should be the same as 'id'. In other
   --   words, @a@ and @b@ are isomorphic.
   --
-  --   - This often true, but not always. For example, converting a list into
-  --     a set will remove duplicates. And then converting back into a list
-  --     will put the elements in ascending order.
+  --     - This often true, but not always. For example, converting a list
+  --       into a set will remove duplicates. And then converting back into a
+  --       list will put the elements in ascending order.
   --
   -- - If you have both @From a b@ and @From b c@, then you could also have
   --   @From a c@ and it should be the same as @from \@b \@c . from \@a \@b@.
   --   In other words, @From@ is transitive.
   --
-  --   - This is not always true. For example an @Int8@ may be represented as
-  --     a number in JSON, whereas an @Int64@ might be represented as a
-  --     string. That means @into \@JSON (into \@Int64 int8)@ would not be the
-  --     same as @into \@JSON int8@.
+  --     - This is not always true. For example an @Int8@ may be represented
+  --       as a number in JSON, whereas an @Int64@ might be represented as a
+  --       string. That means @into \@JSON (into \@Int64 int8)@ would not be
+  --       the same as @into \@JSON int8@.
+  --
+  -- - You should not have both a @From@ instance and a @TryFrom@ instance for
+  --   the same pair of types.
   --
   -- In general if @s@ /is/ a @t@, then you should add a 'Witch.From.From'
   -- instance for it. But if @s@ merely /can be/ a @t@, then you could add a
   -- 'Witch.TryFrom.TryFrom' instance for it. And if it is technically
   -- possible to convert from @s@ to @t@ but there are a lot of caveats, you
   -- probably should not write any instances at all.
+
+  --  ** Downsides
+  -- | As the author of this library, I obviously think that everyone should
+  -- use it because it's the greatest thing since sliced bread. But nothing is
+  -- perfect, so what are some downsides to this library?
+  --
+  -- - More specific type classes are often better. For example, @IsString s@
+  --   is more useful that @From String s@. The former says that the type @s@
+  --   is the same as a string literal, but the latter just says you can
+  --   produce a value of type @s@ when given a string.
+  --
+  -- - The @From@ type class works great for specific pairs of types, but can
+  --   get confusing when it's polymorphic. For example if you have some
+  --   function with a `From s t` constraint, that doesn't really tell you
+  --   anything about what it's doing.
   ) where
 
 import qualified Witch.From

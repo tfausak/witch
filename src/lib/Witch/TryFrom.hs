@@ -9,11 +9,17 @@ import qualified Witch.TryFromException as TryFromException
 -- that you may be able to convert from a value of type @source@ into a value
 -- of type @target@, but that conversion may fail at runtime.
 --
--- This type class is for conversions that can fail. If your conversion cannot
--- fail, consider implementing @From@ instead.
+-- This type class is for conversions that can sometimes fail. If your
+-- conversion always succeeds, consider implementing @From@ instead.
 class TryFrom source target where
   -- | This method implements the conversion of a value between types. At call
-  -- sites you will usually want to use @tryInto@ instead of this method.
+  -- sites you may want to use @tryInto@ instead.
+  --
+  -- > -- Avoid this:
+  -- > tryFrom (x :: s)
+  -- >
+  -- > -- Prefer this:
+  -- > tryFrom @s
   --
   -- Consider using @maybeTryFrom@ or @eitherTryFrom@ to implement this
   -- method.
