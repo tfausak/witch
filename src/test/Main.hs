@@ -3,7 +3,6 @@
 {-# LANGUAGE TypeApplications #-}
 
 import qualified Control.Exception as Exception
-import qualified Control.Monad as Monad
 import qualified Data.ByteString as ByteString
 import qualified Data.ByteString.Lazy as LazyByteString
 import qualified Data.ByteString.Short as ShortByteString
@@ -103,1677 +102,1566 @@ main = runTestTTAndExit $ "Witch" ~:
       , f 127 ~?= 127
       , f (-128) ~?= (-128)
       ]
+    , "From Int8 Int64" ~:
+      let f = Witch.from @Int.Int8 @Int.Int64 in
+      [ f 0 ~?= 0
+      , f 127 ~?= 127
+      , f (-128) ~?= (-128)
+      ]
+    , "From Int8 Int" ~:
+      let f = Witch.from @Int.Int8 @Int in
+      [ f 0 ~?= 0
+      , f 127 ~?= 127
+      , f (-128) ~?= (-128)
+      ]
+    , "From Int8 Integer" ~:
+      let f = Witch.from @Int.Int8 @Integer in
+      [ f 0 ~?= 0
+      , f 127 ~?= 127
+      , f (-128) ~?= (-128)
+      ]
+    , "TryFrom Int8 Word8" ~:
+      let f = hush . Witch.tryFrom @Int.Int8 @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int8 Word16" ~:
+      let f = hush . Witch.tryFrom @Int.Int8 @Word.Word16 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int8 Word32" ~:
+      let f = hush . Witch.tryFrom @Int.Int8 @Word.Word32 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int8 Word64" ~:
+      let f = hush . Witch.tryFrom @Int.Int8 @Word.Word64 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int8 Word" ~:
+      let f = hush . Witch.tryFrom @Int.Int8 @Word in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int8 Natural" ~:
+      let f = hush . Witch.tryFrom @Int.Int8 @Natural.Natural in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f (-1) ~?= Nothing
+      ]
+    , "From Int8 Float" ~:
+      let f = Witch.from @Int.Int8 @Float in
+      [ f 0 ~?= 0
+      , f 127 ~?= 127
+      , f (-128) ~?= (-128)
+      ]
+    , "From Int8 Double" ~:
+      let f = Witch.from @Int.Int8 @Double in
+      [ f 0 ~?= 0
+      , f 127 ~?= 127
+      , f (-128) ~?= (-128)
+      ]
+    , "TryFrom Int16 Int8" ~:
+      let f = hush . Witch.tryFrom @Int.Int16 @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      , f (-128) ~?= Just (-128)
+      , f (-129) ~?= Nothing
+      ]
+    , "From Int16 Int32" ~:
+      let f = Witch.from @Int.Int16 @Int.Int32 in
+      [ f 0 ~?= 0
+      , f 32767 ~?= 32767
+      , f (-32768) ~?= (-32768)
+      ]
+    , "From Int16 Int64" ~:
+      let f = Witch.from @Int.Int16 @Int.Int64 in
+      [ f 0 ~?= 0
+      , f 32767 ~?= 32767
+      , f (-32768) ~?= (-32768)
+      ]
+    , "From Int16 Int" ~:
+      let f = Witch.from @Int.Int16 @Int in
+      [ f 0 ~?= 0
+      , f 32767 ~?= 32767
+      , f (-32768) ~?= (-32768)
+      ]
+    , "From Int16 Integer" ~:
+      let f = Witch.from @Int.Int16 @Integer in
+      [ f 0 ~?= 0
+      , f 32767 ~?= 32767
+      , f (-32768) ~?= (-32768)
+      ]
+    , "TryFrom Int16 Word8" ~:
+      let f = hush . Witch.tryFrom @Int.Int16 @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 255 ~?= Just 255
+      , f 256 ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int16 Word16" ~:
+      let f = hush . Witch.tryFrom @Int.Int16 @Word.Word16 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int16 Word32" ~:
+      let f = hush . Witch.tryFrom @Int.Int16 @Word.Word32 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int16 Word64" ~:
+      let f = hush . Witch.tryFrom @Int.Int16 @Word.Word64 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int16 Word" ~:
+      let f = hush . Witch.tryFrom @Int.Int16 @Word in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int16 Natural" ~:
+      let f = hush . Witch.tryFrom @Int.Int16 @Natural.Natural in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f (-1) ~?= Nothing
+      ]
+    , "From Int16 Float" ~:
+      let f = Witch.from @Int.Int16 @Float in
+      [ f 0 ~?= 0
+      , f 32767 ~?= 32767
+      , f (-32768) ~?= (-32768)
+      ]
+    , "From Int16 Double" ~:
+      let f = Witch.from @Int.Int16 @Double in
+      [ f 0 ~?= 0
+      , f 32767 ~?= 32767
+      , f (-32768) ~?= (-32768)
+      ]
     ]
+    , "TryFrom Int32 Int8" ~:
+      let f = hush . Witch.tryFrom @Int.Int32 @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      , f (-128) ~?= Just (-128)
+      , f (-129) ~?= Nothing
+      ]
+    , "TryFrom Int32 Int16" ~:
+      let f = hush . Witch.tryFrom @Int.Int32 @Int.Int16 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f 32768 ~?= Nothing
+      , f (-32768) ~?= Just (-32768)
+      , f (-32769) ~?= Nothing
+      ]
+    , "From Int32 Int64" ~:
+      let f = Witch.from @Int.Int32 @Int.Int64 in
+      [ f 0 ~?= 0
+      , f 2147483647 ~?= 2147483647
+      , f (-2147483648) ~?= (-2147483648)
+      ]
+    , "TryFrom Int32 Int" ~:
+      let f = hush . Witch.tryFrom @Int.Int32 @Int in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f (-2147483648) ~?= Just (-2147483648)
+      ]
+    , "From Int32 Integer" ~:
+      let f = Witch.from @Int.Int32 @Integer in
+      [ f 0 ~?= 0
+      , f 2147483647 ~?= 2147483647
+      , f (-2147483648) ~?= (-2147483648)
+      ]
+    , "TryFrom Int32 Word8" ~:
+      let f = hush . Witch.tryFrom @Int.Int32 @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 255 ~?= Just 255
+      , f 256 ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int32 Word16" ~:
+      let f = hush . Witch.tryFrom @Int.Int32 @Word.Word16 in
+      [ f 0 ~?= Just 0
+      , f 65535 ~?= Just 65535
+      , f 65536 ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int32 Word32" ~:
+      let f = hush . Witch.tryFrom @Int.Int32 @Word.Word32 in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int32 Word64" ~:
+      let f = hush . Witch.tryFrom @Int.Int32 @Word.Word64 in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int32 Word" ~:
+      let f = hush . Witch.tryFrom @Int.Int32 @Word in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int32 Natural" ~:
+      let f = hush . Witch.tryFrom @Int.Int32 @Natural.Natural in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int32 Float" ~:
+      let f = hush . Witch.tryFrom @Int.Int32 @Float in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      , f (-16777215) ~?= Just (-16777215)
+      , f (-16777216) ~?= Nothing
+      ]
+    , "From Int32 Double" ~:
+      let f = Witch.from @Int.Int32 @Double in
+      [ f 0 ~?= 0
+      , f 2147483647 ~?= 2147483647
+      , f (-2147483648) ~?= (-2147483648)
+      ]
+    , "TryFrom Int64 Int8" ~:
+      let f = hush . Witch.tryFrom @Int.Int64 @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      , f (-128) ~?= Just (-128)
+      , f (-129) ~?= Nothing
+      ]
+    , "TryFrom Int64 Int16" ~:
+      let f = hush . Witch.tryFrom @Int.Int64 @Int.Int16 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f 32768 ~?= Nothing
+      , f (-32768) ~?= Just (-32768)
+      , f (-32769) ~?= Nothing
+      ]
+    , "TryFrom Int64 Int32" ~:
+      let f = hush . Witch.tryFrom @Int.Int64 @Int.Int32 in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f 2147483648 ~?= Nothing
+      , f (-2147483648) ~?= Just (-2147483648)
+      , f (-2147483649) ~?= Nothing
+      ]
+    , "TryFrom Int64 Int" ~:
+      let f = hush . Witch.tryFrom @Int.Int64 @Int in
+      [ f 0 ~?= Just 0
+      , f 9223372036854775807 ~?= Just 9223372036854775807
+      , f (-9223372036854775808) ~?= Just (-9223372036854775808)
+      ]
+    , "From Int64 Integer" ~:
+      let f = Witch.from @Int.Int64 @Integer in
+      [ f 0 ~?= 0
+      , f 9223372036854775807 ~?= 9223372036854775807
+      , f (-9223372036854775808) ~?= (-9223372036854775808)
+      ]
+    , "TryFrom Int64 Word8" ~:
+      let f = hush . Witch.tryFrom @Int.Int64 @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 255 ~?= Just 255
+      , f 256 ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int64 Word16" ~:
+      let f = hush . Witch.tryFrom @Int.Int64 @Word.Word16 in
+      [ f 0 ~?= Just 0
+      , f 65535 ~?= Just 65535
+      , f 65536 ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int64 Word32" ~:
+      let f = hush . Witch.tryFrom @Int.Int64 @Word.Word32 in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int64 Word64" ~:
+      let f = hush . Witch.tryFrom @Int.Int64 @Word.Word64 in
+      [ f 0 ~?= Just 0
+      , f 9223372036854775807 ~?= Just 9223372036854775807
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int64 Word" ~:
+      let f = hush . Witch.tryFrom @Int.Int64 @Word in
+      [ f 0 ~?= Just 0
+      , f 9223372036854775807 ~?= Just 9223372036854775807
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int64 Natural" ~:
+      let f = hush . Witch.tryFrom @Int.Int64 @Natural.Natural in
+      [ f 0 ~?= Just 0
+      , f 9223372036854775807 ~?= Just 9223372036854775807
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int64 Float" ~:
+      let f = hush . Witch.tryFrom @Int.Int64 @Float in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      , f (-16777215) ~?= Just (-16777215)
+      , f (-16777216) ~?= Nothing
+      ]
+    , "TryFrom Int64 Double" ~:
+      let f = hush . Witch.tryFrom @Int.Int64 @Double in
+      [ f 0 ~?= Just 0
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f 9007199254740992 ~?= Nothing
+      , f (-9007199254740991) ~?= Just (-9007199254740991)
+      , f (-9007199254740992) ~?= Nothing
+      ]
+    , "TryFrom Int Int8" ~:
+      let f = hush . Witch.tryFrom @Int @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      , f (-128) ~?= Just (-128)
+      , f (-129) ~?= Nothing
+      ]
+    , "TryFrom Int Int16" ~:
+      let f = hush . Witch.tryFrom @Int @Int.Int16 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f 32768 ~?= Nothing
+      , f (-32768) ~?= Just (-32768)
+      , f (-32769) ~?= Nothing
+      ]
+    , "TryFrom Int Int32" ~:
+      let f = hush . Witch.tryFrom @Int @Int.Int32 in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f 2147483648 ~?= Nothing
+      , f (-2147483648) ~?= Just (-2147483648)
+      , f (-2147483649) ~?= Nothing
+      ]
+    , "From Int Int64" ~:
+      let f = Witch.from @Int @Int.Int64 in
+      [ f 0 ~?= 0
+      , f maxBound ~?= fromIntegral (maxBound :: Int)
+      , f minBound ~?= fromIntegral (minBound :: Int)
+      ]
+    , "From Int Integer" ~:
+      let f = Witch.from @Int @Integer in
+      [ f 0 ~?= 0
+      , f maxBound ~?= fromIntegral (maxBound :: Int)
+      , f minBound ~?= fromIntegral (minBound :: Int)
+      ]
+    , "TryFrom Int Word8" ~:
+      let f = hush . Witch.tryFrom @Int @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 255 ~?= Just 255
+      , f 256 ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int Word16" ~:
+      let f = hush . Witch.tryFrom @Int @Word.Word16 in
+      [ f 0 ~?= Just 0
+      , f 65535 ~?= Just 65535
+      , f 65536 ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int Word32" ~:
+      let f = hush . Witch.tryFrom @Int @Word.Word32 in
+      [ f 0 ~?= Just 0
+      , f 4294967295 ~?= Just 4294967295
+      , f 4294967296 ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int Word64" ~:
+      let f = hush . Witch.tryFrom @Int @Word.Word64 in
+      [ f 0 ~?= Just 0
+      , f maxBound ~?= Just (fromIntegral (maxBound :: Int))
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int Word" ~:
+      let f = hush . Witch.tryFrom @Int @Word in
+      [ f 0 ~?= Just 0
+      , f maxBound ~?= Just (fromIntegral (maxBound :: Int))
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int Natural" ~:
+      let f = hush . Witch.tryFrom @Int @Natural.Natural in
+      [ f 0 ~?= Just 0
+      , f maxBound ~?= Just (fromIntegral (maxBound :: Int))
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Int Float" ~:
+      let f = hush . Witch.tryFrom @Int @Float in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      , f (-16777215) ~?= Just (-16777215)
+      , f (-16777216) ~?= Nothing
+      ]
+    , "TryFrom Int Double" ~:
+      let f = hush . Witch.tryFrom @Int @Double in
+      [ f 0 ~?= Just 0
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f 9007199254740992 ~?= Nothing
+      , f (-9007199254740991) ~?= Just (-9007199254740991)
+      , f (-9007199254740992) ~?= Nothing
+      ]
+    , "TryFrom Integer Int8" ~:
+      let f = hush . Witch.tryFrom @Integer @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      , f (-128) ~?= Just (-128)
+      , f (-129) ~?= Nothing
+      ]
+    , "TryFrom Integer Int16" ~:
+      let f = hush . Witch.tryFrom @Integer @Int.Int16 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f 32768 ~?= Nothing
+      , f (-32768) ~?= Just (-32768)
+      , f (-32769) ~?= Nothing
+      ]
+    , "TryFrom Integer Int32" ~:
+      let f = hush . Witch.tryFrom @Integer @Int.Int32 in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f 2147483648 ~?= Nothing
+      , f (-2147483648) ~?= Just (-2147483648)
+      , f (-2147483649) ~?= Nothing
+      ]
+    , "TryFrom Integer Int64" ~:
+      let f = hush . Witch.tryFrom @Integer @Int.Int64 in
+      [ f 0 ~?= Just 0
+      , f 9223372036854775807 ~?= Just 9223372036854775807
+      , f 9223372036854775808 ~?= Nothing
+      , f (-9223372036854775808) ~?= Just (-9223372036854775808)
+      , f (-9223372036854775809) ~?= Nothing
+      ]
+    , "TryFrom Integer Int" ~:
+      let f = hush . Witch.tryFrom @Integer @Int in
+      [ f 0 ~?= Just 0
+      , let x = maxBound :: Int in f (fromIntegral x) ~?= Just x
+      , let x = toInteger (maxBound :: Int) + 1 in f x ~?= Nothing
+      , let x = minBound :: Int in f (fromIntegral x) ~?= Just x
+      , let x = toInteger (minBound :: Int) - 1 in f x ~?= Nothing
+      ]
+    , "TryFrom Integer Word8" ~:
+      let f = hush . Witch.tryFrom @Integer @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 255 ~?= Just 255
+      , f 256 ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Integer Word16" ~:
+      let f = hush . Witch.tryFrom @Integer @Word.Word16 in
+      [ f 0 ~?= Just 0
+      , f 65535 ~?= Just 65535
+      , f 65536 ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Integer Word32" ~:
+      let f = hush . Witch.tryFrom @Integer @Word.Word32 in
+      [ f 0 ~?= Just 0
+      , f 4294967295 ~?= Just 4294967295
+      , f 4294967296 ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Integer Word64" ~:
+      let f = hush . Witch.tryFrom @Integer @Word.Word64 in
+      [ f 0 ~?= Just 0
+      , f 18446744073709551615 ~?= Just 18446744073709551615
+      , f 18446744073709551616 ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Integer Word" ~:
+      let f = hush . Witch.tryFrom @Integer @Word in
+      [ f 0 ~?= Just 0
+      , let x = maxBound :: Word in f (fromIntegral x) ~?= Just x
+      , let x = toInteger (maxBound :: Word) + 1 in f x ~?= Nothing
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Integer Natural" ~:
+      let f = hush . Witch.tryFrom @Integer @Natural.Natural in
+      [ f 0 ~?= Just 0
+      , f 18446744073709551616 ~?= Just 18446744073709551616
+      , f (-1) ~?= Nothing
+      ]
+    , "TryFrom Integer Float" ~:
+      let f = hush . Witch.tryFrom @Integer @Float in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      , f (-16777215) ~?= Just (-16777215)
+      , f (-16777216) ~?= Nothing
+      ]
+    , "TryFrom Integer Double" ~:
+      let f = hush . Witch.tryFrom @Integer @Double in
+      [ f 0 ~?= Just 0
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f 9007199254740992 ~?= Nothing
+      , f (-9007199254740991) ~?= Just (-9007199254740991)
+      , f (-9007199254740992) ~?= Nothing
+      ]
+    , "From Word8 Word16" ~:
+      let f = Witch.from @Word.Word8 @Word.Word16 in
+      [ f 0 ~?= 0
+      , f 255 ~?= 255
+      ]
+    , "From Word8 Word32" ~:
+      let f = Witch.from @Word.Word8 @Word.Word32 in
+      [ f 0 ~?= 0
+      , f 255 ~?= 255
+      ]
+    , "From Word8 Word64" ~:
+      let f = Witch.from @Word.Word8 @Word.Word64 in
+      [ f 0 ~?= 0
+      , f 255 ~?= 255
+      ]
+    , "From Word8 Word" ~:
+      let f = Witch.from @Word.Word8 @Word in
+      [ f 0 ~?= 0
+      , f 255 ~?= 255
+      ]
+    , "From Word8 Natural" ~:
+      let f = Witch.from @Word.Word8 @Natural.Natural in
+      [ f 0 ~?= 0
+      , f 255 ~?= 255
+      ]
+    , "TryFrom Word8 Int8" ~:
+      let f = hush . Witch.tryFrom @Word.Word8 @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      ]
+    , "From Word8 Int16" ~:
+      let f = Witch.from @Word.Word8 @Int.Int16 in
+      [ f 0 ~?= 0
+      , f 255 ~?= 255
+      ]
+    , "From Word8 Int32" ~:
+      let f = Witch.from @Word.Word8 @Int.Int32 in
+      [ f 0 ~?= 0
+      , f 255 ~?= 255
+      ]
+    , "From Word8 Int64" ~:
+      let f = Witch.from @Word.Word8 @Int.Int64 in
+      [ f 0 ~?= 0
+      , f 255 ~?= 255
+      ]
+    , "From Word8 Int" ~:
+      let f = Witch.from @Word.Word8 @Int in
+      [ f 0 ~?= 0
+      , f 255 ~?= 255
+      ]
+    , "From Word8 Integer" ~:
+      let f = Witch.from @Word.Word8 @Integer in
+      [ f 0 ~?= 0
+      , f 255 ~?= 255
+      ]
+    , "From Word8 Float" ~:
+      let f = Witch.from @Word.Word8 @Float in
+      [ f 0 ~?= 0
+      , f 255 ~?= 255
+      ]
+    , "From Word8 Double" ~:
+      let f = Witch.from @Word.Word8 @Double in
+      [ f 0 ~?= 0
+      , f 255 ~?= 255
+      ]
+    , "TryFrom Word16 Word8" ~:
+      let f = hush . Witch.tryFrom @Word.Word16 @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 255 ~?= Just 255
+      , f 256 ~?= Nothing
+      ]
+    , "From Word16 Word32" ~:
+      let f = Witch.from @Word.Word16 @Word.Word32 in
+      [ f 0 ~?= 0
+      , f 65535 ~?= 65535
+      ]
+    , "From Word16 Word64" ~:
+      let f = Witch.from @Word.Word16 @Word.Word64 in
+      [ f 0 ~?= 0
+      , f 65535 ~?= 65535
+      ]
+    , "From Word16 Word" ~:
+      let f = Witch.from @Word.Word16 @Word in
+      [ f 0 ~?= 0
+      , f 65535 ~?= 65535
+      ]
+    , "From Word16 Natural" ~:
+      let f = Witch.from @Word.Word16 @Natural.Natural in
+      [ f 0 ~?= 0
+      , f 65535 ~?= 65535
+      ]
+    , "TryFrom Word16 Int8" ~:
+      let f = hush . Witch.tryFrom @Word.Word16 @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      ]
+    , "TryFrom Word16 Int16" ~:
+      let f = hush . Witch.tryFrom @Word.Word16 @Int.Int16 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f 32768 ~?= Nothing
+      ]
+    , "From Word16 Int32" ~:
+      let f = Witch.from @Word.Word16 @Int.Int32 in
+      [ f 0 ~?= 0
+      , f 65535 ~?= 65535
+      ]
+    , "From Word16 Int64" ~:
+      let f = Witch.from @Word.Word16 @Int.Int64 in
+      [ f 0 ~?= 0
+      , f 65535 ~?= 65535
+      ]
+    , "From Word16 Int" ~:
+      let f = Witch.from @Word.Word16 @Int in
+      [ f 0 ~?= 0
+      , f 65535 ~?= 65535
+      ]
+    , "From Word16 Integer" ~:
+      let f = Witch.from @Word.Word16 @Integer in
+      [ f 0 ~?= 0
+      , f 65535 ~?= 65535
+      ]
+    , "From Word16 Float" ~:
+      let f = Witch.from @Word.Word16 @Float in
+      [ f 0 ~?= 0
+      , f 65535 ~?= 65535
+      ]
+    , "From Word16 Double" ~:
+      let f = Witch.from @Word.Word16 @Double in
+      [ f 0 ~?= 0
+      , f 65535 ~?= 65535
+      ]
+    , "TryFrom Word32 Word8" ~:
+      let f = hush . Witch.tryFrom @Word.Word32 @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 255 ~?= Just 255
+      , f 256 ~?= Nothing
+      ]
+    , "TryFrom Word32 Word16" ~:
+      let f = hush . Witch.tryFrom @Word.Word32 @Word.Word16 in
+      [ f 0 ~?= Just 0
+      , f 65535 ~?= Just 65535
+      , f 65536 ~?= Nothing
+      ]
+    , "From Word32 Word64" ~:
+      let f = Witch.from @Word.Word32 @Word.Word64 in
+      [ f 0 ~?= 0
+      , f 4294967295 ~?= 4294967295
+      ]
+    , "TryFrom Word32 Word" ~:
+      let f = hush . Witch.tryFrom @Word.Word32 @Word in
+      [ f 0 ~?= Just 0
+      , f 4294967295 ~?= Just 4294967295
+      ]
+    , "From Word32 Natural" ~:
+      let f = Witch.from @Word.Word32 @Natural.Natural in
+      [ f 0 ~?= 0
+      , f 4294967295 ~?= 4294967295
+      ]
+    , "TryFrom Word32 Int8" ~:
+      let f = hush . Witch.tryFrom @Word.Word32 @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      ]
+    , "TryFrom Word32 Int16" ~:
+      let f = hush . Witch.tryFrom @Word.Word32 @Int.Int16 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f 32768 ~?= Nothing
+      ]
+    , "TryFrom Word32 Int32" ~:
+      let f = hush . Witch.tryFrom @Word.Word32 @Int.Int32 in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f 2147483648 ~?= Nothing
+      ]
+    , "From Word32 Int64" ~:
+      let f = Witch.from @Word.Word32 @Int.Int64 in
+      [ f 0 ~?= 0
+      , f 4294967295 ~?= 4294967295
+      ]
+    , "TryFrom Word32 Int" ~:
+      let f = hush . Witch.tryFrom @Word.Word32 @Int in
+      [ f 0 ~?= Just 0
+      , f 4294967295 ~?= Just 4294967295
+      ]
+    , "From Word32 Integer" ~:
+      let f = Witch.from @Word.Word32 @Integer in
+      [ f 0 ~?= 0
+      , f 4294967295 ~?= 4294967295
+      ]
+    , "TryFrom Word32 Float" ~:
+      let f = hush . Witch.tryFrom @Word.Word32 @Float in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      ]
+    , "From Word32 Double" ~:
+      let f = Witch.from @Word.Word32 @Double in
+      [ f 0 ~?= 0
+      , f 4294967295 ~?= 4294967295
+      ]
+    , "TryFrom Word64 Word8" ~:
+      let f = hush . Witch.tryFrom @Word.Word64 @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 255 ~?= Just 255
+      , f 256 ~?= Nothing
+      ]
+    , "TryFrom Word64 Word16" ~:
+      let f = hush . Witch.tryFrom @Word.Word64 @Word.Word16 in
+      [ f 0 ~?= Just 0
+      , f 65535 ~?= Just 65535
+      , f 65536 ~?= Nothing
+      ]
+    , "TryFrom Word64 Word32" ~:
+      let f = hush . Witch.tryFrom @Word.Word64 @Word.Word32 in
+      [ f 0 ~?= Just 0
+      , f 4294967295 ~?= Just 4294967295
+      , f 4294967296 ~?= Nothing
+      ]
+    , "TryFrom Word64 Word" ~:
+      let f = hush . Witch.tryFrom @Word.Word64 @Word in
+      [ f 0 ~?= Just 0
+      , f 18446744073709551615 ~?= Just 18446744073709551615
+      ]
+    , "From Word64 Natural" ~:
+      let f = Witch.from @Word.Word64 @Natural.Natural in
+      [ f 0 ~?= 0
+      , f 18446744073709551615 ~?= 18446744073709551615
+      ]
+    , "TryFrom Word64 Int8" ~:
+      let f = hush . Witch.tryFrom @Word.Word64 @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      ]
+    , "TryFrom Word64 Int16" ~:
+      let f = hush . Witch.tryFrom @Word.Word64 @Int.Int16 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f 32768 ~?= Nothing
+      ]
+    , "TryFrom Word64 Int32" ~:
+      let f = hush . Witch.tryFrom @Word.Word64 @Int.Int32 in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f 2147483648 ~?= Nothing
+      ]
+    , "TryFrom Word64 Int64" ~:
+      let f = hush . Witch.tryFrom @Word.Word64 @Int.Int64 in
+      [ f 0 ~?= Just 0
+      , f 9223372036854775807 ~?= Just 9223372036854775807
+      , f 9223372036854775808 ~?= Nothing
+      ]
+    , "TryFrom Word64 Int" ~:
+      let f = hush . Witch.tryFrom @Word.Word64 @Int in
+      [ f 0 ~?= Just 0
+      , let x = maxBound :: Int in hush (Witch.tryFrom @Word.Word64 @Int (fromIntegral x)) ~?= Just x
+      , let x = fromIntegral (maxBound :: Int) + 1 :: Word.Word64 in hush (Witch.tryFrom @Word.Word64 @Int x) ~?= Nothing
+      ]
+    , "From Word64 Integer" ~:
+      let f = Witch.from @Word.Word64 @Integer in
+      [ f 0 ~?= 0
+      , f 18446744073709551615 ~?= 18446744073709551615
+      ]
+    , "TryFrom Word64 Float" ~:
+      let f = hush . Witch.tryFrom @Word.Word64 @Float in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      ]
+    , "TryFrom Word64 Double" ~:
+      let f = hush . Witch.tryFrom @Word.Word64 @Double in
+      [ f 0 ~?= Just 0
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f 9007199254740992 ~?= Nothing
+      ]
+    , "TryFrom Word Word8" ~:
+      let f = hush . Witch.tryFrom @Word @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 255 ~?= Just 255
+      , f 256 ~?= Nothing
+      ]
+    , "TryFrom Word Word16" ~:
+      let f = hush . Witch.tryFrom @Word @Word.Word16 in
+      [ f 0 ~?= Just 0
+      , f 65535 ~?= Just 65535
+      , f 65536 ~?= Nothing
+      ]
+    , "TryFrom Word Word32" ~:
+      let f = hush . Witch.tryFrom @Word @Word.Word32 in
+      [ f 0 ~?= Just 0
+      , f 4294967295 ~?= Just 4294967295
+      , f 4294967296 ~?= Nothing
+      ]
+    , "From Word Word64" ~:
+      let f = Witch.from @Word @Word.Word64 in
+      [ f 0 ~?= 0
+      , f maxBound ~?= fromIntegral (maxBound :: Word)
+      ]
+    , "From Word Natural" ~:
+      let f = Witch.from @Word @Natural.Natural in
+      [ f 0 ~?= 0
+      , f maxBound ~?= fromIntegral (maxBound :: Word)
+      ]
+    , "TryFrom Word Int8" ~:
+      let f = hush . Witch.tryFrom @Word @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      ]
+    , "TryFrom Word Int16" ~:
+      let f = hush . Witch.tryFrom @Word @Int.Int16 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f 32768 ~?= Nothing
+      ]
+    , "TryFrom Word Int32" ~:
+      let f = hush . Witch.tryFrom @Word @Int.Int32 in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f 2147483648 ~?= Nothing
+      ]
+    , "TryFrom Word Int64" ~:
+      let f = hush . Witch.tryFrom @Word @Int.Int64 in
+      [ f 0 ~?= Just 0
+      , f 9223372036854775807 ~?= Just 9223372036854775807
+      , f 9223372036854775808 ~?= Nothing
+      ]
+    , "TryFrom Word Int" ~:
+      let f = hush . Witch.tryFrom @Word @Int in
+      [ f 0 ~?= Just 0
+      , let x = maxBound :: Int in hush (Witch.tryFrom @Word @Int (fromIntegral x)) ~?= Just x
+      , let x = fromIntegral (maxBound :: Int) + 1 :: Word in hush (Witch.tryFrom @Word @Int x) ~?= Nothing
+      ]
+    , "From Word Integer" ~:
+      let f = Witch.from @Word @Integer in
+      [ f 0 ~?= 0
+      , f maxBound ~?= fromIntegral (maxBound :: Word)
+      ]
+    , "TryFrom Word Float" ~:
+      let f = hush . Witch.tryFrom @Word @Float in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      ]
+    , "TryFrom Word Double" ~:
+      let f = hush . Witch.tryFrom @Word @Double in
+      [ f 0 ~?= Just 0
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f 9007199254740992 ~?= Nothing
+      ]
+    , "TryFrom Natural Word8" ~:
+      let f = hush . Witch.tryFrom @Natural.Natural @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 255 ~?= Just 255
+      , f 256 ~?= Nothing
+      ]
+    , "TryFrom Natural Word16" ~:
+      let f = hush . Witch.tryFrom @Natural.Natural @Word.Word16 in
+      [ f 0 ~?= Just 0
+      , f 65535 ~?= Just 65535
+      , f 65536 ~?= Nothing
+      ]
+    , "TryFrom Natural Word32" ~:
+      let f = hush . Witch.tryFrom @Natural.Natural @Word.Word32 in
+      [ f 0 ~?= Just 0
+      , f 4294967295 ~?= Just 4294967295
+      , f 4294967296 ~?= Nothing
+      ]
+    , "TryFrom Natural Word64" ~:
+      let f = hush . Witch.tryFrom @Natural.Natural @Word.Word64 in
+      [ f 0 ~?= Just 0
+      , f 18446744073709551615 ~?= Just 18446744073709551615
+      , f 18446744073709551616 ~?= Nothing
+      ]
+    , "TryFrom Natural Word" ~:
+      let f = hush . Witch.tryFrom @Natural.Natural @Word in
+      [ f 0 ~?= Just 0
+      , let x = maxBound :: Word in hush (Witch.tryFrom @Natural.Natural @Word (fromIntegral x)) ~?= Just x
+      , let x = fromIntegral (maxBound :: Word) + 1 :: Natural.Natural in hush (Witch.tryFrom @Natural.Natural @Word x) ~?= Nothing
+      ]
+    , "TryFrom Natural Int8" ~:
+      let f = hush . Witch.tryFrom @Natural.Natural @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      ]
+    , "TryFrom Natural Int16" ~:
+      let f = hush . Witch.tryFrom @Natural.Natural @Int.Int16 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f 32768 ~?= Nothing
+      ]
+    , "TryFrom Natural Int32" ~:
+      let f = hush . Witch.tryFrom @Natural.Natural @Int.Int32 in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f 2147483648 ~?= Nothing
+      ]
+    , "TryFrom Natural Int64" ~:
+      let f = hush . Witch.tryFrom @Natural.Natural @Int.Int64 in
+      [ f 0 ~?= Just 0
+      , f 9223372036854775807 ~?= Just 9223372036854775807
+      , f 9223372036854775808 ~?= Nothing
+      ]
+    , "TryFrom Natural Int" ~:
+      let f = hush . Witch.tryFrom @Natural.Natural @Int in
+      [ f 0 ~?= Just 0
+      , let x = maxBound :: Int in hush (Witch.tryFrom @Natural.Natural @Int (fromIntegral x)) ~?= Just x
+      , let x = fromIntegral (maxBound :: Int) + 1 :: Natural.Natural in hush (Witch.tryFrom @Natural.Natural @Int x) ~?= Nothing
+      ]
+    , "From Natural Integer" ~:
+      let f = Witch.from @Natural.Natural @Integer in
+      [ f 0 ~?= 0
+      , f 9223372036854775808 ~?= 9223372036854775808
+      ]
+    , "TryFrom Natural Float" ~:
+      let f = hush . Witch.tryFrom @Natural.Natural @Float in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      ]
+    , "TryFrom Natural Double" ~:
+      let f = hush . Witch.tryFrom @Natural.Natural @Double in
+      [ f 0 ~?= Just 0
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f 9007199254740992 ~?= Nothing
+      ]
+    , "TryFrom Float Int8" ~:
+      let f = hush . Witch.tryFrom @Float @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      , f (-128) ~?= Just (-128)
+      , f (-129) ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Float Int16" ~:
+      let f = hush . Witch.tryFrom @Float @Int.Int16 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f 32768 ~?= Nothing
+      , f (-32768) ~?= Just (-32768)
+      , f (-32769) ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Float Int32" ~:
+      let f = hush . Witch.tryFrom @Float @Int.Int32 in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      , f (-16777215) ~?= Just (-16777215)
+      , f (-16777216) ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Float Int64" ~:
+      let f = hush . Witch.tryFrom @Float @Int.Int64 in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      , f (-16777215) ~?= Just (-16777215)
+      , f (-16777216) ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Float Int" ~:
+      let f = hush . Witch.tryFrom @Float @Int in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      , f (-16777215) ~?= Just (-16777215)
+      , f (-16777216) ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Float Integer" ~:
+      let f = hush . Witch.tryFrom @Float @Integer in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      , f (-16777215) ~?= Just (-16777215)
+      , f (-16777216) ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Float Word8" ~:
+      let f = hush . Witch.tryFrom @Float @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 255 ~?= Just 255
+      , f 256 ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Float Word16" ~:
+      let f = hush . Witch.tryFrom @Float @Word.Word16 in
+      [ f 0 ~?= Just 0
+      , f 65535 ~?= Just 65535
+      , f 65536 ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Float Word32" ~:
+      let f = hush . Witch.tryFrom @Float @Word.Word32 in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Float Word64" ~:
+      let f = hush . Witch.tryFrom @Float @Word.Word64 in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Float Word" ~:
+      let f = hush . Witch.tryFrom @Float @Word in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Float Natural" ~:
+      let f = hush . Witch.tryFrom @Float @Natural.Natural in
+      [ f 0 ~?= Just 0
+      , f 16777215 ~?= Just 16777215
+      , f 16777216 ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Float Rational" ~:
+      let f = hush . Witch.tryFrom @Float @Rational in
+      [ f 0 ~?= Just 0
+      , f (-0) ~?= Just 0
+      , f 0.5 ~?= Just 0.5
+      , f (-0.5) ~?= Just (-0.5)
+      , f 16777215 ~?= Just 16777215
+      , f (-16777215) ~?= Just (-16777215)
+      , f 16777216 ~?= Just 16777216
+      , f (-16777216) ~?= Just (-16777216)
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "From Float Double" ~:
+      let f = Witch.from @Float @Double in
+      [ f 0 ~?= 0
+      , f 0.5 ~?= 0.5
+      , f (-0.5) ~?= (-0.5)
+      , TestCase $ let x = f (0 / 0) in assertBool (show x) $ isNaN x
+      , f (1 / 0) ~?= (1 / 0)
+      , f (-1 / 0) ~?= (-1 / 0)
+      ]
+    , "TryFrom Double Int8" ~:
+      let f = hush . Witch.tryFrom @Double @Int.Int8 in
+      [ f 0 ~?= Just 0
+      , f 127 ~?= Just 127
+      , f 128 ~?= Nothing
+      , f (-128) ~?= Just (-128)
+      , f (-129) ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Double Int16" ~:
+      let f = hush . Witch.tryFrom @Double @Int.Int16 in
+      [ f 0 ~?= Just 0
+      , f 32767 ~?= Just 32767
+      , f 32768 ~?= Nothing
+      , f (-32768) ~?= Just (-32768)
+      , f (-32769) ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Double Int32" ~:
+      let f = hush . Witch.tryFrom @Double @Int.Int32 in
+      [ f 0 ~?= Just 0
+      , f 2147483647 ~?= Just 2147483647
+      , f 2147483648 ~?= Nothing
+      , f (-2147483648) ~?= Just (-2147483648)
+      , f (-2147483649) ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Double Int64" ~:
+      let f = hush . Witch.tryFrom @Double @Int.Int64 in
+      [ f 0 ~?= Just 0
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f 9007199254740992 ~?= Nothing
+      , f (-9007199254740991) ~?= Just (-9007199254740991)
+      , f (-9007199254740992) ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Double Int" ~:
+      let f = hush . Witch.tryFrom @Double @Int in
+      [ f 0 ~?= Just 0
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f 9007199254740992 ~?= Nothing
+      , f (-9007199254740991) ~?= Just (-9007199254740991)
+      , f (-9007199254740992) ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Double Integer" ~:
+      let f = hush . Witch.tryFrom @Double @Integer in
+      [ f 0 ~?= Just 0
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f 9007199254740992 ~?= Nothing
+      , f (-9007199254740991) ~?= Just (-9007199254740991)
+      , f (-9007199254740992) ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Double Word8" ~:
+      let f = hush . Witch.tryFrom @Double @Word.Word8 in
+      [ f 0 ~?= Just 0
+      , f 255 ~?= Just 255
+      , f 256 ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Double Word16" ~:
+      let f = hush . Witch.tryFrom @Double @Word.Word16 in
+      [ f 0 ~?= Just 0
+      , f 65535 ~?= Just 65535
+      , f 65536 ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Double Word32" ~:
+      let f = hush . Witch.tryFrom @Double @Word.Word32 in
+      [ f 0 ~?= Just 0
+      , f 4294967295 ~?= Just 4294967295
+      , f 4294967296 ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Double Word64" ~:
+      let f = hush . Witch.tryFrom @Double @Word.Word64 in
+      [ f 0 ~?= Just 0
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f 9007199254740992 ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Double Word" ~:
+      let f = hush . Witch.tryFrom @Double @Word in
+      [ f 0 ~?= Just 0
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f 9007199254740992 ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Double Natural" ~:
+      let f = hush . Witch.tryFrom @Double @Natural.Natural in
+      [ f 0 ~?= Just 0
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f 9007199254740992 ~?= Nothing
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "TryFrom Double Rational" ~:
+      let f = hush . Witch.tryFrom @Double @Rational in
+      [ f 0 ~?= Just 0
+      , f (-0) ~?= Just 0
+      , f 0.5 ~?= Just 0.5
+      , f (-0.5) ~?= Just (-0.5)
+      , f 9007199254740991 ~?= Just 9007199254740991
+      , f (-9007199254740991) ~?= Just (-9007199254740991)
+      , f 9007199254740992 ~?= Just 9007199254740992
+      , f (-9007199254740992) ~?= Just (-9007199254740992)
+      , f (0 / 0) ~?= Nothing
+      , f (1 / 0) ~?= Nothing
+      , f (-1 / 0) ~?= Nothing
+      ]
+    , "From Double Float" ~:
+      let f = Witch.from @Double @Float in
+      [ f 0 ~?= 0
+      , f 0.5 ~?= 0.5
+      , f (-0.5) ~?= (-0.5)
+      , TestCase $ let x = f (0 / 0) in assertBool (show x) $ isNaN x
+      , f (1 / 0) ~?= (1 / 0)
+      , f (-1 / 0) ~?= (-1 / 0)
+      ]
+    , "From a (Ratio a)" ~:
+      let f = Witch.from @Int @(Ratio.Ratio Int) in
+      [ Witch.from @Integer @Rational 0 ~?= 0
+      , f 0 ~?= 0
+      ]
+    , "TryFrom (Ratio a) a" ~:
+      let f = hush . Witch.tryFrom @(Ratio.Ratio Int) @Int in
+      [ hush (Witch.tryFrom @Rational @Integer 0) ~?= Just 0
+      , hush (Witch.tryFrom @Rational @Integer 0.5) ~?= Nothing
+      , f 0 ~?= Just 0
+      , f 0.5 ~?= Nothing
+      ]
+    , "From Rational Float" ~:
+      let f = Witch.from @Rational @Float in
+      [ f 0 ~?= 0
+      , f 0.5 ~?= 0.5
+      , f (-0.5) ~?= (-0.5)
+      ]
+    , "From Rational Double" ~:
+      let f = Witch.from @Rational @Double in
+      [ f 0 ~?= 0
+      , f 0.5 ~?= 0.5
+      , f (-0.5) ~?= (-0.5)
+      ]
+    , "From Integer (Fixed a)" ~:
+      let f = Witch.from @Integer @Fixed.Deci in
+      [ Witch.from @Integer @Fixed.Uni 1 ~?= 1
+      , f 1 ~?= 0.1
+      ]
+    , "From (Fixed a) Integer" ~:
+      let f = Witch.from @Fixed.Deci @Integer in
+      [ Witch.from @Fixed.Uni @Integer 1 ~?= 1
+      , f 1 ~?= 10
+      ]
+    , "From a (Complex a)" ~:
+      let f = Witch.from @Float @(Complex.Complex Float) in
+      [ Witch.from @Double @(Complex.Complex Double) 1 ~?= 1
+      , f 1 ~?= 1
+      ]
+    , "TryFrom (Complex a) a" ~:
+      let f = hush . Witch.tryFrom @(Complex.Complex Float) @Float in
+      [ hush (Witch.tryFrom @(Complex.Complex Double) @Double 1) ~?= Just 1
+      , hush (Witch.tryFrom @(Complex.Complex Double) @Double (0 Complex.:+ 1)) ~?= Nothing
+      , f 1 ~?= Just 1
+      , f (0 Complex.:+ 1) ~?= Nothing
+      ]
+    , "TryFrom [a] (NonEmpty a)" ~:
+      let f = hush . Witch.tryFrom @[Int] @(NonEmpty.NonEmpty Int) in
+      [ f [] ~?= Nothing
+      , f [1] ~?= Just (1 NonEmpty.:| [])
+      , f [1, 2] ~?= Just (1 NonEmpty.:| [2])
+      ]
+    , "From (NonEmpty a) [a]" ~:
+      let f = Witch.from @(NonEmpty.NonEmpty Int) @[Int] in
+      [ f (1 NonEmpty.:| []) ~?= [1]
+      , f (1 NonEmpty.:| [2]) ~?= [1, 2]
+      ]
+    , "From [a] (Set a)" ~:
+      let f = Witch.from @[Char] @(Set.Set Char) in
+      [ f [] ~?= Set.fromList []
+      , f ['a'] ~?= Set.fromList ['a']
+      , f ['a', 'b'] ~?= Set.fromList ['a', 'b']
+      , f ['a', 'a'] ~?= Set.fromList ['a']
+      ]
+    , "From (Set a) [a]" ~:
+      let f = Witch.from @(Set.Set Char) @[Char] in
+      [ f (Set.fromList []) ~?= []
+      , f (Set.fromList ['a']) ~?= ['a']
+      , f (Set.fromList ['a', 'b']) ~?= ['a', 'b']
+      ]
+    , "From [Int] IntSet" ~:
+      let f = Witch.from @[Int] @IntSet.IntSet in
+      [ f [] ~?= IntSet.fromList []
+      , f [1] ~?= IntSet.fromList [1]
+      , f [1, 2] ~?= IntSet.fromList [1, 2]
+      ]
+    , "From IntSet [Int]" ~:
+      let f = Witch.from @IntSet.IntSet @[Int] in
+      [ f (IntSet.fromList []) ~?= []
+      , f (IntSet.fromList [1]) ~?= [1]
+      , f (IntSet.fromList [1, 2]) ~?= [1, 2]
+      ]
+    , "From [(k, v)] (Map k v)" ~:
+      let f = Witch.from @[(Char, Int)] @(Map.Map Char Int) in
+      [ f [] ~?= Map.empty
+      , f [('a', 1)] ~?= Map.fromList [('a', 1)]
+      , f [('a', 1), ('b', 2)] ~?= Map.fromList [('a', 1), ('b', 2)]
+      , f [('a', 1), ('a', 2)] ~?= Map.fromList [('a', 2)]
+      ]
+    , "From (Map k v) [(k, v)]" ~:
+      let f = Witch.from @(Map.Map Char Int) @[(Char, Int)] in
+      [ f Map.empty ~?= []
+      , f (Map.fromList [('a', 1)]) ~?= [('a', 1)]
+      , f (Map.fromList [('a', 1), ('b', 2)]) ~?= [('a', 1), ('b', 2)]
+      ]
+    , "From [(Int, v)] (IntMap v)" ~:
+      let f = Witch.from @[(Int, Char)] @(IntMap.IntMap Char) in
+      [ f [] ~?= IntMap.fromList []
+      , f [(1, 'a')] ~?= IntMap.fromList [(1, 'a')]
+      , f [(1, 'a'), (2, 'b')] ~?= IntMap.fromList [(1, 'a'), (2, 'b')]
+      , f [(1, 'a'), (1, 'b')] ~?= IntMap.fromList [(1, 'b')]
+      ]
+    , "From (IntMap v) [(Int, v)]" ~:
+      let f = Witch.from @(IntMap.IntMap Char) @[(Int, Char)] in
+      [ f (IntMap.fromList []) ~?= []
+      , f (IntMap.fromList [(1, 'a')]) ~?= [(1, 'a')]
+      , f (IntMap.fromList [(1, 'a'), (2, 'b')]) ~?= [(1, 'a'), (2, 'b')]
+      ]
+    , "From [a] (Seq a)" ~:
+      let f = Witch.from @[Int] @(Seq.Seq Int) in
+      [ f [] ~?= Seq.fromList []
+      , f [1] ~?= Seq.fromList [1]
+      , f [1, 2] ~?= Seq.fromList [1, 2]
+      ]
+    , "From (Seq a) [a]" ~:
+      let f = Witch.from @(Seq.Seq Int) @[Int] in
+      [ f (Seq.fromList []) ~?= []
+      , f (Seq.fromList [1]) ~?= [1]
+      , f (Seq.fromList [1, 2]) ~?= [1, 2]
+      ]
+    , "From [Word8] ByteString" ~:
+      let f = Witch.from @[Word.Word8] @ByteString.ByteString in
+      [ f [] ~?= ByteString.pack []
+      , f [0x00] ~?= ByteString.pack [0x00]
+      , f [0x0f, 0xf0] ~?= ByteString.pack [0x0f, 0xf0]
+      ]
+    , "From ByteString [Word8]" ~:
+      let f = Witch.from @ByteString.ByteString @[Word.Word8] in
+      [ f (ByteString.pack []) ~?= []
+      , f (ByteString.pack [0x00]) ~?= [0x00]
+      , f (ByteString.pack [0x0f, 0xf0]) ~?= [0x0f, 0xf0]
+      ]
+    , "From ByteString LazyByteString" ~:
+      let f = Witch.from @ByteString.ByteString @LazyByteString.ByteString in
+      [ f (ByteString.pack []) ~?= LazyByteString.pack []
+      , f (ByteString.pack [0x00]) ~?= LazyByteString.pack [0x00]
+      , f (ByteString.pack [0x0f, 0xf0]) ~?= LazyByteString.pack [0x0f, 0xf0]
+      ]
+    , "From ByteString ShortByteString" ~:
+      let f = Witch.from @ByteString.ByteString @ShortByteString.ShortByteString in
+      [ f (ByteString.pack []) ~?= ShortByteString.pack []
+      , f (ByteString.pack [0x00]) ~?= ShortByteString.pack [0x00]
+      , f (ByteString.pack [0x0f, 0xf0]) ~?= ShortByteString.pack [0x0f, 0xf0]
+      ]
+    , "TryFrom ByteString Text" ~:
+      let f = hush . Witch.tryFrom @ByteString.ByteString @Text.Text in
+      [ f (ByteString.pack []) ~?= Just (Text.pack "")
+      , f (ByteString.pack [0x61]) ~?= Just (Text.pack "a")
+      , f (ByteString.pack [0xff]) ~?= Nothing
+      ]
+    , "From [Word8] LazyByteString" ~:
+      let f = Witch.from @[Word.Word8] @LazyByteString.ByteString in
+      [ f [] ~?= LazyByteString.pack []
+      , f [0x00] ~?= LazyByteString.pack [0x00]
+      , f [0x0f, 0xf0] ~?= LazyByteString.pack [0x0f, 0xf0]
+      ]
+    , "From LazyByteString [Word8]" ~:
+      let f = Witch.from @LazyByteString.ByteString @[Word.Word8] in
+      [ f (LazyByteString.pack []) ~?= []
+      , f (LazyByteString.pack [0x00]) ~?= [0x00]
+      , f (LazyByteString.pack [0x0f, 0xf0]) ~?= [0x0f, 0xf0]
+      ]
+    , "From LazyByteString ByteString" ~:
+      let f = Witch.from @LazyByteString.ByteString @ByteString.ByteString in
+      [ f (LazyByteString.pack []) ~?= ByteString.pack []
+      , f (LazyByteString.pack [0x00]) ~?= ByteString.pack [0x00]
+      , f (LazyByteString.pack [0x0f, 0xf0]) ~?= ByteString.pack [0x0f, 0xf0]
+      ]
+    , "TryFrom LazyByteString LazyText" ~:
+      let f = hush . Witch.tryFrom @LazyByteString.ByteString @LazyText.Text in
+      [ f (LazyByteString.pack []) ~?= Just (LazyText.pack "")
+      , f (LazyByteString.pack [0x61]) ~?= Just (LazyText.pack "a")
+      , f (LazyByteString.pack [0xff]) ~?= Nothing
+      ]
+    , "From [Word8] ShortByteString" ~:
+      let f = Witch.from @[Word.Word8] @ShortByteString.ShortByteString in
+      [ f [] ~?= ShortByteString.pack []
+      , f [0x00] ~?= ShortByteString.pack [0x00]
+      , f [0x0f, 0xf0] ~?= ShortByteString.pack [0x0f, 0xf0]
+      ]
+    , "From ShortByteString [Word8]" ~:
+      let f = Witch.from @ShortByteString.ShortByteString @[Word.Word8] in
+      [ f (ShortByteString.pack []) ~?= []
+      , f (ShortByteString.pack [0x00]) ~?= [0x00]
+      , f (ShortByteString.pack [0x0f, 0xf0]) ~?= [0x0f, 0xf0]
+      ]
+    , "From ShortByteString ByteString" ~:
+      let f = Witch.from @ShortByteString.ShortByteString @ByteString.ByteString in
+      [ f (ShortByteString.pack []) ~?= ByteString.pack []
+      , f (ShortByteString.pack [0x00]) ~?= ByteString.pack [0x00]
+      , f (ShortByteString.pack [0x0f, 0xf0]) ~?= ByteString.pack [0x0f, 0xf0]
+      ]
+    , "From String Text" ~:
+      let f = Witch.from @String @Text.Text in
+      [ f "" ~?= Text.pack ""
+      , f "a" ~?= Text.pack "a"
+      , f "ab" ~?= Text.pack "ab"
+      ]
+    , "From Text String" ~:
+      let f = Witch.from @Text.Text @String in
+      [ f (Text.pack "") ~?= ""
+      , f (Text.pack "a") ~?= "a"
+      , f (Text.pack "ab") ~?= "ab"
+      ]
+    , "From Text LazyText" ~:
+      let f = Witch.from @Text.Text @LazyText.Text in
+      [ f (Text.pack "") ~?= LazyText.pack ""
+      , f (Text.pack "a") ~?= LazyText.pack "a"
+      , f (Text.pack "ab") ~?= LazyText.pack "ab"
+      ]
+    , "From Text ByteString" ~:
+      let f = Witch.from @Text.Text @ByteString.ByteString in
+      [ f (Text.pack "") ~?= ByteString.pack []
+      , f (Text.pack "a") ~?= ByteString.pack [0x61]
+      ]
+    , "From String LazyText" ~:
+      let f = Witch.from @String @LazyText.Text in
+      [ f "" ~?= LazyText.pack ""
+      , f "a" ~?= LazyText.pack "a"
+      , f "ab" ~?= LazyText.pack "ab"
+      ]
+    , "From LazyText String" ~:
+      let f = Witch.from @LazyText.Text @String in
+      [ f (LazyText.pack "") ~?= ""
+      , f (LazyText.pack "a") ~?= "a"
+      , f (LazyText.pack "ab") ~?= "ab"
+      ]
+    , "From LazyText Text" ~:
+      let f = Witch.from @LazyText.Text @Text.Text in
+      [ f (LazyText.pack "") ~?= Text.pack ""
+      , f (LazyText.pack "a") ~?= Text.pack "a"
+      , f (LazyText.pack "ab") ~?= Text.pack "ab"
+      ]
+    , "From LazyText LazyByteString" ~:
+      let f = Witch.from @LazyText.Text @LazyByteString.ByteString in
+      [ f (LazyText.pack "") ~?= LazyByteString.pack []
+      , f (LazyText.pack "a") ~?= LazyByteString.pack [0x61]
+      ]
+    , "From Integer Day" ~:
+      let f = Witch.from @Integer @Time.Day in
+      [ f 0 ~?= Time.ModifiedJulianDay 0
+      ]
+    , "From Day Integer" ~:
+      let f = Witch.from @Time.Day @Integer in
+      [ f (Time.ModifiedJulianDay 0) ~?= 0
+      ]
+    , "From Day DayOfWeek" ~:
+      let f = Witch.from @Time.Day @Time.DayOfWeek in
+      [ f (Time.ModifiedJulianDay 0) ~?= Time.Wednesday
+      ]
+    , "From Rational UniversalTime" ~:
+      let f = Witch.from @Rational @Time.UniversalTime in
+      [ f 0 ~?= Time.ModJulianDate 0
+      ]
+    , "From UniversalTime Rational" ~:
+      let f = Witch.from @Time.UniversalTime @Rational in
+      [ f (Time.ModJulianDate 0) ~?= 0
+      ]
+    , "From Pico DiffTime" ~:
+      let f = Witch.from @Fixed.Pico @Time.DiffTime in
+      [ f 0 ~?= 0
+      ]
+    , "From DiffTime Pico" ~:
+      let f = Witch.from @Time.DiffTime @Fixed.Pico in
+      [ f 0 ~?= 0
+      ]
+    , "From Pico NominalDiffTime" ~:
+      let f = Witch.from @Fixed.Pico @Time.NominalDiffTime in
+      [ f 0 ~?= 0
+      ]
+    , "From NominalDiffTime Pico" ~:
+      let f = Witch.from @Time.NominalDiffTime @Fixed.Pico in
+      [ f 0 ~?= 0
+      ]
+    , "From SystemTime POSIXTime" ~:
+      let f = Witch.from @Time.SystemTime @Time.POSIXTime in
+      [ f (Time.MkSystemTime 0 0) ~?= 0
+      ]
+    , "From UTCTime POSIXTime" ~:
+      let f = Witch.from @Time.UTCTime @Time.POSIXTime in
+      [ f unixEpoch ~?= 0
+      ]
+    , "From POSIXTime UTCTime" ~:
+      let f = Witch.from @Time.POSIXTime @Time.UTCTime in
+      [ f 0 ~?= unixEpoch
+      ]
+    , "From UTCTime SystemTime" ~:
+      let f = Witch.from @Time.UTCTime @Time.SystemTime in
+      [ f unixEpoch ~?= Time.MkSystemTime 0 0
+      ]
+    , "From SystemTime AbsoluteTime" ~:
+      let f = Witch.from @Time.SystemTime @Time.AbsoluteTime in
+      [ f (Time.MkSystemTime (-3506716800) 0) ~?= Time.taiEpoch
+      ]
+    , "From SystemTime UTCTime" ~:
+      let f = Witch.from @Time.SystemTime @Time.UTCTime in
+      [ f (Time.MkSystemTime 0 0) ~?= unixEpoch
+      ]
+    , "From DiffTime TimeOfDay" ~:
+      let f = Witch.from @Time.DiffTime @Time.TimeOfDay in
+      [ f 0 ~?= Time.TimeOfDay 0 0 0
+      ]
+    , "From Rational TimeOfDay" ~:
+      let f = Witch.from @Rational @Time.TimeOfDay in
+      [ f 0 ~?= Time.TimeOfDay 0 0 0
+      ]
+    , "From TimeOfDay DiffTime" ~:
+      let f = Witch.from @Time.TimeOfDay @Time.DiffTime in
+      [ f (Time.TimeOfDay 0 0 0) ~?= 0
+      ]
+    , "From TimeOfDay Rational" ~:
+      let f = Witch.from @Time.TimeOfDay @Rational in
+      [ f (Time.TimeOfDay 0 0 0) ~?= 0
+      ]
+    , "From CalendarDiffDays CalendarDiffTime" ~:
+      let f = Witch.from @Time.CalendarDiffDays @Time.CalendarDiffTime in
+      [ f (Time.CalendarDiffDays 0 0) ~?= Time.CalendarDiffTime 0 0
+      ]
+    , "From NominalDiffTime CalendarDiffTime" ~:
+      let f = Witch.from @Time.NominalDiffTime @Time.CalendarDiffTime in
+      [ f 0 ~?= Time.CalendarDiffTime 0 0
+      ]
+    , "From ZonedTime UTCTime" ~:
+      let f = Witch.from @Time.ZonedTime @Time.UTCTime in
+      [ f (Time.ZonedTime (Time.LocalTime (Time.ModifiedJulianDay 0) (Time.TimeOfDay 0 0 0)) Time.utc) ~?= Time.UTCTime (Time.ModifiedJulianDay 0) 0
+      ]
   ]
-
-{-
-
-    Hspec.describe "From Int8 Int64" $ do
-      let f = Witch.from @Int.Int8 @Int.Int64
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 127 `Hspec.shouldBe` 127
-      test $ f (-128) `Hspec.shouldBe` (-128)
-
-    Hspec.describe "From Int8 Int" $ do
-      let f = Witch.from @Int.Int8 @Int
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 127 `Hspec.shouldBe` 127
-      test $ f (-128) `Hspec.shouldBe` (-128)
-
-    Hspec.describe "From Int8 Integer" $ do
-      let f = Witch.from @Int.Int8 @Integer
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 127 `Hspec.shouldBe` 127
-      test $ f (-128) `Hspec.shouldBe` (-128)
-
-    Hspec.describe "TryFrom Int8 Word8" $ do
-      let f = hush . Witch.tryFrom @Int.Int8 @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int8 Word16" $ do
-      let f = hush . Witch.tryFrom @Int.Int8 @Word.Word16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int8 Word32" $ do
-      let f = hush . Witch.tryFrom @Int.Int8 @Word.Word32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int8 Word64" $ do
-      let f = hush . Witch.tryFrom @Int.Int8 @Word.Word64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int8 Word" $ do
-      let f = hush . Witch.tryFrom @Int.Int8 @Word
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int8 Natural" $ do
-      let f = hush . Witch.tryFrom @Int.Int8 @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Int8 Float" $ do
-      let f = Witch.from @Int.Int8 @Float
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 127 `Hspec.shouldBe` 127
-      test $ f (-128) `Hspec.shouldBe` (-128)
-
-    Hspec.describe "From Int8 Double" $ do
-      let f = Witch.from @Int.Int8 @Double
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 127 `Hspec.shouldBe` 127
-      test $ f (-128) `Hspec.shouldBe` (-128)
-
-    -- Int16
-
-    Hspec.describe "TryFrom Int16 Int8" $ do
-      let f = hush . Witch.tryFrom @Int.Int16 @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-      test $ f (-128) `Hspec.shouldBe` Just (-128)
-      test $ f (-129) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Int16 Int32" $ do
-      let f = Witch.from @Int.Int16 @Int.Int32
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 32767 `Hspec.shouldBe` 32767
-      test $ f (-32768) `Hspec.shouldBe` (-32768)
-
-    Hspec.describe "From Int16 Int64" $ do
-      let f = Witch.from @Int.Int16 @Int.Int64
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 32767 `Hspec.shouldBe` 32767
-      test $ f (-32768) `Hspec.shouldBe` (-32768)
-
-    Hspec.describe "From Int16 Int" $ do
-      let f = Witch.from @Int.Int16 @Int
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 32767 `Hspec.shouldBe` 32767
-      test $ f (-32768) `Hspec.shouldBe` (-32768)
-
-    Hspec.describe "From Int16 Integer" $ do
-      let f = Witch.from @Int.Int16 @Integer
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 32767 `Hspec.shouldBe` 32767
-      test $ f (-32768) `Hspec.shouldBe` (-32768)
-
-    Hspec.describe "TryFrom Int16 Word8" $ do
-      let f = hush . Witch.tryFrom @Int.Int16 @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 255 `Hspec.shouldBe` Just 255
-      test $ f 256 `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int16 Word16" $ do
-      let f = hush . Witch.tryFrom @Int.Int16 @Word.Word16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int16 Word32" $ do
-      let f = hush . Witch.tryFrom @Int.Int16 @Word.Word32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int16 Word64" $ do
-      let f = hush . Witch.tryFrom @Int.Int16 @Word.Word64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int16 Word" $ do
-      let f = hush . Witch.tryFrom @Int.Int16 @Word
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int16 Natural" $ do
-      let f = hush . Witch.tryFrom @Int.Int16 @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Int16 Float" $ do
-      let f = Witch.from @Int.Int16 @Float
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 32767 `Hspec.shouldBe` 32767
-      test $ f (-32768) `Hspec.shouldBe` (-32768)
-
-    Hspec.describe "From Int16 Double" $ do
-      let f = Witch.from @Int.Int16 @Double
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 32767 `Hspec.shouldBe` 32767
-      test $ f (-32768) `Hspec.shouldBe` (-32768)
-
-    -- Int32
-
-    Hspec.describe "TryFrom Int32 Int8" $ do
-      let f = hush . Witch.tryFrom @Int.Int32 @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-      test $ f (-128) `Hspec.shouldBe` Just (-128)
-      test $ f (-129) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int32 Int16" $ do
-      let f = hush . Witch.tryFrom @Int.Int32 @Int.Int16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f 32768 `Hspec.shouldBe` Nothing
-      test $ f (-32768) `Hspec.shouldBe` Just (-32768)
-      test $ f (-32769) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Int32 Int64" $ do
-      let f = Witch.from @Int.Int32 @Int.Int64
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 2147483647 `Hspec.shouldBe` 2147483647
-      test $ f (-2147483648) `Hspec.shouldBe` (-2147483648)
-
-    Hspec.describe "TryFrom Int32 Int" $ do
-      Monad.when (toInteger (maxBound :: Int) < 2147483647) untested
-      let f = hush . Witch.tryFrom @Int.Int32 @Int
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f (-2147483648) `Hspec.shouldBe` Just (-2147483648)
-
-    Hspec.describe "From Int32 Integer" $ do
-      let f = Witch.from @Int.Int32 @Integer
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 2147483647 `Hspec.shouldBe` 2147483647
-      test $ f (-2147483648) `Hspec.shouldBe` (-2147483648)
-
-    Hspec.describe "TryFrom Int32 Word8" $ do
-      let f = hush . Witch.tryFrom @Int.Int32 @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 255 `Hspec.shouldBe` Just 255
-      test $ f 256 `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int32 Word16" $ do
-      let f = hush . Witch.tryFrom @Int.Int32 @Word.Word16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 65535 `Hspec.shouldBe` Just 65535
-      test $ f 65536 `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int32 Word32" $ do
-      let f = hush . Witch.tryFrom @Int.Int32 @Word.Word32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int32 Word64" $ do
-      let f = hush . Witch.tryFrom @Int.Int32 @Word.Word64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int32 Word" $ do
-      Monad.when (toInteger (maxBound :: Word) < 2147483647) untested
-      let f = hush . Witch.tryFrom @Int.Int32 @Word
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int32 Natural" $ do
-      let f = hush . Witch.tryFrom @Int.Int32 @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int32 Float" $ do
-      let f = hush . Witch.tryFrom @Int.Int32 @Float
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-      test $ f (-16777215) `Hspec.shouldBe` Just (-16777215)
-      test $ f (-16777216) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Int32 Double" $ do
-      let f = Witch.from @Int.Int32 @Double
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 2147483647 `Hspec.shouldBe` 2147483647
-      test $ f (-2147483648) `Hspec.shouldBe` (-2147483648)
-
-    -- Int64
-
-    Hspec.describe "TryFrom Int64 Int8" $ do
-      let f = hush . Witch.tryFrom @Int.Int64 @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-      test $ f (-128) `Hspec.shouldBe` Just (-128)
-      test $ f (-129) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int64 Int16" $ do
-      let f = hush . Witch.tryFrom @Int.Int64 @Int.Int16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f 32768 `Hspec.shouldBe` Nothing
-      test $ f (-32768) `Hspec.shouldBe` Just (-32768)
-      test $ f (-32769) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int64 Int32" $ do
-      let f = hush . Witch.tryFrom @Int.Int64 @Int.Int32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f 2147483648 `Hspec.shouldBe` Nothing
-      test $ f (-2147483648) `Hspec.shouldBe` Just (-2147483648)
-      test $ f (-2147483649) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int64 Int" $ do
-      Monad.when (toInteger (maxBound :: Int) < 9223372036854775807) untested
-      let f = hush . Witch.tryFrom @Int.Int64 @Int
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
-      test $ f (-9223372036854775808) `Hspec.shouldBe` Just (-9223372036854775808)
-
-    Hspec.describe "From Int64 Integer" $ do
-      let f = Witch.from @Int.Int64 @Integer
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 9223372036854775807 `Hspec.shouldBe` 9223372036854775807
-      test $ f (-9223372036854775808) `Hspec.shouldBe` (-9223372036854775808)
-
-    Hspec.describe "TryFrom Int64 Word8" $ do
-      let f = hush . Witch.tryFrom @Int.Int64 @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 255 `Hspec.shouldBe` Just 255
-      test $ f 256 `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int64 Word16" $ do
-      let f = hush . Witch.tryFrom @Int.Int64 @Word.Word16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 65535 `Hspec.shouldBe` Just 65535
-      test $ f 65536 `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int64 Word32" $ do
-      let f = hush . Witch.tryFrom @Int.Int64 @Word.Word32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int64 Word64" $ do
-      let f = hush . Witch.tryFrom @Int.Int64 @Word.Word64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int64 Word" $ do
-      Monad.when (toInteger (maxBound :: Word) < 9223372036854775807) untested
-      let f = hush . Witch.tryFrom @Int.Int64 @Word
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int64 Natural" $ do
-      let f = hush . Witch.tryFrom @Int.Int64 @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int64 Float" $ do
-      let f = hush . Witch.tryFrom @Int.Int64 @Float
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-      test $ f (-16777215) `Hspec.shouldBe` Just (-16777215)
-      test $ f (-16777216) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int64 Double" $ do
-      let f = hush . Witch.tryFrom @Int.Int64 @Double
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-      test $ f (-9007199254740991) `Hspec.shouldBe` Just (-9007199254740991)
-      test $ f (-9007199254740992) `Hspec.shouldBe` Nothing
-
-    -- Int
-
-    Hspec.describe "TryFrom Int Int8" $ do
-      let f = hush . Witch.tryFrom @Int @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-      test $ f (-128) `Hspec.shouldBe` Just (-128)
-      test $ f (-129) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int Int16" $ do
-      let f = hush . Witch.tryFrom @Int @Int.Int16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f 32768 `Hspec.shouldBe` Nothing
-      test $ f (-32768) `Hspec.shouldBe` Just (-32768)
-      test $ f (-32769) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int Int32" $ do
-      Monad.when (toInteger (maxBound :: Int) < 2147483647) untested
-      let f = hush . Witch.tryFrom @Int @Int.Int32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f 2147483648 `Hspec.shouldBe` Nothing
-      test $ f (-2147483648) `Hspec.shouldBe` Just (-2147483648)
-      test $ f (-2147483649) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Int Int64" $ do
-      let f = Witch.from @Int @Int.Int64
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f maxBound `Hspec.shouldBe` fromIntegral (maxBound :: Int)
-      test $ f minBound `Hspec.shouldBe` fromIntegral (minBound :: Int)
-
-    Hspec.describe "From Int Integer" $ do
-      let f = Witch.from @Int @Integer
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f maxBound `Hspec.shouldBe` fromIntegral (maxBound :: Int)
-      test $ f minBound `Hspec.shouldBe` fromIntegral (minBound :: Int)
-
-    Hspec.describe "TryFrom Int Word8" $ do
-      let f = hush . Witch.tryFrom @Int @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 255 `Hspec.shouldBe` Just 255
-      test $ f 256 `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int Word16" $ do
-      let f = hush . Witch.tryFrom @Int @Word.Word16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 65535 `Hspec.shouldBe` Just 65535
-      test $ f 65536 `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int Word32" $ do
-      Monad.when (toInteger (maxBound :: Int) < 4294967295) untested
-      let f = hush . Witch.tryFrom @Int @Word.Word32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
-      test $ f 4294967296 `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int Word64" $ do
-      let f = hush . Witch.tryFrom @Int @Word.Word64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f maxBound `Hspec.shouldBe` Just (fromIntegral (maxBound :: Int))
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int Word" $ do
-      let f = hush . Witch.tryFrom @Int @Word
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f maxBound `Hspec.shouldBe` Just (fromIntegral (maxBound :: Int))
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int Natural" $ do
-      let f = hush . Witch.tryFrom @Int @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f maxBound `Hspec.shouldBe` Just (fromIntegral (maxBound :: Int))
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int Float" $ do
-      let f = hush . Witch.tryFrom @Int @Float
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-      test $ f (-16777215) `Hspec.shouldBe` Just (-16777215)
-      test $ f (-16777216) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Int Double" $ do
-      Monad.when (toInteger (maxBound :: Int) < 9007199254740991) untested
-      let f = hush . Witch.tryFrom @Int @Double
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-      test $ f (-9007199254740991) `Hspec.shouldBe` Just (-9007199254740991)
-      test $ f (-9007199254740992) `Hspec.shouldBe` Nothing
-
-    -- Integer
-
-    Hspec.describe "TryFrom Integer Int8" $ do
-      let f = hush . Witch.tryFrom @Integer @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-      test $ f (-128) `Hspec.shouldBe` Just (-128)
-      test $ f (-129) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Integer Int16" $ do
-      let f = hush . Witch.tryFrom @Integer @Int.Int16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f 32768 `Hspec.shouldBe` Nothing
-      test $ f (-32768) `Hspec.shouldBe` Just (-32768)
-      test $ f (-32769) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Integer Int32" $ do
-      let f = hush . Witch.tryFrom @Integer @Int.Int32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f 2147483648 `Hspec.shouldBe` Nothing
-      test $ f (-2147483648) `Hspec.shouldBe` Just (-2147483648)
-      test $ f (-2147483649) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Integer Int64" $ do
-      let f = hush . Witch.tryFrom @Integer @Int.Int64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
-      test $ f 9223372036854775808 `Hspec.shouldBe` Nothing
-      test $ f (-9223372036854775808) `Hspec.shouldBe` Just (-9223372036854775808)
-      test $ f (-9223372036854775809) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Integer Int" $ do
-      let f = hush . Witch.tryFrom @Integer @Int
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ let x = maxBound :: Int in f (fromIntegral x) `Hspec.shouldBe` Just x
-      test $ let x = toInteger (maxBound :: Int) + 1 in f x `Hspec.shouldBe` Nothing
-      test $ let x = minBound :: Int in f (fromIntegral x) `Hspec.shouldBe` Just x
-      test $ let x = toInteger (minBound :: Int) - 1 in f x `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Integer Word8" $ do
-      let f = hush . Witch.tryFrom @Integer @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 255 `Hspec.shouldBe` Just 255
-      test $ f 256 `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Integer Word16" $ do
-      let f = hush . Witch.tryFrom @Integer @Word.Word16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 65535 `Hspec.shouldBe` Just 65535
-      test $ f 65536 `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Integer Word32" $ do
-      let f = hush . Witch.tryFrom @Integer @Word.Word32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
-      test $ f 4294967296 `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Integer Word64" $ do
-      let f = hush . Witch.tryFrom @Integer @Word.Word64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 18446744073709551615 `Hspec.shouldBe` Just 18446744073709551615
-      test $ f 18446744073709551616 `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Integer Word" $ do
-      let f = hush . Witch.tryFrom @Integer @Word
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ let x = maxBound :: Word in f (fromIntegral x) `Hspec.shouldBe` Just x
-      test $ let x = toInteger (maxBound :: Word) + 1 in f x `Hspec.shouldBe` Nothing
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Integer Natural" $ do
-      let f = hush . Witch.tryFrom @Integer @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 18446744073709551616 `Hspec.shouldBe` Just 18446744073709551616
-      test $ f (-1) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Integer Float" $ do
-      let f = hush . Witch.tryFrom @Integer @Float
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-      test $ f (-16777215) `Hspec.shouldBe` Just (-16777215)
-      test $ f (-16777216) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Integer Double" $ do
-      let f = hush . Witch.tryFrom @Integer @Double
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-      test $ f (-9007199254740991) `Hspec.shouldBe` Just (-9007199254740991)
-      test $ f (-9007199254740992) `Hspec.shouldBe` Nothing
-
-    -- Word8
-
-    Hspec.describe "From Word8 Word16" $ do
-      let f = Witch.from @Word.Word8 @Word.Word16
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 255 `Hspec.shouldBe` 255
-
-    Hspec.describe "From Word8 Word32" $ do
-      let f = Witch.from @Word.Word8 @Word.Word32
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 255 `Hspec.shouldBe` 255
-
-    Hspec.describe "From Word8 Word64" $ do
-      let f = Witch.from @Word.Word8 @Word.Word64
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 255 `Hspec.shouldBe` 255
-
-    Hspec.describe "From Word8 Word" $ do
-      let f = Witch.from @Word.Word8 @Word
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 255 `Hspec.shouldBe` 255
-
-    Hspec.describe "From Word8 Natural" $ do
-      let f = Witch.from @Word.Word8 @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 255 `Hspec.shouldBe` 255
-
-    Hspec.describe "TryFrom Word8 Int8" $ do
-      let f = hush . Witch.tryFrom @Word.Word8 @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Word8 Int16" $ do
-      let f = Witch.from @Word.Word8 @Int.Int16
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 255 `Hspec.shouldBe` 255
-
-    Hspec.describe "From Word8 Int32" $ do
-      let f = Witch.from @Word.Word8 @Int.Int32
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 255 `Hspec.shouldBe` 255
-
-    Hspec.describe "From Word8 Int64" $ do
-      let f = Witch.from @Word.Word8 @Int.Int64
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 255 `Hspec.shouldBe` 255
-
-    Hspec.describe "From Word8 Int" $ do
-      let f = Witch.from @Word.Word8 @Int
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 255 `Hspec.shouldBe` 255
-
-    Hspec.describe "From Word8 Integer" $ do
-      let f = Witch.from @Word.Word8 @Integer
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 255 `Hspec.shouldBe` 255
-
-    Hspec.describe "From Word8 Float" $ do
-      let f = Witch.from @Word.Word8 @Float
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 255 `Hspec.shouldBe` 255
-
-    Hspec.describe "From Word8 Double" $ do
-      let f = Witch.from @Word.Word8 @Double
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 255 `Hspec.shouldBe` 255
-
-    -- Word16
-
-    Hspec.describe "TryFrom Word16 Word8" $ do
-      let f = hush . Witch.tryFrom @Word.Word16 @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 255 `Hspec.shouldBe` Just 255
-      test $ f 256 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Word16 Word32" $ do
-      let f = Witch.from @Word.Word16 @Word.Word32
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 65535 `Hspec.shouldBe` 65535
-
-    Hspec.describe "From Word16 Word64" $ do
-      let f = Witch.from @Word.Word16 @Word.Word64
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 65535 `Hspec.shouldBe` 65535
-
-    Hspec.describe "From Word16 Word" $ do
-      let f = Witch.from @Word.Word16 @Word
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 65535 `Hspec.shouldBe` 65535
-
-    Hspec.describe "From Word16 Natural" $ do
-      let f = Witch.from @Word.Word16 @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 65535 `Hspec.shouldBe` 65535
-
-    Hspec.describe "TryFrom Word16 Int8" $ do
-      let f = hush . Witch.tryFrom @Word.Word16 @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word16 Int16" $ do
-      let f = hush . Witch.tryFrom @Word.Word16 @Int.Int16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f 32768 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Word16 Int32" $ do
-      let f = Witch.from @Word.Word16 @Int.Int32
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 65535 `Hspec.shouldBe` 65535
-
-    Hspec.describe "From Word16 Int64" $ do
-      let f = Witch.from @Word.Word16 @Int.Int64
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 65535 `Hspec.shouldBe` 65535
-
-    Hspec.describe "From Word16 Int" $ do
-      let f = Witch.from @Word.Word16 @Int
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 65535 `Hspec.shouldBe` 65535
-
-    Hspec.describe "From Word16 Integer" $ do
-      let f = Witch.from @Word.Word16 @Integer
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 65535 `Hspec.shouldBe` 65535
-
-    Hspec.describe "From Word16 Float" $ do
-      let f = Witch.from @Word.Word16 @Float
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 65535 `Hspec.shouldBe` 65535
-
-    Hspec.describe "From Word16 Double" $ do
-      let f = Witch.from @Word.Word16 @Double
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 65535 `Hspec.shouldBe` 65535
-
-    -- Word32
-
-    Hspec.describe "TryFrom Word32 Word8" $ do
-      let f = hush . Witch.tryFrom @Word.Word32 @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 255 `Hspec.shouldBe` Just 255
-      test $ f 256 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word32 Word16" $ do
-      let f = hush . Witch.tryFrom @Word.Word32 @Word.Word16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 65535 `Hspec.shouldBe` Just 65535
-      test $ f 65536 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Word32 Word64" $ do
-      let f = Witch.from @Word.Word32 @Word.Word64
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 4294967295 `Hspec.shouldBe` 4294967295
-
-    Hspec.describe "TryFrom Word32 Word" $ do
-      Monad.when (toInteger (maxBound :: Word) < 4294967295) untested
-      let f = hush . Witch.tryFrom @Word.Word32 @Word
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
-
-    Hspec.describe "From Word32 Natural" $ do
-      let f = Witch.from @Word.Word32 @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 4294967295 `Hspec.shouldBe` 4294967295
-
-    Hspec.describe "TryFrom Word32 Int8" $ do
-      let f = hush . Witch.tryFrom @Word.Word32 @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word32 Int16" $ do
-      let f = hush . Witch.tryFrom @Word.Word32 @Int.Int16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f 32768 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word32 Int32" $ do
-      let f = hush . Witch.tryFrom @Word.Word32 @Int.Int32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f 2147483648 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Word32 Int64" $ do
-      let f = Witch.from @Word.Word32 @Int.Int64
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 4294967295 `Hspec.shouldBe` 4294967295
-
-    Hspec.describe "TryFrom Word32 Int" $ do
-      Monad.when (toInteger (maxBound :: Int) < 4294967295) untested
-      let f = hush . Witch.tryFrom @Word.Word32 @Int
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
-
-    Hspec.describe "From Word32 Integer" $ do
-      let f = Witch.from @Word.Word32 @Integer
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 4294967295 `Hspec.shouldBe` 4294967295
-
-    Hspec.describe "TryFrom Word32 Float" $ do
-      let f = hush . Witch.tryFrom @Word.Word32 @Float
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Word32 Double" $ do
-      let f = Witch.from @Word.Word32 @Double
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 4294967295 `Hspec.shouldBe` 4294967295
-
-    -- Word64
-
-    Hspec.describe "TryFrom Word64 Word8" $ do
-      let f = hush . Witch.tryFrom @Word.Word64 @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 255 `Hspec.shouldBe` Just 255
-      test $ f 256 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word64 Word16" $ do
-      let f = hush . Witch.tryFrom @Word.Word64 @Word.Word16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 65535 `Hspec.shouldBe` Just 65535
-      test $ f 65536 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word64 Word32" $ do
-      let f = hush . Witch.tryFrom @Word.Word64 @Word.Word32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
-      test $ f 4294967296 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word64 Word" $ do
-      Monad.when (toInteger (maxBound :: Word) < 18446744073709551615) untested
-      let f = hush . Witch.tryFrom @Word.Word64 @Word
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 18446744073709551615 `Hspec.shouldBe` Just 18446744073709551615
-
-    Hspec.describe "From Word64 Natural" $ do
-      let f = Witch.from @Word.Word64 @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 18446744073709551615 `Hspec.shouldBe` 18446744073709551615
-
-    Hspec.describe "TryFrom Word64 Int8" $ do
-      let f = hush . Witch.tryFrom @Word.Word64 @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word64 Int16" $ do
-      let f = hush . Witch.tryFrom @Word.Word64 @Int.Int16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f 32768 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word64 Int32" $ do
-      let f = hush . Witch.tryFrom @Word.Word64 @Int.Int32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f 2147483648 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word64 Int64" $ do
-      let f = hush . Witch.tryFrom @Word.Word64 @Int.Int64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
-      test $ f 9223372036854775808 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word64 Int" $ do
-      let f = hush . Witch.tryFrom @Word.Word64 @Int
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ let x = maxBound :: Int in hush (Witch.tryFrom @Word.Word64 @Int (fromIntegral x)) `Hspec.shouldBe` Just x
-      test $ let x = fromIntegral (maxBound :: Int) + 1 :: Word.Word64 in hush (Witch.tryFrom @Word.Word64 @Int x) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Word64 Integer" $ do
-      let f = Witch.from @Word.Word64 @Integer
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 18446744073709551615 `Hspec.shouldBe` 18446744073709551615
-
-    Hspec.describe "TryFrom Word64 Float" $ do
-      let f = hush . Witch.tryFrom @Word.Word64 @Float
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word64 Double" $ do
-      let f = hush . Witch.tryFrom @Word.Word64 @Double
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-
-    -- Word
-
-    Hspec.describe "TryFrom Word Word8" $ do
-      let f = hush . Witch.tryFrom @Word @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 255 `Hspec.shouldBe` Just 255
-      test $ f 256 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word Word16" $ do
-      let f = hush . Witch.tryFrom @Word @Word.Word16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 65535 `Hspec.shouldBe` Just 65535
-      test $ f 65536 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word Word32" $ do
-      Monad.when (toInteger (maxBound :: Word) < 4294967295) untested
-      let f = hush . Witch.tryFrom @Word @Word.Word32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
-      test $ f 4294967296 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Word Word64" $ do
-      let f = Witch.from @Word @Word.Word64
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f maxBound `Hspec.shouldBe` fromIntegral (maxBound :: Word)
-
-    Hspec.describe "From Word Natural" $ do
-      let f = Witch.from @Word @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f maxBound `Hspec.shouldBe` fromIntegral (maxBound :: Word)
-
-    Hspec.describe "TryFrom Word Int8" $ do
-      let f = hush . Witch.tryFrom @Word @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word Int16" $ do
-      let f = hush . Witch.tryFrom @Word @Int.Int16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f 32768 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word Int32" $ do
-      Monad.when (toInteger (maxBound :: Word) < 2147483647) untested
-      let f = hush . Witch.tryFrom @Word @Int.Int32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f 2147483648 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word Int64" $ do
-      Monad.when (toInteger (maxBound :: Word) < 9223372036854775807) untested
-      let f = hush . Witch.tryFrom @Word @Int.Int64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
-      test $ f 9223372036854775808 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word Int" $ do
-      let f = hush . Witch.tryFrom @Word @Int
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ let x = maxBound :: Int in hush (Witch.tryFrom @Word @Int (fromIntegral x)) `Hspec.shouldBe` Just x
-      test $ let x = fromIntegral (maxBound :: Int) + 1 :: Word in hush (Witch.tryFrom @Word @Int x) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Word Integer" $ do
-      let f = Witch.from @Word @Integer
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f maxBound `Hspec.shouldBe` fromIntegral (maxBound :: Word)
-
-    Hspec.describe "TryFrom Word Float" $ do
-      let f = hush . Witch.tryFrom @Word @Float
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Word Double" $ do
-      Monad.when (toInteger (maxBound :: Word) < 9007199254740991) untested
-      let f = hush . Witch.tryFrom @Word @Double
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-
-    -- Natural
-
-    Hspec.describe "TryFrom Natural Word8" $ do
-      let f = hush . Witch.tryFrom @Natural.Natural @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 255 `Hspec.shouldBe` Just 255
-      test $ f 256 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Natural Word16" $ do
-      let f = hush . Witch.tryFrom @Natural.Natural @Word.Word16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 65535 `Hspec.shouldBe` Just 65535
-      test $ f 65536 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Natural Word32" $ do
-      let f = hush . Witch.tryFrom @Natural.Natural @Word.Word32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
-      test $ f 4294967296 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Natural Word64" $ do
-      let f = hush . Witch.tryFrom @Natural.Natural @Word.Word64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 18446744073709551615 `Hspec.shouldBe` Just 18446744073709551615
-      test $ f 18446744073709551616 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Natural Word" $ do
-      let f = hush . Witch.tryFrom @Natural.Natural @Word
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ let x = maxBound :: Word in hush (Witch.tryFrom @Natural.Natural @Word (fromIntegral x)) `Hspec.shouldBe` Just x
-      test $ let x = fromIntegral (maxBound :: Word) + 1 :: Natural.Natural in hush (Witch.tryFrom @Natural.Natural @Word x) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Natural Int8" $ do
-      let f = hush . Witch.tryFrom @Natural.Natural @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Natural Int16" $ do
-      let f = hush . Witch.tryFrom @Natural.Natural @Int.Int16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f 32768 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Natural Int32" $ do
-      let f = hush . Witch.tryFrom @Natural.Natural @Int.Int32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f 2147483648 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Natural Int64" $ do
-      let f = hush . Witch.tryFrom @Natural.Natural @Int.Int64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9223372036854775807 `Hspec.shouldBe` Just 9223372036854775807
-      test $ f 9223372036854775808 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Natural Int" $ do
-      let f = hush . Witch.tryFrom @Natural.Natural @Int
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ let x = maxBound :: Int in hush (Witch.tryFrom @Natural.Natural @Int (fromIntegral x)) `Hspec.shouldBe` Just x
-      test $ let x = fromIntegral (maxBound :: Int) + 1 :: Natural.Natural in hush (Witch.tryFrom @Natural.Natural @Int x) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Natural Integer" $ do
-      let f = Witch.from @Natural.Natural @Integer
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 9223372036854775808 `Hspec.shouldBe` 9223372036854775808
-
-    Hspec.describe "TryFrom Natural Float" $ do
-      let f = hush . Witch.tryFrom @Natural.Natural @Float
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Natural Double" $ do
-      let f = hush . Witch.tryFrom @Natural.Natural @Double
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-
-    -- Float
-
-    Hspec.describe "TryFrom Float Int8" $ do
-      let f = hush . Witch.tryFrom @Float @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-      test $ f (-128) `Hspec.shouldBe` Just (-128)
-      test $ f (-129) `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Float Int16" $ do
-      let f = hush . Witch.tryFrom @Float @Int.Int16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f 32768 `Hspec.shouldBe` Nothing
-      test $ f (-32768) `Hspec.shouldBe` Just (-32768)
-      test $ f (-32769) `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Float Int32" $ do
-      let f = hush . Witch.tryFrom @Float @Int.Int32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-      test $ f (-16777215) `Hspec.shouldBe` Just (-16777215)
-      test $ f (-16777216) `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Float Int64" $ do
-      let f = hush . Witch.tryFrom @Float @Int.Int64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-      test $ f (-16777215) `Hspec.shouldBe` Just (-16777215)
-      test $ f (-16777216) `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Float Int" $ do
-      let f = hush . Witch.tryFrom @Float @Int
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-      test $ f (-16777215) `Hspec.shouldBe` Just (-16777215)
-      test $ f (-16777216) `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Float Integer" $ do
-      let f = hush . Witch.tryFrom @Float @Integer
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-      test $ f (-16777215) `Hspec.shouldBe` Just (-16777215)
-      test $ f (-16777216) `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Float Word8" $ do
-      let f = hush . Witch.tryFrom @Float @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 255 `Hspec.shouldBe` Just 255
-      test $ f 256 `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Float Word16" $ do
-      let f = hush . Witch.tryFrom @Float @Word.Word16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 65535 `Hspec.shouldBe` Just 65535
-      test $ f 65536 `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Float Word32" $ do
-      let f = hush . Witch.tryFrom @Float @Word.Word32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Float Word64" $ do
-      let f = hush . Witch.tryFrom @Float @Word.Word64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Float Word" $ do
-      let f = hush . Witch.tryFrom @Float @Word
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Float Natural" $ do
-      let f = hush . Witch.tryFrom @Float @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f 16777216 `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Float Rational" $ do
-      let f = hush . Witch.tryFrom @Float @Rational
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f (-0) `Hspec.shouldBe` Just 0
-      test $ f 0.5 `Hspec.shouldBe` Just 0.5
-      test $ f (-0.5) `Hspec.shouldBe` Just (-0.5)
-      test $ f 16777215 `Hspec.shouldBe` Just 16777215
-      test $ f (-16777215) `Hspec.shouldBe` Just (-16777215)
-      test $ f 16777216 `Hspec.shouldBe` Just 16777216
-      test $ f (-16777216) `Hspec.shouldBe` Just (-16777216)
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Float Double" $ do
-      let f = Witch.from @Float @Double
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 0.5 `Hspec.shouldBe` 0.5
-      test $ f (-0.5) `Hspec.shouldBe` (-0.5)
-      test $ f (0 / 0) `Hspec.shouldSatisfy` isNaN
-      test $ f (1 / 0) `Hspec.shouldBe` (1 / 0)
-      test $ f (-1 / 0) `Hspec.shouldBe` (-1 / 0)
-
-    -- Double
-
-    Hspec.describe "TryFrom Double Int8" $ do
-      let f = hush . Witch.tryFrom @Double @Int.Int8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 127 `Hspec.shouldBe` Just 127
-      test $ f 128 `Hspec.shouldBe` Nothing
-      test $ f (-128) `Hspec.shouldBe` Just (-128)
-      test $ f (-129) `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Double Int16" $ do
-      let f = hush . Witch.tryFrom @Double @Int.Int16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 32767 `Hspec.shouldBe` Just 32767
-      test $ f 32768 `Hspec.shouldBe` Nothing
-      test $ f (-32768) `Hspec.shouldBe` Just (-32768)
-      test $ f (-32769) `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Double Int32" $ do
-      let f = hush . Witch.tryFrom @Double @Int.Int32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 2147483647 `Hspec.shouldBe` Just 2147483647
-      test $ f 2147483648 `Hspec.shouldBe` Nothing
-      test $ f (-2147483648) `Hspec.shouldBe` Just (-2147483648)
-      test $ f (-2147483649) `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Double Int64" $ do
-      let f = hush . Witch.tryFrom @Double @Int.Int64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-      test $ f (-9007199254740991) `Hspec.shouldBe` Just (-9007199254740991)
-      test $ f (-9007199254740992) `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Double Int" $ do
-      Monad.when (toInteger (maxBound :: Int) < 9007199254740991) untested
-      let f = hush . Witch.tryFrom @Double @Int
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-      test $ f (-9007199254740991) `Hspec.shouldBe` Just (-9007199254740991)
-      test $ f (-9007199254740992) `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Double Integer" $ do
-      let f = hush . Witch.tryFrom @Double @Integer
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-      test $ f (-9007199254740991) `Hspec.shouldBe` Just (-9007199254740991)
-      test $ f (-9007199254740992) `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Double Word8" $ do
-      let f = hush . Witch.tryFrom @Double @Word.Word8
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 255 `Hspec.shouldBe` Just 255
-      test $ f 256 `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Double Word16" $ do
-      let f = hush . Witch.tryFrom @Double @Word.Word16
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 65535 `Hspec.shouldBe` Just 65535
-      test $ f 65536 `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Double Word32" $ do
-      let f = hush . Witch.tryFrom @Double @Word.Word32
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 4294967295 `Hspec.shouldBe` Just 4294967295
-      test $ f 4294967296 `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Double Word64" $ do
-      let f = hush . Witch.tryFrom @Double @Word.Word64
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Double Word" $ do
-      Monad.when (toInteger (maxBound :: Word) < 9007199254740991) untested
-      let f = hush . Witch.tryFrom @Double @Word
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Double Natural" $ do
-      let f = hush . Witch.tryFrom @Double @Natural.Natural
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f 9007199254740992 `Hspec.shouldBe` Nothing
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "TryFrom Double Rational" $ do
-      let f = hush . Witch.tryFrom @Double @Rational
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f (-0) `Hspec.shouldBe` Just 0
-      test $ f 0.5 `Hspec.shouldBe` Just 0.5
-      test $ f (-0.5) `Hspec.shouldBe` Just (-0.5)
-      test $ f 9007199254740991 `Hspec.shouldBe` Just 9007199254740991
-      test $ f (-9007199254740991) `Hspec.shouldBe` Just (-9007199254740991)
-      test $ f 9007199254740992 `Hspec.shouldBe` Just 9007199254740992
-      test $ f (-9007199254740992) `Hspec.shouldBe` Just (-9007199254740992)
-      test $ f (0 / 0) `Hspec.shouldBe` Nothing
-      test $ f (1 / 0) `Hspec.shouldBe` Nothing
-      test $ f (-1 / 0) `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Double Float" $ do
-      let f = Witch.from @Double @Float
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 0.5 `Hspec.shouldBe` 0.5
-      test $ f (-0.5) `Hspec.shouldBe` (-0.5)
-      test $ f (0 / 0) `Hspec.shouldSatisfy` isNaN
-      test $ f (1 / 0) `Hspec.shouldBe` (1 / 0)
-      test $ f (-1 / 0) `Hspec.shouldBe` (-1 / 0)
-
-    -- Ratio
-
-    Hspec.describe "From a (Ratio a)" $ do
-      test $ Witch.from @Integer @Rational 0 `Hspec.shouldBe` 0
-      let f = Witch.from @Int @(Ratio.Ratio Int)
-      test $ f 0 `Hspec.shouldBe` 0
-
-    Hspec.describe "TryFrom (Ratio a) a" $ do
-      test $ hush (Witch.tryFrom @Rational @Integer 0) `Hspec.shouldBe` Just 0
-      test $ hush (Witch.tryFrom @Rational @Integer 0.5) `Hspec.shouldBe` Nothing
-      let f = hush . Witch.tryFrom @(Ratio.Ratio Int) @Int
-      test $ f 0 `Hspec.shouldBe` Just 0
-      test $ f 0.5 `Hspec.shouldBe` Nothing
-
-    Hspec.describe "From Rational Float" $ do
-      let f = Witch.from @Rational @Float
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 0.5 `Hspec.shouldBe` 0.5
-      test $ f (-0.5) `Hspec.shouldBe` (-0.5)
-
-    Hspec.describe "From Rational Double" $ do
-      let f = Witch.from @Rational @Double
-      test $ f 0 `Hspec.shouldBe` 0
-      test $ f 0.5 `Hspec.shouldBe` 0.5
-      test $ f (-0.5) `Hspec.shouldBe` (-0.5)
-
-    -- Fixed
-
-    Hspec.describe "From Integer (Fixed a)" $ do
-      test $ Witch.from @Integer @Fixed.Uni 1 `Hspec.shouldBe` 1
-      let f = Witch.from @Integer @Fixed.Deci
-      test $ f 1 `Hspec.shouldBe` 0.1
-
-    Hspec.describe "From (Fixed a) Integer" $ do
-      test $ Witch.from @Fixed.Uni @Integer 1 `Hspec.shouldBe` 1
-      let f = Witch.from @Fixed.Deci @Integer
-      test $ f 1 `Hspec.shouldBe` 10
-
-    -- Complex
-
-    Hspec.describe "From a (Complex a)" $ do
-      test $ Witch.from @Double @(Complex.Complex Double) 1 `Hspec.shouldBe` 1
-      let f = Witch.from @Float @(Complex.Complex Float)
-      test $ f 1 `Hspec.shouldBe` 1
-
-    Hspec.describe "TryFrom (Complex a) a" $ do
-      test $ hush (Witch.tryFrom @(Complex.Complex Double) @Double 1) `Hspec.shouldBe` Just 1
-      test $ hush (Witch.tryFrom @(Complex.Complex Double) @Double (0 Complex.:+ 1)) `Hspec.shouldBe` Nothing
-      let f = hush . Witch.tryFrom @(Complex.Complex Float) @Float
-      test $ f 1 `Hspec.shouldBe` Just 1
-      test $ f (0 Complex.:+ 1) `Hspec.shouldBe` Nothing
-
-    -- NonEmpty
-
-    Hspec.describe "TryFrom [a] (NonEmpty a)" $ do
-      let f = hush . Witch.tryFrom @[Int] @(NonEmpty.NonEmpty Int)
-      test $ f [] `Hspec.shouldBe` Nothing
-      test $ f [1] `Hspec.shouldBe` Just (1 NonEmpty.:| [])
-      test $ f [1, 2] `Hspec.shouldBe` Just (1 NonEmpty.:| [2])
-
-    Hspec.describe "From (NonEmpty a) [a]" $ do
-      let f = Witch.from @(NonEmpty.NonEmpty Int) @[Int]
-      test $ f (1 NonEmpty.:| []) `Hspec.shouldBe` [1]
-      test $ f (1 NonEmpty.:| [2]) `Hspec.shouldBe` [1, 2]
-
-    -- Set
-
-    Hspec.describe "From [a] (Set a)" $ do
-      let f = Witch.from @[Char] @(Set.Set Char)
-      test $ f [] `Hspec.shouldBe` Set.fromList []
-      test $ f ['a'] `Hspec.shouldBe` Set.fromList ['a']
-      test $ f ['a', 'b'] `Hspec.shouldBe` Set.fromList ['a', 'b']
-      test $ f ['a', 'a'] `Hspec.shouldBe` Set.fromList ['a']
-
-    Hspec.describe "From (Set a) [a]" $ do
-      let f = Witch.from @(Set.Set Char) @[Char]
-      test $ f (Set.fromList []) `Hspec.shouldBe` []
-      test $ f (Set.fromList ['a']) `Hspec.shouldBe` ['a']
-      test $ f (Set.fromList ['a', 'b']) `Hspec.shouldBe` ['a', 'b']
-
-    -- IntSet
-
-    Hspec.describe "From [Int] IntSet" $ do
-      let f = Witch.from @[Int] @IntSet.IntSet
-      test $ f [] `Hspec.shouldBe` IntSet.fromList []
-      test $ f [1] `Hspec.shouldBe` IntSet.fromList [1]
-      test $ f [1, 2] `Hspec.shouldBe` IntSet.fromList [1, 2]
-
-    Hspec.describe "From IntSet [Int]" $ do
-      let f = Witch.from @IntSet.IntSet @[Int]
-      test $ f (IntSet.fromList []) `Hspec.shouldBe` []
-      test $ f (IntSet.fromList [1]) `Hspec.shouldBe` [1]
-      test $ f (IntSet.fromList [1, 2]) `Hspec.shouldBe` [1, 2]
-
-    -- Map
-
-    Hspec.describe "From [(k, v)] (Map k v)" $ do
-      let f = Witch.from @[(Char, Int)] @(Map.Map Char Int)
-      test $ f [] `Hspec.shouldBe` Map.empty
-      test $ f [('a', 1)] `Hspec.shouldBe` Map.fromList [('a', 1)]
-      test $ f [('a', 1), ('b', 2)] `Hspec.shouldBe` Map.fromList [('a', 1), ('b', 2)]
-      test $ f [('a', 1), ('a', 2)] `Hspec.shouldBe` Map.fromList [('a', 2)]
-
-    Hspec.describe "From (Map k v) [(k, v)]" $ do
-      let f = Witch.from @(Map.Map Char Int) @[(Char, Int)]
-      test $ f Map.empty `Hspec.shouldBe` []
-      test $ f (Map.fromList [('a', 1)]) `Hspec.shouldBe` [('a', 1)]
-      test $ f (Map.fromList [('a', 1), ('b', 2)]) `Hspec.shouldBe` [('a', 1), ('b', 2)]
-
-    -- IntMap
-
-    Hspec.describe "From [(Int, v)] (IntMap v)" $ do
-      let f = Witch.from @[(Int, Char)] @(IntMap.IntMap Char)
-      test $ f [] `Hspec.shouldBe` IntMap.fromList []
-      test $ f [(1, 'a')] `Hspec.shouldBe` IntMap.fromList [(1, 'a')]
-      test $ f [(1, 'a'), (2, 'b')] `Hspec.shouldBe` IntMap.fromList [(1, 'a'), (2, 'b')]
-      test $ f [(1, 'a'), (1, 'b')] `Hspec.shouldBe` IntMap.fromList [(1, 'b')]
-
-    Hspec.describe "From (IntMap v) [(Int, v)]" $ do
-      let f = Witch.from @(IntMap.IntMap Char) @[(Int, Char)]
-      test $ f (IntMap.fromList []) `Hspec.shouldBe` []
-      test $ f (IntMap.fromList [(1, 'a')]) `Hspec.shouldBe` [(1, 'a')]
-      test $ f (IntMap.fromList [(1, 'a'), (2, 'b')]) `Hspec.shouldBe` [(1, 'a'), (2, 'b')]
-
-    -- Seq
-
-    Hspec.describe "From [a] (Seq a)" $ do
-      let f = Witch.from @[Int] @(Seq.Seq Int)
-      test $ f [] `Hspec.shouldBe` Seq.fromList []
-      test $ f [1] `Hspec.shouldBe` Seq.fromList [1]
-      test $ f [1, 2] `Hspec.shouldBe` Seq.fromList [1, 2]
-
-    Hspec.describe "From (Seq a) [a]" $ do
-      let f = Witch.from @(Seq.Seq Int) @[Int]
-      test $ f (Seq.fromList []) `Hspec.shouldBe` []
-      test $ f (Seq.fromList [1]) `Hspec.shouldBe` [1]
-      test $ f (Seq.fromList [1, 2]) `Hspec.shouldBe` [1, 2]
-
-    -- ByteString
-
-    Hspec.describe "From [Word8] ByteString" $ do
-      let f = Witch.from @[Word.Word8] @ByteString.ByteString
-      test $ f [] `Hspec.shouldBe` ByteString.pack []
-      test $ f [0x00] `Hspec.shouldBe` ByteString.pack [0x00]
-      test $ f [0x0f, 0xf0] `Hspec.shouldBe` ByteString.pack [0x0f, 0xf0]
-
-    Hspec.describe "From ByteString [Word8]" $ do
-      let f = Witch.from @ByteString.ByteString @[Word.Word8]
-      test $ f (ByteString.pack []) `Hspec.shouldBe` []
-      test $ f (ByteString.pack [0x00]) `Hspec.shouldBe` [0x00]
-      test $ f (ByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` [0x0f, 0xf0]
-
-    Hspec.describe "From ByteString LazyByteString" $ do
-      let f = Witch.from @ByteString.ByteString @LazyByteString.ByteString
-      test $ f (ByteString.pack []) `Hspec.shouldBe` LazyByteString.pack []
-      test $ f (ByteString.pack [0x00]) `Hspec.shouldBe` LazyByteString.pack [0x00]
-      test $ f (ByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` LazyByteString.pack [0x0f, 0xf0]
-
-    Hspec.describe "From ByteString ShortByteString" $ do
-      let f = Witch.from @ByteString.ByteString @ShortByteString.ShortByteString
-      test $ f (ByteString.pack []) `Hspec.shouldBe` ShortByteString.pack []
-      test $ f (ByteString.pack [0x00]) `Hspec.shouldBe` ShortByteString.pack [0x00]
-      test $ f (ByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` ShortByteString.pack [0x0f, 0xf0]
-
-    Hspec.describe "TryFrom ByteString Text" $ do
-      let f = hush . Witch.tryFrom @ByteString.ByteString @Text.Text
-      test $ f (ByteString.pack []) `Hspec.shouldBe` Just (Text.pack "")
-      test $ f (ByteString.pack [0x61]) `Hspec.shouldBe` Just (Text.pack "a")
-      test $ f (ByteString.pack [0xff]) `Hspec.shouldBe` Nothing
-
-    -- LazyByteString
-
-    Hspec.describe "From [Word8] LazyByteString" $ do
-      let f = Witch.from @[Word.Word8] @LazyByteString.ByteString
-      test $ f [] `Hspec.shouldBe` LazyByteString.pack []
-      test $ f [0x00] `Hspec.shouldBe` LazyByteString.pack [0x00]
-      test $ f [0x0f, 0xf0] `Hspec.shouldBe` LazyByteString.pack [0x0f, 0xf0]
-
-    Hspec.describe "From LazyByteString [Word8]" $ do
-      let f = Witch.from @LazyByteString.ByteString @[Word.Word8]
-      test $ f (LazyByteString.pack []) `Hspec.shouldBe` []
-      test $ f (LazyByteString.pack [0x00]) `Hspec.shouldBe` [0x00]
-      test $ f (LazyByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` [0x0f, 0xf0]
-
-    Hspec.describe "From LazyByteString ByteString" $ do
-      let f = Witch.from @LazyByteString.ByteString @ByteString.ByteString
-      test $ f (LazyByteString.pack []) `Hspec.shouldBe` ByteString.pack []
-      test $ f (LazyByteString.pack [0x00]) `Hspec.shouldBe` ByteString.pack [0x00]
-      test $ f (LazyByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` ByteString.pack [0x0f, 0xf0]
-
-    Hspec.describe "TryFrom LazyByteString LazyText" $ do
-      let f = hush . Witch.tryFrom @LazyByteString.ByteString @LazyText.Text
-      test $ f (LazyByteString.pack []) `Hspec.shouldBe` Just (LazyText.pack "")
-      test $ f (LazyByteString.pack [0x61]) `Hspec.shouldBe` Just (LazyText.pack "a")
-      test $ f (LazyByteString.pack [0xff]) `Hspec.shouldBe` Nothing
-
-    -- ShortByteString
-
-    Hspec.describe "From [Word8] ShortByteString" $ do
-      let f = Witch.from @[Word.Word8] @ShortByteString.ShortByteString
-      test $ f [] `Hspec.shouldBe` ShortByteString.pack []
-      test $ f [0x00] `Hspec.shouldBe` ShortByteString.pack [0x00]
-      test $ f [0x0f, 0xf0] `Hspec.shouldBe` ShortByteString.pack [0x0f, 0xf0]
-
-    Hspec.describe "From ShortByteString [Word8]" $ do
-      let f = Witch.from @ShortByteString.ShortByteString @[Word.Word8]
-      test $ f (ShortByteString.pack []) `Hspec.shouldBe` []
-      test $ f (ShortByteString.pack [0x00]) `Hspec.shouldBe` [0x00]
-      test $ f (ShortByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` [0x0f, 0xf0]
-
-    Hspec.describe "From ShortByteString ByteString" $ do
-      let f = Witch.from @ShortByteString.ShortByteString @ByteString.ByteString
-      test $ f (ShortByteString.pack []) `Hspec.shouldBe` ByteString.pack []
-      test $ f (ShortByteString.pack [0x00]) `Hspec.shouldBe` ByteString.pack [0x00]
-      test $ f (ShortByteString.pack [0x0f, 0xf0]) `Hspec.shouldBe` ByteString.pack [0x0f, 0xf0]
-
-    -- Text
-
-    Hspec.describe "From String Text" $ do
-      let f = Witch.from @String @Text.Text
-      test $ f "" `Hspec.shouldBe` Text.pack ""
-      test $ f "a" `Hspec.shouldBe` Text.pack "a"
-      test $ f "ab" `Hspec.shouldBe` Text.pack "ab"
-
-    Hspec.describe "From Text String" $ do
-      let f = Witch.from @Text.Text @String
-      test $ f (Text.pack "") `Hspec.shouldBe` ""
-      test $ f (Text.pack "a") `Hspec.shouldBe` "a"
-      test $ f (Text.pack "ab") `Hspec.shouldBe` "ab"
-
-    Hspec.describe "From Text LazyText" $ do
-      let f = Witch.from @Text.Text @LazyText.Text
-      test $ f (Text.pack "") `Hspec.shouldBe` LazyText.pack ""
-      test $ f (Text.pack "a") `Hspec.shouldBe` LazyText.pack "a"
-      test $ f (Text.pack "ab") `Hspec.shouldBe` LazyText.pack "ab"
-
-    Hspec.describe "From Text ByteString" $ do
-      let f = Witch.from @Text.Text @ByteString.ByteString
-      test $ f (Text.pack "") `Hspec.shouldBe` ByteString.pack []
-      test $ f (Text.pack "a") `Hspec.shouldBe` ByteString.pack [0x61]
-
-    -- LazyText
-
-    Hspec.describe "From String LazyText" $ do
-      let f = Witch.from @String @LazyText.Text
-      test $ f "" `Hspec.shouldBe` LazyText.pack ""
-      test $ f "a" `Hspec.shouldBe` LazyText.pack "a"
-      test $ f "ab" `Hspec.shouldBe` LazyText.pack "ab"
-
-    Hspec.describe "From LazyText String" $ do
-      let f = Witch.from @LazyText.Text @String
-      test $ f (LazyText.pack "") `Hspec.shouldBe` ""
-      test $ f (LazyText.pack "a") `Hspec.shouldBe` "a"
-      test $ f (LazyText.pack "ab") `Hspec.shouldBe` "ab"
-
-    Hspec.describe "From LazyText Text" $ do
-      let f = Witch.from @LazyText.Text @Text.Text
-      test $ f (LazyText.pack "") `Hspec.shouldBe` Text.pack ""
-      test $ f (LazyText.pack "a") `Hspec.shouldBe` Text.pack "a"
-      test $ f (LazyText.pack "ab") `Hspec.shouldBe` Text.pack "ab"
-
-    Hspec.describe "From LazyText LazyByteString" $ do
-      let f = Witch.from @LazyText.Text @LazyByteString.ByteString
-      test $ f (LazyText.pack "") `Hspec.shouldBe` LazyByteString.pack []
-      test $ f (LazyText.pack "a") `Hspec.shouldBe` LazyByteString.pack [0x61]
-
-    -- TryFromException
-
-    Hspec.describe "From (TryFromException s t0) (TryFromException s t1)" $ do
-      Hspec.it "needs tests" Hspec.pending
-
-    -- Day
-
-    Hspec.describe "From Integer Day" $ do
-      let f = Witch.from @Integer @Time.Day
-      test $ f 0 `Hspec.shouldBe` Time.ModifiedJulianDay 0
-
-    Hspec.describe "From Day Integer" $ do
-      let f = Witch.from @Time.Day @Integer
-      test $ f (Time.ModifiedJulianDay 0) `Hspec.shouldBe` 0
-
-    -- DayOfWeek
-
-    Hspec.describe "From Day DayOfWeek" $ do
-      let f = Witch.from @Time.Day @Time.DayOfWeek
-      test $ f (Time.ModifiedJulianDay 0) `Hspec.shouldBe` Time.Wednesday
-
-    -- UniversalTime
-
-    Hspec.describe "From Rational UniversalTime" $ do
-      let f = Witch.from @Rational @Time.UniversalTime
-      test $ f 0 `Hspec.shouldBe` Time.ModJulianDate 0
-
-    Hspec.describe "From UniversalTime Rational" $ do
-      let f = Witch.from @Time.UniversalTime @Rational
-      test $ f (Time.ModJulianDate 0) `Hspec.shouldBe` 0
-
-    -- DiffTime
-
-    Hspec.describe "From Pico DiffTime" $ do
-      let f = Witch.from @Fixed.Pico @Time.DiffTime
-      test $ f 0 `Hspec.shouldBe` 0
-
-    Hspec.describe "From DiffTime Pico" $ do
-      let f = Witch.from @Time.DiffTime @Fixed.Pico
-      test $ f 0 `Hspec.shouldBe` 0
-
-    -- NominalDiffTime
-
-    Hspec.describe "From Pico NominalDiffTime" $ do
-      let f = Witch.from @Fixed.Pico @Time.NominalDiffTime
-      test $ f 0 `Hspec.shouldBe` 0
-
-    Hspec.describe "From NominalDiffTime Pico" $ do
-      let f = Witch.from @Time.NominalDiffTime @Fixed.Pico
-      test $ f 0 `Hspec.shouldBe` 0
-
-    -- POSIXTime
-
-    Hspec.describe "From SystemTime POSIXTime" $ do
-      let f = Witch.from @Time.SystemTime @Time.POSIXTime
-      test $ f (Time.MkSystemTime 0 0) `Hspec.shouldBe` 0
-
-    Hspec.describe "From UTCTime POSIXTime" $ do
-      let f = Witch.from @Time.UTCTime @Time.POSIXTime
-      test $ f unixEpoch `Hspec.shouldBe` 0
-
-    Hspec.describe "From POSIXTime UTCTime" $ do
-      let f = Witch.from @Time.POSIXTime @Time.UTCTime
-      test $ f 0 `Hspec.shouldBe` unixEpoch
-
-    -- SystemTime
-
-    Hspec.describe "From UTCTime SystemTime" $ do
-      let f = Witch.from @Time.UTCTime @Time.SystemTime
-      test $ f unixEpoch `Hspec.shouldBe` Time.MkSystemTime 0 0
-
-    Hspec.describe "From SystemTime AbsoluteTime" $ do
-      let f = Witch.from @Time.SystemTime @Time.AbsoluteTime
-      test $ f (Time.MkSystemTime (-3506716800) 0) `Hspec.shouldBe` Time.taiEpoch
-
-    Hspec.describe "From SystemTime UTCTime" $ do
-      let f = Witch.from @Time.SystemTime @Time.UTCTime
-      test $ f (Time.MkSystemTime 0 0) `Hspec.shouldBe` unixEpoch
-
-    -- TimeOfDay
-
-    Hspec.describe "From DiffTime TimeOfDay" $ do
-      let f = Witch.from @Time.DiffTime @Time.TimeOfDay
-      test $ f 0 `Hspec.shouldBe` Time.TimeOfDay 0 0 0
-
-    Hspec.describe "From Rational TimeOfDay" $ do
-      let f = Witch.from @Rational @Time.TimeOfDay
-      test $ f 0 `Hspec.shouldBe` Time.TimeOfDay 0 0 0
-
-    Hspec.describe "From TimeOfDay DiffTime" $ do
-      let f = Witch.from @Time.TimeOfDay @Time.DiffTime
-      test $ f (Time.TimeOfDay 0 0 0) `Hspec.shouldBe` 0
-
-    Hspec.describe "From TimeOfDay Rational" $ do
-      let f = Witch.from @Time.TimeOfDay @Rational
-      test $ f (Time.TimeOfDay 0 0 0) `Hspec.shouldBe` 0
-
-    -- CalendarDiffTime
-
-    Hspec.describe "From CalendarDiffDays CalendarDiffTime" $ do
-      let f = Witch.from @Time.CalendarDiffDays @Time.CalendarDiffTime
-      test $ f (Time.CalendarDiffDays 0 0) `Hspec.shouldBe` Time.CalendarDiffTime 0 0
-
-    Hspec.describe "From NominalDiffTime CalendarDiffTime" $ do
-      let f = Witch.from @Time.NominalDiffTime @Time.CalendarDiffTime
-      test $ f 0 `Hspec.shouldBe` Time.CalendarDiffTime 0 0
-
-    -- ZonedTime
-
-    Hspec.describe "From ZonedTime UTCTime" $ do
-      let f = Witch.from @Time.ZonedTime @Time.UTCTime
-      test $ f (Time.ZonedTime (Time.LocalTime (Time.ModifiedJulianDay 0) (Time.TimeOfDay 0 0 0)) Time.utc) `Hspec.shouldBe` Time.UTCTime (Time.ModifiedJulianDay 0) 0
-
-test :: Hspec.Example a => a -> Hspec.SpecWith (Hspec.Arg a)
-test = Hspec.it ""
-
-untested :: Hspec.SpecWith a
-untested = Hspec.runIO $ Exception.throwIO Untested
 
 unixEpoch :: Time.UTCTime
 unixEpoch = Time.UTCTime (Time.ModifiedJulianDay 40587) 0
-
-data Untested
-  = Untested
-  deriving (Eq, Show)
-
-instance Exception.Exception Untested
-
--}
 
 hush :: Either x a -> Maybe a
 hush = either (const Nothing) Just
