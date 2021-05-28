@@ -51,4 +51,4 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: docker run --rm --user 0 --volume "$PWD:$PWD" --workdir "$PWD" taylorfausak/i386-haskell@sha256:450720742fa69258c0a8589dcac28c3c6d5d34718172d935b385520f4ee9128e sh -c 'cabal test --test-show-details direct'
+      - run: docker run --rm --user 0 --volume "$PWD:$PWD" --workdir "$PWD" taylorfausak/i386-haskell@sha256:450720742fa69258c0a8589dcac28c3c6d5d34718172d935b385520f4ee9128e sh -c 'cabal update && cabal test --test-show-details direct'
