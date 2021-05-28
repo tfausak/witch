@@ -74,7 +74,7 @@ test-suite test
   import: basics
 
   build-depends:
-    , hspec >= 2.7.9 && < 2.9
+    , HUnit >= 1.6.2 && < 1.7
     , witch
   ghc-options:
     -rtsopts
