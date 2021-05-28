@@ -209,7 +209,7 @@ module Witch
   --
   -- All of the above also applies for @Word@, @Word32@, and @Word64@.
 
-  --  ** Downsides
+  -- ** Downsides
   -- | As the author of this library, I obviously think that everyone should
   -- use it because it's the greatest thing since sliced bread. But nothing is
   -- perfect, so what are some downsides to this library?
