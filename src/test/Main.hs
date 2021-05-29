@@ -1601,6 +1601,18 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (ByteString.pack [0x61]) ~?= Just (Text.pack "a")
       , f (ByteString.pack [0xff]) ~?= Nothing
       ]
+    , "TryFrom ByteString LazyText" ~:
+      let f = hush . Witch.tryFrom @ByteString.ByteString @LazyText.Text in
+      [ f (ByteString.pack []) ~?= Just (LazyText.pack "")
+      , f (ByteString.pack [0x61]) ~?= Just (LazyText.pack "a")
+      , f (ByteString.pack [0xff]) ~?= Nothing
+      ]
+    , "TryFrom ByteString String" ~:
+      let f = hush . Witch.tryFrom @ByteString.ByteString @String in
+      [ f (ByteString.pack []) ~?= Just ""
+      , f (ByteString.pack [0x61]) ~?= Just "a"
+      , f (ByteString.pack [0xff]) ~?= Nothing
+      ]
 
     -- LazyByteString
 
@@ -1626,6 +1638,18 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = hush . Witch.tryFrom @LazyByteString.ByteString @LazyText.Text in
       [ f (LazyByteString.pack []) ~?= Just (LazyText.pack "")
       , f (LazyByteString.pack [0x61]) ~?= Just (LazyText.pack "a")
+      , f (LazyByteString.pack [0xff]) ~?= Nothing
+      ]
+    , "TryFrom LazyByteString Text" ~:
+      let f = hush . Witch.tryFrom @LazyByteString.ByteString @Text.Text in
+      [ f (LazyByteString.pack []) ~?= Just (Text.pack "")
+      , f (LazyByteString.pack [0x61]) ~?= Just (Text.pack "a")
+      , f (LazyByteString.pack [0xff]) ~?= Nothing
+      ]
+    , "TryFrom LazyByteString String" ~:
+      let f = hush . Witch.tryFrom @LazyByteString.ByteString @String in
+      [ f (LazyByteString.pack []) ~?= Just ""
+      , f (LazyByteString.pack [0x61]) ~?= Just "a"
       , f (LazyByteString.pack [0xff]) ~?= Nothing
       ]
 
@@ -1663,6 +1687,11 @@ main = runTestTTAndExit $ "Witch" ~:
       [ f (Text.pack "") ~?= ByteString.pack []
       , f (Text.pack "a") ~?= ByteString.pack [0x61]
       ]
+    , "From Text LazyByteString" ~:
+      let f = Witch.from @Text.Text @LazyByteString.ByteString in
+      [ f (Text.pack "") ~?= LazyByteString.pack []
+      , f (Text.pack "a") ~?= LazyByteString.pack [0x61]
+      ]
 
     -- LazyText
 
@@ -1676,6 +1705,11 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = Witch.from @LazyText.Text @LazyByteString.ByteString in
       [ f (LazyText.pack "") ~?= LazyByteString.pack []
       , f (LazyText.pack "a") ~?= LazyByteString.pack [0x61]
+      ]
+    , "From LazyText ByteString" ~:
+      let f = Witch.from @LazyText.Text @ByteString.ByteString in
+      [ f (LazyText.pack "") ~?= ByteString.pack []
+      , f (LazyText.pack "a") ~?= ByteString.pack [0x61]
       ]
 
     -- String
@@ -1703,6 +1737,16 @@ main = runTestTTAndExit $ "Witch" ~:
       [ f (LazyText.pack "") ~?= ""
       , f (LazyText.pack "a") ~?= "a"
       , f (LazyText.pack "ab") ~?= "ab"
+      ]
+    , "From String ByteString" ~:
+      let f = Witch.from @String @ByteString.ByteString in
+      [ f "" ~?= ByteString.pack []
+      , f "a" ~?= ByteString.pack [0x61]
+      ]
+    , "From String LazyByteString" ~:
+      let f = Witch.from @String @LazyByteString.ByteString in
+      [ f "" ~?= LazyByteString.pack []
+      , f "a" ~?= LazyByteString.pack [0x61]
       ]
 
     -- Day
