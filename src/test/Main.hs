@@ -92,7 +92,14 @@ main = runTestTTAndExit $ "Witch" ~:
       ]
     ]
   , "Instances" ~:
-    [ "From Int8 Int16" ~:
+    [ "From a a" ~:
+      let f = Witch.from @Int @Int in
+      [ f 0 ~?= 0
+      ]
+
+    -- Int8
+
+    , "From Int8 Int16" ~:
       let f = Witch.from @Int.Int8 @Int.Int16 in
       [ f 0 ~?= 0
       , f 127 ~?= 127
@@ -170,6 +177,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f 127 ~?= 127
       , f (-128) ~?= (-128)
       ]
+
+    -- Int16
+
     , "TryFrom Int16 Int8" ~:
       let f = hush . Witch.tryFrom @Int.Int16 @Int.Int8 in
       [ f 0 ~?= Just 0
@@ -251,7 +261,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f 32767 ~?= 32767
       , f (-32768) ~?= (-32768)
       ]
-    ]
+
+    -- Int32
+
     , "TryFrom Int32 Int8" ~:
       let f = hush . Witch.tryFrom @Int.Int32 @Int.Int8 in
       [ f 0 ~?= Just 0
@@ -338,6 +350,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f 2147483647 ~?= 2147483647
       , f (-2147483648) ~?= (-2147483648)
       ]
+
+    -- Int64
+
     , "TryFrom Int64 Int8" ~:
       let f = hush . Witch.tryFrom @Int.Int64 @Int.Int8 in
       [ f 0 ~?= Just 0
@@ -434,6 +449,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (-9007199254740991) ~?= Just (-9007199254740991)
       , f (-9007199254740992) ~?= Nothing
       ]
+
+    -- Int
+
     , "TryFrom Int Int8" ~:
       let f = hush . Witch.tryFrom @Int @Int.Int8 in
       [ f 0 ~?= Just 0
@@ -541,6 +559,9 @@ main = runTestTTAndExit $ "Witch" ~:
         then f (-9007199254740992) ~?= Nothing
         else f x ~?= Just (fromIntegral x)
       ]
+
+    -- Integer
+
     , "TryFrom Integer Int8" ~:
       let f = hush . Witch.tryFrom @Integer @Int.Int8 in
       [ f 0 ~?= Just 0
@@ -638,6 +659,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (-9007199254740991) ~?= Just (-9007199254740991)
       , f (-9007199254740992) ~?= Nothing
       ]
+
+    -- Word8
+
     , "From Word8 Word16" ~:
       let f = Witch.from @Word.Word8 @Word.Word16 in
       [ f 0 ~?= 0
@@ -704,6 +728,9 @@ main = runTestTTAndExit $ "Witch" ~:
       [ f 0 ~?= 0
       , f 255 ~?= 255
       ]
+
+    -- Word16
+
     , "TryFrom Word16 Word8" ~:
       let f = hush . Witch.tryFrom @Word.Word16 @Word.Word8 in
       [ f 0 ~?= Just 0
@@ -772,6 +799,9 @@ main = runTestTTAndExit $ "Witch" ~:
       [ f 0 ~?= 0
       , f 65535 ~?= 65535
       ]
+
+    -- Word32
+
     , "TryFrom Word32 Word8" ~:
       let f = hush . Witch.tryFrom @Word.Word32 @Word.Word8 in
       [ f 0 ~?= Just 0
@@ -845,6 +875,9 @@ main = runTestTTAndExit $ "Witch" ~:
       [ f 0 ~?= 0
       , f 4294967295 ~?= 4294967295
       ]
+
+    -- Word64
+
     , "TryFrom Word64 Word8" ~:
       let f = hush . Witch.tryFrom @Word.Word64 @Word.Word8 in
       [ f 0 ~?= Just 0
@@ -922,6 +955,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f 9007199254740991 ~?= Just 9007199254740991
       , f 9007199254740992 ~?= Nothing
       ]
+
+    -- Word
+
     , "TryFrom Word Word8" ~:
       let f = hush . Witch.tryFrom @Word @Word.Word8 in
       [ f 0 ~?= Just 0
@@ -1007,6 +1043,9 @@ main = runTestTTAndExit $ "Witch" ~:
         then f 9007199254740992 ~?= Nothing
         else f x ~?= Just (fromIntegral x)
       ]
+
+    -- Natural
+
     , "TryFrom Natural Word8" ~:
       let f = hush . Witch.tryFrom @Natural.Natural @Word.Word8 in
       [ f 0 ~?= Just 0
@@ -1084,6 +1123,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f 9007199254740991 ~?= Just 9007199254740991
       , f 9007199254740992 ~?= Nothing
       ]
+
+    -- Float
+
     , "TryFrom Float Int8" ~:
       let f = hush . Witch.tryFrom @Float @Int.Int8 in
       [ f 0 ~?= Just 0
@@ -1227,6 +1269,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (1 / 0) ~?= (1 / 0)
       , f (-1 / 0) ~?= (-1 / 0)
       ]
+
+    -- Double
+
     , "TryFrom Double Int8" ~:
       let f = hush . Witch.tryFrom @Double @Int.Int8 in
       [ f 0 ~?= Just 0
@@ -1376,6 +1421,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (1 / 0) ~?= (1 / 0)
       , f (-1 / 0) ~?= (-1 / 0)
       ]
+
+    -- Ratio
+
     , "From a (Ratio a)" ~:
       let f = Witch.from @Int @(Ratio.Ratio Int) in
       [ Witch.from @Integer @Rational 0 ~?= 0
@@ -1400,6 +1448,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f 0.5 ~?= 0.5
       , f (-0.5) ~?= (-0.5)
       ]
+
+    -- Fixed
+
     , "From Integer (Fixed a)" ~:
       let f = Witch.from @Integer @Fixed.Deci in
       [ Witch.from @Integer @Fixed.Uni 1 ~?= 1
@@ -1410,6 +1461,9 @@ main = runTestTTAndExit $ "Witch" ~:
       [ Witch.from @Fixed.Uni @Integer 1 ~?= 1
       , f 1 ~?= 10
       ]
+
+    -- Complex
+
     , "From a (Complex a)" ~:
       let f = Witch.from @Float @(Complex.Complex Float) in
       [ Witch.from @Double @(Complex.Complex Double) 1 ~?= 1
@@ -1422,6 +1476,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f 1 ~?= Just 1
       , f (0 Complex.:+ 1) ~?= Nothing
       ]
+
+    -- NonEmpty
+
     , "TryFrom [a] (NonEmpty a)" ~:
       let f = hush . Witch.tryFrom @[Int] @(NonEmpty.NonEmpty Int) in
       [ f [] ~?= Nothing
@@ -1433,6 +1490,9 @@ main = runTestTTAndExit $ "Witch" ~:
       [ f (1 NonEmpty.:| []) ~?= [1]
       , f (1 NonEmpty.:| [2]) ~?= [1, 2]
       ]
+
+    -- Set
+
     , "From [a] (Set a)" ~:
       let f = Witch.from @[Char] @(Set.Set Char) in
       [ f [] ~?= Set.fromList []
@@ -1446,6 +1506,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (Set.fromList ['a']) ~?= ['a']
       , f (Set.fromList ['a', 'b']) ~?= ['a', 'b']
       ]
+
+    -- IntSet
+
     , "From [Int] IntSet" ~:
       let f = Witch.from @[Int] @IntSet.IntSet in
       [ f [] ~?= IntSet.fromList []
@@ -1458,6 +1521,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (IntSet.fromList [1]) ~?= [1]
       , f (IntSet.fromList [1, 2]) ~?= [1, 2]
       ]
+
+    -- Map
+
     , "From [(k, v)] (Map k v)" ~:
       let f = Witch.from @[(Char, Int)] @(Map.Map Char Int) in
       [ f [] ~?= Map.empty
@@ -1471,6 +1537,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (Map.fromList [('a', 1)]) ~?= [('a', 1)]
       , f (Map.fromList [('a', 1), ('b', 2)]) ~?= [('a', 1), ('b', 2)]
       ]
+
+    -- IntMap
+
     , "From [(Int, v)] (IntMap v)" ~:
       let f = Witch.from @[(Int, Char)] @(IntMap.IntMap Char) in
       [ f [] ~?= IntMap.fromList []
@@ -1484,6 +1553,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (IntMap.fromList [(1, 'a')]) ~?= [(1, 'a')]
       , f (IntMap.fromList [(1, 'a'), (2, 'b')]) ~?= [(1, 'a'), (2, 'b')]
       ]
+
+    -- Seq
+
     , "From [a] (Seq a)" ~:
       let f = Witch.from @[Int] @(Seq.Seq Int) in
       [ f [] ~?= Seq.fromList []
@@ -1496,6 +1568,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (Seq.fromList [1]) ~?= [1]
       , f (Seq.fromList [1, 2]) ~?= [1, 2]
       ]
+
+    -- ByteString
+
     , "From [Word8] ByteString" ~:
       let f = Witch.from @[Word.Word8] @ByteString.ByteString in
       [ f [] ~?= ByteString.pack []
@@ -1526,6 +1601,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (ByteString.pack [0x61]) ~?= Just (Text.pack "a")
       , f (ByteString.pack [0xff]) ~?= Nothing
       ]
+
+    -- LazyByteString
+
     , "From [Word8] LazyByteString" ~:
       let f = Witch.from @[Word.Word8] @LazyByteString.ByteString in
       [ f [] ~?= LazyByteString.pack []
@@ -1550,6 +1628,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (LazyByteString.pack [0x61]) ~?= Just (LazyText.pack "a")
       , f (LazyByteString.pack [0xff]) ~?= Nothing
       ]
+
+    -- ShortByteString
+
     , "From [Word8] ShortByteString" ~:
       let f = Witch.from @[Word.Word8] @ShortByteString.ShortByteString in
       [ f [] ~?= ShortByteString.pack []
@@ -1568,6 +1649,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (ShortByteString.pack [0x00]) ~?= ByteString.pack [0x00]
       , f (ShortByteString.pack [0x0f, 0xf0]) ~?= ByteString.pack [0x0f, 0xf0]
       ]
+
+    -- Text
+
     , "From Text LazyText" ~:
       let f = Witch.from @Text.Text @LazyText.Text in
       [ f (Text.pack "") ~?= LazyText.pack ""
@@ -1579,6 +1663,9 @@ main = runTestTTAndExit $ "Witch" ~:
       [ f (Text.pack "") ~?= ByteString.pack []
       , f (Text.pack "a") ~?= ByteString.pack [0x61]
       ]
+
+    -- LazyText
+
     , "From LazyText Text" ~:
       let f = Witch.from @LazyText.Text @Text.Text in
       [ f (LazyText.pack "") ~?= Text.pack ""
@@ -1590,6 +1677,9 @@ main = runTestTTAndExit $ "Witch" ~:
       [ f (LazyText.pack "") ~?= LazyByteString.pack []
       , f (LazyText.pack "a") ~?= LazyByteString.pack [0x61]
       ]
+
+    -- String
+
     , "From String Text" ~:
       let f = Witch.from @String @Text.Text in
       [ f "" ~?= Text.pack ""
@@ -1614,6 +1704,9 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (LazyText.pack "a") ~?= "a"
       , f (LazyText.pack "ab") ~?= "ab"
       ]
+
+    -- Day
+
     , "From Integer Day" ~:
       let f = Witch.from @Integer @Time.Day in
       [ f 0 ~?= Time.ModifiedJulianDay 0
@@ -1622,10 +1715,16 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = Witch.from @Time.Day @Integer in
       [ f (Time.ModifiedJulianDay 0) ~?= 0
       ]
+
+    -- DayOfWeek
+
     , "From Day DayOfWeek" ~:
       let f = Witch.from @Time.Day @Time.DayOfWeek in
       [ f (Time.ModifiedJulianDay 0) ~?= Time.Wednesday
       ]
+
+    -- UniversalTime
+
     , "From Rational UniversalTime" ~:
       let f = Witch.from @Rational @Time.UniversalTime in
       [ f 0 ~?= Time.ModJulianDate 0
@@ -1634,6 +1733,9 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = Witch.from @Time.UniversalTime @Rational in
       [ f (Time.ModJulianDate 0) ~?= 0
       ]
+
+    -- DiffTime
+
     , "From Pico DiffTime" ~:
       let f = Witch.from @Fixed.Pico @Time.DiffTime in
       [ f 0 ~?= 0
@@ -1642,6 +1744,9 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = Witch.from @Time.DiffTime @Fixed.Pico in
       [ f 0 ~?= 0
       ]
+
+    -- NominalDiffTime
+
     , "From Pico NominalDiffTime" ~:
       let f = Witch.from @Fixed.Pico @Time.NominalDiffTime in
       [ f 0 ~?= 0
@@ -1650,6 +1755,9 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = Witch.from @Time.NominalDiffTime @Fixed.Pico in
       [ f 0 ~?= 0
       ]
+
+    -- POSIXTime
+
     , "From SystemTime POSIXTime" ~:
       let f = Witch.from @Time.SystemTime @Time.POSIXTime in
       [ f (Time.MkSystemTime 0 0) ~?= 0
@@ -1662,6 +1770,9 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = Witch.from @Time.POSIXTime @Time.UTCTime in
       [ f 0 ~?= unixEpoch
       ]
+
+    -- SystemTime
+
     , "From UTCTime SystemTime" ~:
       let f = Witch.from @Time.UTCTime @Time.SystemTime in
       [ f unixEpoch ~?= Time.MkSystemTime 0 0
@@ -1674,6 +1785,9 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = Witch.from @Time.SystemTime @Time.UTCTime in
       [ f (Time.MkSystemTime 0 0) ~?= unixEpoch
       ]
+
+    -- TimeOfDay
+
     , "From DiffTime TimeOfDay" ~:
       let f = Witch.from @Time.DiffTime @Time.TimeOfDay in
       [ f 0 ~?= Time.TimeOfDay 0 0 0
@@ -1690,6 +1804,9 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = Witch.from @Time.TimeOfDay @Rational in
       [ f (Time.TimeOfDay 0 0 0) ~?= 0
       ]
+
+    -- CalendarDiffTime
+
     , "From CalendarDiffDays CalendarDiffTime" ~:
       let f = Witch.from @Time.CalendarDiffDays @Time.CalendarDiffTime in
       [ f (Time.CalendarDiffDays 0 0) ~?= Time.CalendarDiffTime 0 0
@@ -1698,10 +1815,14 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = Witch.from @Time.NominalDiffTime @Time.CalendarDiffTime in
       [ f 0 ~?= Time.CalendarDiffTime 0 0
       ]
+
+    -- ZonedTime
+
     , "From ZonedTime UTCTime" ~:
       let f = Witch.from @Time.ZonedTime @Time.UTCTime in
       [ f (Time.ZonedTime (Time.LocalTime (Time.ModifiedJulianDay 0) (Time.TimeOfDay 0 0 0)) Time.utc) ~?= Time.UTCTime (Time.ModifiedJulianDay 0) 0
       ]
+    ]
   ]
 
 unixEpoch :: Time.UTCTime
