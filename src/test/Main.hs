@@ -1568,6 +1568,28 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (ShortByteString.pack [0x00]) ~?= ByteString.pack [0x00]
       , f (ShortByteString.pack [0x0f, 0xf0]) ~?= ByteString.pack [0x0f, 0xf0]
       ]
+    , "From Text LazyText" ~:
+      let f = Witch.from @Text.Text @LazyText.Text in
+      [ f (Text.pack "") ~?= LazyText.pack ""
+      , f (Text.pack "a") ~?= LazyText.pack "a"
+      , f (Text.pack "ab") ~?= LazyText.pack "ab"
+      ]
+    , "From Text ByteString" ~:
+      let f = Witch.from @Text.Text @ByteString.ByteString in
+      [ f (Text.pack "") ~?= ByteString.pack []
+      , f (Text.pack "a") ~?= ByteString.pack [0x61]
+      ]
+    , "From LazyText Text" ~:
+      let f = Witch.from @LazyText.Text @Text.Text in
+      [ f (LazyText.pack "") ~?= Text.pack ""
+      , f (LazyText.pack "a") ~?= Text.pack "a"
+      , f (LazyText.pack "ab") ~?= Text.pack "ab"
+      ]
+    , "From LazyText LazyByteString" ~:
+      let f = Witch.from @LazyText.Text @LazyByteString.ByteString in
+      [ f (LazyText.pack "") ~?= LazyByteString.pack []
+      , f (LazyText.pack "a") ~?= LazyByteString.pack [0x61]
+      ]
     , "From String Text" ~:
       let f = Witch.from @String @Text.Text in
       [ f "" ~?= Text.pack ""
@@ -1580,17 +1602,6 @@ main = runTestTTAndExit $ "Witch" ~:
       , f (Text.pack "a") ~?= "a"
       , f (Text.pack "ab") ~?= "ab"
       ]
-    , "From Text LazyText" ~:
-      let f = Witch.from @Text.Text @LazyText.Text in
-      [ f (Text.pack "") ~?= LazyText.pack ""
-      , f (Text.pack "a") ~?= LazyText.pack "a"
-      , f (Text.pack "ab") ~?= LazyText.pack "ab"
-      ]
-    , "From Text ByteString" ~:
-      let f = Witch.from @Text.Text @ByteString.ByteString in
-      [ f (Text.pack "") ~?= ByteString.pack []
-      , f (Text.pack "a") ~?= ByteString.pack [0x61]
-      ]
     , "From String LazyText" ~:
       let f = Witch.from @String @LazyText.Text in
       [ f "" ~?= LazyText.pack ""
@@ -1602,17 +1613,6 @@ main = runTestTTAndExit $ "Witch" ~:
       [ f (LazyText.pack "") ~?= ""
       , f (LazyText.pack "a") ~?= "a"
       , f (LazyText.pack "ab") ~?= "ab"
-      ]
-    , "From LazyText Text" ~:
-      let f = Witch.from @LazyText.Text @Text.Text in
-      [ f (LazyText.pack "") ~?= Text.pack ""
-      , f (LazyText.pack "a") ~?= Text.pack "a"
-      , f (LazyText.pack "ab") ~?= Text.pack "ab"
-      ]
-    , "From LazyText LazyByteString" ~:
-      let f = Witch.from @LazyText.Text @LazyByteString.ByteString in
-      [ f (LazyText.pack "") ~?= LazyByteString.pack []
-      , f (LazyText.pack "a") ~?= LazyByteString.pack [0x61]
       ]
     , "From Integer Day" ~:
       let f = Witch.from @Integer @Time.Day in

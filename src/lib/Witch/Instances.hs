@@ -1049,15 +1049,6 @@ instance From.From ShortByteString.ShortByteString ByteString.ByteString where
 
 -- Text
 
--- | Uses 'Text.pack'. Some 'Char' values cannot be represented in 'Text.Text'
--- and will be replaced with @'\\xFFFD'@.
-instance From.From String Text.Text where
-  from = Text.pack
-
--- | Uses 'Text.unpack'.
-instance From.From Text.Text String where
-  from = Text.unpack
-
 -- | Uses 'LazyText.fromStrict'.
 instance From.From Text.Text LazyText.Text where
   from = LazyText.fromStrict
@@ -1068,6 +1059,25 @@ instance From.From Text.Text ByteString.ByteString where
 
 -- LazyText
 
+-- | Uses 'LazyText.toStrict'.
+instance From.From LazyText.Text Text.Text where
+  from = LazyText.toStrict
+
+-- | Uses 'LazyText.encodeUtf8'.
+instance From.From LazyText.Text LazyByteString.ByteString where
+  from = LazyText.encodeUtf8
+
+-- String
+
+-- | Uses 'Text.pack'. Some 'Char' values cannot be represented in 'Text.Text'
+-- and will be replaced with @'\\xFFFD'@.
+instance From.From String Text.Text where
+  from = Text.pack
+
+-- | Uses 'Text.unpack'.
+instance From.From Text.Text String where
+  from = Text.unpack
+
 -- | Uses 'LazyText.pack'. Some 'Char' values cannot be represented in
 -- 'LazyText.Text' and will be replaced with @'\\xFFFD'@.
 instance From.From String LazyText.Text where
@@ -1076,14 +1086,6 @@ instance From.From String LazyText.Text where
 -- | Uses 'LazyText.unpack'.
 instance From.From LazyText.Text String where
   from = LazyText.unpack
-
--- | Uses 'LazyText.toStrict'.
-instance From.From LazyText.Text Text.Text where
-  from = LazyText.toStrict
-
--- | Uses 'LazyText.encodeUtf8'.
-instance From.From LazyText.Text LazyByteString.ByteString where
-  from = LazyText.encodeUtf8
 
 -- TryFromException
 
