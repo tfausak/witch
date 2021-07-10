@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 
 module Witch.Instances where
@@ -906,6 +907,14 @@ instance From.From Rational Float where
 -- | Uses 'fromRational'. This necessarily loses some precision.
 instance From.From Rational Double where
   from = fromRational
+
+-- | TODO
+instance Fixed.HasResolution a => TryFrom.TryFrom Rational (Fixed.Fixed a) where
+  tryFrom = Utility.eitherTryFrom $ \s ->
+    let t = fromRational s :: Fixed.Fixed a
+    in if toRational t == s
+      then Right t
+      else Left Exception.LossOfPrecision
 
 -- Fixed
 

@@ -1448,6 +1448,15 @@ main = runTestTTAndExit $ "Witch" ~:
       , f 0.5 ~?= 0.5
       , f (-0.5) ~?= (-0.5)
       ]
+    , "TryFrom Rational (Fixed a)" ~:
+      let f = hush . Witch.tryFrom @Rational @Fixed.Deci in
+      [ hush (Witch.tryFrom @Rational @Fixed.Uni 1) ~?= Just 1
+      , hush (Witch.tryFrom @Rational @Fixed.Uni 1.2) ~?= Nothing
+      , f 0.1 ~?= Just 0.1
+      , f 1.2 ~?= Just 1.2
+      , f 12.3 ~?= Just 12.3
+      , f 0.12 ~?= Nothing
+      ]
 
     -- Fixed
 
