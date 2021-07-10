@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 
 module Witch.Instances where
@@ -907,6 +908,16 @@ instance From.From Rational Float where
 instance From.From Rational Double where
   from = fromRational
 
+-- | Uses `fromRational` as long as there isn't a loss of precision.
+instance Fixed.HasResolution a => TryFrom.TryFrom Rational (Fixed.Fixed a) where
+  tryFrom = Utility.eitherTryFrom $ \s ->
+    let
+      t :: Fixed.Fixed a
+      t = fromRational s
+    in if toRational t == s
+      then Right t
+      else Left Exception.LossOfPrecision
+
 -- Fixed
 
 -- | Uses 'Fixed.MkFixed'. This means @from \@Integer \@Centi 2@ is @0.02@
@@ -918,6 +929,10 @@ instance From.From Integer (Fixed.Fixed a) where
 -- rather than @3@.
 instance From.From (Fixed.Fixed a) Integer where
   from (Fixed.MkFixed t) = t
+
+-- | Uses 'toRational'.
+instance Fixed.HasResolution a => From.From (Fixed.Fixed a) Rational where
+  from = toRational
 
 -- Complex
 
