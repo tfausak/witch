@@ -908,7 +908,7 @@ instance From.From Rational Float where
 instance From.From Rational Double where
   from = fromRational
 
--- | TODO
+-- | Uses `fromRational` as long as there isn't a loss of precision.
 instance Fixed.HasResolution a => TryFrom.TryFrom Rational (Fixed.Fixed a) where
   tryFrom = Utility.eitherTryFrom $ \s ->
     let t = fromRational s :: Fixed.Fixed a
