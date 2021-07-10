@@ -1455,11 +1455,22 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = Witch.from @Integer @Fixed.Deci in
       [ Witch.from @Integer @Fixed.Uni 1 ~?= 1
       , f 1 ~?= 0.1
+      , f 10 ~?= 1
+      , f 120 ~?= 12
       ]
     , "From (Fixed a) Integer" ~:
       let f = Witch.from @Fixed.Deci @Integer in
       [ Witch.from @Fixed.Uni @Integer 1 ~?= 1
+      , f 0.1 ~?= 1
       , f 1 ~?= 10
+      , f 12 ~?= 120
+      ]
+    , "From (Fixed a) Rational" ~:
+      let f = Witch.from @Fixed.Deci @Rational in
+      [ Witch.from @Fixed.Uni @Rational 1 ~?= 1
+      , f 0.1 ~?= 0.1
+      , f 1 ~?= 1
+      , f 12 ~?= 12
       ]
 
     -- Complex

@@ -919,6 +919,10 @@ instance From.From Integer (Fixed.Fixed a) where
 instance From.From (Fixed.Fixed a) Integer where
   from (Fixed.MkFixed t) = t
 
+-- | Uses 'toRational'.
+instance Fixed.HasResolution a => From.From (Fixed.Fixed a) Rational where
+  from = toRational
+
 -- Complex
 
 -- | Uses '(Complex.:+)' with an imaginary part of 0.
