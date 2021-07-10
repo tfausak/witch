@@ -911,7 +911,9 @@ instance From.From Rational Double where
 -- | Uses `fromRational` as long as there isn't a loss of precision.
 instance Fixed.HasResolution a => TryFrom.TryFrom Rational (Fixed.Fixed a) where
   tryFrom = Utility.eitherTryFrom $ \s ->
-    let t = fromRational s :: Fixed.Fixed a
+    let
+      t :: Fixed.Fixed a
+      t = fromRational s
     in if toRational t == s
       then Right t
       else Left Exception.LossOfPrecision
