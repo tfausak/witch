@@ -161,8 +161,8 @@ module Witch
   -- - Conversions should be lossless. If you have @From a b@ then no two @a@
   --   values should be converted to the same @b@ value.
   --
-  --   - Some conversions necessarily lose information, like converting from a
-  --     list into a set.
+  --     - Some conversions necessarily lose information, like converting from
+  --       a list into a set.
   --
   -- - If you have both @From a b@ and @From b a@, then
   --   @from \@b \@a . from \@a \@b@ should be the same as 'id'. In other
