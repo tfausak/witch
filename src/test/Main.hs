@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -Wno-error=overflowed-literals #-}
 
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NegativeLiterals #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 
@@ -89,6 +90,12 @@ main = runTestTTAndExit $ "Witch" ~:
       ]
     , "liftedInto" ~:
       [ $$(Witch.liftedInto @Int.Int8 (1 :: Int.Int16)) ~?= 1
+      ]
+    ]
+  , "TryFromException" ~:
+    [ "show" ~:
+      [ show (Witch.TryFromException @Int @Int 0 Nothing) ~?= "TryFromException @Int @Int 0 Nothing"
+      , show (Witch.TryFromException @(Seq.Seq Int) @(Seq.Seq Int) (Seq.fromList []) (Just (Exception.toException Exception.Overflow))) ~?= "TryFromException @(Seq Int) @(Seq Int) (fromList []) (Just arithmetic overflow)"
       ]
     ]
   , "Instances" ~:
