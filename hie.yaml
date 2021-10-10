@@ -1,0 +1,16 @@
+cradle:
+  stack:
+    - path: "./src/lib"
+      component: "witch:lib"
+
+    - path: "./src/ghc-9.0"
+      component: "witch:lib"
+
+    - path: "./src/ghc-8.10"
+      component: "witch:lib"
+
+    - path: "./src/ghc-8.8"
+      component: "witch:lib"
+
+    - path: "./src/test"
+      component: "witch:test:test"
