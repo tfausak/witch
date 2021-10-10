@@ -1,0 +1,1 @@
+--test=":main --fail-fast --color -f failed-examples"

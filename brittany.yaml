@@ -1,0 +1,19 @@
+conf_forward:
+  options_ghc:
+    - -XApplicativeDo
+    - -XBangPatterns
+    - -XBlockArguments
+    - -XDataKinds
+    - -XFlexibleContexts
+    - -XNamedFieldPuns
+    - -XNegativeLiterals
+    - -XNoImplicitPrelude
+    - -XNumDecimals
+    - -XNumericUnderscores
+    - -XOverloadedStrings
+    - -XScopedTypeVariables
+    - -XTypeApplications
+conf_layout:
+  lconfig_cols: 79
+  lconfig_columnAlignMode: { tag: ColumnAlignModeDisabled }
+  lconfig_indentPolicy: IndentPolicyLeft

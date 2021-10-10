@@ -33,6 +33,9 @@ common basics
     -Wno-redundant-constraints
     -Wno-safe
     -Wno-unsafe
+    -Wno-missing-local-signatures
+    -Wno-missing-import-lists
+
 
   if impl(ghc >= 8.4)
     ghc-options:
