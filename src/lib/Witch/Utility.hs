@@ -6,7 +6,6 @@ module Witch.Utility where
 
 import qualified Control.Exception as Exception
 import qualified Data.Bifunctor as Bifunctor
-import qualified Data.Coerce as Coerce
 import qualified Data.Typeable as Typeable
 import qualified GHC.Stack as Stack
 import qualified Witch.From as From
@@ -103,13 +102,7 @@ tryVia
    . (TryFrom.TryFrom source through, TryFrom.TryFrom through target)
   => source
   -> Either (TryFromException.TryFromException source target) target
-tryVia s = case TryFrom.tryFrom s of
-  Left (TryFromException.TryFromException _ e) ->
-    Left $ TryFromException.TryFromException s e
-  Right u -> case TryFrom.tryFrom (u :: through) of
-    Left (TryFromException.TryFromException _ e) ->
-      Left $ TryFromException.TryFromException s e
-    Right t -> Right t
+tryVia = TryFrom.tryFrom @through `composeTry` TryFrom.tryFrom
 
 -- | Combinator to compose 'TryFrom.tryFrom' based expressions with each other.
 -- Some sort of generic version of 'tryVia' which allows deeper
@@ -137,20 +130,15 @@ composeTry
   -> ( source
      -> Either (TryFromException.TryFromException source through) through
      )
-  -> ( source
-     -> Either (TryFromException.TryFromException source target) target
-     )
-composeTry f g s = handleFail . f =<< handleFail (g s)
- where
-  handleFail
-    :: Either (TryFromException.TryFromException a b) c
-    -> Either (TryFromException.TryFromException source target) c
-  handleFail = Bifunctor.first
-    (\(TryFromException.TryFromException _ e) ->
-      TryFromException.TryFromException s e
-    )
+  -> source
+  -> Either (TryFromException.TryFromException source target) target
+composeTry f g s =
+  either
+      (Left . TryFromException.withTarget)
+      (Bifunctor.first (TryFromException.withSource s) . f)
+    $ g s
 
--- | Combinator to compose 'TryFrom.tryFrom' basd expression with
+-- | Combinator to compose 'TryFrom.tryFrom' based expression with
 -- 'From.from' based expression where 'TryFrom.tryFrom' is on the right side.
 -- Infix notation is very useful in some cases, similar to '.' combinator.
 -- Might be used to build new 'TryFrom.TryFrom' instances.
@@ -172,10 +160,9 @@ composeTryRhs
   -> ( source
      -> Either (TryFromException.TryFromException source through) through
      )
-  -> ( source
-     -> Either (TryFromException.TryFromException source target) target
-     )
-composeTryRhs f g s = Bifunctor.bimap Coerce.coerce f $ g s
+  -> source
+  -> Either (TryFromException.TryFromException source target) target
+composeTryRhs f g s = Bifunctor.bimap TryFromException.withTarget f $ g s
 
 -- | Combinator to compose 'TryFrom.tryFrom' based expression with
 -- 'From.from' based expression where 'TryFrom.tryFrom' is on the left side.
@@ -191,23 +178,18 @@ composeTryRhs f g s = Bifunctor.bimap Coerce.coerce f $ g s
 -- > -- Prefer this:
 -- > tryFrom @u `composeTryLhs` into @u
 composeTryLhs
-  :: forall through source target
+  :: forall
+       through
+       source
+       target
    . ( through
   -> Either (TryFromException.TryFromException through target) target
   )
   -> (source -> through)
-  -> ( source
-     -> Either (TryFromException.TryFromException source target) target
-     )
-composeTryLhs f g s = handleFail . f $ g s
- where
-  handleFail
-    :: Either (TryFromException.TryFromException a b) c
-    -> Either (TryFromException.TryFromException source target) c
-  handleFail = Bifunctor.first
-    (\(TryFromException.TryFromException _ e) ->
-      TryFromException.TryFromException s e
-    )
+  -> source
+  -> Either (TryFromException.TryFromException source target) target
+composeTryLhs f g s =
+  Bifunctor.first (TryFromException.withSource s) . f $ g s
 
 -- | This function can be used to implement 'TryFrom.tryFrom' with a function
 -- that returns 'Maybe'. For example:

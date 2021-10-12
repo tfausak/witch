@@ -3,6 +3,7 @@
 module Witch.TryFromException where
 
 import qualified Control.Exception as Exception
+import qualified Data.Coerce as Coerce
 import qualified Data.Proxy as Proxy
 import qualified Data.Typeable as Typeable
 
@@ -36,3 +37,17 @@ instance
   , Typeable.Typeable source
   , Typeable.Typeable target
   ) => Exception.Exception (TryFromException source target)
+
+-- | For internal usage.
+-- Replaces the source with the given value.
+withSource
+  :: source2 -> TryFromException source1 t -> TryFromException source2 t
+withSource s (TryFromException _ e) = TryFromException s e
+
+-- | For internal usage.
+-- Replaces the target with the given type.
+withTarget
+  :: forall target2 source target1
+   . TryFromException source target1
+  -> TryFromException source target2
+withTarget = Coerce.coerce

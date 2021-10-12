@@ -1,16 +1,16 @@
 cradle:
-  stack:
+  cabal:
     - path: "./src/lib"
-      component: "witch:lib"
+      component: "lib:witch"
 
     - path: "./src/ghc-9.0"
-      component: "witch:lib"
+      component: "lib:witch"
 
     - path: "./src/ghc-8.10"
-      component: "witch:lib"
+      component: "lib:witch"
 
     - path: "./src/ghc-8.8"
-      component: "witch:lib"
+      component: "lib:witch"
 
     - path: "./src/test"
       component: "witch:test:test"
