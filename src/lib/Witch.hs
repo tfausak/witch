@@ -27,6 +27,9 @@ module Witch
   , Witch.Utility.over
   , Witch.Utility.via
   , Witch.Utility.tryVia
+  , Witch.Utility.composeTry
+  , Witch.Utility.composeTryRhs
+  , Witch.Utility.composeTryLhs
   , Witch.Utility.maybeTryFrom
   , Witch.Utility.eitherTryFrom
 

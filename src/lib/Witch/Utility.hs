@@ -1,9 +1,12 @@
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Witch.Utility where
 
 import qualified Control.Exception as Exception
+import qualified Data.Bifunctor as Bifunctor
+import qualified Data.Coerce as Coerce
 import qualified Data.Typeable as Typeable
 import qualified GHC.Stack as Stack
 import qualified Witch.From as From
@@ -29,11 +32,7 @@ as = id
 -- >
 -- > -- Prefer this:
 -- > into @t x
-into
-  :: forall target source
-   . From.From source target
-  => source
-  -> target
+into :: forall target source . From.From source target => source -> target
 into = From.from
 
 -- | This function converts from some @source@ type into some @target@ type,
@@ -48,9 +47,7 @@ into = From.from
 -- > over @t f
 over
   :: forall target source
-   . ( From.From source target
-     , From.From target source
-     )
+   . (From.From source target, From.From target source)
   => (target -> target)
   -> source
   -> source
@@ -68,9 +65,7 @@ over f = From.from . f . From.from
 -- > via @u
 via
   :: forall through source target
-   . ( From.From source through
-     , From.From through target
-     )
+   . (From.From source through, From.From through target)
   => source
   -> target
 via = From.from . (\x -> x :: through) . From.from
@@ -105,9 +100,7 @@ tryInto = TryFrom.tryFrom
 -- > tryVia @u
 tryVia
   :: forall through source target
-   . ( TryFrom.TryFrom source through
-     , TryFrom.TryFrom through target
-     )
+   . (TryFrom.TryFrom source through, TryFrom.TryFrom through target)
   => source
   -> Either (TryFromException.TryFromException source target) target
 tryVia s = case TryFrom.tryFrom s of
@@ -117,6 +110,104 @@ tryVia s = case TryFrom.tryFrom s of
     Left (TryFromException.TryFromException _ e) ->
       Left $ TryFromException.TryFromException s e
     Right t -> Right t
+
+-- | Combinator to compose 'TryFrom.tryFrom' based expressions with each other.
+-- Some sort of generic version of 'tryVia' which allows deeper
+-- composition. Infix notation is very useful in some cases, similar
+-- to '.' combinator. Might be used to build new 'TryFrom.TryFrom' instances.
+-- Effective in combinations with 'composeTryRhs' and 'composeTryLhs'.
+--
+-- > -- Avoid this:
+-- > case tryInto @u x of
+-- >   Left (TryFromException _ e) -> Left $ TryFromException x e
+-- >   Right y -> case tryFrom @u y of
+-- >     Left (TryFromException _ e) -> Left $ TryFromException x e
+-- >     Right z -> Right z
+-- >
+-- > -- Prefer this:
+-- > tryFrom @u `composeTry` tryInto @u
+composeTry
+  :: forall
+       through
+       source
+       target
+   . ( through
+  -> Either (TryFromException.TryFromException through target) target
+  )
+  -> ( source
+     -> Either (TryFromException.TryFromException source through) through
+     )
+  -> ( source
+     -> Either (TryFromException.TryFromException source target) target
+     )
+composeTry f g s = handleFail . f =<< handleFail (g s)
+ where
+  handleFail
+    :: Either (TryFromException.TryFromException a b) c
+    -> Either (TryFromException.TryFromException source target) c
+  handleFail = Bifunctor.first
+    (\(TryFromException.TryFromException _ e) ->
+      TryFromException.TryFromException s e
+    )
+
+-- | Combinator to compose 'TryFrom.tryFrom' basd expression with
+-- 'From.from' based expression where 'TryFrom.tryFrom' is on the right side.
+-- Infix notation is very useful in some cases, similar to '.' combinator.
+-- Might be used to build new 'TryFrom.TryFrom' instances.
+-- Effective in combinations with 'composeTry' and 'composeTryLhs'.
+--
+-- > -- Avoid this:
+-- > case tryInto @u x of
+-- >   Left (TryFromException _ e) -> Left $ TryFromException x e
+-- >   Right y -> from @u y
+-- >
+-- > -- Prefer this:
+-- > from @u `composeTryRhs` tryInto @u
+composeTryRhs
+  :: forall
+       through
+       source
+       target
+   . (through -> target)
+  -> ( source
+     -> Either (TryFromException.TryFromException source through) through
+     )
+  -> ( source
+     -> Either (TryFromException.TryFromException source target) target
+     )
+composeTryRhs f g s = Bifunctor.bimap Coerce.coerce f $ g s
+
+-- | Combinator to compose 'TryFrom.tryFrom' based expression with
+-- 'From.from' based expression where 'TryFrom.tryFrom' is on the left side.
+-- Infix notation is very useful in some cases, similar to '.' combinator.
+-- Might be used to build new 'TryFrom.TryFrom' instances.
+-- Effective in combinations with 'composeTry' and 'composeTryRhs'.
+--
+-- > -- Avoid this:
+-- > case tryFrom @u $ into @u x of
+-- >   Left (TryFromException _ e) -> Left $ TryFromException x e
+-- >   Right z -> Right z
+-- >
+-- > -- Prefer this:
+-- > tryFrom @u `composeTryLhs` into @u
+composeTryLhs
+  :: forall through source target
+   . ( through
+  -> Either (TryFromException.TryFromException through target) target
+  )
+  -> (source -> through)
+  -> ( source
+     -> Either (TryFromException.TryFromException source target) target
+     )
+composeTryLhs f g s = handleFail . f $ g s
+ where
+  handleFail
+    :: Either (TryFromException.TryFromException a b) c
+    -> Either (TryFromException.TryFromException source target) c
+  handleFail = Bifunctor.first
+    (\(TryFromException.TryFromException _ e) ->
+      TryFromException.TryFromException s e
+    )
 
 -- | This function can be used to implement 'TryFrom.tryFrom' with a function
 -- that returns 'Maybe'. For example:
