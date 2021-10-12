@@ -1,5 +1,8 @@
 #!/bin/sh
 
+set -e
+
+THIS_DIR="$(dirname "$(realpath "$0")")"
 VIM_BACKGROUND="${VIM_BACKGROUND:-light}"
 VIM_COLOR_SCHEME="${VIM_COLOR_SCHEME:-PaperColor}"
 USER="${USER:-haskell}"
@@ -10,7 +13,7 @@ trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDS
 "
 
 docker run -it --rm \
-  -v "$(pwd):/app" \
+  -v "$THIS_DIR/..:/app" \
   -v "nix-$USER:/nix" \
   -v "nix-home-$USER:/home/$USER" \
   -w "/app" nixos/nix:2.3.12 \

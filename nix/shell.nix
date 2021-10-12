@@ -25,21 +25,6 @@ let defaultShellHook = ''
       grep -q "$SKIP_GHC_CHECK" ~/.stack/config.yaml \
         || echo "$SKIP_GHC_CHECK" >> ~/.stack/config.yaml
 
-      export HOOGLEDB=~/.hoogle
-      if [ "$(ls -A $HOOGLEDB)" ]; then
-        echo "hoogle database already exists..."
-      else
-        echo "building hoogle database..."
-        stack --stack-yaml=/app/stack.yaml exec hoogle generate
-      fi
-
-      if [ "$(ls -A ~/.cabal)" ]; then
-        echo "cabal database already exists..."
-      else
-        echo "building cabal database..."
-        cabal v2-update
-      fi
-
    '';
 in
 
