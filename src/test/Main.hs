@@ -1895,7 +1895,7 @@ main = runTestTTAndExit $ "Witch" ~:
       [ f (Time.ZonedTime (Time.LocalTime (Time.ModifiedJulianDay 0) (Time.TimeOfDay 0 0 0)) Time.utc) ~?= Time.UTCTime (Time.ModifiedJulianDay 0) 0
       ]
     ]
-  ] <> WitchCompositionSpec.tests
+  ] ++ WitchCompositionSpec.tests
 
 unixEpoch :: Time.UTCTime
 unixEpoch = Time.UTCTime (Time.ModifiedJulianDay 40587) 0
