@@ -32,6 +32,8 @@ module Witch
   , Witch.Utility.composeTryLhs
   , Witch.Utility.maybeTryFrom
   , Witch.Utility.eitherTryFrom
+  , Witch.TryFromException.withSource
+  , Witch.TryFromException.withTarget
 
   -- ** Unsafe
   -- | These functions should only be used in two circumstances: When you know

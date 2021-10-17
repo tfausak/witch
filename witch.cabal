@@ -35,7 +35,7 @@ common basics
     -Wno-unsafe
     -Wno-missing-local-signatures
     -Wno-missing-import-lists
-
+    -Wno-monomorphism-restriction
 
   if impl(ghc >= 8.4)
     ghc-options:

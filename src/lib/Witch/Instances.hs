@@ -8,6 +8,7 @@ module Witch.Instances where
 
 import qualified Control.Exception as Exception
 import qualified Data.Bits as Bits
+import qualified Data.Bifunctor as Bifunctor
 import qualified Data.ByteString as ByteString
 import qualified Data.ByteString.Lazy as LazyByteString
 import qualified Data.ByteString.Short as ShortByteString
@@ -899,6 +900,30 @@ instance (Eq a, Num a) => TryFrom.TryFrom (Ratio.Ratio a) a where
   tryFrom = Utility.eitherTryFrom $ \s -> if Ratio.denominator s == 1
     then Right $ Ratio.numerator s
     else Left Exception.LossOfPrecision
+
+-- | Uses 'From.From' instances of numerator and denominator.
+instance
+  (From.From a b, Integral b) =>
+  From.From (Ratio.Ratio a) (Ratio.Ratio b)
+  where
+  from s =
+    From.from (Ratio.numerator s)
+      Ratio.% From.from (Ratio.denominator s)
+
+-- | Uses 'TryFrom.TryFrom' instances of numerator and denominator.
+instance
+  (TryFrom.TryFrom a b, Integral b) =>
+  TryFrom.TryFrom (Ratio.Ratio a) (Ratio.Ratio b)
+  where
+  tryFrom s =
+    (Ratio.%)
+      <$> tryFrom' (Ratio.numerator s)
+      <*> tryFrom' (Ratio.denominator s)
+    where
+      tryFrom' =
+        Bifunctor.first
+          (TryFromException.withTarget . TryFromException.withSource s)
+          . TryFrom.tryFrom
 
 -- | Uses 'fromRational'. This necessarily loses some precision.
 instance From.From Rational Float where

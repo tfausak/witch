@@ -1444,6 +1444,18 @@ main = runTestTTAndExit $ "Witch" ~:
       , f 0 ~?= Just 0
       , f 0.5 ~?= Nothing
       ]
+    , "From (Ratio a) (Ratio b)" ~:
+      let f = Witch.from @(Ratio.Ratio Natural.Natural) @Rational in
+      [ f 0 ~?= 0
+      , f 1 ~?= 1
+      , f 0.5 ~?= 0.5
+      ]
+    , "TryFrom (Ratio a) (Ratio b)" ~:
+      let f = hush . Witch.tryFrom @Rational @(Ratio.Ratio Natural.Natural) in
+      [ f 0 ~?= Just 0
+      , f 0.5 ~?= Just 0.5
+      , f (-0.5) ~?= Nothing
+      ]
     , "From Rational Float" ~:
       let f = Witch.from @Rational @Float in
       [ f 0 ~?= 0
