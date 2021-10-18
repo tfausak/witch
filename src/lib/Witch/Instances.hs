@@ -7,8 +7,8 @@
 module Witch.Instances where
 
 import qualified Control.Exception as Exception
-import qualified Data.Bits as Bits
 import qualified Data.Bifunctor as Bifunctor
+import qualified Data.Bits as Bits
 import qualified Data.ByteString as ByteString
 import qualified Data.ByteString.Lazy as LazyByteString
 import qualified Data.ByteString.Short as ShortByteString
@@ -257,7 +257,8 @@ instance TryFrom.TryFrom Int.Int64 Natural.Natural where
   -- This should use @eitherTryFrom fromNonNegativeIntegral@, but that causes
   -- a bug in GHC 9.0.1.
   -- https://mail.haskell.org/pipermail/haskell-cafe/2021-March/133540.html
-  tryFrom = Utility.eitherTryFrom $ \ s -> TryFrom.tryFrom (From.from s :: Integer)
+  tryFrom =
+    Utility.eitherTryFrom $ \s -> TryFrom.tryFrom (From.from s :: Integer)
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
@@ -907,23 +908,28 @@ instance
   From.From (Ratio.Ratio a) (Ratio.Ratio b)
   where
   from s =
-    From.from (Ratio.numerator s)
-      Ratio.% From.from (Ratio.denominator s)
+    From.from (Ratio.numerator s) Ratio.% From.from (Ratio.denominator s)
 
 -- | Uses 'TryFrom.TryFrom' instances of numerator and denominator.
 instance
-  (TryFrom.TryFrom a b, Integral b) =>
+  forall a b. (TryFrom.TryFrom a b, Integral b) =>
   TryFrom.TryFrom (Ratio.Ratio a) (Ratio.Ratio b)
   where
-  tryFrom s =
-    (Ratio.%)
-      <$> tryFrom' (Ratio.numerator s)
-      <*> tryFrom' (Ratio.denominator s)
-    where
-      tryFrom' =
-        Bifunctor.first
+  tryFrom s = (Ratio.%) <$> tryFrom' (Ratio.numerator s) <*> tryFrom'
+    (Ratio.denominator s)
+   where
+    tryFrom'
+      :: a
+      -> Either
+           ( TryFromException.TryFromException
+               (Ratio.Ratio a)
+               (Ratio.Ratio b)
+           )
+           b
+    tryFrom' =
+      Bifunctor.first
           (TryFromException.withTarget . TryFromException.withSource s)
-          . TryFrom.tryFrom
+        . TryFrom.tryFrom
 
 -- | Uses 'fromRational'. This necessarily loses some precision.
 instance From.From Rational Float where
@@ -939,9 +945,7 @@ instance Fixed.HasResolution a => TryFrom.TryFrom Rational (Fixed.Fixed a) where
     let
       t :: Fixed.Fixed a
       t = fromRational s
-    in if toRational t == s
-      then Right t
-      else Left Exception.LossOfPrecision
+    in if toRational t == s then Right t else Left Exception.LossOfPrecision
 
 -- Fixed
 
@@ -1057,11 +1061,17 @@ instance TryFrom.TryFrom ByteString.ByteString Text.Text where
 
 -- | Converts via 'Text.Text'.
 instance TryFrom.TryFrom ByteString.ByteString LazyText.Text where
-  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @LazyText.Text) . Utility.tryInto @Text.Text
+  tryFrom =
+    Utility.eitherTryFrom
+      $ fmap (Utility.into @LazyText.Text)
+      . Utility.tryInto @Text.Text
 
 -- | Converts via 'Text.Text'.
 instance TryFrom.TryFrom ByteString.ByteString String where
-  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @Text.Text
+  tryFrom =
+    Utility.eitherTryFrom
+      $ fmap (Utility.into @String)
+      . Utility.tryInto @Text.Text
 
 -- LazyByteString
 
@@ -1083,11 +1093,17 @@ instance TryFrom.TryFrom LazyByteString.ByteString LazyText.Text where
 
 -- | Converts via 'LazyText.Text'.
 instance TryFrom.TryFrom LazyByteString.ByteString Text.Text where
-  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @Text.Text) . Utility.tryInto @LazyText.Text
+  tryFrom =
+    Utility.eitherTryFrom
+      $ fmap (Utility.into @Text.Text)
+      . Utility.tryInto @LazyText.Text
 
 -- | Converts via 'LazyText.Text'.
 instance TryFrom.TryFrom LazyByteString.ByteString String where
-  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @LazyText.Text
+  tryFrom =
+    Utility.eitherTryFrom
+      $ fmap (Utility.into @String)
+      . Utility.tryInto @LazyText.Text
 
 -- ShortByteString
 
