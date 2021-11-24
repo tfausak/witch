@@ -51,7 +51,7 @@ library
   import: basics
 
   build-depends:
-    , template-haskell >= 2.12.0 && < 2.18
+    , template-haskell >= 2.12.0 && < 2.19
   exposed-modules:
     Witch
     Witch.From
