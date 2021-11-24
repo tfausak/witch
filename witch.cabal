@@ -18,7 +18,7 @@ source-repository head
 
 common basics
   build-depends:
-    , base >= 4.10.0 && < 4.16
+    , base >= 4.10.0 && < 4.17
     , bytestring >= 0.10.8 && < 0.12
     , containers >= 0.5.10 && < 0.7
     , text >= 1.2.3 && < 1.3
