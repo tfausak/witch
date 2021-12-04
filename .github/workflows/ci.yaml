@@ -31,6 +31,7 @@ jobs:
         with:
           ghc-version: ${{ matrix.ghc }}
           cabal-version: ${{ matrix.cabal }}
+      - run: cabal configure --enable-tests --flags pedantic --jobs
       - run: cabal freeze && cat cabal.project.freeze
       - uses: actions/cache@v2
         with:

@@ -16,6 +16,11 @@ source-repository head
   location: https://github.com/tfausak/witch
   type: git
 
+flag pedantic
+  default: False
+  description: Enables @-Werror@, which turns warnings into errors.
+  manual: True
+
 common basics
   build-depends:
     , base >= 4.10.0 && < 4.17
@@ -46,10 +51,14 @@ common basics
     ghc-options:
       -Wno-missing-safe-haskell-mode
       -Wno-prepositive-qualified-module
-      
+
   if impl(ghc >= 9.2)
     ghc-options:
       -Wno-missing-kind-signatures
+
+  if flag(pedantic)
+    ghc-options:
+      -Werror
 
 library
   import: basics
