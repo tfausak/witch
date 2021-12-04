@@ -29,11 +29,7 @@ as = id
 -- >
 -- > -- Prefer this:
 -- > into @t x
-into
-  :: forall target source
-   . From.From source target
-  => source
-  -> target
+into :: forall target source . From.From source target => source -> target
 into = From.from
 
 -- | This function converts from some @source@ type into some @target@ type,
@@ -48,9 +44,7 @@ into = From.from
 -- > over @t f
 over
   :: forall target source
-   . ( From.From source target
-     , From.From target source
-     )
+   . (From.From source target, From.From target source)
   => (target -> target)
   -> source
   -> source
@@ -68,9 +62,7 @@ over f = From.from . f . From.from
 -- > via @u
 via
   :: forall through source target
-   . ( From.From source through
-     , From.From through target
-     )
+   . (From.From source through, From.From through target)
   => source
   -> target
 via = From.from . (\x -> x :: through) . From.from
@@ -105,9 +97,7 @@ tryInto = TryFrom.tryFrom
 -- > tryVia @u
 tryVia
   :: forall through source target
-   . ( TryFrom.TryFrom source through
-     , TryFrom.TryFrom through target
-     )
+   . (TryFrom.TryFrom source through, TryFrom.TryFrom through target)
   => source
   -> Either (TryFromException.TryFromException source target) target
 tryVia s = case TryFrom.tryFrom s of
