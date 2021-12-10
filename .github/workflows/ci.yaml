@@ -14,32 +14,29 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: ubuntu-20.04, ghc: 9.2.1, cabal: 3.6.2.0 }
-          - { os: ubuntu-20.04, ghc: 9.0.1, cabal: 3.4.0.0 }
-          - { os: macos-10.15, ghc: 9.0.1, cabal: 3.4.0.0 }
-          - { os: windows-2019, ghc: 9.0.1, cabal: 3.4.0.0 }
-          - { os: ubuntu-20.04, ghc: 8.10.4, cabal: 3.4.0.0 }
-          - { os: ubuntu-20.04, ghc: 8.8.4, cabal: 3.4.0.0 }
-          - { os: ubuntu-20.04, ghc: 8.6.5, cabal: 3.4.0.0 }
-          - { os: ubuntu-20.04, ghc: 8.4.4, cabal: 3.4.0.0 }
-          - { os: ubuntu-20.04, ghc: 8.2.2, cabal: 3.4.0.0 }
-    runs-on: ${{ matrix.os }}
+          - { os: ubuntu, ghc: 9.2.1 }
+          - { os: ubuntu, ghc: 9.0.1 }
+          - { os: macos, ghc: 9.2.1 }
+          - { os: windows, ghc: 9.2.1 }
+          - { os: ubuntu, ghc: 8.10.7 }
+          - { os: ubuntu, ghc: 8.8.4 }
+          - { os: ubuntu, ghc: 8.6.5 }
+          - { os: ubuntu, ghc: 8.4.4 }
+          - { os: ubuntu, ghc: 8.2.2 }
+    runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v2
       - id: setup-haskell
         uses: haskell/actions/setup@v1
         with:
           ghc-version: ${{ matrix.ghc }}
-          cabal-version: ${{ matrix.cabal }}
       - run: cabal configure --enable-tests --flags pedantic --jobs
       - run: cabal freeze && cat cabal.project.freeze
       - uses: actions/cache@v2
         with:
           path: ${{ steps.setup-haskell.outputs.cabal-store }}
-          key: ${{ matrix.os }}-${{ matrix.ghc }}-${{ matrix.cabal }}-${{ hashFiles('cabal.project.freeze') }}
-          restore-keys: |
-            ${{ matrix.os }}-${{ matrix.ghc }}-${{ matrix.cabal }}-
-            ${{ matrix.os }}-${{ matrix.ghc }}-
+          key: ${{ matrix.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
+          restore-keys: ${{ matrix.os }}-${{ matrix.ghc }}-
       - run: cabal test --test-show-details direct
       - run: cabal sdist
       - uses: actions/upload-artifact@v2
@@ -47,10 +44,10 @@ jobs:
           path: dist-newstyle/sdist/witch-*.tar.gz
           name: witch-${{ github.sha }}.tar.gz
       - run: cabal check
-      - if: github.event_name == 'release' && matrix.os == 'ubuntu-20.04' && matrix.ghc == '9.0.1'
+      - if: github.event_name == 'release' && matrix.os == 'ubuntu' && matrix.ghc == '9.0.1'
         run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' dist-newstyle/sdist/witch-*.tar.gz
   i386:
-     runs-on: ubuntu-20.04
+     runs-on: ubuntu-latest
      steps:
        - uses: actions/checkout@v2
        - run: docker run --rm --user 0 --volume "$PWD:$PWD" --workdir "$PWD" taylorfausak/i386-haskell@sha256:450720742fa69258c0a8589dcac28c3c6d5d34718172d935b385520f4ee9128e sh -c 'cabal update && cabal test --test-show-details direct'
