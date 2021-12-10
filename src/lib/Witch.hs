@@ -184,11 +184,36 @@ module Witch
   -- - You should not have both a @From@ instance and a @TryFrom@ instance for
   --   the same pair of types.
   --
+  -- - If you have a @From@ or @TryFrom@ instance for a pair of types, then
+  --   you should probably have a @From@ or @TryFrom@ instance for the same
+  --   pair of types but in the opposite direction. In other words if you have
+  --   @From a b@ then you should have @From b a@ or @TryFrom b a@.
+  --
   -- In general if @s@ /is/ a @t@, then you should add a 'Witch.From.From'
   -- instance for it. But if @s@ merely /can be/ a @t@, then you could add a
   -- 'Witch.TryFrom.TryFrom' instance for it. And if it is technically
   -- possible to convert from @s@ to @t@ but there are a lot of caveats, you
   -- probably should not write any instances at all.
+
+  -- ** Laws
+  -- | As the previous section notes, there aren't any cut and dried laws for
+  -- the @From@ and @TryFrom@ type classes. However it can be useful to
+  -- consider the following equations for guiding instances:
+  --
+  -- > -- same strictness
+  -- > seq (from @a @b x) y = seq x y
+  -- > seq (tryFrom @a @b x) y = seq x y
+  --
+  -- > -- round trip
+  -- > from @b @a (from @a @b x) = x
+  --
+  -- > -- transitive
+  -- > from @b @c (from @a @b x) = from @a @c x
+  -- > tryFrom @b @a (from @a @b x) = Right x
+  -- > if isRight (tryFrom @a @b x) then
+  -- >   fmap (from @b @a) (tryFrom @a @b x) = Right x
+  -- > if isRight (tryFrom @a @b x) then do
+  -- >   fmap (tryFrom @b @a) (tryFrom @a @b x) = Right (Right x)
 
   -- ** Integral types
   -- | There are a lot of types that represent various different ranges of
