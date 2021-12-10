@@ -14,15 +14,15 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: ubuntu-20.04, ghc: 9.2.1, cabal: 3.6.2.0 }
-          - { os: ubuntu-20.04, ghc: 9.0.1, cabal: 3.4.0.0 }
-          - { os: macos-10.15, ghc: 9.0.1, cabal: 3.4.0.0 }
-          - { os: windows-2019, ghc: 9.0.1, cabal: 3.4.0.0 }
-          - { os: ubuntu-20.04, ghc: 8.10.4, cabal: 3.4.0.0 }
-          - { os: ubuntu-20.04, ghc: 8.8.4, cabal: 3.4.0.0 }
-          - { os: ubuntu-20.04, ghc: 8.6.5, cabal: 3.4.0.0 }
-          - { os: ubuntu-20.04, ghc: 8.4.4, cabal: 3.4.0.0 }
-          - { os: ubuntu-20.04, ghc: 8.2.2, cabal: 3.4.0.0 }
+          - { os: ubuntu-20.04, ghc: 9.2.1 }
+          - { os: ubuntu-20.04, ghc: 9.0.1 }
+          - { os: macos-10.15, ghc: 9.0.1 }
+          - { os: windows-2019, ghc: 9.0.1 }
+          - { os: ubuntu-20.04, ghc: 8.10.4 }
+          - { os: ubuntu-20.04, ghc: 8.8.4 }
+          - { os: ubuntu-20.04, ghc: 8.6.5 }
+          - { os: ubuntu-20.04, ghc: 8.4.4 }
+          - { os: ubuntu-20.04, ghc: 8.2.2 }
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -30,16 +30,13 @@ jobs:
         uses: haskell/actions/setup@v1
         with:
           ghc-version: ${{ matrix.ghc }}
-          cabal-version: ${{ matrix.cabal }}
       - run: cabal configure --enable-tests --flags pedantic --jobs
       - run: cabal freeze && cat cabal.project.freeze
       - uses: actions/cache@v2
         with:
           path: ${{ steps.setup-haskell.outputs.cabal-store }}
-          key: ${{ matrix.os }}-${{ matrix.ghc }}-${{ matrix.cabal }}-${{ hashFiles('cabal.project.freeze') }}
-          restore-keys: |
-            ${{ matrix.os }}-${{ matrix.ghc }}-${{ matrix.cabal }}-
-            ${{ matrix.os }}-${{ matrix.ghc }}-
+          key: ${{ matrix.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
+          restore-keys: ${{ matrix.os }}-${{ matrix.ghc }}-
       - run: cabal test --test-show-details direct
       - run: cabal sdist
       - uses: actions/upload-artifact@v2
