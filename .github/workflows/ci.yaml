@@ -16,7 +16,7 @@ jobs:
         include:
           - { os: ubuntu, ghc: 9.2.1 }
           - { os: ubuntu, ghc: 9.0.1 }
-          - { os: macos, ghc: 9.0.1 }
+          - { os: macos, ghc: 9.2.1 }
           - { os: windows, ghc: 9.0.1 }
           - { os: ubuntu, ghc: 8.10.4 }
           - { os: ubuntu, ghc: 8.8.4 }
