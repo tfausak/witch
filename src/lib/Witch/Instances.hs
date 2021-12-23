@@ -1263,14 +1263,14 @@ realFloatToRational s
 overPositive :: (Eq a, Num a, Num b) => (a -> b) -> a -> b
 overPositive f x = if signum x == -1 then -(f (-x)) else f x
 
-fromDigits :: [Int] -> Int -> (Int, Int)
+fromDigits :: [Int] -> Int -> (Integer, Integer)
 fromDigits ds e = List.foldl'
-  (\ (a, n) d -> (a * 10 + d, n - 1))
-  (0, e)
+  (\ (a, n) d -> (a * 10 + toInteger d, n - 1))
+  (0, toInteger e)
   ds
 
-makeRational :: Int -> Int -> Rational
-makeRational d e = toRational d * 10 ^^ toInteger e
+makeRational :: Integer -> Integer -> Rational
+makeRational d e = toRational d * 10 ^^ e
 
 fromNonNegativeIntegral
   :: (Integral s, Num t) => s -> Either Exception.ArithException t
