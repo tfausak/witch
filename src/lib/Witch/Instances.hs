@@ -1254,20 +1254,23 @@ instance From.From Time.ZonedTime Time.UTCTime where
 
 --
 
-realFloatToRational :: RealFloat s => s -> Either Exception.ArithException Rational
+realFloatToRational
+  :: RealFloat s => s -> Either Exception.ArithException Rational
 realFloatToRational s
   | isNaN s = Left Exception.LossOfPrecision
-  | isInfinite s = if s > 0 then Left Exception.Overflow else Left Exception.Underflow
-  | otherwise = Right $ overPositive (uncurry makeRational . uncurry fromDigits . Numeric.floatToDigits 10) s
+  | isInfinite s = if s > 0
+    then Left Exception.Overflow
+    else Left Exception.Underflow
+  | otherwise = Right $ overPositive
+    (uncurry makeRational . uncurry fromDigits . Numeric.floatToDigits 10)
+    s
 
 overPositive :: (Eq a, Num a, Num b) => (a -> b) -> a -> b
 overPositive f x = if signum x == -1 then -(f (-x)) else f x
 
 fromDigits :: [Int] -> Int -> (Integer, Integer)
-fromDigits ds e = List.foldl'
-  (\ (a, n) d -> (a * 10 + toInteger d, n - 1))
-  (0, toInteger e)
-  ds
+fromDigits ds e =
+  List.foldl' (\(a, n) d -> (a * 10 + toInteger d, n - 1)) (0, toInteger e) ds
 
 makeRational :: Integer -> Integer -> Rational
 makeRational d e = toRational d * 10 ^^ e
