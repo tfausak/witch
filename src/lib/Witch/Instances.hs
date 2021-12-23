@@ -17,6 +17,7 @@ import qualified Data.Foldable as Foldable
 import qualified Data.Int as Int
 import qualified Data.IntMap as IntMap
 import qualified Data.IntSet as IntSet
+import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
 import qualified Data.Ratio as Ratio
@@ -32,6 +33,7 @@ import qualified Data.Time.Clock.System as Time
 import qualified Data.Time.Clock.TAI as Time
 import qualified Data.Word as Word
 import qualified GHC.Float as Float
+import qualified Numeric
 import qualified Numeric.Natural as Natural
 import qualified Witch.From as From
 import qualified Witch.TryFrom as TryFrom
@@ -807,13 +809,9 @@ instance TryFrom.TryFrom Float Word where
 instance TryFrom.TryFrom Float Natural.Natural where
   tryFrom = Utility.tryVia @Integer
 
--- | Uses 'toRational' when the input is not NaN or infinity.
+-- | Uses 'Numeric.floatToDigits' when the input is not NaN or infinity.
 instance TryFrom.TryFrom Float Rational where
-  tryFrom = Utility.eitherTryFrom $ \s -> if isNaN s
-    then Left Exception.LossOfPrecision
-    else if isInfinite s
-      then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
-      else Right $ toRational s
+  tryFrom = Utility.eitherTryFrom realFloatToRational
 
 -- | Uses 'Float.float2Double'.
 instance From.From Float Double where
@@ -875,13 +873,9 @@ instance TryFrom.TryFrom Double Word where
 instance TryFrom.TryFrom Double Natural.Natural where
   tryFrom = Utility.tryVia @Integer
 
--- | Uses 'toRational' when the input is not NaN or infinity.
+-- | Uses 'Numeric.floatToDigits' when the input is not NaN or infinity.
 instance TryFrom.TryFrom Double Rational where
-  tryFrom = Utility.eitherTryFrom $ \s -> if isNaN s
-    then Left Exception.LossOfPrecision
-    else if isInfinite s
-      then if s > 0 then Left Exception.Overflow else Left Exception.Underflow
-      else Right $ toRational s
+  tryFrom = Utility.eitherTryFrom realFloatToRational
 
 -- | Uses 'Float.double2Float'. This necessarily loses some precision.
 instance From.From Double Float where
@@ -1257,6 +1251,29 @@ instance From.From Time.NominalDiffTime Time.CalendarDiffTime where
 -- | Uses 'Time.zonedTimeToUTC'.
 instance From.From Time.ZonedTime Time.UTCTime where
   from = Time.zonedTimeToUTC
+
+--
+
+realFloatToRational
+  :: RealFloat s => s -> Either Exception.ArithException Rational
+realFloatToRational s
+  | isNaN s = Left Exception.LossOfPrecision
+  | isInfinite s = if s > 0
+    then Left Exception.Overflow
+    else Left Exception.Underflow
+  | otherwise = Right $ overPositive
+    (uncurry makeRational . uncurry fromDigits . Numeric.floatToDigits 10)
+    s
+
+overPositive :: (Eq a, Num a, Num b) => (a -> b) -> a -> b
+overPositive f x = if signum x == -1 then -(f (-x)) else f x
+
+fromDigits :: [Int] -> Int -> (Integer, Integer)
+fromDigits ds e =
+  List.foldl' (\(a, n) d -> (a * 10 + toInteger d, n - 1)) (0, toInteger e) ds
+
+makeRational :: Integer -> Integer -> Rational
+makeRational d e = toRational d * 10 ^^ e
 
 fromNonNegativeIntegral
   :: (Integral s, Num t) => s -> Either Exception.ArithException t

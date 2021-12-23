@@ -1208,6 +1208,8 @@ main =
                    , f (0 / 0) ~?= Nothing
                    , f (1 / 0) ~?= Nothing
                    , f (-1 / 0) ~?= Nothing
+                   , f 0.1 ~?= Just 0.1
+                   , f (-0.1) ~?= Just (-0.1)
                    ]
             , "From Float Double"
               ~: let f = Witch.from @Float @Double
@@ -1380,6 +1382,8 @@ main =
                    , f (0 / 0) ~?= Nothing
                    , f (1 / 0) ~?= Nothing
                    , f (-1 / 0) ~?= Nothing
+                   , f 0.1 ~?= Just 0.1
+                   , f (-0.1) ~?= Just (-0.1)
                    ]
             , "From Double Float"
               ~: let f = Witch.from @Double @Float
@@ -1407,10 +1411,22 @@ main =
                    ]
             , "From Rational Float"
               ~: let f = Witch.from @Rational @Float
-                 in [f 0 ~?= 0, f 0.5 ~?= 0.5, f (-0.5) ~?= (-0.5)]
+                 in
+                   [ f 0 ~?= 0
+                   , f 0.5 ~?= 0.5
+                   , f (-0.5) ~?= (-0.5)
+                   , f 0.1 ~?= 0.1
+                   , f (-0.1) ~?= (-0.1)
+                   ]
             , "From Rational Double"
               ~: let f = Witch.from @Rational @Double
-                 in [f 0 ~?= 0, f 0.5 ~?= 0.5, f (-0.5) ~?= (-0.5)]
+                 in
+                   [ f 0 ~?= 0
+                   , f 0.5 ~?= 0.5
+                   , f (-0.5) ~?= (-0.5)
+                   , f 0.1 ~?= 0.1
+                   , f (-0.1) ~?= (-0.1)
+                   ]
             , "TryFrom Rational (Fixed a)"
               ~: let f = hush . Witch.tryFrom @Rational @Fixed.Deci
                  in
