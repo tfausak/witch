@@ -1141,8 +1141,8 @@ instance From.From String LazyByteString.ByteString where
 
 -- | Uses @coerce@.
 instance From.From
-  (TryFromException.TryFromException s u)
-  (TryFromException.TryFromException s t)
+  (TryFromException.TryFromException source oldTarget)
+  (TryFromException.TryFromException source newTarget)
 
 -- Day
 
