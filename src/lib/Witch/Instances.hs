@@ -809,7 +809,7 @@ instance TryFrom.TryFrom Float Word where
 instance TryFrom.TryFrom Float Natural.Natural where
   tryFrom = Utility.tryVia @Integer
 
--- | Uses 'toRational' when the input is not NaN or infinity.
+-- | Uses 'Numeric.floatToDigits' when the input is not NaN or infinity.
 instance TryFrom.TryFrom Float Rational where
   tryFrom = Utility.eitherTryFrom realFloatToRational
 
@@ -873,7 +873,7 @@ instance TryFrom.TryFrom Double Word where
 instance TryFrom.TryFrom Double Natural.Natural where
   tryFrom = Utility.tryVia @Integer
 
--- | Uses 'toRational' when the input is not NaN or infinity.
+-- | Uses 'Numeric.floatToDigits' when the input is not NaN or infinity.
 instance TryFrom.TryFrom Double Rational where
   tryFrom = Utility.eitherTryFrom realFloatToRational
 
