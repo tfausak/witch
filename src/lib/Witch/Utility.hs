@@ -4,6 +4,7 @@
 module Witch.Utility where
 
 import qualified Control.Exception as Exception
+import qualified Data.Coerce as Coerce
 import qualified Data.Typeable as Typeable
 import qualified GHC.Stack as Stack
 import qualified Witch.From as From
@@ -101,11 +102,9 @@ tryVia
   => source
   -> Either (TryFromException.TryFromException source target) target
 tryVia s = case TryFrom.tryFrom s of
-  Left (TryFromException.TryFromException _ e) ->
-    Left $ TryFromException.TryFromException s e
+  Left e -> Left $ withTarget e
   Right u -> case TryFrom.tryFrom (u :: through) of
-    Left (TryFromException.TryFromException _ e) ->
-      Left $ TryFromException.TryFromException s e
+    Left e -> Left $ withSource s e
     Right t -> Right t
 
 -- | This function can be used to implement 'TryFrom.tryFrom' with a function
@@ -185,3 +184,16 @@ unsafeInto
   => source
   -> target
 unsafeInto = unsafeFrom
+
+withSource
+  :: newSource
+  -> TryFromException.TryFromException oldSource target
+  -> TryFromException.TryFromException newSource target
+withSource x (TryFromException.TryFromException _ e) =
+  TryFromException.TryFromException x e
+
+withTarget
+  :: forall newTarget source oldTarget
+   . TryFromException.TryFromException source oldTarget
+  -> TryFromException.TryFromException source newTarget
+withTarget = Coerce.coerce
