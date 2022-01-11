@@ -35,7 +35,8 @@ main :: IO ()
 main =
   runTestTTAndExit
     $ "Witch"
-    ~: [ "From" ~: ["from" ~: [Witch.from (1 :: Int.Int8) ~?= (1 :: Int.Int16)]]
+    ~: [ "From"
+         ~: ["from" ~: [Witch.from (1 :: Int.Int8) ~?= (1 :: Int.Int16)]]
        , "TryFrom"
          ~: [ "tryFrom"
                 ~: let f = hush . Witch.tryFrom @Int.Int16 @Int.Int8
@@ -170,16 +171,20 @@ main =
                  in [f 0 ~?= Just 0, f 127 ~?= Just 127, f (-1) ~?= Nothing]
             , "TryFrom Int16 Word32"
               ~: let f = hush . Witch.tryFrom @Int.Int16 @Word.Word32
-                 in [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f (-1) ~?= Nothing]
+                 in
+                   [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f (-1) ~?= Nothing]
             , "TryFrom Int16 Word64"
               ~: let f = hush . Witch.tryFrom @Int.Int16 @Word.Word64
-                 in [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f (-1) ~?= Nothing]
+                 in
+                   [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f (-1) ~?= Nothing]
             , "TryFrom Int16 Word"
               ~: let f = hush . Witch.tryFrom @Int.Int16 @Word
-                 in [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f (-1) ~?= Nothing]
+                 in
+                   [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f (-1) ~?= Nothing]
             , "TryFrom Int16 Natural"
               ~: let f = hush . Witch.tryFrom @Int.Int16 @Natural.Natural
-                 in [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f (-1) ~?= Nothing]
+                 in
+                   [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f (-1) ~?= Nothing]
             , "From Int16 Float"
               ~: let f = Witch.from @Int.Int16 @Float
                  in [f 0 ~?= 0, f 32767 ~?= 32767, f (-32768) ~?= (-32768)]
@@ -323,7 +328,8 @@ main =
                    , let x = maxBound :: Int
                      in
                        if toInteger x >= 9223372036854775807
-                         then f 9223372036854775807 ~?= Just 9223372036854775807
+                         then f 9223372036854775807
+                           ~?= Just 9223372036854775807
                          else f (fromIntegral x) ~?= Just x
                    , let x = minBound :: Int
                      in
@@ -376,7 +382,8 @@ main =
                    , let x = maxBound :: Word
                      in
                        if toInteger x >= 9223372036854775807
-                         then f 9223372036854775807 ~?= Just 9223372036854775807
+                         then f 9223372036854775807
+                           ~?= Just 9223372036854775807
                          else f (fromIntegral x) ~?= Just x
                    , f (-1) ~?= Nothing
                    ]
@@ -535,7 +542,8 @@ main =
                    , let x = minBound :: Int
                      in
                        if toInteger x <= (-9007199254740991)
-                         then f (-9007199254740991) ~?= Just (-9007199254740991)
+                         then f (-9007199254740991)
+                           ~?= Just (-9007199254740991)
                          else f x ~?= Just (fromIntegral x)
                    , let x = minBound :: Int
                      in
@@ -586,9 +594,11 @@ main =
                  in
                    [ f 0 ~?= Just 0
                    , let x = maxBound :: Int in f (fromIntegral x) ~?= Just x
-                   , let x = toInteger (maxBound :: Int) + 1 in f x ~?= Nothing
+                   , let x = toInteger (maxBound :: Int) + 1
+                     in f x ~?= Nothing
                    , let x = minBound :: Int in f (fromIntegral x) ~?= Just x
-                   , let x = toInteger (minBound :: Int) - 1 in f x ~?= Nothing
+                   , let x = toInteger (minBound :: Int) - 1
+                     in f x ~?= Nothing
                    ]
             , "TryFrom Integer Word8"
               ~: let f = hush . Witch.tryFrom @Integer @Word.Word8
@@ -720,7 +730,10 @@ main =
             , "TryFrom Word16 Int16"
               ~: let f = hush . Witch.tryFrom @Word.Word16 @Int.Int16
                  in
-                   [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f 32768 ~?= Nothing]
+                   [ f 0 ~?= Just 0
+                   , f 32767 ~?= Just 32767
+                   , f 32768 ~?= Nothing
+                   ]
             , "From Word16 Int32"
               ~: let f = Witch.from @Word.Word16 @Int.Int32
                  in [f 0 ~?= 0, f 65535 ~?= 65535]
@@ -747,7 +760,10 @@ main =
             , "TryFrom Word32 Word16"
               ~: let f = hush . Witch.tryFrom @Word.Word32 @Word.Word16
                  in
-                   [f 0 ~?= Just 0, f 65535 ~?= Just 65535, f 65536 ~?= Nothing]
+                   [ f 0 ~?= Just 0
+                   , f 65535 ~?= Just 65535
+                   , f 65536 ~?= Nothing
+                   ]
             , "From Word32 Word64"
               ~: let f = Witch.from @Word.Word32 @Word.Word64
                  in [f 0 ~?= 0, f 4294967295 ~?= 4294967295]
@@ -763,7 +779,10 @@ main =
             , "TryFrom Word32 Int16"
               ~: let f = hush . Witch.tryFrom @Word.Word32 @Int.Int16
                  in
-                   [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f 32768 ~?= Nothing]
+                   [ f 0 ~?= Just 0
+                   , f 32767 ~?= Just 32767
+                   , f 32768 ~?= Nothing
+                   ]
             , "TryFrom Word32 Int32"
               ~: let f = hush . Witch.tryFrom @Word.Word32 @Int.Int32
                  in
@@ -805,7 +824,10 @@ main =
             , "TryFrom Word64 Word16"
               ~: let f = hush . Witch.tryFrom @Word.Word64 @Word.Word16
                  in
-                   [f 0 ~?= Just 0, f 65535 ~?= Just 65535, f 65536 ~?= Nothing]
+                   [ f 0 ~?= Just 0
+                   , f 65535 ~?= Just 65535
+                   , f 65536 ~?= Nothing
+                   ]
             , "TryFrom Word64 Word32"
               ~: let f = hush . Witch.tryFrom @Word.Word64 @Word.Word32
                  in
@@ -826,14 +848,18 @@ main =
                    ]
             , "From Word64 Natural"
               ~: let f = Witch.from @Word.Word64 @Natural.Natural
-                 in [f 0 ~?= 0, f 18446744073709551615 ~?= 18446744073709551615]
+                 in
+                   [f 0 ~?= 0, f 18446744073709551615 ~?= 18446744073709551615]
             , "TryFrom Word64 Int8"
               ~: let f = hush . Witch.tryFrom @Word.Word64 @Int.Int8
                  in [f 0 ~?= Just 0, f 127 ~?= Just 127, f 128 ~?= Nothing]
             , "TryFrom Word64 Int16"
               ~: let f = hush . Witch.tryFrom @Word.Word64 @Int.Int16
                  in
-                   [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f 32768 ~?= Nothing]
+                   [ f 0 ~?= Just 0
+                   , f 32767 ~?= Just 32767
+                   , f 32768 ~?= Nothing
+                   ]
             , "TryFrom Word64 Int32"
               ~: let f = hush . Witch.tryFrom @Word.Word64 @Int.Int32
                  in
@@ -861,7 +887,8 @@ main =
                    ]
             , "From Word64 Integer"
               ~: let f = Witch.from @Word.Word64 @Integer
-                 in [f 0 ~?= 0, f 18446744073709551615 ~?= 18446744073709551615]
+                 in
+                   [f 0 ~?= 0, f 18446744073709551615 ~?= 18446744073709551615]
             , "TryFrom Word64 Float"
               ~: let f = hush . Witch.tryFrom @Word.Word64 @Float
                  in
@@ -884,7 +911,10 @@ main =
             , "TryFrom Word Word16"
               ~: let f = hush . Witch.tryFrom @Word @Word.Word16
                  in
-                   [f 0 ~?= Just 0, f 65535 ~?= Just 65535, f 65536 ~?= Nothing]
+                   [ f 0 ~?= Just 0
+                   , f 65535 ~?= Just 65535
+                   , f 65536 ~?= Nothing
+                   ]
             , "TryFrom Word Word32"
               ~: let f = hush . Witch.tryFrom @Word @Word.Word32
                  in
@@ -908,7 +938,10 @@ main =
             , "TryFrom Word Int16"
               ~: let f = hush . Witch.tryFrom @Word @Int.Int16
                  in
-                   [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f 32768 ~?= Nothing]
+                   [ f 0 ~?= Just 0
+                   , f 32767 ~?= Just 32767
+                   , f 32768 ~?= Nothing
+                   ]
             , "TryFrom Word Int32"
               ~: let f = hush . Witch.tryFrom @Word @Int.Int32
                  in
@@ -923,7 +956,8 @@ main =
                    , let x = maxBound :: Word
                      in
                        if toInteger x >= 9223372036854775807
-                         then f 9223372036854775807 ~?= Just 9223372036854775807
+                         then f 9223372036854775807
+                           ~?= Just 9223372036854775807
                          else f x ~?= Just (fromIntegral x)
                    , let x = maxBound :: Word
                      in
@@ -975,7 +1009,10 @@ main =
             , "TryFrom Natural Word16"
               ~: let f = hush . Witch.tryFrom @Natural.Natural @Word.Word16
                  in
-                   [f 0 ~?= Just 0, f 65535 ~?= Just 65535, f 65536 ~?= Nothing]
+                   [ f 0 ~?= Just 0
+                   , f 65535 ~?= Just 65535
+                   , f 65536 ~?= Nothing
+                   ]
             , "TryFrom Natural Word32"
               ~: let f = hush . Witch.tryFrom @Natural.Natural @Word.Word32
                  in
@@ -1005,7 +1042,8 @@ main =
                        x =
                          fromIntegral (maxBound :: Word) + 1 :: Natural.Natural
                      in
-                       hush (Witch.tryFrom @Natural.Natural @Word x) ~?= Nothing
+                       hush (Witch.tryFrom @Natural.Natural @Word x)
+                         ~?= Nothing
                    ]
             , "TryFrom Natural Int8"
               ~: let f = hush . Witch.tryFrom @Natural.Natural @Int.Int8
@@ -1013,7 +1051,10 @@ main =
             , "TryFrom Natural Int16"
               ~: let f = hush . Witch.tryFrom @Natural.Natural @Int.Int16
                  in
-                   [f 0 ~?= Just 0, f 32767 ~?= Just 32767, f 32768 ~?= Nothing]
+                   [ f 0 ~?= Just 0
+                   , f 32767 ~?= Just 32767
+                   , f 32768 ~?= Nothing
+                   ]
             , "TryFrom Natural Int32"
               ~: let f = hush . Witch.tryFrom @Natural.Natural @Int.Int32
                  in
@@ -1035,13 +1076,15 @@ main =
                    , let x = maxBound :: Int
                      in
                        hush
-                           (Witch.tryFrom @Natural.Natural @Int (fromIntegral x)
+                           (Witch.tryFrom @Natural.Natural @Int
+                             (fromIntegral x)
                            )
                          ~?= Just x
                    , let
                        x =
                          fromIntegral (maxBound :: Int) + 1 :: Natural.Natural
-                     in hush (Witch.tryFrom @Natural.Natural @Int x) ~?= Nothing
+                     in
+                       hush (Witch.tryFrom @Natural.Natural @Int x) ~?= Nothing
                    ]
             , "From Natural Integer"
               ~: let f = Witch.from @Natural.Natural @Integer
@@ -1285,7 +1328,8 @@ main =
                    , let x = minBound :: Int
                      in
                        if toInteger x <= (-9007199254740991)
-                         then f (-9007199254740991) ~?= Just (-9007199254740991)
+                         then f (-9007199254740991)
+                           ~?= Just (-9007199254740991)
                          else f (fromIntegral x) ~?= Just x
                    , f (-9007199254740992) ~?= Nothing
                    , f (0 / 0) ~?= Nothing
@@ -1625,7 +1669,8 @@ main =
                      ~?= ShortByteString.pack [0x0f, 0xf0]
                    ]
             , "TryFrom ByteString Text"
-              ~: let f = hush . Witch.tryFrom @ByteString.ByteString @Text.Text
+              ~: let
+                   f = hush . Witch.tryFrom @ByteString.ByteString @Text.Text
                  in
                    [ f (ByteString.pack []) ~?= Just (Text.pack "")
                    , f (ByteString.pack [0x61]) ~?= Just (Text.pack "a")
@@ -1678,10 +1723,12 @@ main =
               ~: let
                    f =
                      hush
-                       . Witch.tryFrom @LazyByteString.ByteString @LazyText.Text
+                       . Witch.tryFrom @LazyByteString.ByteString
+                         @LazyText.Text
                  in
                    [ f (LazyByteString.pack []) ~?= Just (LazyText.pack "")
-                   , f (LazyByteString.pack [0x61]) ~?= Just (LazyText.pack "a")
+                   , f (LazyByteString.pack [0x61])
+                     ~?= Just (LazyText.pack "a")
                    , f (LazyByteString.pack [0xff]) ~?= Nothing
                    ]
             , "TryFrom LazyByteString Text"
@@ -1891,9 +1938,12 @@ main =
     -- CalendarDiffTime
             , "From CalendarDiffDays CalendarDiffTime"
               ~: let
-                   f = Witch.from @Time.CalendarDiffDays @Time.CalendarDiffTime
+                   f =
+                     Witch.from @Time.CalendarDiffDays @Time.CalendarDiffTime
                  in
-                   [f (Time.CalendarDiffDays 0 0) ~?= Time.CalendarDiffTime 0 0]
+                   [ f (Time.CalendarDiffDays 0 0)
+                       ~?= Time.CalendarDiffTime 0 0
+                   ]
             , "From NominalDiffTime CalendarDiffTime"
               ~: let
                    f = Witch.from @Time.NominalDiffTime @Time.CalendarDiffTime

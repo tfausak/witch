@@ -6,3 +6,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: tfausak/hlint-action@v1
+        with:
+          config: config/hlint.yaml
