@@ -634,8 +634,9 @@ instance TryFrom.TryFrom Word.Word64 Float where
 -- | Uses 'fromIntegral' when the input is less than or equal to
 -- 9,007,199,254,740,991.
 instance TryFrom.TryFrom Word.Word64 Double where
-  tryFrom = Utility.eitherTryFrom $ \s ->
-    if s <= maxDouble then Right $ fromIntegral s else Left Exception.Overflow
+  tryFrom = Utility.eitherTryFrom $ \s -> if s <= maxDouble
+    then Right $ fromIntegral s
+    else Left Exception.Overflow
 
 -- Word
 
@@ -750,8 +751,9 @@ instance TryFrom.TryFrom Natural.Natural Float where
 -- | Uses 'fromIntegral' when the input is less than or equal to
 -- 9,007,199,254,740,991.
 instance TryFrom.TryFrom Natural.Natural Double where
-  tryFrom = Utility.eitherTryFrom $ \s ->
-    if s <= maxDouble then Right $ fromIntegral s else Left Exception.Overflow
+  tryFrom = Utility.eitherTryFrom $ \s -> if s <= maxDouble
+    then Right $ fromIntegral s
+    else Left Exception.Overflow
 
 -- Float
 
