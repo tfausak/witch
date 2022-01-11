@@ -97,7 +97,7 @@ test-suite test
   import: executable
 
   build-depends:
-    , HUnit >= 1.6.2 && < 1.7
+    , HUnit >= 1.6.1 && < 1.7
   hs-source-dirs: source/test-suite
   main-is: Main.hs
   type: exitcode-stdio-1.0
