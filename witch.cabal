@@ -68,7 +68,10 @@ common executable
   ghc-options:
     -rtsopts
     -threaded
-    -Wno-unused-packages
+
+  if impl(ghc >= 8.10)
+    ghc-options:
+      -Wno-unused-packages
 
 library
   import: library
