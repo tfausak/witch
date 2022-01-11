@@ -66,9 +66,6 @@ jobs:
           path: artifact
           name: witch-${{ github.sha }}
 
-      - if: github.event_name == 'release' && matrix.platform == 'ubuntu' && matrix.ghc == '9.0.1'
-        run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' dist-newstyle/sdist/witch-*.tar.gz
-
   release:
     needs: ci
     if: github.event_name == 'release'
