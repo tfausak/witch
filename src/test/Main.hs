@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -Wno-error=overflowed-literals #-}
-
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NegativeLiterals #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -22,10 +22,12 @@ import qualified Data.Sequence as Seq
 import qualified Data.Set as Set
 import qualified Data.Text as Text
 import qualified Data.Text.Lazy as LazyText
+#ifndef REMOVE_TIME
 import qualified Data.Time as Time
 import qualified Data.Time.Clock.POSIX as Time
 import qualified Data.Time.Clock.System as Time
 import qualified Data.Time.Clock.TAI as Time
+#endif
 import qualified Data.Word as Word
 import qualified Numeric.Natural as Natural
 import Test.HUnit (Test(TestCase), assertBool, runTestTTAndExit, (~:), (~?=))
@@ -1789,6 +1791,8 @@ main = runTestTTAndExit $ "Witch" ~:
       , f "a" ~?= LazyByteString.pack [0x61]
       ]
 
+#ifndef REMOVE_TIME
+
     -- Day
 
     , "From Integer Day" ~:
@@ -1906,11 +1910,16 @@ main = runTestTTAndExit $ "Witch" ~:
       let f = Witch.from @Time.ZonedTime @Time.UTCTime in
       [ f (Time.ZonedTime (Time.LocalTime (Time.ModifiedJulianDay 0) (Time.TimeOfDay 0 0 0)) Time.utc) ~?= Time.UTCTime (Time.ModifiedJulianDay 0) 0
       ]
+
+#endif
+
     ]
   ] ++ WitchCompositionSpec.tests
 
+#ifndef REMOVE_TIME
 unixEpoch :: Time.UTCTime
 unixEpoch = Time.UTCTime (Time.ModifiedJulianDay 40587) 0
+#endif
 
 hush :: Either x a -> Maybe a
 hush = either (const Nothing) Just

@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -27,10 +28,12 @@ import qualified Data.Text as Text
 import qualified Data.Text.Encoding as Text
 import qualified Data.Text.Lazy as LazyText
 import qualified Data.Text.Lazy.Encoding as LazyText
+#ifndef REMOVE_TIME
 import qualified Data.Time as Time
 import qualified Data.Time.Clock.POSIX as Time
 import qualified Data.Time.Clock.System as Time
 import qualified Data.Time.Clock.TAI as Time
+#endif
 import qualified Data.Word as Word
 import qualified GHC.Float as Float
 import qualified Numeric.Natural as Natural
@@ -1182,6 +1185,8 @@ instance From.From
   (TryFromException.TryFromException s u)
   (TryFromException.TryFromException s t)
 
+#ifndef REMOVE_TIME
+
 -- Day
 
 -- | Uses 'Time.ModifiedJulianDay'.
@@ -1289,6 +1294,8 @@ instance From.From Time.NominalDiffTime Time.CalendarDiffTime where
 -- | Uses 'Time.zonedTimeToUTC'.
 instance From.From Time.ZonedTime Time.UTCTime where
   from = Time.zonedTimeToUTC
+
+#endif
 
 fromNonNegativeIntegral
   :: (Integral s, Num t) => s -> Either Exception.ArithException t

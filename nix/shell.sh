@@ -21,6 +21,7 @@ docker run -it --rm \
   adduser $USER -D &&
   echo \"$NIX_CONF\" >> /etc/nix/nix.conf &&
   (nix-daemon &) &&
+  sleep 1 &&
   su $USER -c \"NIX_REMOTE=daemon nix-shell ./nix/shell.nix \
     --pure \
     --show-trace -v \
