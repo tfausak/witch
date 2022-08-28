@@ -27,6 +27,7 @@ import qualified Data.Time.Clock.POSIX as Time
 import qualified Data.Time.Clock.System as Time
 import qualified Data.Time.Clock.TAI as Time
 import qualified Data.Word as Word
+import qualified Foreign.C.Types as Foreign
 import qualified Numeric.Natural as Natural
 import Test.HUnit (Test(TestCase), assertBool, runTestTTAndExit, (~:), (~?=))
 import qualified Witch
@@ -1964,6 +1965,14 @@ main =
                        ~?= Time.UTCTime (Time.ModifiedJulianDay 0) 0
                    ]
             ]
+
+            -- CChar
+            , "From CChar Word8" ~: let f = Witch.from @Foreign.CChar @Word.Word8 in
+              [ f (Foreign.CChar 0) ~?= 0
+              ]
+            , "From Word8 CChar" ~: let f = Witch.from @Word.Word8 @Foreign.CChar in
+              [ f 0 ~?= Foreign.CChar 0
+              ]
        ]
 
 unixEpoch :: Time.UTCTime

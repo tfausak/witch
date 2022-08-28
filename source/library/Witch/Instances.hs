@@ -32,6 +32,7 @@ import qualified Data.Time.Clock.POSIX as Time
 import qualified Data.Time.Clock.System as Time
 import qualified Data.Time.Clock.TAI as Time
 import qualified Data.Word as Word
+import qualified Foreign.C.Types as Foreign
 import qualified GHC.Float as Float
 import qualified Numeric
 import qualified Numeric.Natural as Natural
@@ -1253,6 +1254,14 @@ instance From.From Time.NominalDiffTime Time.CalendarDiffTime where
 -- | Uses 'Time.zonedTimeToUTC'.
 instance From.From Time.ZonedTime Time.UTCTime where
   from = Time.zonedTimeToUTC
+
+-- CChar
+
+-- | Uses @coerce@.
+instance From.From Foreign.CChar Word.Word8
+
+-- | Uses @coerce@.
+instance From.From Word.Word8 Foreign.CChar
 
 --
 

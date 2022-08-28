@@ -12,6 +12,7 @@ on:
 jobs:
   ci:
     strategy:
+      fail-fast: false # TODO
       matrix:
         include:
           - { platform: ubuntu, ghc: 9.4.2 }
