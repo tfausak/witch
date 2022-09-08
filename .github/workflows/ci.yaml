@@ -5,6 +5,12 @@ on:
     types:
       - created
 jobs:
+  brittany:
+    runs-on: ubuntu-latest
+    name: Brittany
+    steps:
+      - uses: actions/checkout@v2
+      - uses: tfausak/brittany-action@v1
   ci:
     strategy:
       matrix:
