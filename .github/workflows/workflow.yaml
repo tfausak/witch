@@ -53,12 +53,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - run: mkdir artifact
+
       - id: artifact
-        run: |
-          mkdir artifact
-          mkdir artifact/${{ matrix.platform }}
-          mkdir artifact/${{ matrix.platform }}/${{ matrix.ghc }}
-          echo '::set-output name=directory::artifact/${{ matrix.platform }}/${{ matrix.ghc }}'
+        run: echo '::set-output name=directory::artifact/${{ matrix.platform }}-${{ matrix.ghc }}'
+
+      - run: mkdir ${{ steps.artifact.outputs.directory }}
 
       - id: setup-haskell
         uses: haskell/actions/setup@v2
@@ -80,6 +80,8 @@ jobs:
       - run: cabal build
 
       - run: cabal test --test-show-details direct
+
+      - run: cp cabal.project.local cabal.project.freeze ${{ steps.artifact.outputs.directory }}
 
       - run: cabal sdist --output-dir ${{ steps.artifact.outputs.directory }}
 
@@ -104,10 +106,10 @@ jobs:
         with:
           asset_content_type: application/gzip
           asset_name: witch-${{ github.event.release.tag_name }}.tar.gz
-          asset_path: artifact/ubuntu/9.2.4/witch-${{ github.event.release.tag_name }}.tar.gz
+          asset_path: artifact/ubuntu-9.2.4/witch-${{ github.event.release.tag_name }}.tar.gz
           upload_url: ${{ github.event.release.upload_url }}
 
-      - run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' artifact/ubuntu/9.2.4/witch-${{ github.event.release.tag_name }}.tar.gz
+      - run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' artifact/ubuntu-9.2.4/witch-${{ github.event.release.tag_name }}.tar.gz
 
   i386:
      runs-on: ubuntu-latest
