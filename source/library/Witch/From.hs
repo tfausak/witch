@@ -31,6 +31,5 @@ class From source target where
   -- >>> instance From Name String
   -- >>> instance From String Name
   from :: source -> target
-
   default from :: Coerce.Coercible source target => source -> target
   from = Coerce.coerce
