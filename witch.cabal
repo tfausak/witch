@@ -93,7 +93,7 @@ library
   else
     hs-source-dirs: source/ghc-8.8
 
-test-suite test
+test-suite witch-test-suite
   import: executable
 
   build-depends:

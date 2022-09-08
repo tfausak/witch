@@ -67,9 +67,15 @@ jobs:
 
       - run: cabal configure --enable-tests --flags pedantic --jobs
 
+      - run: cat cabal.project.local
+
+      - run: cp cabal.project.local ${{ steps.artifact.outputs.directory }}
+
       - run: cabal freeze
 
       - run: cat cabal.project.freeze
+
+      - run: cp cabal.project.freeze ${{ steps.artifact.outputs.directory }}
 
       - uses: actions/cache@v2
         with:
@@ -77,11 +83,13 @@ jobs:
           key: ${{ matrix.platform }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
           restore-keys: ${{ matrix.platform }}-${{ matrix.ghc }}-
 
+      - run: cabal build --only-download
+
+      - run: cabal build --only-dependencies
+
       - run: cabal build
 
-      - run: cabal test --test-show-details direct
-
-      - run: cp cabal.project.local cabal.project.freeze ${{ steps.artifact.outputs.directory }}
+      - run: cabal run -- witch-test-suite
 
       - run: cabal sdist --output-dir ${{ steps.artifact.outputs.directory }}
 
