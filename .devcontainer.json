@@ -1,7 +1,0 @@
-{
-  "image": "ghcr.io/tfausak/haskell-codespace:ghc-9.2",
-  "extensions": [
-    "taylorfausak.purple-yolk"
-  ],
-  "postCreateCommand": "cabal update"
-}

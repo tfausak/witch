@@ -1,0 +1,16 @@
+{
+  "dockerComposeFile": "compose.yaml",
+  "extensions": [
+    "taylorfausak.purple-yolk"
+  ],
+  "initializeCommand": ".devcontainer/initialize.sh",
+  "onCreateCommand": ".devcontainer/on-create.sh",
+  "service": "devcontainer",
+  "settings": {
+    "editor.formatOnSave": true,
+    "purple-yolk.haskell.formatter.command": ".devcontainer/cabal-shim.sh ormolu --no-cabal",
+    "purple-yolk.haskell.linter.command": ".devcontainer/cabal-shim.sh hlint --json --no-exit-code -",
+    "purple-yolk.haskell.linter.onSave": true
+  },
+  "workspaceFolder": "/workspaces/witch"
+}
