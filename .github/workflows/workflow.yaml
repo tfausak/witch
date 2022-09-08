@@ -4,14 +4,8 @@ on:
   release:
     types:
       - created
-jobs:
-  ormolu:
-    runs-on: ubuntu-latest
-    name: Ormolu
-    steps:
-      - uses: actions/checkout@v3
 
-      - uses: mrkkrp/ormolu-action@v7
+jobs:
   cabal:
     runs-on: ubuntu-latest
     name: Cabal
@@ -19,6 +13,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - run: cabal check
+
   hlint:
     runs-on: ubuntu-latest
     name: HLint
@@ -30,6 +25,15 @@ jobs:
       - uses: haskell/actions/hlint-run@v2
         with:
           fail-on: status
+
+  ormolu:
+    runs-on: ubuntu-latest
+    name: Ormolu
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: mrkkrp/ormolu-action@v7
+
   build:
     strategy:
       matrix:
@@ -47,8 +51,7 @@ jobs:
     runs-on: ${{ matrix.platform }}-latest
     name: GHC ${{ matrix.ghc }} on ${{ matrix.platform }}
     steps:
-
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - id: artifact
         run: |
@@ -58,7 +61,7 @@ jobs:
           echo '::set-output name=directory::artifact/${{ matrix.platform }}/${{ matrix.ghc }}'
 
       - id: setup-haskell
-        uses: haskell/actions/setup@v1
+        uses: haskell/actions/setup@v2
         with:
           ghc-version: ${{ matrix.ghc }}
 
@@ -90,7 +93,6 @@ jobs:
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
-
       - uses: actions/download-artifact@v2
         with:
           name: witch-${{ github.sha }}
@@ -111,4 +113,5 @@ jobs:
      runs-on: ubuntu-latest
      steps:
        - uses: actions/checkout@v2
+
        - run: docker run --rm --user 0 --volume "$PWD:$PWD" --workdir "$PWD" taylorfausak/i386-haskell@sha256:450720742fa69258c0a8589dcac28c3c6d5d34718172d935b385520f4ee9128e sh -c 'cabal update && cabal test --test-show-details direct'
