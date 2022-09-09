@@ -79,7 +79,7 @@ jobs:
 
       - run: cp cabal.project.freeze ${{ steps.artifact.outputs.directory }}
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ${{ steps.setup-haskell.outputs.cabal-store }}
           key: ${{ matrix.platform }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
