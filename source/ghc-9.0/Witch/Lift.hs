@@ -15,17 +15,17 @@ import qualified Witch.Utility as Utility
 -- >
 -- > -- Prefer this:
 -- > $$(liftedFrom @s "some literal")
-liftedFrom
-  :: forall source target m
-   . ( TryFrom.TryFrom source target
-     , TH.Lift target
-     , Show source
-     , Typeable.Typeable source
-     , Typeable.Typeable target
-     , TH.Quote m
-     )
-  => source
-  -> TH.Code m target
+liftedFrom ::
+  forall source target m.
+  ( TryFrom.TryFrom source target,
+    TH.Lift target,
+    Show source,
+    Typeable.Typeable source,
+    Typeable.Typeable target,
+    TH.Quote m
+  ) =>
+  source ->
+  TH.Code m target
 liftedFrom = TH.liftTyped . Utility.unsafeFrom
 
 -- | This is like 'Utility.unsafeInto' except that it works at compile time
@@ -36,15 +36,15 @@ liftedFrom = TH.liftTyped . Utility.unsafeFrom
 -- >
 -- > -- Prefer this:
 -- > $$(liftedInto @t "some literal")
-liftedInto
-  :: forall target source m
-   . ( TryFrom.TryFrom source target
-     , TH.Lift target
-     , Show source
-     , Typeable.Typeable source
-     , Typeable.Typeable target
-     , TH.Quote m
-     )
-  => source
-  -> TH.Code m target
+liftedInto ::
+  forall target source m.
+  ( TryFrom.TryFrom source target,
+    TH.Lift target,
+    Show source,
+    Typeable.Typeable source,
+    Typeable.Typeable target,
+    TH.Quote m
+  ) =>
+  source ->
+  TH.Code m target
 liftedInto = liftedFrom

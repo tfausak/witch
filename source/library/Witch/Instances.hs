@@ -1,8 +1,8 @@
-{-# OPTIONS_GHC -Wno-orphans #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 module Witch.Instances where
 
@@ -201,11 +201,13 @@ instance TryFrom.TryFrom Int.Int32 Natural.Natural where
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryFrom.TryFrom Int.Int32 Float where
-  tryFrom = Utility.eitherTryFrom $ \s -> if s < -maxFloat
-    then Left Exception.Underflow
-    else if s > maxFloat
-      then Left Exception.Overflow
-      else Right $ fromIntegral s
+  tryFrom = Utility.eitherTryFrom $ \s ->
+    if s < -maxFloat
+      then Left Exception.Underflow
+      else
+        if s > maxFloat
+          then Left Exception.Overflow
+          else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral'.
 instance From.From Int.Int32 Double where
@@ -264,20 +266,24 @@ instance TryFrom.TryFrom Int.Int64 Natural.Natural where
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryFrom.TryFrom Int.Int64 Float where
-  tryFrom = Utility.eitherTryFrom $ \s -> if s < -maxFloat
-    then Left Exception.Underflow
-    else if s > maxFloat
-      then Left Exception.Overflow
-      else Right $ fromIntegral s
+  tryFrom = Utility.eitherTryFrom $ \s ->
+    if s < -maxFloat
+      then Left Exception.Underflow
+      else
+        if s > maxFloat
+          then Left Exception.Overflow
+          else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryFrom.TryFrom Int.Int64 Double where
-  tryFrom = Utility.eitherTryFrom $ \s -> if s < -maxDouble
-    then Left Exception.Underflow
-    else if s > maxDouble
-      then Left Exception.Overflow
-      else Right $ fromIntegral s
+  tryFrom = Utility.eitherTryFrom $ \s ->
+    if s < -maxDouble
+      then Left Exception.Underflow
+      else
+        if s > maxDouble
+          then Left Exception.Overflow
+          else Right $ fromIntegral s
 
 -- Int
 
@@ -328,11 +334,13 @@ instance TryFrom.TryFrom Int Natural.Natural where
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryFrom.TryFrom Int Float where
-  tryFrom = Utility.eitherTryFrom $ \s -> if s < -maxFloat
-    then Left Exception.Underflow
-    else if s > maxFloat
-      then Left Exception.Overflow
-      else Right $ fromIntegral s
+  tryFrom = Utility.eitherTryFrom $ \s ->
+    if s < -maxFloat
+      then Left Exception.Underflow
+      else
+        if s > maxFloat
+          then Left Exception.Overflow
+          else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
@@ -340,11 +348,13 @@ instance TryFrom.TryFrom Int Double where
   tryFrom = Utility.eitherTryFrom $ \s ->
     if toInteger (maxBound :: Int) <= maxDouble
       then Right $ fromIntegral s
-      else if s < -maxDouble
-        then Left Exception.Underflow
-        else if s > maxDouble
-          then Left Exception.Overflow
-          else Right $ fromIntegral s
+      else
+        if s < -maxDouble
+          then Left Exception.Underflow
+          else
+            if s > maxDouble
+              then Left Exception.Overflow
+              else Right $ fromIntegral s
 
 -- Integer
 
@@ -394,26 +404,30 @@ instance TryFrom.TryFrom Integer Natural.Natural where
   -- a bug in GHC 9.0.1. By inlining @fromNonNegativeIntegral@ and replacing
   -- @fromIntegral@ with @fromInteger@, we can work around the bug.
   -- https://mail.haskell.org/pipermail/haskell-cafe/2021-March/133540.html
-  tryFrom = Utility.eitherTryFrom
-    $ \s -> if s < 0 then Left Exception.Underflow else Right $ fromInteger s
+  tryFrom = Utility.eitherTryFrom $
+    \s -> if s < 0 then Left Exception.Underflow else Right $ fromInteger s
 
 -- | Uses 'fromIntegral' when the input is between -16,777,215 and 16,777,215
 -- inclusive.
 instance TryFrom.TryFrom Integer Float where
-  tryFrom = Utility.eitherTryFrom $ \s -> if s < -maxFloat
-    then Left Exception.Underflow
-    else if s > maxFloat
-      then Left Exception.Overflow
-      else Right $ fromIntegral s
+  tryFrom = Utility.eitherTryFrom $ \s ->
+    if s < -maxFloat
+      then Left Exception.Underflow
+      else
+        if s > maxFloat
+          then Left Exception.Overflow
+          else Right $ fromIntegral s
 
 -- | Uses 'fromIntegral' when the input is between -9,007,199,254,740,991 and
 -- 9,007,199,254,740,991 inclusive.
 instance TryFrom.TryFrom Integer Double where
-  tryFrom = Utility.eitherTryFrom $ \s -> if s < -maxDouble
-    then Left Exception.Underflow
-    else if s > maxDouble
-      then Left Exception.Overflow
-      else Right $ fromIntegral s
+  tryFrom = Utility.eitherTryFrom $ \s ->
+    if s < -maxDouble
+      then Left Exception.Underflow
+      else
+        if s > maxDouble
+          then Left Exception.Overflow
+          else Right $ fromIntegral s
 
 -- Word8
 
@@ -634,9 +648,10 @@ instance TryFrom.TryFrom Word.Word64 Float where
 -- | Uses 'fromIntegral' when the input is less than or equal to
 -- 9,007,199,254,740,991.
 instance TryFrom.TryFrom Word.Word64 Double where
-  tryFrom = Utility.eitherTryFrom $ \s -> if s <= maxDouble
-    then Right $ fromIntegral s
-    else Left Exception.Overflow
+  tryFrom = Utility.eitherTryFrom $ \s ->
+    if s <= maxDouble
+      then Right $ fromIntegral s
+      else Left Exception.Overflow
 
 -- Word
 
@@ -751,9 +766,10 @@ instance TryFrom.TryFrom Natural.Natural Float where
 -- | Uses 'fromIntegral' when the input is less than or equal to
 -- 9,007,199,254,740,991.
 instance TryFrom.TryFrom Natural.Natural Double where
-  tryFrom = Utility.eitherTryFrom $ \s -> if s <= maxDouble
-    then Right $ fromIntegral s
-    else Left Exception.Overflow
+  tryFrom = Utility.eitherTryFrom $ \s ->
+    if s <= maxDouble
+      then Right $ fromIntegral s
+      else Left Exception.Overflow
 
 -- Float
 
@@ -891,9 +907,10 @@ instance Integral a => From.From a (Ratio.Ratio a) where
 
 -- | Uses 'Ratio.numerator' when the denominator is 1.
 instance (Eq a, Num a) => TryFrom.TryFrom (Ratio.Ratio a) a where
-  tryFrom = Utility.eitherTryFrom $ \s -> if Ratio.denominator s == 1
-    then Right $ Ratio.numerator s
-    else Left Exception.LossOfPrecision
+  tryFrom = Utility.eitherTryFrom $ \s ->
+    if Ratio.denominator s == 1
+      then Right $ Ratio.numerator s
+      else Left Exception.LossOfPrecision
 
 -- | Uses 'fromRational'. This necessarily loses some precision.
 instance From.From Rational Float where
@@ -906,10 +923,9 @@ instance From.From Rational Double where
 -- | Uses `fromRational` as long as there isn't a loss of precision.
 instance Fixed.HasResolution a => TryFrom.TryFrom Rational (Fixed.Fixed a) where
   tryFrom = Utility.eitherTryFrom $ \s ->
-    let
-      t :: Fixed.Fixed a
-      t = fromRational s
-    in if toRational t == s then Right t else Left Exception.LossOfPrecision
+    let t :: Fixed.Fixed a
+        t = fromRational s
+     in if toRational t == s then Right t else Left Exception.LossOfPrecision
 
 -- Fixed
 
@@ -935,9 +951,10 @@ instance Num a => From.From a (Complex.Complex a) where
 
 -- | Uses 'Complex.realPart' when the imaginary part is 0.
 instance (Eq a, Num a) => TryFrom.TryFrom (Complex.Complex a) a where
-  tryFrom = Utility.eitherTryFrom $ \s -> if Complex.imagPart s == 0
-    then Right $ Complex.realPart s
-    else Left Exception.LossOfPrecision
+  tryFrom = Utility.eitherTryFrom $ \s ->
+    if Complex.imagPart s == 0
+      then Right $ Complex.realPart s
+      else Left Exception.LossOfPrecision
 
 -- NonEmpty
 
@@ -1026,16 +1043,16 @@ instance TryFrom.TryFrom ByteString.ByteString Text.Text where
 -- | Converts via 'Text.Text'.
 instance TryFrom.TryFrom ByteString.ByteString LazyText.Text where
   tryFrom =
-    Utility.eitherTryFrom
-      $ fmap (Utility.into @LazyText.Text)
-      . Utility.tryInto @Text.Text
+    Utility.eitherTryFrom $
+      fmap (Utility.into @LazyText.Text)
+        . Utility.tryInto @Text.Text
 
 -- | Converts via 'Text.Text'.
 instance TryFrom.TryFrom ByteString.ByteString String where
   tryFrom =
-    Utility.eitherTryFrom
-      $ fmap (Utility.into @String)
-      . Utility.tryInto @Text.Text
+    Utility.eitherTryFrom $
+      fmap (Utility.into @String)
+        . Utility.tryInto @Text.Text
 
 -- LazyByteString
 
@@ -1058,16 +1075,16 @@ instance TryFrom.TryFrom LazyByteString.ByteString LazyText.Text where
 -- | Converts via 'LazyText.Text'.
 instance TryFrom.TryFrom LazyByteString.ByteString Text.Text where
   tryFrom =
-    Utility.eitherTryFrom
-      $ fmap (Utility.into @Text.Text)
-      . Utility.tryInto @LazyText.Text
+    Utility.eitherTryFrom $
+      fmap (Utility.into @Text.Text)
+        . Utility.tryInto @LazyText.Text
 
 -- | Converts via 'LazyText.Text'.
 instance TryFrom.TryFrom LazyByteString.ByteString String where
   tryFrom =
-    Utility.eitherTryFrom
-      $ fmap (Utility.into @String)
-      . Utility.tryInto @LazyText.Text
+    Utility.eitherTryFrom $
+      fmap (Utility.into @String)
+        . Utility.tryInto @LazyText.Text
 
 -- ShortByteString
 
@@ -1142,9 +1159,10 @@ instance From.From String LazyByteString.ByteString where
 -- TryFromException
 
 -- | Uses @coerce@.
-instance From.From
-  (TryFromException.TryFromException source oldTarget)
-  (TryFromException.TryFromException source newTarget)
+instance
+  From.From
+    (TryFromException.TryFromException source oldTarget)
+    (TryFromException.TryFromException source newTarget)
 
 -- Day
 
@@ -1256,16 +1274,19 @@ instance From.From Time.ZonedTime Time.UTCTime where
 
 --
 
-realFloatToRational
-  :: RealFloat s => s -> Either Exception.ArithException Rational
+realFloatToRational ::
+  RealFloat s => s -> Either Exception.ArithException Rational
 realFloatToRational s
   | isNaN s = Left Exception.LossOfPrecision
-  | isInfinite s = if s > 0
-    then Left Exception.Overflow
-    else Left Exception.Underflow
-  | otherwise = Right $ overPositive
-    (uncurry makeRational . uncurry fromDigits . Numeric.floatToDigits 10)
-    s
+  | isInfinite s =
+      if s > 0
+        then Left Exception.Overflow
+        else Left Exception.Underflow
+  | otherwise =
+      Right $
+        overPositive
+          (uncurry makeRational . uncurry fromDigits . Numeric.floatToDigits 10)
+          s
 
 overPositive :: (Eq a, Num a, Num b) => (a -> b) -> a -> b
 overPositive f x = if signum x == -1 then -(f (-x)) else f x
@@ -1277,8 +1298,8 @@ fromDigits ds e =
 makeRational :: Integer -> Integer -> Rational
 makeRational d e = toRational d * 10 ^^ e
 
-fromNonNegativeIntegral
-  :: (Integral s, Num t) => s -> Either Exception.ArithException t
+fromNonNegativeIntegral ::
+  (Integral s, Num t) => s -> Either Exception.ArithException t
 fromNonNegativeIntegral x =
   if x < 0 then Left Exception.Underflow else Right $ fromIntegral x
 

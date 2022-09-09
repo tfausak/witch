@@ -1,24 +1,48 @@
-name: CI
+name: Workflow
 on:
-  pull_request:
-    branches:
-      - main
-  push:
-    branches:
-      - main
+  push: null
   release:
     types:
       - created
+
 jobs:
-  ci:
+  cabal:
+    runs-on: ubuntu-latest
+    name: Cabal
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: cabal check
+
+  hlint:
+    runs-on: ubuntu-latest
+    name: HLint
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: haskell/actions/hlint-setup@v2
+
+      - uses: haskell/actions/hlint-run@v2
+        with:
+          fail-on: status
+
+  ormolu:
+    runs-on: ubuntu-latest
+    name: Ormolu
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: mrkkrp/ormolu-action@v7
+
+  build:
     strategy:
       matrix:
         include:
           - { platform: ubuntu, ghc: 9.4.2 }
-          - { platform: ubuntu, ghc: 9.2.1 }
-          - { platform: ubuntu, ghc: 9.0.1 }
-          - { platform: macos, ghc: 9.2.1 }
-          - { platform: windows, ghc: 9.2.1 }
+          - { platform: ubuntu, ghc: 9.2.4 }
+          - { platform: ubuntu, ghc: 9.0.2 }
+          - { platform: macos, ghc: 9.4.2 }
+          - { platform: windows, ghc: 9.4.2 }
           - { platform: ubuntu, ghc: 8.10.7 }
           - { platform: ubuntu, ghc: 8.8.4 }
           - { platform: ubuntu, ghc: 8.6.5 }
@@ -27,26 +51,33 @@ jobs:
     runs-on: ${{ matrix.platform }}-latest
     name: GHC ${{ matrix.ghc }} on ${{ matrix.platform }}
     steps:
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2
+      - run: mkdir artifact
 
       - id: artifact
-        run: |
-          mkdir artifact
-          mkdir artifact/${{ matrix.platform }}
-          mkdir artifact/${{ matrix.platform }}/${{ matrix.ghc }}
-          echo '::set-output name=directory::artifact/${{ matrix.platform }}/${{ matrix.ghc }}'
+        run: echo '::set-output name=directory::artifact/${{ matrix.platform }}-${{ matrix.ghc }}'
+
+      - run: mkdir ${{ steps.artifact.outputs.directory }}
 
       - id: setup-haskell
-        uses: haskell/actions/setup@v1
+        uses: haskell/actions/setup@v2
         with:
           ghc-version: ${{ matrix.ghc }}
 
+      - run: ghc-pkg list
+
       - run: cabal configure --enable-tests --flags pedantic --jobs
+
+      - run: cat cabal.project.local
+
+      - run: cp cabal.project.local ${{ steps.artifact.outputs.directory }}
 
       - run: cabal freeze
 
       - run: cat cabal.project.freeze
+
+      - run: cp cabal.project.freeze ${{ steps.artifact.outputs.directory }}
 
       - uses: actions/cache@v2
         with:
@@ -54,11 +85,13 @@ jobs:
           key: ${{ matrix.platform }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
           restore-keys: ${{ matrix.platform }}-${{ matrix.ghc }}-
 
+      - run: cabal build --only-download
+
+      - run: cabal build --only-dependencies
+
       - run: cabal build
 
-      - run: cabal test --test-show-details direct
-
-      - run: cabal check
+      - run: cabal run -- witch-test-suite
 
       - run: cabal sdist --output-dir ${{ steps.artifact.outputs.directory }}
 
@@ -68,11 +101,10 @@ jobs:
           name: witch-${{ github.sha }}
 
   release:
-    needs: ci
+    needs: build
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
-
       - uses: actions/download-artifact@v2
         with:
           name: witch-${{ github.sha }}
@@ -84,13 +116,14 @@ jobs:
         with:
           asset_content_type: application/gzip
           asset_name: witch-${{ github.event.release.tag_name }}.tar.gz
-          asset_path: artifact/ubuntu/9.2.1/witch-${{ github.event.release.tag_name }}.tar.gz
+          asset_path: artifact/ubuntu-9.4.2/witch-${{ github.event.release.tag_name }}.tar.gz
           upload_url: ${{ github.event.release.upload_url }}
 
-      - run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' artifact/ubuntu/9.2.1/witch-${{ github.event.release.tag_name }}.tar.gz
+      - run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' artifact/ubuntu-9.4.2/witch-${{ github.event.release.tag_name }}.tar.gz
 
   i386:
      runs-on: ubuntu-latest
      steps:
        - uses: actions/checkout@v2
+
        - run: docker run --rm --user 0 --volume "$PWD:$PWD" --workdir "$PWD" taylorfausak/i386-haskell@sha256:450720742fa69258c0a8589dcac28c3c6d5d34718172d935b385520f4ee9128e sh -c 'cabal update && cabal test --test-show-details direct'

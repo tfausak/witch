@@ -19,7 +19,7 @@ import qualified Witch.TryFromException as TryFromException
 -- >
 -- > -- Prefer this:
 -- > f . as @Int . g
-as :: forall source . source -> source
+as :: forall source. source -> source
 as = id
 
 -- | This is the same as 'From.from' except that the type variables are in the
@@ -30,7 +30,7 @@ as = id
 -- >
 -- > -- Prefer this:
 -- > into @t x
-into :: forall target source . From.From source target => source -> target
+into :: forall target source. From.From source target => source -> target
 into = From.from
 
 -- | This function converts from some @source@ type into some @target@ type,
@@ -43,12 +43,12 @@ into = From.from
 -- >
 -- > -- Prefer this:
 -- > over @t f
-over
-  :: forall target source
-   . (From.From source target, From.From target source)
-  => (target -> target)
-  -> source
-  -> source
+over ::
+  forall target source.
+  (From.From source target, From.From target source) =>
+  (target -> target) ->
+  source ->
+  source
 over f = From.from . f . From.from
 
 -- | This function first converts from some @source@ type into some @through@
@@ -61,11 +61,11 @@ over f = From.from . f . From.from
 -- >
 -- > -- Prefer this:
 -- > via @u
-via
-  :: forall through source target
-   . (From.From source through, From.From through target)
-  => source
-  -> target
+via ::
+  forall through source target.
+  (From.From source through, From.From through target) =>
+  source ->
+  target
 via = From.from . (\x -> x :: through) . From.from
 
 -- | This is the same as 'TryFrom.tryFrom' except that the type variables are
@@ -76,11 +76,11 @@ via = From.from . (\x -> x :: through) . From.from
 -- >
 -- > -- Prefer this:
 -- > tryInto @t x
-tryInto
-  :: forall target source
-   . TryFrom.TryFrom source target
-  => source
-  -> Either (TryFromException.TryFromException source target) target
+tryInto ::
+  forall target source.
+  TryFrom.TryFrom source target =>
+  source ->
+  Either (TryFromException.TryFromException source target) target
 tryInto = TryFrom.tryFrom
 
 -- | This is similar to 'via' except that it works with 'TryFrom.TryFrom'
@@ -96,11 +96,11 @@ tryInto = TryFrom.tryFrom
 -- >
 -- > -- Prefer this:
 -- > tryVia @u
-tryVia
-  :: forall through source target
-   . (TryFrom.TryFrom source through, TryFrom.TryFrom through target)
-  => source
-  -> Either (TryFromException.TryFromException source target) target
+tryVia ::
+  forall through source target.
+  (TryFrom.TryFrom source through, TryFrom.TryFrom through target) =>
+  source ->
+  Either (TryFromException.TryFromException source target) target
 tryVia s = case TryFrom.tryFrom s of
   Left e -> Left $ withTarget e
   Right u -> case TryFrom.tryFrom (u :: through) of
@@ -117,10 +117,10 @@ tryVia s = case TryFrom.tryFrom s of
 -- >
 -- > -- Prefer this:
 -- > tryFrom = maybeTryFrom f
-maybeTryFrom
-  :: (source -> Maybe target)
-  -> source
-  -> Either (TryFromException.TryFromException source target) target
+maybeTryFrom ::
+  (source -> Maybe target) ->
+  source ->
+  Either (TryFromException.TryFromException source target) target
 maybeTryFrom f s = case f s of
   Nothing -> Left $ TryFromException.TryFromException s Nothing
   Just t -> Right t
@@ -135,11 +135,11 @@ maybeTryFrom f s = case f s of
 -- >
 -- > -- Prefer this:
 -- > tryFrom = eitherTryFrom f
-eitherTryFrom
-  :: Exception.Exception exception
-  => (source -> Either exception target)
-  -> source
-  -> Either (TryFromException.TryFromException source target) target
+eitherTryFrom ::
+  Exception.Exception exception =>
+  (source -> Either exception target) ->
+  source ->
+  Either (TryFromException.TryFromException source target) target
 eitherTryFrom f s = case f s of
   Left e ->
     Left . TryFromException.TryFromException s . Just $ Exception.toException e
@@ -153,16 +153,16 @@ eitherTryFrom f s = case f s of
 -- >
 -- > -- Prefer this:
 -- > unsafeFrom @s
-unsafeFrom
-  :: forall source target
-   . ( Stack.HasCallStack
-     , TryFrom.TryFrom source target
-     , Show source
-     , Typeable.Typeable source
-     , Typeable.Typeable target
-     )
-  => source
-  -> target
+unsafeFrom ::
+  forall source target.
+  ( Stack.HasCallStack,
+    TryFrom.TryFrom source target,
+    Show source,
+    Typeable.Typeable source,
+    Typeable.Typeable target
+  ) =>
+  source ->
+  target
 unsafeFrom = either Exception.throw id . TryFrom.tryFrom
 
 -- | This function is like 'tryInto' except that it will throw an impure
@@ -173,27 +173,27 @@ unsafeFrom = either Exception.throw id . TryFrom.tryFrom
 -- >
 -- > -- Prefer this:
 -- > unsafeInto @t
-unsafeInto
-  :: forall target source
-   . ( Stack.HasCallStack
-     , TryFrom.TryFrom source target
-     , Show source
-     , Typeable.Typeable source
-     , Typeable.Typeable target
-     )
-  => source
-  -> target
+unsafeInto ::
+  forall target source.
+  ( Stack.HasCallStack,
+    TryFrom.TryFrom source target,
+    Show source,
+    Typeable.Typeable source,
+    Typeable.Typeable target
+  ) =>
+  source ->
+  target
 unsafeInto = unsafeFrom
 
-withSource
-  :: newSource
-  -> TryFromException.TryFromException oldSource target
-  -> TryFromException.TryFromException newSource target
+withSource ::
+  newSource ->
+  TryFromException.TryFromException oldSource target ->
+  TryFromException.TryFromException newSource target
 withSource x (TryFromException.TryFromException _ e) =
   TryFromException.TryFromException x e
 
-withTarget
-  :: forall newTarget source oldTarget
-   . TryFromException.TryFromException source oldTarget
-  -> TryFromException.TryFromException source newTarget
+withTarget ::
+  forall newTarget source oldTarget.
+  TryFromException.TryFromException source oldTarget ->
+  TryFromException.TryFromException source newTarget
 withTarget = Coerce.coerce
