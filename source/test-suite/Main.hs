@@ -2098,14 +2098,14 @@ shouldBe :: (Stack.HasCallStack, Eq a, Show a) => a -> a -> HUnit.Assertion
 shouldBe = (HUnit.@?=)
 
 shouldSatisfy :: (Stack.HasCallStack, Show a) => a -> (a -> Bool) -> HUnit.Assertion
-shouldSatisfy value predicate = HUnit.assertBool ("predicate failed on: " <> show value) $ predicate value
+shouldSatisfy value predicate = HUnit.assertBool ("predicate failed on: " ++ show value) $ predicate value
 
 shouldThrow :: (Stack.HasCallStack, Exception.Exception e) => IO a -> Selector e -> HUnit.Assertion
 shouldThrow action predicate = do
   result <- Exception.try action
   case result of
     Right _ -> HUnit.assertFailure "did not get expected exception"
-    Left exception -> HUnit.assertBool ("predicate failed on expected exception: " <> show exception) $ predicate exception
+    Left exception -> HUnit.assertBool ("predicate failed on expected exception: " ++ show exception) $ predicate exception
 
 specToTest :: Stack.HasCallStack => Spec -> HUnit.Test
 specToTest = HUnit.TestList . Foldable.toList . Writer.execWriter
