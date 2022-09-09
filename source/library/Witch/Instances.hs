@@ -1038,7 +1038,7 @@ instance From.From ByteString.ByteString LazyByteString.ByteString where
 instance From.From ByteString.ByteString ShortByteString.ShortByteString where
   from = ShortByteString.toShort
 
--- | Uses 'Test.decodeUtf8''.
+-- | Uses 'Text.decodeUtf8''.
 instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" ByteString.ByteString) Text.Text where
   tryFrom = Utility.eitherTryFrom $ Text.decodeUtf8' . Tagged.unTagged
 
@@ -1154,7 +1154,7 @@ instance From.From LazyText.Text String where
 instance From.From String (Tagged.Tagged "UTF-8" ByteString.ByteString) where
   from = Utility.via @Text.Text
 
--- | Converts via 'Text.Text'.
+-- | Converts via 'LazyText.Text'.
 instance From.From String (Tagged.Tagged "UTF-8" LazyByteString.ByteString) where
   from = Utility.via @LazyText.Text
 
