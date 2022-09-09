@@ -95,6 +95,7 @@ test-suite witch-test-suite
 
   build-depends:
     , HUnit >= 1.6.1 && < 1.7
+    , transformers
   hs-source-dirs: source/test-suite
   main-is: Main.hs
   type: exitcode-stdio-1.0
