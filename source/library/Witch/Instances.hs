@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -23,8 +24,11 @@ import qualified Data.Map as Map
 import qualified Data.Ratio as Ratio
 import qualified Data.Sequence as Seq
 import qualified Data.Set as Set
+import qualified Data.Tagged as Tagged
 import qualified Data.Text as Text
+import qualified Data.Text.Encoding as Text
 import qualified Data.Text.Lazy as LazyText
+import qualified Data.Text.Lazy.Encoding as LazyText
 import qualified Data.Time as Time
 import qualified Data.Time.Clock.POSIX as Time
 import qualified Data.Time.Clock.System as Time
@@ -1034,6 +1038,24 @@ instance From.From ByteString.ByteString LazyByteString.ByteString where
 instance From.From ByteString.ByteString ShortByteString.ShortByteString where
   from = ShortByteString.toShort
 
+-- | Uses 'Test.decodeUtf8''.
+instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" ByteString.ByteString) Text.Text where
+  tryFrom = Utility.eitherTryFrom $ Text.decodeUtf8' . Tagged.unTagged
+
+-- | Converts via 'Text.Text'.
+instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" ByteString.ByteString) LazyText.Text where
+  tryFrom =
+    Utility.eitherTryFrom $
+      fmap (Utility.into @LazyText.Text)
+        . Utility.tryInto @Text.Text
+
+-- | Converts via 'Text.Text'.
+instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" ByteString.ByteString) String where
+  tryFrom =
+    Utility.eitherTryFrom $
+      fmap (Utility.into @String)
+        . Utility.tryInto @Text.Text
+
 -- LazyByteString
 
 -- | Uses 'LazyByteString.pack'.
@@ -1047,6 +1069,24 @@ instance From.From LazyByteString.ByteString [Word.Word8] where
 -- | Uses 'LazyByteString.toStrict'.
 instance From.From LazyByteString.ByteString ByteString.ByteString where
   from = LazyByteString.toStrict
+
+-- | Uses 'LazyText.decodeUtf8''.
+instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" LazyByteString.ByteString) LazyText.Text where
+  tryFrom = Utility.eitherTryFrom $ LazyText.decodeUtf8' . Tagged.unTagged
+
+-- | Converts via 'LazyText.Text'.
+instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" LazyByteString.ByteString) Text.Text where
+  tryFrom =
+    Utility.eitherTryFrom $
+      fmap (Utility.into @Text.Text)
+        . Utility.tryInto @LazyText.Text
+
+-- | Converts via 'LazyText.Text'.
+instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" LazyByteString.ByteString) String where
+  tryFrom =
+    Utility.eitherTryFrom $
+      fmap (Utility.into @String)
+        . Utility.tryInto @LazyText.Text
 
 -- ShortByteString
 
@@ -1068,11 +1108,27 @@ instance From.From ShortByteString.ShortByteString ByteString.ByteString where
 instance From.From Text.Text LazyText.Text where
   from = LazyText.fromStrict
 
+-- | Uses 'Text.encodeUtf8'.
+instance From.From Text.Text (Tagged.Tagged "UTF-8" ByteString.ByteString) where
+  from = Tagged.Tagged . Text.encodeUtf8
+
+-- | Converts via 'ByteString.ByteString'.
+instance From.From Text.Text (Tagged.Tagged "UTF-8" LazyByteString.ByteString) where
+  from = fmap (Utility.into @LazyByteString.ByteString) . Utility.into @(Tagged.Tagged "UTF-8" ByteString.ByteString)
+
 -- LazyText
 
 -- | Uses 'LazyText.toStrict'.
 instance From.From LazyText.Text Text.Text where
   from = LazyText.toStrict
+
+-- | Uses 'LazyText.encodeUtf8'.
+instance From.From LazyText.Text (Tagged.Tagged "UTF-8" LazyByteString.ByteString) where
+  from = Tagged.Tagged . LazyText.encodeUtf8
+
+-- | Converts via 'LazyByteString.ByteString'.
+instance From.From LazyText.Text (Tagged.Tagged "UTF-8" ByteString.ByteString) where
+  from = fmap (Utility.into @ByteString.ByteString) . Utility.into @(Tagged.Tagged "UTF-8" LazyByteString.ByteString)
 
 -- String
 
@@ -1093,6 +1149,14 @@ instance From.From String LazyText.Text where
 -- | Uses 'LazyText.unpack'.
 instance From.From LazyText.Text String where
   from = LazyText.unpack
+
+-- | Converts via 'Text.Text'.
+instance From.From String (Tagged.Tagged "UTF-8" ByteString.ByteString) where
+  from = Utility.via @Text.Text
+
+-- | Converts via 'Text.Text'.
+instance From.From String (Tagged.Tagged "UTF-8" LazyByteString.ByteString) where
+  from = Utility.via @LazyText.Text
 
 -- TryFromException
 
@@ -1209,6 +1273,14 @@ instance From.From Time.NominalDiffTime Time.CalendarDiffTime where
 -- | Uses 'Time.zonedTimeToUTC'.
 instance From.From Time.ZonedTime Time.UTCTime where
   from = Time.zonedTimeToUTC
+
+-- Tagged
+
+-- | Uses 'Tagged.Tagged'.
+instance From.From a (Tagged.Tagged s a)
+
+-- | Uses 'Tagged.unTagged'.
+instance From.From (Tagged.Tagged s a) a
 
 --
 
