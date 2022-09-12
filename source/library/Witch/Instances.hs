@@ -38,6 +38,7 @@ import qualified Data.Word as Word
 import qualified GHC.Float as Float
 import qualified Numeric
 import qualified Numeric.Natural as Natural
+import qualified Witch.Encoding as Encoding
 import qualified Witch.From as From
 import qualified Witch.TryFrom as TryFrom
 import qualified Witch.TryFromException as TryFromException
@@ -1040,22 +1041,22 @@ instance From.From ByteString.ByteString ShortByteString.ShortByteString where
   from = ShortByteString.toShort
 
 -- | Uses 'Text.decodeUtf8''.
-instance TryFrom.TryFrom ByteString.ByteString (Tagged.Tagged "UTF-8" Text.Text) where
+instance TryFrom.TryFrom ByteString.ByteString (Encoding.Utf8 Text.Text) where
   tryFrom = Utility.eitherTryFrom $ fmap Tagged.Tagged . Text.decodeUtf8'
 
 -- | Converts via 'Text.Text'.
-instance TryFrom.TryFrom ByteString.ByteString (Tagged.Tagged "UTF-8" LazyText.Text) where
+instance TryFrom.TryFrom ByteString.ByteString (Encoding.Utf8 LazyText.Text) where
   tryFrom =
     Utility.eitherTryFrom $
       fmap (fmap From.from)
-        . Utility.tryInto @(Tagged.Tagged "UTF-8" Text.Text)
+        . Utility.tryInto @(Encoding.Utf8 Text.Text)
 
 -- | Converts via 'Text.Text'.
-instance TryFrom.TryFrom ByteString.ByteString (Tagged.Tagged "UTF-8" String) where
+instance TryFrom.TryFrom ByteString.ByteString (Encoding.Utf8 String) where
   tryFrom =
     Utility.eitherTryFrom $
       fmap (fmap From.from)
-        . Utility.tryInto @(Tagged.Tagged "UTF-8" Text.Text)
+        . Utility.tryInto @(Encoding.Utf8 Text.Text)
 
 -- LazyByteString
 
@@ -1072,22 +1073,22 @@ instance From.From LazyByteString.ByteString ByteString.ByteString where
   from = LazyByteString.toStrict
 
 -- | Uses 'LazyText.decodeUtf8''.
-instance TryFrom.TryFrom LazyByteString.ByteString (Tagged.Tagged "UTF-8" LazyText.Text) where
+instance TryFrom.TryFrom LazyByteString.ByteString (Encoding.Utf8 LazyText.Text) where
   tryFrom = Utility.eitherTryFrom $ fmap Tagged.Tagged . LazyText.decodeUtf8'
 
 -- | Converts via 'LazyText.Text'.
-instance TryFrom.TryFrom LazyByteString.ByteString (Tagged.Tagged "UTF-8" Text.Text) where
+instance TryFrom.TryFrom LazyByteString.ByteString (Encoding.Utf8 Text.Text) where
   tryFrom =
     Utility.eitherTryFrom $
       fmap (fmap From.from)
-        . Utility.tryInto @(Tagged.Tagged "UTF-8" LazyText.Text)
+        . Utility.tryInto @(Encoding.Utf8 LazyText.Text)
 
 -- | Converts via 'LazyText.Text'.
-instance TryFrom.TryFrom LazyByteString.ByteString (Tagged.Tagged "UTF-8" String) where
+instance TryFrom.TryFrom LazyByteString.ByteString (Encoding.Utf8 String) where
   tryFrom =
     Utility.eitherTryFrom $
       fmap (fmap From.from)
-        . Utility.tryInto @(Tagged.Tagged "UTF-8" LazyText.Text)
+        . Utility.tryInto @(Encoding.Utf8 LazyText.Text)
 
 -- ShortByteString
 
@@ -1110,11 +1111,11 @@ instance From.From Text.Text LazyText.Text where
   from = LazyText.fromStrict
 
 -- | Uses 'Text.encodeUtf8'.
-instance From.From (Tagged.Tagged "UTF-8" Text.Text) ByteString.ByteString where
+instance From.From (Encoding.Utf8 Text.Text) ByteString.ByteString where
   from = Text.encodeUtf8 . Tagged.unTagged
 
 -- | Converts via 'ByteString.ByteString'.
-instance From.From (Tagged.Tagged "UTF-8" Text.Text) LazyByteString.ByteString where
+instance From.From (Encoding.Utf8 Text.Text) LazyByteString.ByteString where
   from = Utility.via @ByteString.ByteString
 
 -- LazyText
@@ -1124,11 +1125,11 @@ instance From.From LazyText.Text Text.Text where
   from = LazyText.toStrict
 
 -- | Uses 'LazyText.encodeUtf8'.
-instance From.From (Tagged.Tagged "UTF-8" LazyText.Text) LazyByteString.ByteString where
+instance From.From (Encoding.Utf8 LazyText.Text) LazyByteString.ByteString where
   from = LazyText.encodeUtf8 . Tagged.unTagged
 
 -- | Converts via 'LazyByteString.ByteString'.
-instance From.From (Tagged.Tagged "UTF-8" LazyText.Text) ByteString.ByteString where
+instance From.From (Encoding.Utf8 LazyText.Text) ByteString.ByteString where
   from = Utility.via @LazyByteString.ByteString
 
 -- String
@@ -1152,11 +1153,11 @@ instance From.From LazyText.Text String where
   from = LazyText.unpack
 
 -- | Converts via 'Text.Text'.
-instance From.From (Tagged.Tagged "UTF-8" String) ByteString.ByteString where
+instance From.From (Encoding.Utf8 String) ByteString.ByteString where
   from = From.from . fmap (Utility.into @Text.Text)
 
 -- | Converts via 'LazyText.Text'.
-instance From.From (Tagged.Tagged "UTF-8" String) LazyByteString.ByteString where
+instance From.From (Encoding.Utf8 String) LazyByteString.ByteString where
   from = From.from . fmap (Utility.into @LazyText.Text)
 
 -- TryFromException

@@ -22,6 +22,9 @@ module Witch
     -- * Data types
     Witch.TryFromException.TryFromException (..),
 
+    -- ** Encodings
+    Witch.Encoding.Utf8,
+
     -- * Utilities
     Witch.Utility.as,
     Witch.Utility.over,
@@ -260,6 +263,7 @@ module Witch
   )
 where
 
+import qualified Witch.Encoding
 import qualified Witch.From
 import Witch.Instances ()
 import qualified Witch.Lift
