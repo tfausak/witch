@@ -1047,14 +1047,14 @@ instance TryFrom.TryFrom ByteString.ByteString (Tagged.Tagged "UTF-8" Text.Text)
 instance TryFrom.TryFrom ByteString.ByteString (Tagged.Tagged "UTF-8" LazyText.Text) where
   tryFrom =
     Utility.eitherTryFrom $
-      fmap From.from
+      fmap (fmap From.from)
         . Utility.tryInto @(Tagged.Tagged "UTF-8" Text.Text)
 
 -- | Converts via 'Text.Text'.
 instance TryFrom.TryFrom ByteString.ByteString (Tagged.Tagged "UTF-8" String) where
   tryFrom =
     Utility.eitherTryFrom $
-      fmap From.from
+      fmap (fmap From.from)
         . Utility.tryInto @(Tagged.Tagged "UTF-8" Text.Text)
 
 -- LazyByteString
@@ -1079,14 +1079,14 @@ instance TryFrom.TryFrom LazyByteString.ByteString (Tagged.Tagged "UTF-8" LazyTe
 instance TryFrom.TryFrom LazyByteString.ByteString (Tagged.Tagged "UTF-8" Text.Text) where
   tryFrom =
     Utility.eitherTryFrom $
-      fmap From.from
+      fmap (fmap From.from)
         . Utility.tryInto @(Tagged.Tagged "UTF-8" LazyText.Text)
 
 -- | Converts via 'LazyText.Text'.
 instance TryFrom.TryFrom LazyByteString.ByteString (Tagged.Tagged "UTF-8" String) where
   tryFrom =
     Utility.eitherTryFrom $
-      fmap From.from
+      fmap (fmap From.from)
         . Utility.tryInto @(Tagged.Tagged "UTF-8" LazyText.Text)
 
 -- ShortByteString
@@ -1153,11 +1153,11 @@ instance From.From LazyText.Text String where
 
 -- | Converts via 'Text.Text'.
 instance From.From (Tagged.Tagged "UTF-8" String) ByteString.ByteString where
-  from = Utility.via @(Tagged.Tagged "UTF-8" Text.Text)
+  from = From.from . fmap (Utility.into @Text.Text)
 
 -- | Converts via 'LazyText.Text'.
 instance From.From (Tagged.Tagged "UTF-8" String) LazyByteString.ByteString where
-  from = Utility.via @(Tagged.Tagged "UTF-8" LazyText.Text)
+  from = From.from . fmap (Utility.into @LazyText.Text)
 
 -- TryFromException
 
@@ -1285,10 +1285,6 @@ instance From.From (Tagged.Tagged s a) a
 
 -- | Uses @coerce@.
 instance From.From (Tagged.Tagged s a) (Tagged.Tagged t a)
-
--- | Uses 'From.from' on the tagged value.
-instance From.From a b => From.From (Tagged.Tagged s a) (Tagged.Tagged s b) where
-  from = fmap From.from
 
 --
 

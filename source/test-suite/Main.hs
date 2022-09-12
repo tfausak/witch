@@ -2087,11 +2087,6 @@ spec = describe "Witch" $ do
       it "works" $ do
         f 1 `shouldBe` 1
 
-    describe "From (Tagged s a) (Tagged s b)" $ do
-      let f = Witch.from @(Tagged.Tagged () Int.Int8) @(Tagged.Tagged () Int.Int16)
-      it "works" $ do
-        f 1 `shouldBe` 1
-
 newtype Age
   = Age Int.Int8
   deriving (Eq, Show)
