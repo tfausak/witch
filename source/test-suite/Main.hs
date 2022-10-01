@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NegativeLiterals #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -2080,6 +2081,11 @@ spec = describe "Witch" $ do
       let f = Witch.from @(Tagged.Tagged () Bool) @Bool
       it "works" $ do
         f (Tagged.Tagged False) `shouldBe` False
+
+    describe "From (Tagged t a) (Tagged u a)" $ do
+      let f = Witch.from @(Tagged.Tagged "old" Bool) @(Tagged.Tagged "new" Bool)
+      it "works" $ do
+        f (Tagged.Tagged False) `shouldBe` Tagged.Tagged False
 
 newtype Age
   = Age Int.Int8

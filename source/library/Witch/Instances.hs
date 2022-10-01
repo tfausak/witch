@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
@@ -1280,6 +1281,9 @@ instance From.From a (Tagged.Tagged t a)
 
 -- | Uses @coerce@. Essentially the same as 'Tagged.unTagged'.
 instance From.From (Tagged.Tagged t a) a
+
+-- | Uses @coerce@. Essentially the same as 'Tagged.retag'.
+instance From.From (Tagged.Tagged t a) (Tagged.Tagged u a)
 
 --
 
