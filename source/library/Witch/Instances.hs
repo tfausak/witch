@@ -23,6 +23,7 @@ import qualified Data.Map as Map
 import qualified Data.Ratio as Ratio
 import qualified Data.Sequence as Seq
 import qualified Data.Set as Set
+import qualified Data.Tagged as Tagged
 import qualified Data.Text as Text
 import qualified Data.Text.Encoding as Text
 import qualified Data.Text.Lazy as LazyText
@@ -1271,6 +1272,11 @@ instance From.From Time.NominalDiffTime Time.CalendarDiffTime where
 -- | Uses 'Time.zonedTimeToUTC'.
 instance From.From Time.ZonedTime Time.UTCTime where
   from = Time.zonedTimeToUTC
+
+-- Tagged
+
+-- | Uses @coerce@. Essentially the same as 'Tagged.Tagged'.
+instance From.From a (Tagged.Tagged t a)
 
 --
 
