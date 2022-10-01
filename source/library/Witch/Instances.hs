@@ -1278,6 +1278,9 @@ instance From.From Time.ZonedTime Time.UTCTime where
 -- | Uses @coerce@. Essentially the same as 'Tagged.Tagged'.
 instance From.From a (Tagged.Tagged t a)
 
+-- | Uses @coerce@. Essentially the same as 'Tagged.unTagged'.
+instance From.From (Tagged.Tagged t a) a
+
 --
 
 realFloatToRational ::
