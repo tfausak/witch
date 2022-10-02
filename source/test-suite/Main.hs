@@ -1801,25 +1801,25 @@ spec = describe "Witch" $ do
         f (ByteString.pack [0x0f, 0xf0]) `shouldBe` ShortByteString.pack [0x0f, 0xf0]
 
     describe "TryFrom ByteString Text" $ do
-      let f = hush . Witch.tryFrom @ByteString.ByteString @Text.Text
+      let f = hush . Witch.tryFrom @(Tagged.Tagged "UTF-8" ByteString.ByteString) @Text.Text
       it "works" $ do
-        f (ByteString.pack []) `shouldBe` Just (Text.pack "")
-        f (ByteString.pack [0x61]) `shouldBe` Just (Text.pack "a")
-        f (ByteString.pack [0xff]) `shouldBe` Nothing
+        f (Tagged.Tagged (ByteString.pack [])) `shouldBe` Just (Text.pack "")
+        f (Tagged.Tagged (ByteString.pack [0x61])) `shouldBe` Just (Text.pack "a")
+        f (Tagged.Tagged (ByteString.pack [0xff])) `shouldBe` Nothing
 
     describe "TryFrom ByteString LazyText" $ do
-      let f = hush . Witch.tryFrom @ByteString.ByteString @LazyText.Text
+      let f = hush . Witch.tryFrom @(Tagged.Tagged "UTF-8" ByteString.ByteString) @LazyText.Text
       it "works" $ do
-        f (ByteString.pack []) `shouldBe` Just (LazyText.pack "")
-        f (ByteString.pack [0x61]) `shouldBe` Just (LazyText.pack "a")
-        f (ByteString.pack [0xff]) `shouldBe` Nothing
+        f (Tagged.Tagged (ByteString.pack [])) `shouldBe` Just (LazyText.pack "")
+        f (Tagged.Tagged (ByteString.pack [0x61])) `shouldBe` Just (LazyText.pack "a")
+        f (Tagged.Tagged (ByteString.pack [0xff])) `shouldBe` Nothing
 
     describe "TryFrom ByteString String" $ do
-      let f = hush . Witch.tryFrom @ByteString.ByteString @String
+      let f = hush . Witch.tryFrom @(Tagged.Tagged "UTF-8" ByteString.ByteString) @String
       it "works" $ do
-        f (ByteString.pack []) `shouldBe` Just ""
-        f (ByteString.pack [0x61]) `shouldBe` Just "a"
-        f (ByteString.pack [0xff]) `shouldBe` Nothing
+        f (Tagged.Tagged (ByteString.pack [])) `shouldBe` Just ""
+        f (Tagged.Tagged (ByteString.pack [0x61])) `shouldBe` Just "a"
+        f (Tagged.Tagged (ByteString.pack [0xff])) `shouldBe` Nothing
 
     describe "From [Word8] LazyByteString" $ do
       let f = Witch.from @[Word.Word8] @LazyByteString.ByteString
@@ -1843,25 +1843,25 @@ spec = describe "Witch" $ do
         f (LazyByteString.pack [0x0f, 0xf0]) `shouldBe` ByteString.pack [0x0f, 0xf0]
 
     describe "TryFrom LazyByteString LazyText" $ do
-      let f = hush . Witch.tryFrom @LazyByteString.ByteString @LazyText.Text
+      let f = hush . Witch.tryFrom @(Tagged.Tagged "UTF-8" LazyByteString.ByteString) @LazyText.Text
       it "works" $ do
-        f (LazyByteString.pack []) `shouldBe` Just (LazyText.pack "")
-        f (LazyByteString.pack [0x61]) `shouldBe` Just (LazyText.pack "a")
-        f (LazyByteString.pack [0xff]) `shouldBe` Nothing
+        f (Tagged.Tagged (LazyByteString.pack [])) `shouldBe` Just (LazyText.pack "")
+        f (Tagged.Tagged (LazyByteString.pack [0x61])) `shouldBe` Just (LazyText.pack "a")
+        f (Tagged.Tagged (LazyByteString.pack [0xff])) `shouldBe` Nothing
 
     describe "TryFrom LazyByteString Text" $ do
-      let f = hush . Witch.tryFrom @LazyByteString.ByteString @Text.Text
+      let f = hush . Witch.tryFrom @(Tagged.Tagged "UTF-8" LazyByteString.ByteString) @Text.Text
       it "works" $ do
-        f (LazyByteString.pack []) `shouldBe` Just (Text.pack "")
-        f (LazyByteString.pack [0x61]) `shouldBe` Just (Text.pack "a")
-        f (LazyByteString.pack [0xff]) `shouldBe` Nothing
+        f (Tagged.Tagged (LazyByteString.pack [])) `shouldBe` Just (Text.pack "")
+        f (Tagged.Tagged (LazyByteString.pack [0x61])) `shouldBe` Just (Text.pack "a")
+        f (Tagged.Tagged (LazyByteString.pack [0xff])) `shouldBe` Nothing
 
     describe "TryFrom LazyByteString String" $ do
-      let f = hush . Witch.tryFrom @LazyByteString.ByteString @String
+      let f = hush . Witch.tryFrom @(Tagged.Tagged "UTF-8" LazyByteString.ByteString) @String
       it "works" $ do
-        f (LazyByteString.pack []) `shouldBe` Just ""
-        f (LazyByteString.pack [0x61]) `shouldBe` Just "a"
-        f (LazyByteString.pack [0xff]) `shouldBe` Nothing
+        f (Tagged.Tagged (LazyByteString.pack [])) `shouldBe` Just ""
+        f (Tagged.Tagged (LazyByteString.pack [0x61])) `shouldBe` Just "a"
+        f (Tagged.Tagged (LazyByteString.pack [0xff])) `shouldBe` Nothing
 
     describe "From [Word8] ShortByteString" $ do
       let f = Witch.from @[Word.Word8] @ShortByteString.ShortByteString
@@ -1892,16 +1892,16 @@ spec = describe "Witch" $ do
         f (Text.pack "ab") `shouldBe` LazyText.pack "ab"
 
     describe "From Text ByteString" $ do
-      let f = Witch.from @Text.Text @ByteString.ByteString
+      let f = Witch.from @Text.Text @(Tagged.Tagged "UTF-8" ByteString.ByteString)
       it "works" $ do
-        f (Text.pack "") `shouldBe` ByteString.pack []
-        f (Text.pack "a") `shouldBe` ByteString.pack [0x61]
+        f (Text.pack "") `shouldBe` Tagged.Tagged (ByteString.pack [])
+        f (Text.pack "a") `shouldBe` Tagged.Tagged (ByteString.pack [0x61])
 
     describe "From Text LazyByteString" $ do
-      let f = Witch.from @Text.Text @LazyByteString.ByteString
+      let f = Witch.from @Text.Text @(Tagged.Tagged "UTF-8" LazyByteString.ByteString)
       it "works" $ do
-        f (Text.pack "") `shouldBe` LazyByteString.pack []
-        f (Text.pack "a") `shouldBe` LazyByteString.pack [0x61]
+        f (Text.pack "") `shouldBe` Tagged.Tagged (LazyByteString.pack [])
+        f (Text.pack "a") `shouldBe` Tagged.Tagged (LazyByteString.pack [0x61])
 
     describe "From LazyText Text" $ do
       let f = Witch.from @LazyText.Text @Text.Text
@@ -1911,16 +1911,16 @@ spec = describe "Witch" $ do
         f (LazyText.pack "ab") `shouldBe` Text.pack "ab"
 
     describe "From LazyText LazyByteString" $ do
-      let f = Witch.from @LazyText.Text @LazyByteString.ByteString
+      let f = Witch.from @LazyText.Text @(Tagged.Tagged "UTF-8" LazyByteString.ByteString)
       it "works" $ do
-        f (LazyText.pack "") `shouldBe` LazyByteString.pack []
-        f (LazyText.pack "a") `shouldBe` LazyByteString.pack [0x61]
+        f (LazyText.pack "") `shouldBe` Tagged.Tagged (LazyByteString.pack [])
+        f (LazyText.pack "a") `shouldBe` Tagged.Tagged (LazyByteString.pack [0x61])
 
     describe "From LazyText ByteString" $ do
-      let f = Witch.from @LazyText.Text @ByteString.ByteString
+      let f = Witch.from @LazyText.Text @(Tagged.Tagged "UTF-8" ByteString.ByteString)
       it "works" $ do
-        f (LazyText.pack "") `shouldBe` ByteString.pack []
-        f (LazyText.pack "a") `shouldBe` ByteString.pack [0x61]
+        f (LazyText.pack "") `shouldBe` Tagged.Tagged (ByteString.pack [])
+        f (LazyText.pack "a") `shouldBe` Tagged.Tagged (ByteString.pack [0x61])
 
     describe "From String Text" $ do
       let f = Witch.from @String @Text.Text
@@ -1951,16 +1951,16 @@ spec = describe "Witch" $ do
         f (LazyText.pack "ab") `shouldBe` "ab"
 
     describe "From String ByteString" $ do
-      let f = Witch.from @String @ByteString.ByteString
+      let f = Witch.from @String @(Tagged.Tagged "UTF-8" ByteString.ByteString)
       it "works" $ do
-        f "" `shouldBe` ByteString.pack []
-        f "a" `shouldBe` ByteString.pack [0x61]
+        f "" `shouldBe` Tagged.Tagged (ByteString.pack [])
+        f "a" `shouldBe` Tagged.Tagged (ByteString.pack [0x61])
 
     describe "From String LazyByteString" $ do
-      let f = Witch.from @String @LazyByteString.ByteString
+      let f = Witch.from @String @(Tagged.Tagged "UTF-8" LazyByteString.ByteString)
       it "works" $ do
-        f "" `shouldBe` LazyByteString.pack []
-        f "a" `shouldBe` LazyByteString.pack [0x61]
+        f "" `shouldBe` Tagged.Tagged (LazyByteString.pack [])
+        f "a" `shouldBe` Tagged.Tagged (LazyByteString.pack [0x61])
 
     describe "From Integer Day" $ do
       let f = Witch.from @Integer @Time.Day
