@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NegativeLiterals #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -20,6 +21,7 @@ import qualified Data.Map as Map
 import qualified Data.Ratio as Ratio
 import qualified Data.Sequence as Seq
 import qualified Data.Set as Set
+import qualified Data.Tagged as Tagged
 import qualified Data.Text as Text
 import qualified Data.Text.Lazy as LazyText
 import qualified Data.Time as Time
@@ -2069,6 +2071,21 @@ spec = describe "Witch" $ do
       let f = Witch.from @Time.ZonedTime @Time.UTCTime
       it "works" $ do
         f (Time.ZonedTime (Time.LocalTime (Time.ModifiedJulianDay 0) (Time.TimeOfDay 0 0 0)) Time.utc) `shouldBe` Time.UTCTime (Time.ModifiedJulianDay 0) 0
+
+    describe "From a (Tagged t a)" $ do
+      let f = Witch.from @Bool @(Tagged.Tagged () Bool)
+      it "works" $ do
+        f False `shouldBe` Tagged.Tagged False
+
+    describe "From (Tagged t a) a" $ do
+      let f = Witch.from @(Tagged.Tagged () Bool) @Bool
+      it "works" $ do
+        f (Tagged.Tagged False) `shouldBe` False
+
+    describe "From (Tagged t a) (Tagged u a)" $ do
+      let f = Witch.from @(Tagged.Tagged "old" Bool) @(Tagged.Tagged "new" Bool)
+      it "works" $ do
+        f (Tagged.Tagged False) `shouldBe` Tagged.Tagged False
 
 newtype Age
   = Age Int.Int8
