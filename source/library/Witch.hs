@@ -8,6 +8,9 @@
 -- In typical usage, the functions that you will use most often are
 -- 'Witch.Utility.into' for conversions that always succeed and
 -- 'Witch.Utility.tryInto' for conversions that sometimes fail.
+--
+-- Please consider reading the blog post that announces this library:
+-- <https://taylor.fausak.me/2021/07/13/witch/>
 module Witch
   ( -- * Type classes
 
