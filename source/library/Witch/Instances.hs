@@ -1340,10 +1340,7 @@ instance From.From String (Encoding.UTF_8 LazyByteString.ByteString) where
 
 -- | Uses 'Text.decodeUtf16LE'.
 instance TryFrom.TryFrom (Encoding.UTF_16LE ByteString.ByteString) Text.Text where
-  tryFrom = Utility.eitherTryFrom $ todo @Text.UnicodeException . Text.decodeUtf16LE . From.from
-
-todo :: Exception.Exception e => a -> Either e a
-todo = Unsafe.unsafePerformIO . Exception.try . Exception.evaluate
+  tryFrom = Utility.eitherTryFrom $ tryEvaluate @Text.UnicodeException . Text.decodeUtf16LE . From.from
 
 -- | Converts via 'Text.Text'.
 instance TryFrom.TryFrom (Encoding.UTF_16LE ByteString.ByteString) LazyText.Text where
@@ -1355,7 +1352,7 @@ instance TryFrom.TryFrom (Encoding.UTF_16LE ByteString.ByteString) String where
 
 -- | Uses 'LazyText.decodeUtf16LE'.
 instance TryFrom.TryFrom (Encoding.UTF_16LE LazyByteString.ByteString) LazyText.Text where
-  tryFrom = Utility.eitherTryFrom $ todo @Text.UnicodeException . LazyText.decodeUtf16LE . From.from
+  tryFrom = Utility.eitherTryFrom $ tryEvaluate @Text.UnicodeException . LazyText.decodeUtf16LE . From.from
 
 -- | Converts via 'LazyText.Text'.
 instance TryFrom.TryFrom (Encoding.UTF_16LE LazyByteString.ByteString) Text.Text where
@@ -1429,3 +1426,6 @@ maxFloat = 16777215
 -- 'Double'. Equal to 9,007,199,254,740,991.
 maxDouble :: Num a => a
 maxDouble = 9007199254740991
+
+tryEvaluate :: Exception.Exception e => a -> Either e a
+tryEvaluate = Unsafe.unsafePerformIO . Exception.try . Exception.evaluate
