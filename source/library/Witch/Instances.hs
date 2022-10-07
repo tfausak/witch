@@ -1234,17 +1234,11 @@ instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" ByteString.ByteString) Text.Text
 
 -- | Converts via 'Text.Text'.
 instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" ByteString.ByteString) LazyText.Text where
-  tryFrom =
-    Utility.eitherTryFrom $
-      fmap (Utility.into @LazyText.Text)
-        . Utility.tryInto @Text.Text
+  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @LazyText.Text) . Utility.tryInto @Text.Text
 
 -- | Converts via 'Text.Text'.
 instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" ByteString.ByteString) String where
-  tryFrom =
-    Utility.eitherTryFrom $
-      fmap (Utility.into @String)
-        . Utility.tryInto @Text.Text
+  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @Text.Text
 
 -- | Uses 'LazyText.decodeUtf8''.
 instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" LazyByteString.ByteString) LazyText.Text where
@@ -1252,17 +1246,11 @@ instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" LazyByteString.ByteString) LazyT
 
 -- | Converts via 'LazyText.Text'.
 instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" LazyByteString.ByteString) Text.Text where
-  tryFrom =
-    Utility.eitherTryFrom $
-      fmap (Utility.into @Text.Text)
-        . Utility.tryInto @LazyText.Text
+  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @Text.Text) . Utility.tryInto @LazyText.Text
 
 -- | Converts via 'LazyText.Text'.
 instance TryFrom.TryFrom (Tagged.Tagged "UTF-8" LazyByteString.ByteString) String where
-  tryFrom =
-    Utility.eitherTryFrom $
-      fmap (Utility.into @String)
-        . Utility.tryInto @LazyText.Text
+  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @LazyText.Text
 
 -- | Uses 'Text.encodeUtf8'.
 instance From.From Text.Text (Tagged.Tagged "UTF-8" ByteString.ByteString) where
