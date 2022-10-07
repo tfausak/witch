@@ -8,10 +8,14 @@
 module Witch.Instances where
 
 import qualified Control.Exception as Exception
+import qualified Control.Monad as Monad
 import qualified Data.Bits as Bits
 import qualified Data.ByteString as ByteString
+import qualified Data.ByteString.Char8 as Char8
 import qualified Data.ByteString.Lazy as LazyByteString
+import qualified Data.ByteString.Lazy.Char8 as LazyChar8
 import qualified Data.ByteString.Short as ShortByteString
+import qualified Data.Char as Char
 import qualified Data.Complex as Complex
 import qualified Data.Fixed as Fixed
 import qualified Data.Foldable as Foldable
@@ -1225,6 +1229,60 @@ instance From.From (Tagged.Tagged t a) a
 
 -- | Uses @coerce@. Essentially the same as 'Tagged.retag'.
 instance From.From (Tagged.Tagged t a) (Tagged.Tagged u a)
+
+-- ISO-8859-1
+
+-- | Uses 'Text.decodeLatin1'.
+instance From.From (Encoding.ISO_8859_1 ByteString.ByteString) Text.Text where
+  from = Text.decodeLatin1 . From.from
+
+-- | Converts via 'Text.Text'.
+instance From.From (Encoding.ISO_8859_1 ByteString.ByteString) LazyText.Text where
+  from = Utility.via @Text.Text
+
+-- | Converts via 'Text.Text'.
+instance From.From (Encoding.ISO_8859_1 ByteString.ByteString) String where
+  from = Utility.via @Text.Text
+
+-- | Uses 'LazyText.decodeLatin1'.
+instance From.From (Encoding.ISO_8859_1 LazyByteString.ByteString) LazyText.Text where
+  from = LazyText.decodeLatin1 . From.from
+
+-- | Converts via 'LazyText.Text'.
+instance From.From (Encoding.ISO_8859_1 LazyByteString.ByteString) Text.Text where
+  from = Utility.via @LazyText.Text
+
+-- | Converts via 'LazyText.Text'.
+instance From.From (Encoding.ISO_8859_1 LazyByteString.ByteString) String where
+  from = Utility.via @LazyText.Text
+
+-- | Converts via 'String'.
+instance TryFrom.TryFrom Text.Text (Encoding.ISO_8859_1 ByteString.ByteString) where
+  tryFrom = Utility.eitherTryFrom $ TryFrom.tryFrom . Utility.into @String
+
+-- | Converts via 'String'.
+instance TryFrom.TryFrom Text.Text (Encoding.ISO_8859_1 LazyByteString.ByteString) where
+  tryFrom = Utility.eitherTryFrom $ TryFrom.tryFrom . Utility.into @String
+
+-- | Converts via 'String'.
+instance TryFrom.TryFrom LazyText.Text (Encoding.ISO_8859_1 LazyByteString.ByteString) where
+  tryFrom = Utility.eitherTryFrom $ TryFrom.tryFrom . Utility.into @String
+
+-- | Converts via 'String'.
+instance TryFrom.TryFrom LazyText.Text (Encoding.ISO_8859_1 ByteString.ByteString) where
+  tryFrom = Utility.eitherTryFrom $ TryFrom.tryFrom . Utility.into @String
+
+-- | Uses 'Char8.pack' when each character 'Char.isLatin1'.
+instance TryFrom.TryFrom String (Encoding.ISO_8859_1 ByteString.ByteString) where
+  tryFrom = Utility.maybeTryFrom $ \string -> do
+    Monad.guard $ all Char.isLatin1 string
+    pure . From.from $ Char8.pack string
+
+-- | Uses 'LazyChar8.pack' when each character 'Char.isLatin1'.
+instance TryFrom.TryFrom String (Encoding.ISO_8859_1 LazyByteString.ByteString) where
+  tryFrom = Utility.maybeTryFrom $ \string -> do
+    Monad.guard $ all Char.isLatin1 string
+    pure . From.from $ LazyChar8.pack string
 
 -- UTF-8
 

@@ -2010,6 +2010,72 @@ spec = describe "Witch" $ do
       it "works" $ do
         f (Tagged.Tagged False) `shouldBe` Tagged.Tagged False
 
+    describe "From (ISO_8859_1 ByteString) Text" $ do
+      let f = Witch.from @(Encoding.ISO_8859_1 ByteString.ByteString) @Text.Text
+      it "works" $ do
+        f (Tagged.Tagged (ByteString.pack [0x61])) `shouldBe` Text.pack "a"
+
+    describe "From (ISO_8859_1 ByteString) LazyText" $ do
+      let f = Witch.from @(Encoding.ISO_8859_1 ByteString.ByteString) @LazyText.Text
+      it "works" $ do
+        f (Tagged.Tagged (ByteString.pack [0x61])) `shouldBe` LazyText.pack "a"
+
+    describe "From (ISO_8859_1 ByteString) String" $ do
+      let f = Witch.from @(Encoding.ISO_8859_1 ByteString.ByteString) @String
+      it "works" $ do
+        f (Tagged.Tagged (ByteString.pack [0x61])) `shouldBe` "a"
+
+    describe "From (ISO_8859_1 LazyByteString) LazyText" $ do
+      let f = Witch.from @(Encoding.ISO_8859_1 LazyByteString.ByteString) @LazyText.Text
+      it "works" $ do
+        f (Tagged.Tagged (LazyByteString.pack [0x61])) `shouldBe` LazyText.pack "a"
+
+    describe "From (ISO_8859_1 LazyByteString) Text" $ do
+      let f = Witch.from @(Encoding.ISO_8859_1 LazyByteString.ByteString) @Text.Text
+      it "works" $ do
+        f (Tagged.Tagged (LazyByteString.pack [0x61])) `shouldBe` Text.pack "a"
+
+    describe "From (ISO_8859_1 LazyByteString) String" $ do
+      let f = Witch.from @(Encoding.ISO_8859_1 LazyByteString.ByteString) @String
+      it "works" $ do
+        f (Tagged.Tagged (LazyByteString.pack [0x61])) `shouldBe` "a"
+
+    describe "TryFrom Text (ISO_8859_1 ByteString)" $ do
+      let f = hush . Witch.tryFrom @Text.Text @(Encoding.ISO_8859_1 ByteString.ByteString)
+      it "works" $ do
+        f (Text.pack "a") `shouldBe` Just (Tagged.Tagged $ ByteString.pack [0x61])
+        f (Text.pack "\x100") `shouldBe` Nothing
+
+    describe "TryFrom Text (ISO_8859_1 LazyByteString)" $ do
+      let f = hush . Witch.tryFrom @Text.Text @(Encoding.ISO_8859_1 LazyByteString.ByteString)
+      it "works" $ do
+        f (Text.pack "a") `shouldBe` Just (Tagged.Tagged $ LazyByteString.pack [0x61])
+        f (Text.pack "\x100") `shouldBe` Nothing
+
+    describe "TryFrom LazyText (ISO_8859_1 LazyByteString)" $ do
+      let f = hush . Witch.tryFrom @LazyText.Text @(Encoding.ISO_8859_1 LazyByteString.ByteString)
+      it "works" $ do
+        f (LazyText.pack "a") `shouldBe` Just (Tagged.Tagged $ LazyByteString.pack [0x61])
+        f (LazyText.pack "\x100") `shouldBe` Nothing
+
+    describe "TryFrom LazyText (ISO_8859_1 ByteString)" $ do
+      let f = hush . Witch.tryFrom @LazyText.Text @(Encoding.ISO_8859_1 ByteString.ByteString)
+      it "works" $ do
+        f (LazyText.pack "a") `shouldBe` Just (Tagged.Tagged $ ByteString.pack [0x61])
+        f (LazyText.pack "\x100") `shouldBe` Nothing
+
+    describe "TryFrom String (ISO_8859_1 ByteString)" $ do
+      let f = hush . Witch.tryFrom @String @(Encoding.ISO_8859_1 ByteString.ByteString)
+      it "works" $ do
+        f "a" `shouldBe` Just (Tagged.Tagged $ ByteString.pack [0x61])
+        f "\x100" `shouldBe` Nothing
+
+    describe "TryFrom String (ISO_8859_1 LazyByteString)" $ do
+      let f = hush . Witch.tryFrom @String @(Encoding.ISO_8859_1 LazyByteString.ByteString)
+      it "works" $ do
+        f "a" `shouldBe` Just (Tagged.Tagged $ LazyByteString.pack [0x61])
+        f "\x100" `shouldBe` Nothing
+
     describe "TryFrom (UTF_8 ByteString) Text" $ do
       let f = hush . Witch.tryFrom @(Encoding.UTF_8 ByteString.ByteString) @Text.Text
       it "works" $ do
