@@ -76,6 +76,7 @@ library
     , template-haskell >= 2.12 && < 2.20
   exposed-modules:
     Witch
+    Witch.Encoding
     Witch.From
     Witch.Instances
     Witch.Lift
