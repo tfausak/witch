@@ -31,6 +31,7 @@ import qualified Data.Set as Set
 import qualified Data.Tagged as Tagged
 import qualified Data.Text as Text
 import qualified Data.Text.Encoding as Text
+import qualified Data.Text.Encoding.Error as Text
 import qualified Data.Text.Lazy as LazyText
 import qualified Data.Text.Lazy.Encoding as LazyText
 import qualified Data.Time as Time
@@ -41,6 +42,7 @@ import qualified Data.Word as Word
 import qualified GHC.Float as Float
 import qualified Numeric
 import qualified Numeric.Natural as Natural
+import qualified System.IO.Unsafe as Unsafe
 import qualified Witch.Encoding as Encoding
 import qualified Witch.From as From
 import qualified Witch.TryFrom as TryFrom
@@ -1332,6 +1334,59 @@ instance From.From String (Encoding.UTF_8 ByteString.ByteString) where
 
 -- | Converts via 'LazyText.Text'.
 instance From.From String (Encoding.UTF_8 LazyByteString.ByteString) where
+  from = Utility.via @LazyText.Text
+
+-- UTF-16LE
+
+-- | Uses 'Text.decodeUtf16LE'.
+instance TryFrom.TryFrom (Encoding.UTF_16LE ByteString.ByteString) Text.Text where
+  tryFrom = Utility.eitherTryFrom $ todo @Text.UnicodeException . Text.decodeUtf16LE . From.from
+
+todo :: Exception.Exception e => a -> Either e a
+todo = Unsafe.unsafePerformIO . Exception.try . Exception.evaluate
+
+-- | Converts via 'Text.Text'.
+instance TryFrom.TryFrom (Encoding.UTF_16LE ByteString.ByteString) LazyText.Text where
+  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @LazyText.Text) . Utility.tryInto @Text.Text
+
+-- | Converts via 'Text.Text'.
+instance TryFrom.TryFrom (Encoding.UTF_16LE ByteString.ByteString) String where
+  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @Text.Text
+
+-- | Uses 'LazyText.decodeUtf16LE'.
+instance TryFrom.TryFrom (Encoding.UTF_16LE LazyByteString.ByteString) LazyText.Text where
+  tryFrom = Utility.eitherTryFrom $ todo @Text.UnicodeException . LazyText.decodeUtf16LE . From.from
+
+-- | Converts via 'LazyText.Text'.
+instance TryFrom.TryFrom (Encoding.UTF_16LE LazyByteString.ByteString) Text.Text where
+  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @Text.Text) . Utility.tryInto @LazyText.Text
+
+-- | Converts via 'LazyText.Text'.
+instance TryFrom.TryFrom (Encoding.UTF_16LE LazyByteString.ByteString) String where
+  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @LazyText.Text
+
+-- | Uses 'Text.encodeUtf16LE'.
+instance From.From Text.Text (Encoding.UTF_16LE ByteString.ByteString) where
+  from = From.from . Text.encodeUtf16LE
+
+-- | Converts via 'ByteString.ByteString'.
+instance From.From Text.Text (Encoding.UTF_16LE LazyByteString.ByteString) where
+  from = fmap From.from . Utility.into @(Encoding.UTF_16LE ByteString.ByteString)
+
+-- | Uses 'LazyText.encodeUtf16LE'.
+instance From.From LazyText.Text (Encoding.UTF_16LE LazyByteString.ByteString) where
+  from = From.from . LazyText.encodeUtf16LE
+
+-- | Converts via 'LazyByteString.ByteString'.
+instance From.From LazyText.Text (Encoding.UTF_16LE ByteString.ByteString) where
+  from = fmap From.from . Utility.into @(Encoding.UTF_16LE LazyByteString.ByteString)
+
+-- | Converts via 'Text.Text'.
+instance From.From String (Encoding.UTF_16LE ByteString.ByteString) where
+  from = Utility.via @Text.Text
+
+-- | Converts via 'LazyText.Text'.
+instance From.From String (Encoding.UTF_16LE LazyByteString.ByteString) where
   from = Utility.via @LazyText.Text
 
 --
