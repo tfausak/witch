@@ -1226,6 +1226,56 @@ instance From.From (Tagged.Tagged t a) a
 -- | Uses @coerce@. Essentially the same as 'Tagged.retag'.
 instance From.From (Tagged.Tagged t a) (Tagged.Tagged u a)
 
+-- ISO-8859-1
+
+-- | Uses 'Text.decodeLatin1'.
+instance From.From (Encoding.ISO_8859_1 ByteString.ByteString) Text.Text where
+  from = Text.decodeLatin1 . From.from
+
+-- | Converts via 'Text.Text'.
+instance From.From (Encoding.ISO_8859_1 ByteString.ByteString) LazyText.Text where
+  from = Utility.via @Text.Text
+
+-- | Converts via 'Text.Text'.
+instance From.From (Encoding.ISO_8859_1 ByteString.ByteString) String where
+  from = Utility.via @Text.Text
+
+-- | Uses 'LazyText.decodeLatin1'.
+instance From.From (Encoding.ISO_8859_1 LazyByteString.ByteString) LazyText.Text where
+  from = LazyText.decodeLatin1 . From.from
+
+-- | Converts via 'LazyText.Text'.
+instance From.From (Encoding.ISO_8859_1 LazyByteString.ByteString) Text.Text where
+  from = Utility.via @LazyText.Text
+
+-- | Converts via 'LazyText.Text'.
+instance From.From (Encoding.ISO_8859_1 LazyByteString.ByteString) String where
+  from = Utility.via @LazyText.Text
+
+-- | Uses 'Text.encodeUtf8'.
+instance From.From Text.Text (Encoding.ISO_8859_1 ByteString.ByteString) where
+  from = From.from . Text.encodeUtf8
+
+-- | Converts via 'ByteString.ByteString'.
+instance From.From Text.Text (Encoding.ISO_8859_1 LazyByteString.ByteString) where
+  from = fmap From.from . Utility.into @(Encoding.ISO_8859_1 ByteString.ByteString)
+
+-- | Uses 'LazyText.encodeUtf8'.
+instance From.From LazyText.Text (Encoding.ISO_8859_1 LazyByteString.ByteString) where
+  from = From.from . LazyText.encodeUtf8
+
+-- | Converts via 'LazyByteString.ByteString'.
+instance From.From LazyText.Text (Encoding.ISO_8859_1 ByteString.ByteString) where
+  from = fmap From.from . Utility.into @(Encoding.ISO_8859_1 LazyByteString.ByteString)
+
+-- | Converts via 'Text.Text'.
+instance From.From String (Encoding.ISO_8859_1 ByteString.ByteString) where
+  from = Utility.via @Text.Text
+
+-- | Converts via 'LazyText.Text'.
+instance From.From String (Encoding.ISO_8859_1 LazyByteString.ByteString) where
+  from = Utility.via @LazyText.Text
+
 -- UTF-8
 
 -- | Uses 'Text.decodeUtf8''.
