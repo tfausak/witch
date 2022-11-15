@@ -2300,6 +2300,75 @@ spec = describe "Witch" $ do
       it "works" $ do
         f "a" `shouldBe` Tagged.Tagged (LazyByteString.pack [0x00, 0x61])
 
+    describe "TryFrom (UTF_32LE ByteString) Text" $ do
+      let f = hush . Witch.tryFrom @(Encoding.UTF_32LE ByteString.ByteString) @Text.Text
+      it "works" $ do
+        f (Tagged.Tagged (ByteString.pack [])) `shouldBe` Just (Text.pack "")
+        f (Tagged.Tagged (ByteString.pack [0x24, 0x00, 0x00, 0x00])) `shouldBe` Just (Text.pack "\x24")
+        f (Tagged.Tagged (ByteString.pack [0xa3, 0x00, 0x00, 0x00])) `shouldBe` Just (Text.pack "\xa3")
+        f (Tagged.Tagged (ByteString.pack [0xac, 0x20, 0x00, 0x00])) `shouldBe` Just (Text.pack "\x20ac")
+        f (Tagged.Tagged (ByteString.pack [0x48, 0x03, 0x01, 0x00])) `shouldBe` Just (Text.pack "\x10348")
+        f (Tagged.Tagged (ByteString.pack [0x00])) `shouldBe` Nothing
+
+    describe "TryFrom (UTF_32LE ByteString) LazyText" $ do
+      let f = hush . Witch.tryFrom @(Encoding.UTF_32LE ByteString.ByteString) @LazyText.Text
+      it "works" $ do
+        f (Tagged.Tagged (ByteString.pack [0x61, 0x00, 0x00, 0x00])) `shouldBe` Just (LazyText.pack "a")
+
+    describe "TryFrom (UTF_32LE ByteString) String" $ do
+      let f = hush . Witch.tryFrom @(Encoding.UTF_32LE ByteString.ByteString) @String
+      it "works" $ do
+        f (Tagged.Tagged (ByteString.pack [0x61, 0x00, 0x00, 0x00])) `shouldBe` Just "a"
+
+    describe "TryFrom (UTF_32LE LazyByteString) LazyText" $ do
+      let f = hush . Witch.tryFrom @(Encoding.UTF_32LE LazyByteString.ByteString) @LazyText.Text
+      it "works" $ do
+        f (Tagged.Tagged (LazyByteString.pack [0x61, 0x00, 0x00, 0x00])) `shouldBe` Just (LazyText.pack "a")
+
+    describe "TryFrom (UTF_32LE LazyByteString) Text" $ do
+      let f = hush . Witch.tryFrom @(Encoding.UTF_32LE LazyByteString.ByteString) @Text.Text
+      it "works" $ do
+        f (Tagged.Tagged (LazyByteString.pack [0x61, 0x00, 0x00, 0x00])) `shouldBe` Just (Text.pack "a")
+
+    describe "TryFrom (UTF_32LE LazyByteString) String" $ do
+      let f = hush . Witch.tryFrom @(Encoding.UTF_32LE LazyByteString.ByteString) @String
+      it "works" $ do
+        f (Tagged.Tagged (LazyByteString.pack [0x61, 0x00, 0x00, 0x00])) `shouldBe` Just "a"
+
+    describe "From Text (UTF_32LE ByteString)" $ do
+      let f = Witch.from @Text.Text @(Encoding.UTF_32LE ByteString.ByteString)
+      it "works" $ do
+        f (Text.pack "") `shouldBe` Tagged.Tagged (ByteString.pack [])
+        f (Text.pack "\x24") `shouldBe` Tagged.Tagged (ByteString.pack [0x24, 0x00, 0x00, 0x00])
+        f (Text.pack "\xa3") `shouldBe` Tagged.Tagged (ByteString.pack [0xa3, 0x00, 0x00, 0x00])
+        f (Text.pack "\x20ac") `shouldBe` Tagged.Tagged (ByteString.pack [0xac, 0x20, 0x00, 0x00])
+        f (Text.pack "\x10348") `shouldBe` Tagged.Tagged (ByteString.pack [0x48, 0x03, 0x01, 0x00])
+
+    describe "From Text (UTF_32LE LazyByteString)" $ do
+      let f = Witch.from @Text.Text @(Encoding.UTF_32LE LazyByteString.ByteString)
+      it "works" $ do
+        f (Text.pack "a") `shouldBe` Tagged.Tagged (LazyByteString.pack [0x61, 0x00, 0x00, 0x00])
+
+    describe "From LazyText (UTF_32LE LazyByteString)" $ do
+      let f = Witch.from @LazyText.Text @(Encoding.UTF_32LE LazyByteString.ByteString)
+      it "works" $ do
+        f (LazyText.pack "a") `shouldBe` Tagged.Tagged (LazyByteString.pack [0x61, 0x00, 0x00, 0x00])
+
+    describe "From LazyText (UTF_32LE ByteString)" $ do
+      let f = Witch.from @LazyText.Text @(Encoding.UTF_32LE ByteString.ByteString)
+      it "works" $ do
+        f (LazyText.pack "a") `shouldBe` Tagged.Tagged (ByteString.pack [0x61, 0x00, 0x00, 0x00])
+
+    describe "From String (UTF_32LE ByteString)" $ do
+      let f = Witch.from @String @(Encoding.UTF_32LE ByteString.ByteString)
+      it "works" $ do
+        f "a" `shouldBe` Tagged.Tagged (ByteString.pack [0x61, 0x00, 0x00, 0x00])
+
+    describe "From String (UTF_32LE LazyByteString)" $ do
+      let f = Witch.from @String @(Encoding.UTF_32LE LazyByteString.ByteString)
+      it "works" $ do
+        f "a" `shouldBe` Tagged.Tagged (LazyByteString.pack [0x61, 0x00, 0x00, 0x00])
+
 newtype Age
   = Age Int.Int8
   deriving (Eq, Show)
