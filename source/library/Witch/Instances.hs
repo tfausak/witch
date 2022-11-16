@@ -1436,6 +1436,56 @@ instance From.From String (Encoding.UTF_16BE ByteString.ByteString) where
 instance From.From String (Encoding.UTF_16BE LazyByteString.ByteString) where
   from = Utility.via @LazyText.Text
 
+-- UTF-32LE
+
+-- | Uses 'Text.decodeUtf32LE'.
+instance TryFrom.TryFrom (Encoding.UTF_32LE ByteString.ByteString) Text.Text where
+  tryFrom = Utility.eitherTryFrom $ tryEvaluate @Text.UnicodeException . Text.decodeUtf32LE . From.from
+
+-- | Converts via 'Text.Text'.
+instance TryFrom.TryFrom (Encoding.UTF_32LE ByteString.ByteString) LazyText.Text where
+  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @LazyText.Text) . Utility.tryInto @Text.Text
+
+-- | Converts via 'Text.Text'.
+instance TryFrom.TryFrom (Encoding.UTF_32LE ByteString.ByteString) String where
+  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @Text.Text
+
+-- | Uses 'LazyText.decodeUtf32LE'.
+instance TryFrom.TryFrom (Encoding.UTF_32LE LazyByteString.ByteString) LazyText.Text where
+  tryFrom = Utility.eitherTryFrom $ tryEvaluate @Text.UnicodeException . LazyText.decodeUtf32LE . From.from
+
+-- | Converts via 'LazyText.Text'.
+instance TryFrom.TryFrom (Encoding.UTF_32LE LazyByteString.ByteString) Text.Text where
+  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @Text.Text) . Utility.tryInto @LazyText.Text
+
+-- | Converts via 'LazyText.Text'.
+instance TryFrom.TryFrom (Encoding.UTF_32LE LazyByteString.ByteString) String where
+  tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @LazyText.Text
+
+-- | Uses 'Text.encodeUtf32LE'.
+instance From.From Text.Text (Encoding.UTF_32LE ByteString.ByteString) where
+  from = From.from . Text.encodeUtf32LE
+
+-- | Converts via 'ByteString.ByteString'.
+instance From.From Text.Text (Encoding.UTF_32LE LazyByteString.ByteString) where
+  from = fmap From.from . Utility.into @(Encoding.UTF_32LE ByteString.ByteString)
+
+-- | Uses 'LazyText.encodeUtf32LE'.
+instance From.From LazyText.Text (Encoding.UTF_32LE LazyByteString.ByteString) where
+  from = From.from . LazyText.encodeUtf32LE
+
+-- | Converts via 'LazyByteString.ByteString'.
+instance From.From LazyText.Text (Encoding.UTF_32LE ByteString.ByteString) where
+  from = fmap From.from . Utility.into @(Encoding.UTF_32LE LazyByteString.ByteString)
+
+-- | Converts via 'Text.Text'.
+instance From.From String (Encoding.UTF_32LE ByteString.ByteString) where
+  from = Utility.via @Text.Text
+
+-- | Converts via 'LazyText.Text'.
+instance From.From String (Encoding.UTF_32LE LazyByteString.ByteString) where
+  from = Utility.via @LazyText.Text
+
 --
 
 realFloatToRational ::
