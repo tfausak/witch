@@ -18,3 +18,6 @@ type UTF_16BE = Tagged.Tagged "UTF-16BE"
 
 -- | <https://en.wikipedia.org/wiki/UTF-32>
 type UTF_32LE = Tagged.Tagged "UTF-32LE"
+
+-- | <https://en.wikipedia.org/wiki/UTF-32>
+type UTF_32BE = Tagged.Tagged "UTF-32BE"
