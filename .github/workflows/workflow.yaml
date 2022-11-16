@@ -39,7 +39,7 @@ jobs:
       matrix:
         include:
           - { platform: ubuntu, ghc: 9.4.2 }
-          - { platform: ubuntu, ghc: 9.2.4 }
+          - { platform: ubuntu, ghc: 9.2.5 }
           - { platform: ubuntu, ghc: 9.0.2 }
           - { platform: macos, ghc: 9.4.2 }
           - { platform: windows, ghc: 9.4.2 }
@@ -64,8 +64,6 @@ jobs:
         uses: haskell/actions/setup@v2
         with:
           ghc-version: ${{ matrix.ghc }}
-
-      - run: ghc-pkg list
 
       - run: cabal configure --enable-tests --flags pedantic --jobs
 
