@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: mrkkrp/ormolu-action@v7
+      - uses: mrkkrp/ormolu-action@v8
 
   build:
     strategy:
