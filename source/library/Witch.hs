@@ -271,6 +271,7 @@ module Witch
   )
 where
 
+import qualified Witch.Encoding
 import qualified Witch.From
 import Witch.Instances ()
 import qualified Witch.Lift
