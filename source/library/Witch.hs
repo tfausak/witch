@@ -25,6 +25,14 @@ module Witch
     -- * Data types
     Witch.TryFromException.TryFromException (..),
 
+    -- ** Encodings
+    Witch.Encoding.ISO_8859_1,
+    Witch.Encoding.UTF_8,
+    Witch.Encoding.UTF_16LE,
+    Witch.Encoding.UTF_16BE,
+    Witch.Encoding.UTF_32LE,
+    Witch.Encoding.UTF_32BE,
+
     -- * Utilities
     Witch.Utility.as,
     Witch.Utility.over,
