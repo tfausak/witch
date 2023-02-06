@@ -19,7 +19,7 @@ class From source target where
   -- > -- Avoid this:
   -- > from (x :: s)
   -- >
-  -- > -- Prefer this:
+  -- > -- Prefer this (using [@TypeApplications@](https://downloads.haskell.org/~ghc/9.0.1/docs/html/users_guide/exts/type_applications.html) language extension):
   -- > from @s x
   --
   -- The default implementation of this method simply calls 'Coerce.coerce',
