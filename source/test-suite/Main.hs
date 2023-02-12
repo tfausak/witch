@@ -2453,32 +2453,32 @@ type Spec = Writer.Writer (Seq.Seq HUnit.Test) ()
 anyTryFromException :: Selector (Witch.TryFromException s t)
 anyTryFromException = const True
 
-describe :: Stack.HasCallStack => String -> Spec -> Spec
+describe :: (Stack.HasCallStack) => String -> Spec -> Spec
 describe label = testToSpec . HUnit.TestLabel label . specToTest
 
 hush :: Either x a -> Maybe a
 hush = either (const Nothing) Just
 
-it :: Stack.HasCallStack => String -> HUnit.Assertion -> Spec
+it :: (Stack.HasCallStack) => String -> HUnit.Assertion -> Spec
 it label = testToSpec . HUnit.TestLabel label . HUnit.TestCase
 
 shouldBe :: (Stack.HasCallStack, Eq a, Show a) => a -> a -> HUnit.Assertion
 shouldBe = (HUnit.@?=)
 
 shouldSatisfy :: (Stack.HasCallStack, Show a) => a -> (a -> Bool) -> HUnit.Assertion
-shouldSatisfy value predicate = HUnit.assertBool ("predicate failed on: " ++ show value) $ predicate value
+shouldSatisfy value predicate = HUnit.assertBool ("predicate failed on: " <> show value) $ predicate value
 
 shouldThrow :: (Stack.HasCallStack, Exception.Exception e) => IO a -> Selector e -> HUnit.Assertion
 shouldThrow action predicate = do
   result <- Exception.try action
   case result of
     Right _ -> HUnit.assertFailure "did not get expected exception"
-    Left exception -> HUnit.assertBool ("predicate failed on expected exception: " ++ show exception) $ predicate exception
+    Left exception -> HUnit.assertBool ("predicate failed on expected exception: " <> show exception) $ predicate exception
 
-specToTest :: Stack.HasCallStack => Spec -> HUnit.Test
+specToTest :: (Stack.HasCallStack) => Spec -> HUnit.Test
 specToTest = HUnit.TestList . Foldable.toList . Writer.execWriter
 
-testToSpec :: Stack.HasCallStack => HUnit.Test -> Spec
+testToSpec :: (Stack.HasCallStack) => HUnit.Test -> Spec
 testToSpec = Writer.tell . Seq.singleton
 
 unixEpoch :: Time.UTCTime

@@ -911,7 +911,7 @@ instance From.From Double Float where
 -- Ratio
 
 -- | Uses '(Ratio.%)' with a denominator of 1.
-instance Integral a => From.From a (Ratio.Ratio a) where
+instance (Integral a) => From.From a (Ratio.Ratio a) where
   from = (Ratio.% 1)
 
 -- | Uses 'Ratio.numerator' when the denominator is 1.
@@ -930,7 +930,7 @@ instance From.From Rational Double where
   from = fromRational
 
 -- | Uses `fromRational` as long as there isn't a loss of precision.
-instance Fixed.HasResolution a => TryFrom.TryFrom Rational (Fixed.Fixed a) where
+instance (Fixed.HasResolution a) => TryFrom.TryFrom Rational (Fixed.Fixed a) where
   tryFrom = Utility.eitherTryFrom $ \s ->
     let t :: Fixed.Fixed a
         t = fromRational s
@@ -949,13 +949,13 @@ instance From.From (Fixed.Fixed a) Integer where
   from (Fixed.MkFixed t) = t
 
 -- | Uses 'toRational'.
-instance Fixed.HasResolution a => From.From (Fixed.Fixed a) Rational where
+instance (Fixed.HasResolution a) => From.From (Fixed.Fixed a) Rational where
   from = toRational
 
 -- Complex
 
 -- | Uses '(Complex.:+)' with an imaginary part of 0.
-instance Num a => From.From a (Complex.Complex a) where
+instance (Num a) => From.From a (Complex.Complex a) where
   from = (Complex.:+ 0)
 
 -- | Uses 'Complex.realPart' when the imaginary part is 0.
@@ -978,7 +978,7 @@ instance From.From (NonEmpty.NonEmpty a) [a] where
 -- Set
 
 -- | Uses 'Set.fromList'.
-instance Ord a => From.From [a] (Set.Set a) where
+instance (Ord a) => From.From [a] (Set.Set a) where
   from = Set.fromList
 
 -- | Uses 'Set.toAscList'.
@@ -999,7 +999,7 @@ instance From.From IntSet.IntSet [Int] where
 
 -- | Uses 'Map.fromList'. If there are duplicate keys, later values will
 -- overwrite earlier ones.
-instance Ord k => From.From [(k, v)] (Map.Map k v) where
+instance (Ord k) => From.From [(k, v)] (Map.Map k v) where
   from = Map.fromList
 
 -- | Uses 'Map.toAscList'.
@@ -1539,7 +1539,7 @@ instance From.From String (Encoding.UTF_32BE LazyByteString.ByteString) where
 --
 
 realFloatToRational ::
-  RealFloat s => s -> Either Exception.ArithException Rational
+  (RealFloat s) => s -> Either Exception.ArithException Rational
 realFloatToRational s
   | isNaN s = Left Exception.LossOfPrecision
   | isInfinite s =
@@ -1569,13 +1569,13 @@ fromNonNegativeIntegral x =
 
 -- | The maximum integral value that can be unambiguously represented as a
 -- 'Float'. Equal to 16,777,215.
-maxFloat :: Num a => a
+maxFloat :: (Num a) => a
 maxFloat = 16777215
 
 -- | The maximum integral value that can be unambiguously represented as a
 -- 'Double'. Equal to 9,007,199,254,740,991.
-maxDouble :: Num a => a
+maxDouble :: (Num a) => a
 maxDouble = 9007199254740991
 
-tryEvaluate :: Exception.Exception e => a -> Either e a
+tryEvaluate :: (Exception.Exception e) => a -> Either e a
 tryEvaluate = Unsafe.unsafePerformIO . Exception.try . Exception.evaluate

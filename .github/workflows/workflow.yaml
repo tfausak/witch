@@ -1,131 +1,193 @@
-name: Workflow
-on:
-  push: null
-  release:
-    types:
-      - created
-
-jobs:
-  cabal:
-    runs-on: ubuntu-latest
-    name: Cabal
-    steps:
-      - uses: actions/checkout@v3
-
-      - run: cabal check
-
-  hlint:
-    runs-on: ubuntu-latest
-    name: HLint
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: haskell/actions/hlint-setup@v2
-
-      - uses: haskell/actions/hlint-run@v2
-        with:
-          fail-on: status
-
-  ormolu:
-    runs-on: ubuntu-latest
-    name: Ormolu
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: mrkkrp/ormolu-action@v9
-
-  build:
-    strategy:
-      matrix:
-        include:
-          - { platform: ubuntu, ghc: 9.4.2 }
-          - { platform: ubuntu, ghc: 9.2.5 }
-          - { platform: ubuntu, ghc: 9.0.2 }
-          - { platform: macos, ghc: 9.4.2 }
-          - { platform: windows, ghc: 9.4.2 }
-          - { platform: ubuntu, ghc: 8.10.7 }
-          - { platform: ubuntu, ghc: 8.8.4 }
-          - { platform: ubuntu, ghc: 8.6.5 }
-          - { platform: ubuntu, ghc: 8.4.4 }
-          - { platform: ubuntu, ghc: 8.2.2 }
-    runs-on: ${{ matrix.platform }}-latest
-    name: GHC ${{ matrix.ghc }} on ${{ matrix.platform }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - run: mkdir artifact
-
-      - id: artifact
-        run: echo '::set-output name=directory::artifact/${{ matrix.platform }}-${{ matrix.ghc }}'
-
-      - run: mkdir ${{ steps.artifact.outputs.directory }}
-
-      # https://discourse.haskell.org/t/incident-github-actions-ci-failure-ghcup/5761
-      - if: matrix.platform == 'ubuntu'
-        run: sudo chown -R $USER /usr/local/.ghcup
-
-      - id: setup-haskell
-        uses: haskell/actions/setup@v2
-        with:
-          ghc-version: ${{ matrix.ghc }}
-
-      - run: cabal configure --enable-tests --flags pedantic --jobs
-
-      - run: cat cabal.project.local
-
-      - run: cp cabal.project.local ${{ steps.artifact.outputs.directory }}
-
-      - run: cabal freeze
-
-      - run: cat cabal.project.freeze
-
-      - run: cp cabal.project.freeze ${{ steps.artifact.outputs.directory }}
-
-      - uses: actions/cache@v3
-        with:
-          path: ${{ steps.setup-haskell.outputs.cabal-store }}
-          key: ${{ matrix.platform }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
-          restore-keys: ${{ matrix.platform }}-${{ matrix.ghc }}-
-
-      - run: cabal build --only-download
-
-      - run: cabal build --only-dependencies
-
-      - run: cabal build
-
-      - run: cabal run -- witch-test-suite
-
-      - run: cabal sdist --output-dir ${{ steps.artifact.outputs.directory }}
-
-      - uses: actions/upload-artifact@v3
-        with:
-          path: artifact
-          name: witch-${{ github.sha }}
-
-  release:
-    needs: build
-    if: github.event_name == 'release'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: witch-${{ github.sha }}
-          path: artifact
-
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          asset_content_type: application/gzip
-          asset_name: witch-${{ github.event.release.tag_name }}.tar.gz
-          asset_path: artifact/ubuntu-9.4.2/witch-${{ github.event.release.tag_name }}.tar.gz
-          upload_url: ${{ github.event.release.upload_url }}
-
-      - run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' artifact/ubuntu-9.4.2/witch-${{ github.event.release.tag_name }}.tar.gz
-
-  i386:
-     runs-on: ubuntu-latest
-     steps:
-       - uses: actions/checkout@v2
-
-       - run: docker run --rm --user 0 --volume "$PWD:$PWD" --workdir "$PWD" taylorfausak/i386-haskell@sha256:450720742fa69258c0a8589dcac28c3c6d5d34718172d935b385520f4ee9128e sh -c 'cabal update && cabal test --test-show-details direct'
+{
+  "jobs": {
+    "build": {
+      "name": "Build on ${{ matrix.platform }} with GHC ${{ matrix.ghc }}",
+      "runs-on": "${{ matrix.platform }}-${{ matrix.version }}",
+      "steps": [
+        {
+          "uses": "actions/checkout@v3"
+        },
+        {
+          "run": "mkdir artifact"
+        },
+        {
+          "id": "artifact",
+          "run": "echo 'directory=artifact/${{ matrix.platform }}-${{ matrix.ghc }}' >> $GITHUB_OUTPUT",
+          "shell": "bash"
+        },
+        {
+          "run": "mkdir ${{ steps.artifact.outputs.directory }}"
+        },
+        {
+          "id": "haskell",
+          "uses": "haskell/actions/setup@v2",
+          "with": {
+            "cabal-version": "3.8.1.0",
+            "ghc-version": "${{ matrix.ghc }}"
+          }
+        },
+        {
+          "run": "cabal sdist --output-dir ${{ steps.artifact.outputs.directory }}"
+        },
+        {
+          "run": "cabal configure --enable-optimization=2 --flags pedantic --jobs"
+        },
+        {
+          "run": "cat cabal.project.local"
+        },
+        {
+          "run": "cp cabal.project.local ${{ steps.artifact.outputs.directory }}"
+        },
+        {
+          "run": "cabal freeze"
+        },
+        {
+          "run": "cat cabal.project.freeze"
+        },
+        {
+          "run": "cp cabal.project.freeze ${{ steps.artifact.outputs.directory }}"
+        },
+        {
+          "run": "cabal outdated --v2-freeze-file cabal.project.freeze"
+        },
+        {
+          "uses": "actions/cache@v3",
+          "with": {
+            "key": "${{ matrix.platform }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}",
+            "path": "${{ steps.haskell.outputs.cabal-store }}",
+            "restore-keys": "${{ matrix.platform }}-${{ matrix.ghc }}-"
+          }
+        },
+        {
+          "run": "cabal build --only-download"
+        },
+        {
+          "run": "cabal build --only-dependencies"
+        },
+        {
+          "run": "cabal build"
+        },
+        {
+          "uses": "actions/upload-artifact@v3",
+          "with": {
+            "name": "witch-${{ github.sha }}",
+            "path": "artifact"
+          }
+        },
+        {
+          "run": "cabal run witch-test-suite"
+        }
+      ],
+      "strategy": {
+        "matrix": {
+          "include": [
+            {
+              "ghc": "9.4.4",
+              "platform": "macos",
+              "version": "12"
+            },
+            {
+              "ghc": "9.0.2",
+              "platform": "ubuntu",
+              "version": "22.04"
+            },
+            {
+              "ghc": "9.2.5",
+              "platform": "ubuntu",
+              "version": "22.04"
+            },
+            {
+              "ghc": "9.4.4",
+              "platform": "ubuntu",
+              "version": "22.04"
+            },
+            {
+              "extension": ".exe",
+              "ghc": "9.4.4",
+              "platform": "windows",
+              "version": "2022"
+            }
+          ]
+        }
+      }
+    },
+    "cabal": {
+      "name": "Cabal",
+      "runs-on": "ubuntu-22.04",
+      "steps": [
+        {
+          "uses": "actions/checkout@v3"
+        },
+        {
+          "run": "cabal check"
+        }
+      ]
+    },
+    "hlint": {
+      "name": "HLint",
+      "runs-on": "ubuntu-22.04",
+      "steps": [
+        {
+          "uses": "actions/checkout@v3"
+        },
+        {
+          "uses": "haskell/actions/hlint-setup@v2",
+          "with": {
+            "version": 3.5
+          }
+        }
+      ]
+    },
+    "ormolu": {
+      "name": "Ormolu",
+      "runs-on": "ubuntu-22.04",
+      "steps": [
+        {
+          "uses": "actions/checkout@v3"
+        },
+        {
+          "uses": "mrkkrp/ormolu-action@v10"
+        }
+      ]
+    },
+    "release": {
+      "if": "github.event_name == 'release'",
+      "name": "Release",
+      "needs": "build",
+      "runs-on": "ubuntu-22.04",
+      "steps": [
+        {
+          "uses": "actions/download-artifact@v3",
+          "with": {
+            "name": "witch-${{ github.sha }}",
+            "path": "artifact"
+          }
+        },
+        {
+          "uses": "svenstaro/upload-release-action@v2",
+          "with": {
+            "asset_name": "witch-${{ github.event.release.tag_name }}.tar.gz",
+            "file": "artifact/ubuntu-9.4.4/witch-${{ github.event.release.tag_name }}.tar.gz"
+          }
+        },
+        {
+          "run": "cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' artifact/ubuntu-9.4.4/witch-${{ github.event.release.tag_name }}.tar.gz"
+        }
+      ]
+    }
+  },
+  "name": "Workflow",
+  "on": {
+    "push": null,
+    "release": {
+      "types": [
+        "created"
+      ]
+    },
+    "schedule": [
+      {
+        "cron": "0 0 * * *"
+      }
+    ]
+  }
+}

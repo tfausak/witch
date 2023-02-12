@@ -23,35 +23,26 @@ flag pedantic
 
 common library
   build-depends:
-    , base >= 4.10 && < 4.18
-    , bytestring >= 0.10.8 && < 0.12
-    , containers >= 0.5.10 && < 0.7
+    , base >= 4.15 && < 4.18
+    , bytestring >= 0.10.12 && < 0.12
+    , containers >= 0.6.4 && < 0.7
     , tagged >= 0.8.6 && < 0.9
-    , text >= 1.2.3 && < 1.3 || >= 2.0 && < 2.1
-    , time >= 1.9.1 && < 1.13
+    , text >= 1.2.5 && < 1.3 || >= 2.0 && < 2.1
+    , time >= 1.9.3 && < 1.13
   default-language: Haskell2010
   ghc-options:
     -Weverything
     -Wno-all-missed-specialisations
     -Wno-implicit-prelude
     -Wno-missed-specialisations
+    -Wno-missing-deriving-strategies
+    -Wno-missing-export-lists
     -Wno-missing-exported-signatures
+    -Wno-missing-safe-haskell-mode
+    -Wno-prepositive-qualified-module
     -Wno-redundant-constraints
     -Wno-safe
     -Wno-unsafe
-
-  if impl(ghc >= 8.4)
-    ghc-options:
-      -Wno-missing-export-lists
-
-  if impl(ghc >= 8.8)
-    ghc-options:
-      -Wno-missing-deriving-strategies
-
-  if impl(ghc >= 8.10)
-    ghc-options:
-      -Wno-missing-safe-haskell-mode
-      -Wno-prepositive-qualified-module
 
   if impl(ghc >= 9.2)
     ghc-options:
@@ -73,7 +64,7 @@ library
   import: library
 
   build-depends:
-    , template-haskell >= 2.12 && < 2.20
+    , template-haskell >= 2.17 && < 2.20
   exposed-modules:
     Witch
     Witch.Encoding
@@ -84,13 +75,6 @@ library
     Witch.TryFromException
     Witch.Utility
   hs-source-dirs: source/library
-
-  if impl(ghc >= 9.0)
-    hs-source-dirs: source/ghc-9.0
-  elif impl(ghc >= 8.10)
-    hs-source-dirs: source/ghc-8.10
-  else
-    hs-source-dirs: source/ghc-8.8
 
 test-suite witch-test-suite
   import: executable
