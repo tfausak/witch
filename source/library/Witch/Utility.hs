@@ -30,7 +30,7 @@ as = id
 -- >
 -- > -- Prefer this:
 -- > into @t x
-into :: forall target source. From.From source target => source -> target
+into :: forall target source. (From.From source target) => source -> target
 into = From.from
 
 -- | This function converts from some @source@ type into some @target@ type,
@@ -78,7 +78,7 @@ via = From.from . (\x -> x :: through) . From.from
 -- > tryInto @t x
 tryInto ::
   forall target source.
-  TryFrom.TryFrom source target =>
+  (TryFrom.TryFrom source target) =>
   source ->
   Either (TryFromException.TryFromException source target) target
 tryInto = TryFrom.tryFrom
@@ -136,7 +136,7 @@ maybeTryFrom f s = case f s of
 -- > -- Prefer this:
 -- > tryFrom = eitherTryFrom f
 eitherTryFrom ::
-  Exception.Exception exception =>
+  (Exception.Exception exception) =>
   (source -> Either exception target) ->
   source ->
   Either (TryFromException.TryFromException source target) target
