@@ -35,7 +35,6 @@ module Witch
 
     -- * Utilities
     Witch.Utility.as,
-    Witch.Utility.over,
     Witch.Utility.via,
     Witch.Utility.tryVia,
     Witch.Utility.maybeTryFrom,
