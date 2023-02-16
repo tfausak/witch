@@ -56,7 +56,7 @@ spec = describe "Witch" $ do
   describe "Utility" $ do
     describe "as" $ do
       it "works" $ do
-        Witch.as @Int.Int8 1 `shouldBe` 1
+        Utility.as @Int.Int8 1 `shouldBe` 1
 
     describe "into" $ do
       it "works" $ do
