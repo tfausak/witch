@@ -64,7 +64,7 @@ spec = describe "Witch" $ do
 
     describe "over" $ do
       it "works" $ do
-        Witch.over @Int.Int8 (+ 1) (Age 1) `shouldBe` Age 2
+        Utility.over @Int.Int8 (+ 1) (Age 1) `shouldBe` Age 2
 
     describe "via" $ do
       it "works" $ do

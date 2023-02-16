@@ -34,7 +34,6 @@ module Witch
     Witch.Encoding.UTF_32BE,
 
     -- * Utilities
-    Witch.Utility.over,
     Witch.Utility.via,
     Witch.Utility.tryVia,
     Witch.Utility.maybeTryFrom,
