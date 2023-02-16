@@ -34,6 +34,7 @@ import qualified Numeric.Natural as Natural
 import qualified Test.HUnit as HUnit
 import qualified Witch
 import qualified Witch.Encoding as Encoding
+import qualified Witch.Utility as Utility
 
 main :: IO ()
 main = HUnit.runTestTTAndExit $ specToTest spec
@@ -55,7 +56,7 @@ spec = describe "Witch" $ do
   describe "Utility" $ do
     describe "as" $ do
       it "works" $ do
-        Witch.as @Int.Int8 1 `shouldBe` 1
+        Utility.as @Int.Int8 1 `shouldBe` 1
 
     describe "into" $ do
       it "works" $ do
