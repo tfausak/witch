@@ -34,6 +34,7 @@ import qualified Numeric.Natural as Natural
 import qualified Test.HUnit as HUnit
 import qualified Witch
 import qualified Witch.Encoding as Encoding
+import qualified Witch.Utility as Utility
 
 main :: IO ()
 main = HUnit.runTestTTAndExit $ specToTest spec
@@ -63,7 +64,7 @@ spec = describe "Witch" $ do
 
     describe "over" $ do
       it "works" $ do
-        Witch.over @Int.Int8 (+ 1) (Age 1) `shouldBe` Age 2
+        Utility.over @Int.Int8 (+ 1) (Age 1) `shouldBe` Age 2
 
     describe "via" $ do
       it "works" $ do
