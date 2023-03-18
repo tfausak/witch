@@ -81,7 +81,7 @@ module Witch
 
     -- ** Type applications
 
-    -- | Although you can use this library without the [@TypeApplications@](https://downloads.haskell.org/~ghc/9.0.1/docs/html/users_guide/exts/type_applications.html)
+    -- | Although you can use this library without the [@TypeApplications@](https://downloads.haskell.org/ghc/9.6.1/docs/users_guide/exts/type_applications.html)
     -- language extension, the extension is strongly recommended. Since most
     -- functions provided by this library are polymorphic in at least one type
     -- variable, it's easy to use them in a situation that would be ambiguous.
