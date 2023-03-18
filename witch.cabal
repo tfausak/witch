@@ -23,12 +23,12 @@ flag pedantic
 
 common library
   build-depends:
-    , base >= 4.15 && < 4.18
-    , bytestring >= 0.10.12 && < 0.12
-    , containers >= 0.6.4 && < 0.7
+    , base >= 4.16.0 && < 4.19
+    , bytestring >= 0.11.4 && < 0.12
+    , containers >= 0.6.5 && < 0.7
     , tagged >= 0.8.6 && < 0.9
     , text >= 1.2.5 && < 1.3 || >= 2.0 && < 2.1
-    , time >= 1.9.3 && < 1.13
+    , time >= 1.11.1 && < 1.13
   default-language: Haskell2010
   ghc-options:
     -Weverything
@@ -38,15 +38,12 @@ common library
     -Wno-missing-deriving-strategies
     -Wno-missing-export-lists
     -Wno-missing-exported-signatures
+    -Wno-missing-kind-signatures
     -Wno-missing-safe-haskell-mode
     -Wno-prepositive-qualified-module
     -Wno-redundant-constraints
     -Wno-safe
     -Wno-unsafe
-
-  if impl(ghc >= 9.2)
-    ghc-options:
-      -Wno-missing-kind-signatures
 
   if flag(pedantic)
     ghc-options:
@@ -64,7 +61,7 @@ library
   import: library
 
   build-depends:
-    , template-haskell >= 2.17 && < 2.20
+    , template-haskell >= 2.18 && < 2.21
   exposed-modules:
     Witch
     Witch.Encoding
