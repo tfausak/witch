@@ -23,11 +23,11 @@ flag pedantic
 
 common library
   build-depends:
-    , base >= 4.16.0 && < 4.19
+    , base >= 4.16.0 && < 4.20
     , bytestring >= 0.11.3 && < 0.12
     , containers >= 0.6.5 && < 0.7
     , tagged >= 0.8.6 && < 0.9
-    , text >= 1.2.5 && < 1.3 || >= 2.0 && < 2.1
+    , text >= 1.2.5 && < 1.3 || >= 2.0 && < 2.2
     , time >= 1.11.1 && < 1.13
   default-language: Haskell2010
   ghc-options:
@@ -49,6 +49,9 @@ common library
     ghc-options:
       -Werror
 
+  if impl(ghc >= 9.8)
+    ghc-options: -Wno-missing-role-annotations
+
 common executable
   import: library
 
@@ -61,7 +64,7 @@ library
   import: library
 
   build-depends:
-    , template-haskell >= 2.18 && < 2.21
+    , template-haskell >= 2.18 && < 2.22
   exposed-modules:
     Witch
     Witch.Encoding
