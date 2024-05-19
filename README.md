@@ -1,8 +1,7 @@
 # Witch
 
-[![Workflow](https://github.com/tfausak/witch/actions/workflows/workflow.yaml/badge.svg)](https://github.com/tfausak/witch/actions/workflows/workflow.yaml)
-[![Hackage](https://img.shields.io/hackage/v/witch)](https://hackage.haskell.org/package/witch)
-[![Stackage](https://www.stackage.org/package/witch/badge/nightly?label=stackage)](https://www.stackage.org/package/witch)
+[![CI](https://github.com/tfausak/witch/actions/workflows/ci.yml/badge.svg)](https://github.com/tfausak/witch/actions/workflows/ci.yml)
+[![Hackage](https://badgen.net/hackage/v/witch)](https://hackage.haskell.org/package/witch)
 
 :mage_woman: Convert values from one type into another.
 
