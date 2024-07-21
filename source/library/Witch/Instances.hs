@@ -965,6 +965,12 @@ instance (Eq a, Num a) => TryFrom.TryFrom (Complex.Complex a) a where
       then Right $ Complex.realPart s
       else Left Exception.LossOfPrecision
 
+-- Maybe
+
+-- | Uses 'fmap'
+instance From.From a b => From.From (Maybe a) (Maybe b) where
+  from = fmap From.from
+
 -- NonEmpty
 
 -- | Uses 'NonEmpty.nonEmpty'.
