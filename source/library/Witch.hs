@@ -26,11 +26,23 @@ module Witch
     Witch.TryFromException.TryFromException (..),
 
     -- ** Encodings
+    Witch.Encoding.Latin1Strict,
+    Witch.Encoding.Latin1Lazy,
     Witch.Encoding.ISO_8859_1,
+    Witch.Encoding.Utf8Strict,
+    Witch.Encoding.Utf8Lazy,
     Witch.Encoding.UTF_8,
+    Witch.Encoding.Utf16leStrict,
+    Witch.Encoding.Utf16leLazy,
     Witch.Encoding.UTF_16LE,
+    Witch.Encoding.Utf16beStrict,
+    Witch.Encoding.Utf16beLazy,
     Witch.Encoding.UTF_16BE,
+    Witch.Encoding.Utf32leStrict,
+    Witch.Encoding.Utf32leLazy,
     Witch.Encoding.UTF_32LE,
+    Witch.Encoding.Utf32beStrict,
+    Witch.Encoding.Utf32beLazy,
     Witch.Encoding.UTF_32BE,
 
     -- * Utilities
