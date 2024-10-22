@@ -26,11 +26,42 @@ module Witch
     Witch.TryFromException.TryFromException (..),
 
     -- ** Encodings
+
+    -- | Witch supports decoding text and encoding byte strings using various
+    -- character encodings. For example to convert from a 'String' into a
+    -- strict 'Data.ByteString.ByteString', you can use the
+    -- 'Witch.Encoding.Utf8S' alias:
+    --
+    -- @
+    -- 'Witch.Utility.into' @'Data.ByteString.ByteString' ('Witch.Utility.into' @'Witch.Encoding.Utf8S' ("..." :: 'String'))
+    -- -- "..."
+    -- @
+    --
+    -- And to convert from a strict 'Data.ByteString.ByteString' into a
+    -- 'String', you can use the 'Witch.Encoding.Utf8S' alias in the other
+    -- direction:
+    --
+    -- @
+    -- 'Witch.Utility.tryInto' @'String' ('Witch.Utility.into' @'Witch.Encoding.Utf8S' ("..." :: 'Data.ByteString.ByteString'))
+    -- -- Right "..."
+    -- @
+    Witch.Encoding.Latin1S,
+    Witch.Encoding.Latin1L,
     Witch.Encoding.ISO_8859_1,
+    Witch.Encoding.Utf8S,
+    Witch.Encoding.Utf8L,
     Witch.Encoding.UTF_8,
+    Witch.Encoding.Utf16LS,
+    Witch.Encoding.Utf16LL,
     Witch.Encoding.UTF_16LE,
+    Witch.Encoding.Utf16BS,
+    Witch.Encoding.Utf16BL,
     Witch.Encoding.UTF_16BE,
+    Witch.Encoding.Utf32LS,
+    Witch.Encoding.Utf32LL,
     Witch.Encoding.UTF_32LE,
+    Witch.Encoding.Utf32BS,
+    Witch.Encoding.Utf32BL,
     Witch.Encoding.UTF_32BE,
 
     -- * Utilities
