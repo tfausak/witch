@@ -1235,53 +1235,53 @@ instance From.From (Tagged.Tagged t a) (Tagged.Tagged u a)
 -- ISO-8859-1
 
 -- | Uses 'Text.decodeLatin1'.
-instance From.From Encoding.Latin1Strict Text.Text where
+instance From.From Encoding.Latin1S Text.Text where
   from = Text.decodeLatin1 . From.from
 
 -- | Converts via 'Text.Text'.
-instance From.From Encoding.Latin1Strict LazyText.Text where
+instance From.From Encoding.Latin1S LazyText.Text where
   from = Utility.via @Text.Text
 
 -- | Converts via 'Text.Text'.
-instance From.From Encoding.Latin1Strict String where
+instance From.From Encoding.Latin1S String where
   from = Utility.via @Text.Text
 
 -- | Uses 'LazyText.decodeLatin1'.
-instance From.From Encoding.Latin1Lazy LazyText.Text where
+instance From.From Encoding.Latin1L LazyText.Text where
   from = LazyText.decodeLatin1 . From.from
 
 -- | Converts via 'LazyText.Text'.
-instance From.From Encoding.Latin1Lazy Text.Text where
+instance From.From Encoding.Latin1L Text.Text where
   from = Utility.via @LazyText.Text
 
 -- | Converts via 'LazyText.Text'.
-instance From.From Encoding.Latin1Lazy String where
+instance From.From Encoding.Latin1L String where
   from = Utility.via @LazyText.Text
 
 -- | Converts via 'String'.
-instance TryFrom.TryFrom Text.Text Encoding.Latin1Strict where
+instance TryFrom.TryFrom Text.Text Encoding.Latin1S where
   tryFrom = Utility.eitherTryFrom $ TryFrom.tryFrom . Utility.into @String
 
 -- | Converts via 'String'.
-instance TryFrom.TryFrom Text.Text Encoding.Latin1Lazy where
+instance TryFrom.TryFrom Text.Text Encoding.Latin1L where
   tryFrom = Utility.eitherTryFrom $ TryFrom.tryFrom . Utility.into @String
 
 -- | Converts via 'String'.
-instance TryFrom.TryFrom LazyText.Text Encoding.Latin1Lazy where
+instance TryFrom.TryFrom LazyText.Text Encoding.Latin1L where
   tryFrom = Utility.eitherTryFrom $ TryFrom.tryFrom . Utility.into @String
 
 -- | Converts via 'String'.
-instance TryFrom.TryFrom LazyText.Text Encoding.Latin1Strict where
+instance TryFrom.TryFrom LazyText.Text Encoding.Latin1S where
   tryFrom = Utility.eitherTryFrom $ TryFrom.tryFrom . Utility.into @String
 
 -- | Uses 'Char8.pack' when each character 'Char.isLatin1'.
-instance TryFrom.TryFrom String Encoding.Latin1Strict where
+instance TryFrom.TryFrom String Encoding.Latin1S where
   tryFrom = Utility.maybeTryFrom $ \string -> do
     Monad.guard $ all Char.isLatin1 string
     pure . From.from $ Char8.pack string
 
 -- | Uses 'LazyChar8.pack' when each character 'Char.isLatin1'.
-instance TryFrom.TryFrom String Encoding.Latin1Lazy where
+instance TryFrom.TryFrom String Encoding.Latin1L where
   tryFrom = Utility.maybeTryFrom $ \string -> do
     Monad.guard $ all Char.isLatin1 string
     pure . From.from $ LazyChar8.pack string
@@ -1289,251 +1289,251 @@ instance TryFrom.TryFrom String Encoding.Latin1Lazy where
 -- UTF-8
 
 -- | Uses 'Text.decodeUtf8''.
-instance TryFrom.TryFrom Encoding.Utf8Strict Text.Text where
+instance TryFrom.TryFrom Encoding.Utf8S Text.Text where
   tryFrom = Utility.eitherTryFrom $ Text.decodeUtf8' . From.from
 
 -- | Converts via 'Text.Text'.
-instance TryFrom.TryFrom Encoding.Utf8Strict LazyText.Text where
+instance TryFrom.TryFrom Encoding.Utf8S LazyText.Text where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @LazyText.Text) . Utility.tryInto @Text.Text
 
 -- | Converts via 'Text.Text'.
-instance TryFrom.TryFrom Encoding.Utf8Strict String where
+instance TryFrom.TryFrom Encoding.Utf8S String where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @Text.Text
 
 -- | Uses 'LazyText.decodeUtf8''.
-instance TryFrom.TryFrom Encoding.Utf8Lazy LazyText.Text where
+instance TryFrom.TryFrom Encoding.Utf8L LazyText.Text where
   tryFrom = Utility.eitherTryFrom $ LazyText.decodeUtf8' . From.from
 
 -- | Converts via 'LazyText.Text'.
-instance TryFrom.TryFrom Encoding.Utf8Lazy Text.Text where
+instance TryFrom.TryFrom Encoding.Utf8L Text.Text where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @Text.Text) . Utility.tryInto @LazyText.Text
 
 -- | Converts via 'LazyText.Text'.
-instance TryFrom.TryFrom Encoding.Utf8Lazy String where
+instance TryFrom.TryFrom Encoding.Utf8L String where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @LazyText.Text
 
 -- | Uses 'Text.encodeUtf8'.
-instance From.From Text.Text Encoding.Utf8Strict where
+instance From.From Text.Text Encoding.Utf8S where
   from = From.from . Text.encodeUtf8
 
 -- | Converts via 'ByteString.ByteString'.
-instance From.From Text.Text Encoding.Utf8Lazy where
-  from = fmap From.from . Utility.into @Encoding.Utf8Strict
+instance From.From Text.Text Encoding.Utf8L where
+  from = fmap From.from . Utility.into @Encoding.Utf8S
 
 -- | Uses 'LazyText.encodeUtf8'.
-instance From.From LazyText.Text Encoding.Utf8Lazy where
+instance From.From LazyText.Text Encoding.Utf8L where
   from = From.from . LazyText.encodeUtf8
 
 -- | Converts via 'LazyByteString.ByteString'.
-instance From.From LazyText.Text Encoding.Utf8Strict where
-  from = fmap From.from . Utility.into @Encoding.Utf8Lazy
+instance From.From LazyText.Text Encoding.Utf8S where
+  from = fmap From.from . Utility.into @Encoding.Utf8L
 
 -- | Converts via 'Text.Text'.
-instance From.From String Encoding.Utf8Strict where
+instance From.From String Encoding.Utf8S where
   from = Utility.via @Text.Text
 
 -- | Converts via 'LazyText.Text'.
-instance From.From String Encoding.Utf8Lazy where
+instance From.From String Encoding.Utf8L where
   from = Utility.via @LazyText.Text
 
 -- UTF-16LE
 
 -- | Uses 'Text.decodeUtf16LE'.
-instance TryFrom.TryFrom Encoding.Utf16leStrict Text.Text where
+instance TryFrom.TryFrom Encoding.Utf16LS Text.Text where
   tryFrom = Utility.eitherTryFrom $ tryEvaluate @Text.UnicodeException . Text.decodeUtf16LE . From.from
 
 -- | Converts via 'Text.Text'.
-instance TryFrom.TryFrom Encoding.Utf16leStrict LazyText.Text where
+instance TryFrom.TryFrom Encoding.Utf16LS LazyText.Text where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @LazyText.Text) . Utility.tryInto @Text.Text
 
 -- | Converts via 'Text.Text'.
-instance TryFrom.TryFrom Encoding.Utf16leStrict String where
+instance TryFrom.TryFrom Encoding.Utf16LS String where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @Text.Text
 
 -- | Uses 'LazyText.decodeUtf16LE'.
-instance TryFrom.TryFrom Encoding.Utf16leLazy LazyText.Text where
+instance TryFrom.TryFrom Encoding.Utf16LL LazyText.Text where
   tryFrom = Utility.eitherTryFrom $ tryEvaluate @Text.UnicodeException . LazyText.decodeUtf16LE . From.from
 
 -- | Converts via 'LazyText.Text'.
-instance TryFrom.TryFrom Encoding.Utf16leLazy Text.Text where
+instance TryFrom.TryFrom Encoding.Utf16LL Text.Text where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @Text.Text) . Utility.tryInto @LazyText.Text
 
 -- | Converts via 'LazyText.Text'.
-instance TryFrom.TryFrom Encoding.Utf16leLazy String where
+instance TryFrom.TryFrom Encoding.Utf16LL String where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @LazyText.Text
 
 -- | Uses 'Text.encodeUtf16LE'.
-instance From.From Text.Text Encoding.Utf16leStrict where
+instance From.From Text.Text Encoding.Utf16LS where
   from = From.from . Text.encodeUtf16LE
 
 -- | Converts via 'ByteString.ByteString'.
-instance From.From Text.Text Encoding.Utf16leLazy where
-  from = fmap From.from . Utility.into @Encoding.Utf16leStrict
+instance From.From Text.Text Encoding.Utf16LL where
+  from = fmap From.from . Utility.into @Encoding.Utf16LS
 
 -- | Uses 'LazyText.encodeUtf16LE'.
-instance From.From LazyText.Text Encoding.Utf16leLazy where
+instance From.From LazyText.Text Encoding.Utf16LL where
   from = From.from . LazyText.encodeUtf16LE
 
 -- | Converts via 'LazyByteString.ByteString'.
-instance From.From LazyText.Text Encoding.Utf16leStrict where
-  from = fmap From.from . Utility.into @Encoding.Utf16leLazy
+instance From.From LazyText.Text Encoding.Utf16LS where
+  from = fmap From.from . Utility.into @Encoding.Utf16LL
 
 -- | Converts via 'Text.Text'.
-instance From.From String Encoding.Utf16leStrict where
+instance From.From String Encoding.Utf16LS where
   from = Utility.via @Text.Text
 
 -- | Converts via 'LazyText.Text'.
-instance From.From String Encoding.Utf16leLazy where
+instance From.From String Encoding.Utf16LL where
   from = Utility.via @LazyText.Text
 
 -- UTF-16BE
 
 -- | Uses 'Text.decodeUtf16BE'.
-instance TryFrom.TryFrom Encoding.Utf16beStrict Text.Text where
+instance TryFrom.TryFrom Encoding.Utf16BS Text.Text where
   tryFrom = Utility.eitherTryFrom $ tryEvaluate @Text.UnicodeException . Text.decodeUtf16BE . From.from
 
 -- | Converts via 'Text.Text'.
-instance TryFrom.TryFrom Encoding.Utf16beStrict LazyText.Text where
+instance TryFrom.TryFrom Encoding.Utf16BS LazyText.Text where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @LazyText.Text) . Utility.tryInto @Text.Text
 
 -- | Converts via 'Text.Text'.
-instance TryFrom.TryFrom Encoding.Utf16beStrict String where
+instance TryFrom.TryFrom Encoding.Utf16BS String where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @Text.Text
 
 -- | Uses 'LazyText.decodeUtf16BE'.
-instance TryFrom.TryFrom Encoding.Utf16beLazy LazyText.Text where
+instance TryFrom.TryFrom Encoding.Utf16BL LazyText.Text where
   tryFrom = Utility.eitherTryFrom $ tryEvaluate @Text.UnicodeException . LazyText.decodeUtf16BE . From.from
 
 -- | Converts via 'LazyText.Text'.
-instance TryFrom.TryFrom Encoding.Utf16beLazy Text.Text where
+instance TryFrom.TryFrom Encoding.Utf16BL Text.Text where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @Text.Text) . Utility.tryInto @LazyText.Text
 
 -- | Converts via 'LazyText.Text'.
-instance TryFrom.TryFrom Encoding.Utf16beLazy String where
+instance TryFrom.TryFrom Encoding.Utf16BL String where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @LazyText.Text
 
 -- | Uses 'Text.encodeUtf16BE'.
-instance From.From Text.Text Encoding.Utf16beStrict where
+instance From.From Text.Text Encoding.Utf16BS where
   from = From.from . Text.encodeUtf16BE
 
 -- | Converts via 'ByteString.ByteString'.
-instance From.From Text.Text Encoding.Utf16beLazy where
-  from = fmap From.from . Utility.into @Encoding.Utf16beStrict
+instance From.From Text.Text Encoding.Utf16BL where
+  from = fmap From.from . Utility.into @Encoding.Utf16BS
 
 -- | Uses 'LazyText.encodeUtf16BE'.
-instance From.From LazyText.Text Encoding.Utf16beLazy where
+instance From.From LazyText.Text Encoding.Utf16BL where
   from = From.from . LazyText.encodeUtf16BE
 
 -- | Converts via 'LazyByteString.ByteString'.
-instance From.From LazyText.Text Encoding.Utf16beStrict where
-  from = fmap From.from . Utility.into @Encoding.Utf16beLazy
+instance From.From LazyText.Text Encoding.Utf16BS where
+  from = fmap From.from . Utility.into @Encoding.Utf16BL
 
 -- | Converts via 'Text.Text'.
-instance From.From String Encoding.Utf16beStrict where
+instance From.From String Encoding.Utf16BS where
   from = Utility.via @Text.Text
 
 -- | Converts via 'LazyText.Text'.
-instance From.From String Encoding.Utf16beLazy where
+instance From.From String Encoding.Utf16BL where
   from = Utility.via @LazyText.Text
 
 -- UTF-32LE
 
 -- | Uses 'Text.decodeUtf32LE'.
-instance TryFrom.TryFrom Encoding.Utf32leStrict Text.Text where
+instance TryFrom.TryFrom Encoding.Utf32LS Text.Text where
   tryFrom = Utility.eitherTryFrom $ tryEvaluate @Text.UnicodeException . Text.decodeUtf32LE . From.from
 
 -- | Converts via 'Text.Text'.
-instance TryFrom.TryFrom Encoding.Utf32leStrict LazyText.Text where
+instance TryFrom.TryFrom Encoding.Utf32LS LazyText.Text where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @LazyText.Text) . Utility.tryInto @Text.Text
 
 -- | Converts via 'Text.Text'.
-instance TryFrom.TryFrom Encoding.Utf32leStrict String where
+instance TryFrom.TryFrom Encoding.Utf32LS String where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @Text.Text
 
 -- | Uses 'LazyText.decodeUtf32LE'.
-instance TryFrom.TryFrom Encoding.Utf32leLazy LazyText.Text where
+instance TryFrom.TryFrom Encoding.Utf32LL LazyText.Text where
   tryFrom = Utility.eitherTryFrom $ tryEvaluate @Text.UnicodeException . LazyText.decodeUtf32LE . From.from
 
 -- | Converts via 'LazyText.Text'.
-instance TryFrom.TryFrom Encoding.Utf32leLazy Text.Text where
+instance TryFrom.TryFrom Encoding.Utf32LL Text.Text where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @Text.Text) . Utility.tryInto @LazyText.Text
 
 -- | Converts via 'LazyText.Text'.
-instance TryFrom.TryFrom Encoding.Utf32leLazy String where
+instance TryFrom.TryFrom Encoding.Utf32LL String where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @LazyText.Text
 
 -- | Uses 'Text.encodeUtf32LE'.
-instance From.From Text.Text Encoding.Utf32leStrict where
+instance From.From Text.Text Encoding.Utf32LS where
   from = From.from . Text.encodeUtf32LE
 
 -- | Converts via 'ByteString.ByteString'.
-instance From.From Text.Text Encoding.Utf32leLazy where
-  from = fmap From.from . Utility.into @Encoding.Utf32leStrict
+instance From.From Text.Text Encoding.Utf32LL where
+  from = fmap From.from . Utility.into @Encoding.Utf32LS
 
 -- | Uses 'LazyText.encodeUtf32LE'.
-instance From.From LazyText.Text Encoding.Utf32leLazy where
+instance From.From LazyText.Text Encoding.Utf32LL where
   from = From.from . LazyText.encodeUtf32LE
 
 -- | Converts via 'LazyByteString.ByteString'.
-instance From.From LazyText.Text Encoding.Utf32leStrict where
-  from = fmap From.from . Utility.into @Encoding.Utf32leLazy
+instance From.From LazyText.Text Encoding.Utf32LS where
+  from = fmap From.from . Utility.into @Encoding.Utf32LL
 
 -- | Converts via 'Text.Text'.
-instance From.From String Encoding.Utf32leStrict where
+instance From.From String Encoding.Utf32LS where
   from = Utility.via @Text.Text
 
 -- | Converts via 'LazyText.Text'.
-instance From.From String Encoding.Utf32leLazy where
+instance From.From String Encoding.Utf32LL where
   from = Utility.via @LazyText.Text
 
 -- UTF-32BE
 
 -- | Uses 'Text.decodeUtf32BE'.
-instance TryFrom.TryFrom Encoding.Utf32beStrict Text.Text where
+instance TryFrom.TryFrom Encoding.Utf32BS Text.Text where
   tryFrom = Utility.eitherTryFrom $ tryEvaluate @Text.UnicodeException . Text.decodeUtf32BE . From.from
 
 -- | Converts via 'Text.Text'.
-instance TryFrom.TryFrom Encoding.Utf32beStrict LazyText.Text where
+instance TryFrom.TryFrom Encoding.Utf32BS LazyText.Text where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @LazyText.Text) . Utility.tryInto @Text.Text
 
 -- | Converts via 'Text.Text'.
-instance TryFrom.TryFrom Encoding.Utf32beStrict String where
+instance TryFrom.TryFrom Encoding.Utf32BS String where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @Text.Text
 
 -- | Uses 'LazyText.decodeUtf32BE'.
-instance TryFrom.TryFrom Encoding.Utf32beLazy LazyText.Text where
+instance TryFrom.TryFrom Encoding.Utf32BL LazyText.Text where
   tryFrom = Utility.eitherTryFrom $ tryEvaluate @Text.UnicodeException . LazyText.decodeUtf32BE . From.from
 
 -- | Converts via 'LazyText.Text'.
-instance TryFrom.TryFrom Encoding.Utf32beLazy Text.Text where
+instance TryFrom.TryFrom Encoding.Utf32BL Text.Text where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @Text.Text) . Utility.tryInto @LazyText.Text
 
 -- | Converts via 'LazyText.Text'.
-instance TryFrom.TryFrom Encoding.Utf32beLazy String where
+instance TryFrom.TryFrom Encoding.Utf32BL String where
   tryFrom = Utility.eitherTryFrom $ fmap (Utility.into @String) . Utility.tryInto @LazyText.Text
 
 -- | Uses 'Text.encodeUtf32BE'.
-instance From.From Text.Text Encoding.Utf32beStrict where
+instance From.From Text.Text Encoding.Utf32BS where
   from = From.from . Text.encodeUtf32BE
 
 -- | Converts via 'ByteString.ByteString'.
-instance From.From Text.Text Encoding.Utf32beLazy where
-  from = fmap From.from . Utility.into @Encoding.Utf32beStrict
+instance From.From Text.Text Encoding.Utf32BL where
+  from = fmap From.from . Utility.into @Encoding.Utf32BS
 
 -- | Uses 'LazyText.encodeUtf32BE'.
-instance From.From LazyText.Text Encoding.Utf32beLazy where
+instance From.From LazyText.Text Encoding.Utf32BL where
   from = From.from . LazyText.encodeUtf32BE
 
 -- | Converts via 'LazyByteString.ByteString'.
-instance From.From LazyText.Text Encoding.Utf32beStrict where
-  from = fmap From.from . Utility.into @Encoding.Utf32beLazy
+instance From.From LazyText.Text Encoding.Utf32BS where
+  from = fmap From.from . Utility.into @Encoding.Utf32BL
 
 -- | Converts via 'Text.Text'.
-instance From.From String Encoding.Utf32beStrict where
+instance From.From String Encoding.Utf32BS where
   from = Utility.via @Text.Text
 
 -- | Converts via 'LazyText.Text'.
-instance From.From String Encoding.Utf32beLazy where
+instance From.From String Encoding.Utf32BL where
   from = Utility.via @LazyText.Text
 
 --
