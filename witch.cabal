@@ -70,6 +70,7 @@ library
     Witch
     Witch.Encoding
     Witch.From
+    Witch.Generic
     Witch.Instances
     Witch.Lift
     Witch.TryFrom

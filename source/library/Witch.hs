@@ -302,6 +302,7 @@ where
 
 import qualified Witch.Encoding
 import qualified Witch.From
+import Witch.Generic ()
 import Witch.Instances ()
 import qualified Witch.Lift
 import qualified Witch.TryFrom

@@ -1,6 +1,9 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NegativeLiterals #-}
+{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 {-# OPTIONS_GHC -Wno-error=overflowed-literals #-}
@@ -29,6 +32,7 @@ import qualified Data.Time.Clock.POSIX as Time
 import qualified Data.Time.Clock.System as Time
 import qualified Data.Time.Clock.TAI as Time
 import qualified Data.Word as Word
+import qualified GHC.Generics as Generics
 import qualified GHC.Stack as Stack
 import qualified Numeric.Natural as Natural
 import qualified Test.HUnit as HUnit
@@ -64,7 +68,7 @@ spec = describe "Witch" $ do
 
     describe "over" $ do
       it "works" $ do
-        Utility.over @Int.Int8 (+ 1) (Age 1) `shouldBe` Age 2
+        Utility.over @Int.Int8 (+ 1) (MkAge 1) `shouldBe` MkAge 2
 
     describe "via" $ do
       it "works" $ do
@@ -2439,8 +2443,39 @@ spec = describe "Witch" $ do
       it "works" $ do
         f "a" `shouldBe` Tagged.Tagged (LazyByteString.pack [0x00, 0x00, 0x00, 0x61])
 
+  describe "Generically" $ do
+    it "converts into pair" $ do
+      let f = Witch.from @(Int, Bool) @(Pair Int Bool)
+      f (0, False) `shouldBe` MkPair 0 False
+
+    it "converts into pair while also converting fields" $ do
+      let f = Witch.from @(Int, Int.Int8) @(Pair Integer Age)
+      f (1, 2) `shouldBe` MkPair 1 (MkAge 2)
+
+    it "converts from pair" $ do
+      let f = Witch.from @(Pair Int Bool) @(Int, Bool)
+      f (MkPair 0 False) `shouldBe` (0, False)
+
+    it "converts from pair while also converting fields" $ do
+      let f = Witch.from @(Pair Int Age) @(Integer, Int.Int8)
+      f (MkPair 1 (MkAge 2)) `shouldBe` (1, 2)
+
+data Pair a b
+  = MkPair a b
+  deriving (Eq, Generics.Generic, Show)
+
+deriving via
+  Generics.Generically (Pair c d)
+  instance
+    (Witch.From a c, Witch.From b d) => Witch.From (a, b) (Pair c d)
+
+deriving via
+  Generics.Generically (c, d)
+  instance
+    (Witch.From a c, Witch.From b d) => Witch.From (Pair a b) (c, d)
+
 newtype Age
-  = Age Int.Int8
+  = MkAge Int.Int8
   deriving (Eq, Show)
 
 instance Witch.From Age Int.Int8
