@@ -1,6 +1,9 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NegativeLiterals #-}
+{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 {-# OPTIONS_GHC -Wno-error=overflowed-literals #-}
@@ -28,7 +31,10 @@ import qualified Data.Time as Time
 import qualified Data.Time.Clock.POSIX as Time
 import qualified Data.Time.Clock.System as Time
 import qualified Data.Time.Clock.TAI as Time
+import qualified Data.Tuple as Tuple
+import qualified Data.Void as Void
 import qualified Data.Word as Word
+import qualified GHC.Generics as Generics
 import qualified GHC.Stack as Stack
 import qualified Numeric.Natural as Natural
 import qualified Test.HUnit as HUnit
@@ -64,7 +70,7 @@ spec = describe "Witch" $ do
 
     describe "over" $ do
       it "works" $ do
-        Utility.over @Int.Int8 (+ 1) (Age 1) `shouldBe` Age 2
+        Utility.over @Int.Int8 (+ 1) (MkAge 1) `shouldBe` MkAge 2
 
     describe "via" $ do
       it "works" $ do
@@ -2439,8 +2445,86 @@ spec = describe "Witch" $ do
       it "works" $ do
         f "a" `shouldBe` Tagged.Tagged (LazyByteString.pack [0x00, 0x00, 0x00, 0x61])
 
+  describe "Generically" $ do
+    it "converts into empty" $ do
+      -- This only needs to type check.
+      let _ = Witch.from @Void.Void @Empty
+      pure ()
+
+    it "converts into unit" $ do
+      let f = Witch.from @() @Unit
+      f () `shouldBe` MkUnit
+
+    it "converts into only" $ do
+      let f = Witch.from @(Tuple.Solo Int) @(Only Integer)
+      f (Tuple.MkSolo 1) `shouldBe` MkOnly 1
+
+    it "converts into pair" $ do
+      let f = Witch.from @(Int, Int.Int8) @(Pair Integer Age)
+      f (1, 2) `shouldBe` MkPair 1 (MkAge 2)
+
+    it "converts into result" $ do
+      let f = Witch.from @(Either Int Int.Int8) @(Result Integer Age)
+      f (Left 1) `shouldBe` Failure 1
+      f (Right 2) `shouldBe` Success (MkAge 2)
+
+    it "converts into list" $ do
+      let f = Witch.from @[Int] @(List Integer)
+      f [] `shouldBe` Nil
+      f [1] `shouldBe` Cons 1 Nil
+      f [1, 2] `shouldBe` Cons 1 (Cons 2 Nil)
+
+data Empty
+  deriving (Generics.Generic)
+
+deriving via Generics.Generically Empty instance Witch.From Void.Void Empty
+
+data Unit
+  = MkUnit
+  deriving (Eq, Generics.Generic, Show)
+
+deriving via Generics.Generically Unit instance Witch.From () Unit
+
+newtype Only a
+  = MkOnly a
+  deriving (Eq, Generics.Generic, Show)
+
+deriving via
+  Generics.Generically (Only b)
+  instance
+    (Witch.From a b) => Witch.From (Tuple.Solo a) (Only b)
+
+data Pair a b
+  = MkPair a b
+  deriving (Eq, Generics.Generic, Show)
+
+deriving via
+  Generics.Generically (Pair c d)
+  instance
+    (Witch.From a c, Witch.From b d) => Witch.From (a, b) (Pair c d)
+
+data Result a b
+  = Failure a
+  | Success b
+  deriving (Eq, Generics.Generic, Show)
+
+deriving via
+  Generics.Generically (Result c d)
+  instance
+    (Witch.From a c, Witch.From b d) => Witch.From (Either a b) (Result c d)
+
+data List a
+  = Nil
+  | Cons a (List a)
+  deriving (Eq, Generics.Generic, Show)
+
+deriving via
+  Generics.Generically (List b)
+  instance
+    (Witch.From a b) => Witch.From [a] (List b)
+
 newtype Age
-  = Age Int.Int8
+  = MkAge Int.Int8
   deriving (Eq, Show)
 
 instance Witch.From Age Int.Int8
