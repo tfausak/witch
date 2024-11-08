@@ -30,7 +30,7 @@ import qualified Witch.From as From
 -- This approach (with 'Generics.Generically') only requires the types to be /structurally/ equal.
 -- In this case, @Unit@ is structurally equal to @()@ since they both have a single constructor with no arguments.
 --
--- This also works with arbitrary sum types, like a custom pair type:
+-- This also works with arbitrary product types, like a custom pair type:
 --
 -- > data Pair a b = MkPair a b deriving Generic
 -- > deriving via Generically (Pair c d)
@@ -39,7 +39,7 @@ import qualified Witch.From as From
 -- Note that this can also convert the type variables as long as they have 'From.From' instances as well.
 -- This allows converting from @(Int, Int)@ to @Pair Integer Integer@ in one step, for example.
 --
--- And this works with arbitrary product types as well:
+-- And this works with arbitrary sum types as well:
 --
 -- > data Result a b = Failure a | Success b deriving Generic
 -- > deriving via Generically (Result c d)
