@@ -33,7 +33,7 @@ module Witch
     -- 'Witch.Encoding.Utf8S' alias:
     --
     -- @
-    -- 'Witch.Utility.into' @'Data.ByteString.ByteString' ('Witch.Utility.into' @'Witch.Encoding.Utf8S' ("..." :: 'String'))
+    -- 'Witch.Utility.into' \@'Data.ByteString.ByteString' ('Witch.Utility.into' \@'Witch.Encoding.Utf8S' ("..." :: 'String'))
     -- -- "..."
     -- @
     --
@@ -42,7 +42,7 @@ module Witch
     -- direction:
     --
     -- @
-    -- 'Witch.Utility.tryInto' @'String' ('Witch.Utility.into' @'Witch.Encoding.Utf8S' ("..." :: 'Data.ByteString.ByteString'))
+    -- 'Witch.Utility.tryInto' \@'String' ('Witch.Utility.into' \@'Witch.Encoding.Utf8S' ("..." :: 'Data.ByteString.ByteString'))
     -- -- Right "..."
     -- @
     Witch.Encoding.Latin1S,
