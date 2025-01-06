@@ -1,6 +1,6 @@
 cabal-version: 2.2
 name: witch
-version: 1.2.3.1
+version: 1.2.3.2
 synopsis: Convert values from one type into another.
 description: Witch converts values from one type into another.
 build-type: Simple
