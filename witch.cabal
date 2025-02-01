@@ -22,7 +22,7 @@ flag pedantic
   manual: True
 
 common library
-  build-depends: base ^>=4.18.0.0 || ^>=4.19.0.0 || ^>=4.20.0.0
+  build-depends: base ^>=4.19.0.0 || ^>=4.20.0.0 || ^>=4.21.0.0
   build-depends:
     bytestring ^>=0.11.4.0 || ^>=0.12.0.2,
     containers ^>=0.6.7 || ^>=0.7,
@@ -40,6 +40,7 @@ common library
     -Wno-missing-export-lists
     -Wno-missing-exported-signatures
     -Wno-missing-kind-signatures
+    -Wno-missing-role-annotations
     -Wno-missing-safe-haskell-mode
     -Wno-prepositive-qualified-module
     -Wno-redundant-constraints
@@ -49,9 +50,6 @@ common library
   if flag(pedantic)
     ghc-options:
       -Werror
-
-  if impl(ghc >=9.8)
-    ghc-options: -Wno-missing-role-annotations
 
 common executable
   import: library
@@ -63,7 +61,7 @@ common executable
 library
   import: library
   build-depends:
-    template-haskell ^>=2.20.0.0 || ^>=2.21.0.0 || ^>=2.22.0.0
+    template-haskell ^>=2.21.0.0 || ^>=2.22.0.0 || ^>=2.23.0.0
 
   -- cabal-gild: discover source/library
   exposed-modules:
