@@ -40,6 +40,7 @@ common library
     -Wno-missing-export-lists
     -Wno-missing-exported-signatures
     -Wno-missing-kind-signatures
+    -Wno-missing-role-annotations
     -Wno-missing-safe-haskell-mode
     -Wno-prepositive-qualified-module
     -Wno-redundant-constraints
@@ -49,9 +50,6 @@ common library
   if flag(pedantic)
     ghc-options:
       -Werror
-
-  if impl(ghc >=9.8)
-    ghc-options: -Wno-missing-role-annotations
 
 common executable
   import: library
