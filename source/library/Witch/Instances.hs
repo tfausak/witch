@@ -381,13 +381,13 @@ instance TryFrom.TryFrom Integer Natural.Natural where
 -- | TODO
 instance TryFrom.TryFrom Integer Float where
   tryFrom = Utility.eitherTryFrom $ \s -> case fromInteger s of
-    t | s == truncate t -> Right t
+    t | not (isInfinite t), s == truncate t -> Right t
     _ -> Left Exception.LossOfPrecision
 
 -- | TODO
 instance TryFrom.TryFrom Integer Double where
   tryFrom = Utility.eitherTryFrom $ \s -> case fromInteger s of
-    t | s == truncate t -> Right t
+    t | not (isInfinite t), s == truncate t -> Right t
     _ -> Left Exception.LossOfPrecision
 
 -- Word8
