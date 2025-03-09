@@ -939,15 +939,16 @@ instance (Fixed.HasResolution a) => TryFrom.TryFrom Rational (Fixed.Fixed a) whe
 
 -- Fixed
 
--- | Uses 'Fixed.MkFixed'. This means @from \@Integer \@Centi 2@ is @0.02@
--- rather than @2.00@.
-instance From.From Integer (Fixed.Fixed a) where
-  from = Fixed.MkFixed
+-- | Uses 'fromInteger'. This means @from \@Integer \@Centi 2@ is @02.00@
+-- rather than @0.02@.
+instance (Fixed.HasResolution a) => From.From Integer (Fixed.Fixed a) where
+  from = fromInteger
 
--- | Uses 'Fixed.MkFixed'. This means @from \@Centi \@Integer 3.00@ is @300@
--- rather than @3@.
-instance From.From (Fixed.Fixed a) Integer where
-  from (Fixed.MkFixed t) = t
+-- | Converts via 'Rational' when there is no fractional part. This means
+-- @tryFrom \@Centi \@Integer 2.00@ is @Right 2@ and
+-- @tryFrom \@Centi \@Integer 0.02@ will fail.
+instance (Fixed.HasResolution a) => TryFrom.TryFrom (Fixed.Fixed a) Integer where
+  tryFrom = Utility.eitherTryFrom $ TryFrom.tryFrom @Rational . From.from
 
 -- | Uses 'toRational'.
 instance (Fixed.HasResolution a) => From.From (Fixed.Fixed a) Rational where
