@@ -9,6 +9,7 @@ module Witch.Instances where
 
 import qualified Control.Exception as Exception
 import qualified Control.Monad as Monad
+import qualified Data.Bifunctor as Bifunctor
 import qualified Data.Bits as Bits
 import qualified Data.ByteString as ByteString
 import qualified Data.ByteString.Char8 as Char8
@@ -951,6 +952,16 @@ instance From.From (Fixed.Fixed a) Integer where
 -- | Uses 'toRational'.
 instance (Fixed.HasResolution a) => From.From (Fixed.Fixed a) Rational where
   from = toRational
+
+-- | Converts via 'Rational'.
+instance
+  (Fixed.HasResolution s, Fixed.HasResolution t) =>
+  TryFrom.TryFrom (Fixed.Fixed s) (Fixed.Fixed t)
+  where
+  tryFrom s =
+    Bifunctor.first (Utility.withSource s)
+      . TryFrom.tryFrom @Rational
+      $ From.from s
 
 -- Complex
 
