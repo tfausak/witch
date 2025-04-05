@@ -33,11 +33,13 @@ group =
       (,) "tripping Word16 Word8"
         . H.property
         . tryFromFrom @Word.Word8
-        $ Gen.word16 Range.linearBounded,
+        . Gen.word16
+        $ Range.linear 0 (fromIntegral (maxBound :: Word.Word8)),
       (,) "tripping Word Word32"
         . H.property
         . tryFromTryFrom @Word.Word32
-        $ Gen.word Range.linearBounded
+        . Gen.word
+        $ Range.linear 0 (fromIntegral (maxBound :: Word.Word32))
     ]
 
 -- | Tests round-tripping between two types using 'Witch.From' in both
@@ -129,7 +131,7 @@ tripping into from gen = do
     Left _ ->
       -- If we can't convert the source into the target, then there's nothing
       -- to test. But we don't want to fail the property with 'H.evalEither'.
-      pure ()
+      H.discard
     Right t1 -> do
       s2 <- H.evalEither $ from t1
       -- Note that @s2@ is not equal to @s1@ in general because the target type
