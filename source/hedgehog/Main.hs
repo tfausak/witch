@@ -4,6 +4,8 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 
+import qualified Control.Monad.Trans.Writer as Writer
+import qualified Data.Int as Int
 import qualified Data.Set as Set
 import qualified Data.Typeable as Typeable
 import qualified Data.Void as Void
@@ -12,35 +14,75 @@ import qualified Hedgehog as H
 import qualified Hedgehog.Gen as Gen
 import qualified Hedgehog.Main as Main
 import qualified Hedgehog.Range as Range
+import qualified Numeric.Natural as Natural
 import qualified Witch
 
 main :: IO ()
-main = Main.defaultMain [H.checkParallel group]
+main = Main.defaultMain $ fmap H.checkParallel groups
 
-group :: H.Group
-group =
+groups :: [H.Group]
+groups =
+  [ witchGroup,
+    int8Group
+  ]
+
+witchGroup :: H.Group
+witchGroup =
   H.Group
     "witch"
-    [ (,) "tripping (List a) (Set a)"
+    [ (,) "tripping a a"
+        . H.property
+        . fromFrom @Word.Word8
+        $ Gen.word8 Range.exponentialBounded,
+      (,) "tripping (List a) (Set a)"
         . H.property
         . fromFrom @(Set.Set Word.Word8)
         . Gen.list (Range.linear 0 10)
-        $ Gen.word8 Range.linearBounded,
+        $ Gen.word8 Range.exponentialBounded,
       (,) "tripping Word8 Word16"
         . H.property
         . fromTryFrom @Word.Word16
-        $ Gen.word8 Range.linearBounded,
+        $ Gen.word8 Range.exponentialBounded,
       (,) "tripping Word16 Word8"
         . H.property
         . tryFromFrom @Word.Word8
-        . Gen.word16
-        $ Range.linear 0 (fromIntegral (maxBound :: Word.Word8)),
+        $ Gen.word16 Range.exponentialBounded,
       (,) "tripping Word Word32"
         . H.property
         . tryFromTryFrom @Word.Word32
-        . Gen.word
-        $ Range.linear 0 (fromIntegral (maxBound :: Word.Word32))
+        $ Gen.word Range.exponentialBounded
     ]
+
+int8Group :: H.Group
+int8Group = group "Int8" $ do
+  let g :: H.Gen Int.Int8
+      g = Gen.int8 Range.exponentialBounded
+  property "Int16" $ fromTryFrom @Int.Int16 g
+  property "Int32" $ fromTryFrom @Int.Int32 g
+  property "Int64" $ fromTryFrom @Int.Int64 g
+  property "Int" $ fromTryFrom @Int g
+  property "Integer" $ fromTryFrom @Integer g
+  property "Word8" $ tryFromTryFrom @Word.Word8 g
+  property "Word16" $ tryFromTryFrom @Word.Word16 g
+  property "Word32" $ tryFromTryFrom @Word.Word32 g
+  property "Word64" $ tryFromTryFrom @Word.Word64 g
+  property "Word" $ tryFromTryFrom @Word g
+  property "Natural" $ tryFromTryFrom @Natural.Natural g
+  property "Float" $ fromTryFrom @Float g
+  property "Double" $ fromTryFrom @Double g
+
+group ::
+  H.GroupName ->
+  Writer.Writer [(H.PropertyName, H.Property)] () ->
+  H.Group
+group n = H.Group n . Writer.execWriter
+
+property ::
+  (Monad m) =>
+  H.PropertyName ->
+  H.PropertyT IO () ->
+  Writer.WriterT [(H.PropertyName, H.Property)] m ()
+property n = Writer.tell . pure . (,) n . H.property
 
 -- | Tests round-tripping between two types using 'Witch.From' in both
 -- directions.
