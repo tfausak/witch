@@ -23,7 +23,12 @@ main = Main.defaultMain $ fmap H.checkParallel groups
 groups :: [H.Group]
 groups =
   [ witchGroup,
-    int8Group
+    int8Group,
+    int16Group,
+    int32Group,
+    int64Group,
+    intGroup,
+    integerGroup
   ]
 
 witchGroup :: H.Group
@@ -55,8 +60,7 @@ witchGroup =
 
 int8Group :: H.Group
 int8Group = group "Int8" $ do
-  let g :: H.Gen Int.Int8
-      g = Gen.int8 Range.exponentialBounded
+  let g = Gen.integral Range.exponentialBounded :: H.Gen Int.Int8
   property "Int16" $ fromTryFrom @Int.Int16 g
   property "Int32" $ fromTryFrom @Int.Int32 g
   property "Int64" $ fromTryFrom @Int.Int64 g
@@ -70,6 +74,93 @@ int8Group = group "Int8" $ do
   property "Natural" $ tryFromTryFrom @Natural.Natural g
   property "Float" $ fromTryFrom @Float g
   property "Double" $ fromTryFrom @Double g
+
+int16Group :: H.Group
+int16Group = group "Int16" $ do
+  let g = Gen.integral Range.exponentialBounded :: H.Gen Int.Int16
+  property "Int8" $ tryFromFrom @Int.Int8 g
+  property "Int32" $ fromTryFrom @Int.Int32 g
+  property "Int64" $ fromTryFrom @Int.Int64 g
+  property "Int" $ fromTryFrom @Int g
+  property "Integer" $ fromTryFrom @Integer g
+  property "Word8" $ tryFromFrom @Word.Word8 g
+  property "Word16" $ tryFromTryFrom @Word.Word16 g
+  property "Word32" $ tryFromTryFrom @Word.Word32 g
+  property "Word64" $ tryFromTryFrom @Word.Word64 g
+  property "Word" $ tryFromTryFrom @Word g
+  property "Natural" $ tryFromTryFrom @Natural.Natural g
+  property "Float" $ fromTryFrom @Float g
+  property "Double" $ fromTryFrom @Double g
+
+int32Group :: H.Group
+int32Group = group "Int32" $ do
+  let g = Gen.integral Range.exponentialBounded :: H.Gen Int.Int32
+  property "Int8" $ tryFromFrom @Int.Int8 g
+  property "Int16" $ tryFromFrom @Int.Int16 g
+  property "Int64" $ fromTryFrom @Int.Int64 g
+  property "Int" $ tryFromTryFrom @Int g
+  property "Integer" $ fromTryFrom @Integer g
+  property "Word8" $ tryFromFrom @Word.Word8 g
+  property "Word16" $ tryFromFrom @Word.Word16 g
+  property "Word32" $ tryFromTryFrom @Word.Word32 g
+  property "Word64" $ tryFromTryFrom @Word.Word64 g
+  property "Word" $ tryFromTryFrom @Word g
+  property "Natural" $ tryFromTryFrom @Natural.Natural g
+  property "Float" $ tryFromTryFrom @Float g
+  property "Double" $ fromTryFrom @Double g
+
+int64Group :: H.Group
+int64Group = group "Int64" $ do
+  let g = Gen.integral Range.exponentialBounded :: H.Gen Int.Int64
+  property "Int8" $ tryFromFrom @Int.Int8 g
+  property "Int16" $ tryFromFrom @Int.Int16 g
+  property "Int32" $ tryFromFrom @Int.Int32 g
+  property "Int" $ tryFromFrom @Int g
+  property "Integer" $ fromTryFrom @Integer g
+  property "Word8" $ tryFromFrom @Word.Word8 g
+  property "Word16" $ tryFromFrom @Word.Word16 g
+  property "Word32" $ tryFromFrom @Word.Word32 g
+  property "Word64" $ tryFromTryFrom @Word.Word64 g
+  property "Word" $ tryFromTryFrom @Word g
+  property "Natural" $ tryFromTryFrom @Natural.Natural g
+  property "Float" $ tryFromTryFrom @Float g
+  property "Double" $ tryFromTryFrom @Double g
+
+intGroup :: H.Group
+intGroup = group "Int" $ do
+  let g = Gen.integral Range.exponentialBounded :: H.Gen Int
+  property "Int8" $ tryFromFrom @Int.Int8 g
+  property "Int16" $ tryFromFrom @Int.Int16 g
+  property "Int32" $ tryFromTryFrom @Int.Int32 g
+  property "Int64" $ fromTryFrom @Int.Int64 g
+  property "Integer" $ fromTryFrom @Integer g
+  property "Word8" $ tryFromFrom @Word.Word8 g
+  property "Word16" $ tryFromFrom @Word.Word16 g
+  property "Word32" $ tryFromTryFrom @Word.Word32 g
+  property "Word64" $ tryFromTryFrom @Word.Word64 g
+  property "Word" $ tryFromTryFrom @Word g
+  property "Natural" $ tryFromTryFrom @Natural.Natural g
+  property "Float" $ tryFromTryFrom @Float g
+  property "Double" $ tryFromTryFrom @Double g
+
+integerGroup :: H.Group
+integerGroup = group "Integer" $ do
+  let lo = toInteger (minBound :: Int.Int64)
+      hi = toInteger (maxBound :: Int.Int64)
+      g = Gen.integral $ Range.exponential lo hi :: H.Gen Integer
+  property "Int8" $ tryFromFrom @Int.Int8 g
+  property "Int16" $ tryFromFrom @Int.Int16 g
+  property "Int32" $ tryFromFrom @Int.Int32 g
+  property "Int64" $ tryFromFrom @Int.Int64 g
+  property "Int" $ tryFromFrom @Int g
+  property "Word8" $ tryFromFrom @Word.Word8 g
+  property "Word16" $ tryFromFrom @Word.Word16 g
+  property "Word32" $ tryFromFrom @Word.Word32 g
+  property "Word64" $ tryFromFrom @Word.Word64 g
+  property "Word" $ tryFromFrom @Word g
+  property "Natural" $ tryFromFrom @Natural.Natural g
+  property "Float" $ tryFromTryFrom @Float g
+  property "Double" $ tryFromTryFrom @Double g
 
 group ::
   H.GroupName ->
