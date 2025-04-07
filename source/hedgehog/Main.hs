@@ -29,7 +29,8 @@ groups =
     groupInt32,
     groupInt64,
     groupInt,
-    groupInteger
+    groupInteger,
+    groupWord8
   ]
 
 groupWitch :: H.Group
@@ -44,10 +45,6 @@ groupWitch =
         . H.property
         . fromFrom @(Set.Set Word.Word8)
         . Gen.list (Range.linear 0 10)
-        $ Gen.word8 Range.exponentialBounded,
-      (,) "tripping Word8 Word16"
-        . H.property
-        . fromTryFrom @Word.Word16
         $ Gen.word8 Range.exponentialBounded,
       (,) "tripping Word16 Word8"
         . H.property
@@ -160,6 +157,23 @@ groupInteger = group "Integer" $ do
   property "Natural" . tryFromFrom @Natural.Natural $ gen 0 99999999999999999999
   property "Float" . tryFromTryFrom @Float $ gen -16777215 16777215
   property "Double" . tryFromTryFrom @Double $ gen -9007199254740991 9007199254740991
+
+groupWord8 :: H.Group
+groupWord8 = group "Word8" $ do
+  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Word.Word8
+  property "Int8" . tryFromTryFrom @Int.Int8 $ gen 0 127
+  property "Int16" . fromTryFrom @Int.Int16 $ gen 0 255
+  property "Int32" . fromTryFrom @Int.Int32 $ gen 0 255
+  property "Int64" . fromTryFrom @Int.Int64 $ gen 0 255
+  property "Int" . fromTryFrom @Int $ gen 0 255
+  property "Integer" . fromTryFrom @Integer $ gen 0 255
+  property "Word16" . fromTryFrom @Word.Word16 $ gen 0 255
+  property "Word32" . fromTryFrom @Word.Word32 $ gen 0 255
+  property "Word64" . fromTryFrom @Word.Word64 $ gen 0 255
+  property "Word" . fromTryFrom @Word $ gen 0 255
+  property "Natural" . fromTryFrom @Natural.Natural $ gen 0 255
+  property "Float" . fromTryFrom @Float $ gen 0 255
+  property "Double" . fromTryFrom @Double $ gen 0 255
 
 group ::
   H.GroupName ->
