@@ -22,16 +22,22 @@ main :: IO ()
 main = Main.defaultMain $ fmap H.checkParallel groups
 
 groups :: [H.Group]
-groups =
-  [ groupWitch,
-    groupInt8,
-    groupInt16,
-    groupInt32,
-    groupInt64,
-    groupInt,
-    groupInteger,
-    groupWord8
-  ]
+groups = Writer.execWriter $ do
+  Writer.tell $ pure groupWitch
+  Writer.tell $ pure groupInt8
+  Writer.tell $ pure groupInt16
+  Writer.tell $ pure groupInt32
+  Writer.tell $ pure groupInt64
+  Writer.tell $ pure groupInt
+  Writer.tell $ pure groupInteger
+  Writer.tell $ pure groupWord8
+  Writer.tell $ pure groupWord16
+  Writer.tell $ pure groupWord32
+  Writer.tell $ pure groupWord64
+  Writer.tell $ pure groupWord
+  Writer.tell $ pure groupNatural
+  Writer.tell $ pure groupFloat
+  Writer.tell $ pure groupDouble
 
 groupWitch :: H.Group
 groupWitch =
@@ -45,15 +51,7 @@ groupWitch =
         . H.property
         . fromFrom @(Set.Set Word.Word8)
         . Gen.list (Range.linear 0 10)
-        $ Gen.word8 Range.exponentialBounded,
-      (,) "tripping Word16 Word8"
-        . H.property
-        . tryFromFrom @Word.Word8
-        $ Gen.word16 Range.exponentialBounded,
-      (,) "tripping Word Word32"
-        . H.property
-        . tryFromTryFrom @Word.Word32
-        $ Gen.word Range.exponentialBounded
+        $ Gen.word8 Range.exponentialBounded
     ]
 
 groupInt8 :: H.Group
@@ -174,6 +172,129 @@ groupWord8 = group "Word8" $ do
   property "Natural" . fromTryFrom @Natural.Natural $ gen 0 255
   property "Float" . fromTryFrom @Float $ gen 0 255
   property "Double" . fromTryFrom @Double $ gen 0 255
+
+groupWord16 :: H.Group
+groupWord16 = group "Word16" $ do
+  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Word.Word16
+  property "Int8" . tryFromTryFrom @Int.Int8 $ gen 0 127
+  property "Int16" . tryFromTryFrom @Int.Int16 $ gen 0 32767
+  property "Int32" . fromTryFrom @Int.Int32 $ gen 0 65535
+  property "Int64" . fromTryFrom @Int.Int64 $ gen 0 65535
+  property "Int" . fromTryFrom @Int $ gen 0 65535
+  property "Integer" . fromTryFrom @Integer $ gen 0 65535
+  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
+  property "Word32" . fromTryFrom @Word.Word32 $ gen 0 65535
+  property "Word64" . fromTryFrom @Word.Word64 $ gen 0 65535
+  property "Word" . fromTryFrom @Word $ gen 0 65535
+  property "Natural" . fromTryFrom @Natural.Natural $ gen 0 65535
+  property "Float" . fromTryFrom @Float $ gen 0 65535
+  property "Double" . fromTryFrom @Double $ gen 0 65535
+
+groupWord32 :: H.Group
+groupWord32 = group "Word32" $ do
+  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Word.Word32
+  property "Int8" . tryFromTryFrom @Int.Int8 $ gen 0 127
+  property "Int16" . tryFromTryFrom @Int.Int16 $ gen 0 32767
+  property "Int32" . tryFromTryFrom @Int.Int32 $ gen 0 2147483647
+  property "Int64" . fromTryFrom @Int.Int64 $ gen 0 4294967295
+  property "Int" . tryFromTryFrom @Int $ gen 0 4294967295
+  property "Integer" . fromTryFrom @Integer $ gen 0 4294967295
+  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
+  property "Word16" . tryFromFrom @Word.Word16 $ gen 0 65535
+  property "Word64" . fromTryFrom @Word.Word64 $ gen 0 4294967295
+  property "Word" . tryFromTryFrom @Word $ gen 0 4294967295
+  property "Natural" . fromTryFrom @Natural.Natural $ gen 0 4294967295
+  property "Float" . tryFromTryFrom @Float $ gen 0 16777215
+  property "Double" . fromTryFrom @Double $ gen 0 4294967295
+
+groupWord64 :: H.Group
+groupWord64 = group "Word64" $ do
+  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Word.Word64
+  property "Int8" . tryFromTryFrom @Int.Int8 $ gen 0 127
+  property "Int16" . tryFromTryFrom @Int.Int16 $ gen 0 32767
+  property "Int32" . tryFromTryFrom @Int.Int32 $ gen 0 2147483647
+  property "Int64" . tryFromTryFrom @Int.Int64 $ gen 0 9223372036854775807
+  property "Int" . tryFromTryFrom @Int $ gen 0 9223372036854775807
+  property "Integer" . fromTryFrom @Integer $ gen 0 18446744073709551615
+  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
+  property "Word16" . tryFromFrom @Word.Word16 $ gen 0 65535
+  property "Word32" . tryFromFrom @Word.Word32 $ gen 0 4294967295
+  property "Word" . tryFromFrom @Word $ gen 0 18446744073709551615
+  property "Natural" . fromTryFrom @Natural.Natural $ gen 0 18446744073709551615
+  property "Float" . tryFromTryFrom @Float $ gen 0 16777215
+  property "Double" . tryFromTryFrom @Double $ gen 0 9007199254740991
+
+groupWord :: H.Group
+groupWord = group "Word" $ do
+  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Word
+  property "Int8" . tryFromTryFrom @Int.Int8 $ gen 0 127
+  property "Int16" . tryFromTryFrom @Int.Int16 $ gen 0 32767
+  property "Int32" . tryFromTryFrom @Int.Int32 $ gen 0 2147483647
+  property "Int64" . tryFromTryFrom @Int.Int64 $ gen 0 9223372036854775807
+  property "Int" . tryFromTryFrom @Int $ gen 0 9223372036854775807
+  property "Integer" . fromTryFrom @Integer $ gen 0 18446744073709551615
+  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
+  property "Word16" . tryFromFrom @Word.Word16 $ gen 0 65535
+  property "Word32" . tryFromTryFrom @Word.Word32 $ gen 0 4294967295
+  property "Word64" . fromTryFrom @Word.Word64 $ gen 0 18446744073709551615
+  property "Natural" . fromTryFrom @Natural.Natural $ gen 0 18446744073709551615
+  property "Float" . tryFromTryFrom @Float $ gen 0 16777215
+  property "Double" . tryFromTryFrom @Double $ gen 0 9007199254740991
+
+groupNatural :: H.Group
+groupNatural = group "Natural" $ do
+  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Natural.Natural
+  property "Int8" . tryFromTryFrom @Int.Int8 $ gen 0 127
+  property "Int16" . tryFromTryFrom @Int.Int16 $ gen 0 32767
+  property "Int32" . tryFromTryFrom @Int.Int32 $ gen 0 2147483647
+  property "Int64" . tryFromTryFrom @Int.Int64 $ gen 0 9223372036854775807
+  property "Int" . tryFromTryFrom @Int $ gen 0 9223372036854775807
+  property "Integer" . fromTryFrom @Integer $ gen 0 99999999999999999999
+  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
+  property "Word16" . tryFromFrom @Word.Word16 $ gen 0 65535
+  property "Word32" . tryFromFrom @Word.Word32 $ gen 0 4294967295
+  property "Word64" . tryFromFrom @Word.Word64 $ gen 0 18446744073709551615
+  property "Word" . tryFromFrom @Word $ gen 0 18446744073709551615
+  property "Float" . tryFromTryFrom @Float $ gen 0 16777215
+  property "Double" . tryFromTryFrom @Double $ gen 0 9007199254740991
+
+groupFloat :: H.Group
+groupFloat = group "Float" $ do
+  let genI lo hi = fmap (fromIntegral @Int.Int32) . Gen.integral $ Range.linear lo hi :: H.Gen Float
+  property "Int8" . tryFromFrom @Int.Int8 $ genI -128 127
+  property "Int16" . tryFromFrom @Int.Int16 $ genI -32768 32767
+  property "Int32" . tryFromTryFrom @Int.Int32 $ genI -16777215 16777215
+  property "Int64" . tryFromTryFrom @Int.Int64 $ genI -16777215 16777215
+  property "Int" . tryFromTryFrom @Int $ genI -16777215 16777215
+  property "Integer" . tryFromTryFrom @Integer $ genI -16777215 16777215
+  property "Word8" . tryFromFrom @Word.Word8 $ genI 0 255
+  property "Word16" . tryFromFrom @Word.Word16 $ genI 0 65535
+  property "Word32" . tryFromTryFrom @Word.Word32 $ genI 0 16777215
+  property "Word64" . tryFromTryFrom @Word.Word64 $ genI 0 16777215
+  property "Word" . tryFromTryFrom @Word $ genI 0 16777215
+  property "Natural" . tryFromTryFrom @Natural.Natural $ genI 0 16777215
+  let genF lo hi = Gen.realFloat $ Range.linearFrac lo hi :: H.Gen Float
+  property "Rational" . tryFromFrom @Rational $ genF -16777215 16777215
+  property "Double" . fromFrom @Double $ genF -16777215 16777215
+
+groupDouble :: H.Group
+groupDouble = group "Double" $ do
+  let genI lo hi = fmap (fromIntegral @Int.Int64) . Gen.integral $ Range.linear lo hi :: H.Gen Double
+  property "Int8" . tryFromFrom @Int.Int8 $ genI -128 127
+  property "Int16" . tryFromFrom @Int.Int16 $ genI -32768 32767
+  property "Int32" . tryFromFrom @Int.Int32 $ genI -2147483648 2147483647
+  property "Int64" . tryFromTryFrom @Int.Int64 $ genI -9007199254740991 9007199254740991
+  property "Int" . tryFromTryFrom @Int $ genI -9007199254740991 9007199254740991
+  property "Integer" . tryFromTryFrom @Integer $ genI -9007199254740991 9007199254740991
+  property "Word8" . tryFromFrom @Word.Word8 $ genI 0 255
+  property "Word16" . tryFromFrom @Word.Word16 $ genI 0 65535
+  property "Word32" . tryFromFrom @Word.Word32 $ genI 0 4294967295
+  property "Word64" . tryFromTryFrom @Word.Word64 $ genI 0 9007199254740991
+  property "Word" . tryFromTryFrom @Word $ genI 0 9007199254740991
+  property "Natural" . tryFromTryFrom @Natural.Natural $ genI 0 9007199254740991
+  let genF lo hi = Gen.realFloat $ Range.linearFrac lo hi :: H.Gen Double
+  property "Rational" . tryFromFrom @Rational $ genF -9007199254740991 9007199254740991
+  property "Float" . fromFrom @Float $ genF -16777215 16777215
 
 group ::
   H.GroupName ->
