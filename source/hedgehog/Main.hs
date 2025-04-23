@@ -6,11 +6,13 @@
 {-# LANGUAGE TypeApplications #-}
 
 import qualified Control.Monad.Trans.Writer as Writer
+import qualified Data.Bits as Bits
 import qualified Data.Int as Int
 import qualified Data.Set as Set
 import qualified Data.Typeable as Typeable
 import qualified Data.Void as Void
 import qualified Data.Word as Word
+import qualified GHC.Stack as Stack
 import qualified Hedgehog as H
 import qualified Hedgehog.Gen as Gen
 import qualified Hedgehog.Main as Main
@@ -56,20 +58,19 @@ groupWitch =
 
 groupInt8 :: H.Group
 groupInt8 = group "Int8" $ do
-  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Int.Int8
-  property "Int16" . fromTryFrom @Int.Int16 $ gen -128 127
-  property "Int32" . fromTryFrom @Int.Int32 $ gen -128 127
-  property "Int64" . fromTryFrom @Int.Int64 $ gen -128 127
-  property "Int" . fromTryFrom @Int $ gen -128 127
-  property "Integer" . fromTryFrom @Integer $ gen -128 127
-  property "Word8" . tryFromTryFrom @Word.Word8 $ gen 0 127
-  property "Word16" . tryFromTryFrom @Word.Word16 $ gen 0 127
-  property "Word32" . tryFromTryFrom @Word.Word32 $ gen 0 127
-  property "Word64" . tryFromTryFrom @Word.Word64 $ gen 0 127
-  property "Word" . tryFromTryFrom @Word $ gen 0 127
-  property "Natural" . tryFromTryFrom @Natural.Natural $ gen 0 127
-  property "Float" . fromTryFrom @Float $ gen -128 127
-  property "Double" . fromTryFrom @Double $ gen -128 127
+  property "Int16" . fromTryFrom @Int.Int16 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Int.Int16
+  property "Int32" . fromTryFrom @Int.Int32 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Int.Int32
+  property "Int64" . fromTryFrom @Int.Int64 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Int.Int64
+  property "Int" . fromTryFrom @Int . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Int
+  property "Integer" . fromTryFrom @Integer . Gen.integral $ Range.linear @Int.Int8 -128 127
+  property "Word8" . tryFromTryFrom @Word.Word8 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Word.Word8
+  property "Word16" . tryFromTryFrom @Word.Word16 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Word.Word16
+  property "Word32" . tryFromTryFrom @Word.Word32 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Word.Word32
+  property "Word64" . tryFromTryFrom @Word.Word64 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Word.Word64
+  property "Word" . tryFromTryFrom @Word . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Word
+  property "Natural" . tryFromTryFrom @Natural.Natural . Gen.integral $ Range.linear @Int.Int8 0 127
+  property "Float" . fromTryFrom @Float . Gen.integral $ Range.linear @Int.Int8 -128 127
+  property "Double" . fromTryFrom @Double . Gen.integral $ Range.linear @Int.Int8 -128 127
 
 groupInt16 :: H.Group
 groupInt16 = group "Int16" $ do
@@ -295,6 +296,42 @@ groupDouble = group "Double" $ do
   let genF lo hi = Gen.realFloat $ Range.linearFrac lo hi :: H.Gen Double
   property "Rational" . tryFromFrom @Rational $ genF -9007199254740991 9007199254740991
   property "Float" . fromFrom @Float $ genF -16777215 16777215
+
+mkBounds ::
+  forall a b.
+  ( Stack.HasCallStack,
+    Bits.Bits a,
+    Bounded a,
+    Bounded b,
+    Integral a,
+    Integral b,
+    Typeable.Typeable a
+  ) =>
+  (a, a)
+mkBounds =
+  ( unsafeFromInteger $ max (toInteger $ minBound @a) (toInteger $ minBound @b),
+    unsafeFromInteger $ min (toInteger $ maxBound @a) (toInteger $ maxBound @b)
+  )
+
+unsafeFromInteger ::
+  forall a.
+  ( Stack.HasCallStack,
+    Bits.Bits a,
+    Integral a,
+    Typeable.Typeable a
+  ) =>
+  Integer ->
+  a
+unsafeFromInteger integer = case Bits.toIntegralSized integer of
+  Nothing ->
+    error $
+      ( showString "unsafeFromInteger @"
+          . showsPrec 11 (Typeable.typeRep (Typeable.Proxy :: Typeable.Proxy a))
+          . showString " "
+          . shows integer
+      )
+        ""
+  Just x -> x
 
 group ::
   H.GroupName ->
