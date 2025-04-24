@@ -1,4 +1,5 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE LexicalNegation #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -26,7 +27,8 @@ main = Main.defaultMain $ fmap H.checkParallel groups
 
 groups :: [H.Group]
 groups =
-  [ groupWitch,
+  [ groupA,
+    groupList,
     groupInt8,
     groupInt16,
     groupInt32,
@@ -43,20 +45,21 @@ groups =
     groupDouble
   ]
 
-groupWitch :: H.Group
-groupWitch =
-  H.Group
-    "witch"
-    [ (,) "tripping a a"
-        . H.property
-        . fromFrom @Word.Word8
-        $ Gen.word8 Range.exponentialBounded,
-      (,) "tripping (List a) (Set a)"
-        . H.property
-        . fromFrom @(Set.Set Word.Word8)
-        . Gen.list (Range.linear 0 10)
-        $ Gen.word8 Range.exponentialBounded
-    ]
+groupA :: H.Group
+groupA = group "a" $ do
+  let s = p @Word.Word8
+
+  property "a" $ do
+    let t = s
+    fromFrom s t $ Gen.integral Range.linearBounded
+
+groupList :: H.Group
+groupList = group "List" $ do
+  let s = p @[Word.Word8]
+
+  property "Set" $ do
+    let t = p @(Set.Set Word.Word8)
+    fromFrom s t . Gen.list (Range.linear 0 10) $ Gen.integral Range.linearBounded
 
 groupInt8 :: H.Group
 groupInt8 = group "Int8" $ do
@@ -64,55 +67,55 @@ groupInt8 = group "Int8" $ do
 
   property "Int16" $ do
     let t = p @Int.Int16
-    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Int32" $ do
     let t = p @Int.Int32
-    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Int64" $ do
     let t = p @Int.Int64
-    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Int" $ do
     let t = p @Int
-    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Integer" $ do
     let t = p @Integer
-    fromTryFromP s t . Gen.integral $ Range.linearBounded
+    fromTryFrom s t . Gen.integral $ Range.linearBounded
 
   property "Word8" $ do
     let t = p @Word.Word8
-    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Word16" $ do
     let t = p @Word.Word16
-    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Word32" $ do
     let t = p @Word.Word32
-    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Word64" $ do
     let t = p @Word.Word64
-    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Word" $ do
     let t = p @Word
-    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Natural" $ do
     let t = p @Natural.Natural
-    tryFromTryFromP s t . Gen.integral $ Range.linear 0 maxBound
+    tryFromTryFrom s t . Gen.integral $ Range.linear 0 maxBound
 
   property "Float" $ do
     let t = p @Float
-    fromTryFromP s t $ Gen.integral Range.linearBounded
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f32) (mkUpperBound s f32)
 
   property "Double" $ do
     let t = p @Double
-    fromTryFromP s t $ Gen.integral Range.linearBounded
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f64) (mkUpperBound s f64)
 
 groupInt16 :: H.Group
 groupInt16 = group "Int16" $ do
@@ -120,263 +123,761 @@ groupInt16 = group "Int16" $ do
 
   property "Int8" $ do
     let t = p @Int.Int8
-    tryFromFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Int32" $ do
     let t = p @Int.Int32
-    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Int64" $ do
     let t = p @Int.Int64
-    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Int" $ do
     let t = p @Int
-    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Integer" $ do
     let t = p @Integer
-    fromTryFromP s t $ Gen.integral Range.linearBounded
+    fromTryFrom s t $ Gen.integral Range.linearBounded
 
   property "Word8" $ do
     let t = p @Word.Word8
-    tryFromFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Word16" $ do
     let t = p @Word.Word16
-    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Word32" $ do
     let t = p @Word.Word32
-    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Word64" $ do
     let t = p @Word.Word64
-    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Word" $ do
     let t = p @Word
-    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
 
   property "Natural" $ do
     let t = p @Natural.Natural
-    tryFromTryFromP s t . Gen.integral $ Range.linear 0 maxBound
+    tryFromTryFrom s t . Gen.integral $ Range.linear 0 maxBound
 
   property "Float" $ do
     let t = p @Float
-    fromTryFromP s t $ Gen.integral Range.linearBounded
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f32) (mkUpperBound s f32)
 
   property "Double" $ do
     let t = p @Double
-    fromTryFromP s t $ Gen.integral Range.linearBounded
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f64) (mkUpperBound s f64)
 
 groupInt32 :: H.Group
 groupInt32 = group "Int32" $ do
-  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Int.Int32
-  property "Int8" . tryFromFrom @Int.Int8 $ gen -128 127
-  property "Int16" . tryFromFrom @Int.Int16 $ gen -32768 32767
-  property "Int64" . fromTryFrom @Int.Int64 $ gen -2147483648 2147483647
-  property "Int" . tryFromTryFrom @Int $ gen -2147483648 2147483647
-  property "Integer" . fromTryFrom @Integer $ gen -2147483648 2147483647
-  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
-  property "Word16" . tryFromFrom @Word.Word16 $ gen 0 65535
-  property "Word32" . tryFromTryFrom @Word.Word32 $ gen 0 2147483647
-  property "Word64" . tryFromTryFrom @Word.Word64 $ gen 0 2147483647
-  property "Word" . tryFromTryFrom @Word $ gen 0 2147483647
-  property "Natural" . tryFromTryFrom @Natural.Natural $ gen 0 2147483647
-  property "Float" . tryFromTryFrom @Float $ gen -16777215 16777215
-  property "Double" . fromTryFrom @Double $ gen -2147483648 2147483647
+  let s = p @Int.Int32
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int" $ do
+    let t = p @Int
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Integer" $ do
+    let t = p @Integer
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word" $ do
+    let t = p @Word
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    tryFromTryFrom s t . Gen.integral $ Range.linear 0 maxBound
+
+  property "Float" $ do
+    let t = p @Float
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f32) (mkUpperBound s f32)
+
+  property "Double" $ do
+    let t = p @Double
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f64) (mkUpperBound s f64)
 
 groupInt64 :: H.Group
 groupInt64 = group "Int64" $ do
-  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Int.Int64
-  property "Int8" . tryFromFrom @Int.Int8 $ gen -128 127
-  property "Int16" . tryFromFrom @Int.Int16 $ gen -32768 32767
-  property "Int32" . tryFromFrom @Int.Int32 $ gen -2147483648 2147483647
-  property "Int" . tryFromFrom @Int $ gen -9223372036854775808 9223372036854775807
-  property "Integer" . fromTryFrom @Integer $ gen -9223372036854775808 9223372036854775807
-  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
-  property "Word16" . tryFromFrom @Word.Word16 $ gen 0 65535
-  property "Word32" . tryFromFrom @Word.Word32 $ gen 0 4294967295
-  property "Word64" . tryFromTryFrom @Word.Word64 $ gen 0 9223372036854775807
-  property "Word" . tryFromTryFrom @Word $ gen 0 9223372036854775807
-  property "Natural" . tryFromTryFrom @Natural.Natural $ gen 0 9223372036854775807
-  property "Float" . tryFromTryFrom @Float $ gen -16777215 16777215
-  property "Double" . tryFromTryFrom @Double $ gen -9007199254740991 9007199254740991
+  let s = p @Int.Int64
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int" $ do
+    let t = p @Int
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Integer" $ do
+    let t = p @Integer
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word" $ do
+    let t = p @Word
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    tryFromTryFrom s t . Gen.integral $ Range.linear 0 maxBound
+
+  property "Float" $ do
+    let t = p @Float
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f32) (mkUpperBound s f32)
+
+  property "Double" $ do
+    let t = p @Double
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f64) (mkUpperBound s f64)
 
 groupInt :: H.Group
 groupInt = group "Int" $ do
-  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Int
-  property "Int8" . tryFromFrom @Int.Int8 $ gen -128 127
-  property "Int16" . tryFromFrom @Int.Int16 $ gen -32768 32767
-  property "Int32" . tryFromTryFrom @Int.Int32 $ gen -2147483648 2147483647
-  property "Int64" . fromTryFrom @Int.Int64 $ gen -9223372036854775808 9223372036854775807
-  property "Integer" . fromTryFrom @Integer $ gen -9223372036854775808 9223372036854775807
-  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
-  property "Word16" . tryFromFrom @Word.Word16 $ gen 0 65535
-  property "Word32" . tryFromTryFrom @Word.Word32 $ gen 0 4294967295
-  property "Word64" . tryFromTryFrom @Word.Word64 $ gen 0 9223372036854775807
-  property "Word" . tryFromTryFrom @Word $ gen 0 9223372036854775807
-  property "Natural" . tryFromTryFrom @Natural.Natural $ gen 0 9223372036854775807
-  property "Float" . tryFromTryFrom @Float $ gen -16777215 16777215
-  property "Double" . tryFromTryFrom @Double $ gen -9007199254740991 9007199254740991
+  let s = p @Int
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Integer" $ do
+    let t = p @Integer
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word" $ do
+    let t = p @Word
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    tryFromTryFrom s t . Gen.integral $ Range.linear 0 maxBound
+
+  property "Float" $ do
+    let t = p @Float
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f32) (mkUpperBound s f32)
+
+  property "Double" $ do
+    let t = p @Double
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f64) (mkUpperBound s f64)
 
 groupInteger :: H.Group
 groupInteger = group "Integer" $ do
-  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Integer
-  property "Int8" . tryFromFrom @Int.Int8 $ gen -128 127
-  property "Int16" . tryFromFrom @Int.Int16 $ gen -32768 32767
-  property "Int32" . tryFromFrom @Int.Int32 $ gen -2147483648 2147483647
-  property "Int64" . tryFromFrom @Int.Int64 $ gen -9223372036854775808 9223372036854775807
-  property "Int" . tryFromFrom @Int $ gen -9223372036854775808 9223372036854775807
-  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
-  property "Word16" . tryFromFrom @Word.Word16 $ gen 0 65535
-  property "Word32" . tryFromFrom @Word.Word32 $ gen 0 4294967295
-  property "Word64" . tryFromFrom @Word.Word64 $ gen 0 18446744073709551615
-  property "Word" . tryFromFrom @Word $ gen 0 18446744073709551615
-  property "Natural" . tryFromFrom @Natural.Natural $ gen 0 99999999999999999999
-  property "Float" . tryFromTryFrom @Float $ gen -16777215 16777215
-  property "Double" . tryFromTryFrom @Double $ gen -9007199254740991 9007199254740991
+  let s = p @Integer
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromFrom s t . Gen.integral $ fmap (toInteger . asProxy t) Range.linearBounded
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    tryFromFrom s t . Gen.integral $ fmap (toInteger . asProxy t) Range.linearBounded
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    tryFromFrom s t . Gen.integral $ fmap (toInteger . asProxy t) Range.linearBounded
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    tryFromFrom s t . Gen.integral $ fmap (toInteger . asProxy t) Range.linearBounded
+
+  property "Int" $ do
+    let t = p @Int
+    tryFromFrom s t . Gen.integral $ fmap (toInteger . asProxy t) Range.linearBounded
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromFrom s t . Gen.integral $ fmap (toInteger . asProxy t) Range.linearBounded
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    tryFromFrom s t . Gen.integral $ fmap (toInteger . asProxy t) Range.linearBounded
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    tryFromFrom s t . Gen.integral $ fmap (toInteger . asProxy t) Range.linearBounded
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    tryFromFrom s t . Gen.integral $ fmap (toInteger . asProxy t) Range.linearBounded
+
+  property "Word" $ do
+    let t = p @Word
+    tryFromFrom s t . Gen.integral $ fmap (toInteger . asProxy t) Range.linearBounded
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    tryFromFrom s t . Gen.integral $ Range.linear 0 9999999999999999999
+
+  property "Float" $ do
+    let t = p @Float
+    tryFromTryFrom s t . Gen.integral $ fmap (toInteger . asProxy f32) Range.linearBounded
+
+  property "Double" $ do
+    let t = p @Double
+    tryFromTryFrom s t . Gen.integral $ fmap (toInteger . asProxy f64) Range.linearBounded
 
 groupWord8 :: H.Group
 groupWord8 = group "Word8" $ do
-  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Word.Word8
-  property "Int8" . tryFromTryFrom @Int.Int8 $ gen 0 127
-  property "Int16" . fromTryFrom @Int.Int16 $ gen 0 255
-  property "Int32" . fromTryFrom @Int.Int32 $ gen 0 255
-  property "Int64" . fromTryFrom @Int.Int64 $ gen 0 255
-  property "Int" . fromTryFrom @Int $ gen 0 255
-  property "Integer" . fromTryFrom @Integer $ gen 0 255
-  property "Word16" . fromTryFrom @Word.Word16 $ gen 0 255
-  property "Word32" . fromTryFrom @Word.Word32 $ gen 0 255
-  property "Word64" . fromTryFrom @Word.Word64 $ gen 0 255
-  property "Word" . fromTryFrom @Word $ gen 0 255
-  property "Natural" . fromTryFrom @Natural.Natural $ gen 0 255
-  property "Float" . fromTryFrom @Float $ gen 0 255
-  property "Double" . fromTryFrom @Double $ gen 0 255
+  let s = p @Word.Word8
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int" $ do
+    let t = p @Int
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Integer" $ do
+    let t = p @Integer
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word" $ do
+    let t = p @Word
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Float" $ do
+    let t = p @Float
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f32) (mkUpperBound s f32)
+
+  property "Double" $ do
+    let t = p @Double
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f64) (mkUpperBound s f64)
 
 groupWord16 :: H.Group
 groupWord16 = group "Word16" $ do
-  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Word.Word16
-  property "Int8" . tryFromTryFrom @Int.Int8 $ gen 0 127
-  property "Int16" . tryFromTryFrom @Int.Int16 $ gen 0 32767
-  property "Int32" . fromTryFrom @Int.Int32 $ gen 0 65535
-  property "Int64" . fromTryFrom @Int.Int64 $ gen 0 65535
-  property "Int" . fromTryFrom @Int $ gen 0 65535
-  property "Integer" . fromTryFrom @Integer $ gen 0 65535
-  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
-  property "Word32" . fromTryFrom @Word.Word32 $ gen 0 65535
-  property "Word64" . fromTryFrom @Word.Word64 $ gen 0 65535
-  property "Word" . fromTryFrom @Word $ gen 0 65535
-  property "Natural" . fromTryFrom @Natural.Natural $ gen 0 65535
-  property "Float" . fromTryFrom @Float $ gen 0 65535
-  property "Double" . fromTryFrom @Double $ gen 0 65535
+  let s = p @Word.Word16
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int" $ do
+    let t = p @Int
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Integer" $ do
+    let t = p @Integer
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word" $ do
+    let t = p @Word
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Float" $ do
+    let t = p @Float
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f32) (mkUpperBound s f32)
+
+  property "Double" $ do
+    let t = p @Double
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f64) (mkUpperBound s f64)
 
 groupWord32 :: H.Group
 groupWord32 = group "Word32" $ do
-  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Word.Word32
-  property "Int8" . tryFromTryFrom @Int.Int8 $ gen 0 127
-  property "Int16" . tryFromTryFrom @Int.Int16 $ gen 0 32767
-  property "Int32" . tryFromTryFrom @Int.Int32 $ gen 0 2147483647
-  property "Int64" . fromTryFrom @Int.Int64 $ gen 0 4294967295
-  property "Int" . tryFromTryFrom @Int $ gen 0 4294967295
-  property "Integer" . fromTryFrom @Integer $ gen 0 4294967295
-  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
-  property "Word16" . tryFromFrom @Word.Word16 $ gen 0 65535
-  property "Word64" . fromTryFrom @Word.Word64 $ gen 0 4294967295
-  property "Word" . tryFromTryFrom @Word $ gen 0 4294967295
-  property "Natural" . fromTryFrom @Natural.Natural $ gen 0 4294967295
-  property "Float" . tryFromTryFrom @Float $ gen 0 16777215
-  property "Double" . fromTryFrom @Double $ gen 0 4294967295
+  let s = p @Word.Word32
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int" $ do
+    let t = p @Int
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Integer" $ do
+    let t = p @Integer
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word" $ do
+    let t = p @Word
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Float" $ do
+    let t = p @Float
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f32) (mkUpperBound s f32)
+
+  property "Double" $ do
+    let t = p @Double
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f64) (mkUpperBound s f64)
 
 groupWord64 :: H.Group
 groupWord64 = group "Word64" $ do
-  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Word.Word64
-  property "Int8" . tryFromTryFrom @Int.Int8 $ gen 0 127
-  property "Int16" . tryFromTryFrom @Int.Int16 $ gen 0 32767
-  property "Int32" . tryFromTryFrom @Int.Int32 $ gen 0 2147483647
-  property "Int64" . tryFromTryFrom @Int.Int64 $ gen 0 9223372036854775807
-  property "Int" . tryFromTryFrom @Int $ gen 0 9223372036854775807
-  property "Integer" . fromTryFrom @Integer $ gen 0 18446744073709551615
-  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
-  property "Word16" . tryFromFrom @Word.Word16 $ gen 0 65535
-  property "Word32" . tryFromFrom @Word.Word32 $ gen 0 4294967295
-  property "Word" . tryFromFrom @Word $ gen 0 18446744073709551615
-  property "Natural" . fromTryFrom @Natural.Natural $ gen 0 18446744073709551615
-  property "Float" . tryFromTryFrom @Float $ gen 0 16777215
-  property "Double" . tryFromTryFrom @Double $ gen 0 9007199254740991
+  let s = p @Word.Word64
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int" $ do
+    let t = p @Int
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Integer" $ do
+    let t = p @Integer
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word" $ do
+    let t = p @Word
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Float" $ do
+    let t = p @Float
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f32) (mkUpperBound s f32)
+
+  property "Double" $ do
+    let t = p @Double
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f64) (mkUpperBound s f64)
 
 groupWord :: H.Group
 groupWord = group "Word" $ do
-  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Word
-  property "Int8" . tryFromTryFrom @Int.Int8 $ gen 0 127
-  property "Int16" . tryFromTryFrom @Int.Int16 $ gen 0 32767
-  property "Int32" . tryFromTryFrom @Int.Int32 $ gen 0 2147483647
-  property "Int64" . tryFromTryFrom @Int.Int64 $ gen 0 9223372036854775807
-  property "Int" . tryFromTryFrom @Int $ gen 0 9223372036854775807
-  property "Integer" . fromTryFrom @Integer $ gen 0 18446744073709551615
-  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
-  property "Word16" . tryFromFrom @Word.Word16 $ gen 0 65535
-  property "Word32" . tryFromTryFrom @Word.Word32 $ gen 0 4294967295
-  property "Word64" . fromTryFrom @Word.Word64 $ gen 0 18446744073709551615
-  property "Natural" . fromTryFrom @Natural.Natural $ gen 0 18446744073709551615
-  property "Float" . tryFromTryFrom @Float $ gen 0 16777215
-  property "Double" . tryFromTryFrom @Double $ gen 0 9007199254740991
+  let s = p @Word
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int" $ do
+    let t = p @Int
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Integer" $ do
+    let t = p @Integer
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    tryFromFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    fromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    fromTryFrom s t $ Gen.integral Range.linearBounded
+
+  property "Float" $ do
+    let t = p @Float
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f32) (mkUpperBound s f32)
+
+  property "Double" $ do
+    let t = p @Double
+    tryFromTryFrom s t . Gen.integral $ Range.linear (mkLowerBound s f64) (mkUpperBound s f64)
 
 groupNatural :: H.Group
 groupNatural = group "Natural" $ do
-  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Natural.Natural
-  property "Int8" . tryFromTryFrom @Int.Int8 $ gen 0 127
-  property "Int16" . tryFromTryFrom @Int.Int16 $ gen 0 32767
-  property "Int32" . tryFromTryFrom @Int.Int32 $ gen 0 2147483647
-  property "Int64" . tryFromTryFrom @Int.Int64 $ gen 0 9223372036854775807
-  property "Int" . tryFromTryFrom @Int $ gen 0 9223372036854775807
-  property "Integer" . fromTryFrom @Integer $ gen 0 99999999999999999999
-  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
-  property "Word16" . tryFromFrom @Word.Word16 $ gen 0 65535
-  property "Word32" . tryFromFrom @Word.Word32 $ gen 0 4294967295
-  property "Word64" . tryFromFrom @Word.Word64 $ gen 0 18446744073709551615
-  property "Word" . tryFromFrom @Word $ gen 0 18446744073709551615
-  property "Float" . tryFromTryFrom @Float $ gen 0 16777215
-  property "Double" . tryFromTryFrom @Double $ gen 0 9007199254740991
+  let s = p @Natural.Natural
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromTryFrom s t . Gen.integral $ Range.linear 0 (unsafeFromIntegral $ asProxy t maxBound)
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    tryFromTryFrom s t . Gen.integral $ Range.linear 0 (unsafeFromIntegral $ asProxy t maxBound)
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    tryFromTryFrom s t . Gen.integral $ Range.linear 0 (unsafeFromIntegral $ asProxy t maxBound)
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    tryFromTryFrom s t . Gen.integral $ Range.linear 0 (unsafeFromIntegral $ asProxy t maxBound)
+
+  property "Int" $ do
+    let t = p @Int
+    tryFromTryFrom s t . Gen.integral $ Range.linear 0 (unsafeFromIntegral $ asProxy t maxBound)
+
+  property "Integer" $ do
+    let t = p @Integer
+    fromTryFrom s t . Gen.integral $ Range.linear 0 9999999999999999999
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromFrom s t . Gen.integral $ Range.linear 0 (unsafeFromIntegral $ asProxy t maxBound)
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    tryFromFrom s t . Gen.integral $ Range.linear 0 (unsafeFromIntegral $ asProxy t maxBound)
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    tryFromFrom s t . Gen.integral $ Range.linear 0 (unsafeFromIntegral $ asProxy t maxBound)
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    tryFromFrom s t . Gen.integral $ Range.linear 0 (unsafeFromIntegral $ asProxy t maxBound)
+
+  property "Word" $ do
+    let t = p @Word
+    tryFromFrom s t . Gen.integral $ Range.linear 0 (unsafeFromIntegral $ asProxy t maxBound)
+
+  property "Float" $ do
+    let t = p @Float
+    tryFromTryFrom s t . Gen.integral $ Range.linear 0 (unsafeFromIntegral $ asProxy f32 maxBound)
+
+  property "Double" $ do
+    let t = p @Double
+    tryFromTryFrom s t . Gen.integral $ Range.linear 0 (unsafeFromIntegral $ asProxy f64 maxBound)
 
 groupFloat :: H.Group
 groupFloat = group "Float" $ do
-  let genI lo hi = fmap (fromIntegral @Int.Int32) . Gen.integral $ Range.linear lo hi :: H.Gen Float
-  property "Int8" . tryFromFrom @Int.Int8 $ genI -128 127
-  property "Int16" . tryFromFrom @Int.Int16 $ genI -32768 32767
-  property "Int32" . tryFromTryFrom @Int.Int32 $ genI -16777215 16777215
-  property "Int64" . tryFromTryFrom @Int.Int64 $ genI -16777215 16777215
-  property "Int" . tryFromTryFrom @Int $ genI -16777215 16777215
-  property "Integer" . tryFromTryFrom @Integer $ genI -16777215 16777215
-  property "Word8" . tryFromFrom @Word.Word8 $ genI 0 255
-  property "Word16" . tryFromFrom @Word.Word16 $ genI 0 65535
-  property "Word32" . tryFromTryFrom @Word.Word32 $ genI 0 16777215
-  property "Word64" . tryFromTryFrom @Word.Word64 $ genI 0 16777215
-  property "Word" . tryFromTryFrom @Word $ genI 0 16777215
-  property "Natural" . tryFromTryFrom @Natural.Natural $ genI 0 16777215
-  let genF lo hi = Gen.realFloat $ Range.linearFrac lo hi :: H.Gen Float
-  property "Rational" . tryFromFrom @Rational $ genF -16777215 16777215
-  property "Double" . fromFrom @Double $ genF -16777215 16777215
+  let s = p @Float
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f32 t) (mkUpperBound f32 t)
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    tryFromFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f32 t) (mkUpperBound f32 t)
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f32 t) (mkUpperBound f32 t)
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f32 t) (mkUpperBound f32 t)
+
+  property "Int" $ do
+    let t = p @Int
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f32 t) (mkUpperBound f32 t)
+
+  property "Integer" $ do
+    let t = p @Integer
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ fmap unF32 Range.linearBounded
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f32 t) (mkUpperBound f32 t)
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    tryFromFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f32 t) (mkUpperBound f32 t)
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f32 t) (mkUpperBound f32 t)
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f32 t) (mkUpperBound f32 t)
+
+  property "Word" $ do
+    let t = p @Word
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f32 t) (mkUpperBound f32 t)
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ Range.linear 0 (unF32 maxBound)
+
+  property "Rational" $ do
+    let t = p @Rational
+    tryFromFrom s t . Gen.realFloat $ fmap (realToFrac . unF32) Range.linearBounded
+
+  property "Double" $ do
+    let t = p @Double
+    fromFrom s t . Gen.realFloat $ fmap (realToFrac . unF32) Range.linearBounded
 
 groupDouble :: H.Group
 groupDouble = group "Double" $ do
-  let genI lo hi = fmap (fromIntegral @Int.Int64) . Gen.integral $ Range.linear lo hi :: H.Gen Double
-  property "Int8" . tryFromFrom @Int.Int8 $ genI -128 127
-  property "Int16" . tryFromFrom @Int.Int16 $ genI -32768 32767
-  property "Int32" . tryFromFrom @Int.Int32 $ genI -2147483648 2147483647
-  property "Int64" . tryFromTryFrom @Int.Int64 $ genI -9007199254740991 9007199254740991
-  property "Int" . tryFromTryFrom @Int $ genI -9007199254740991 9007199254740991
-  property "Integer" . tryFromTryFrom @Integer $ genI -9007199254740991 9007199254740991
-  property "Word8" . tryFromFrom @Word.Word8 $ genI 0 255
-  property "Word16" . tryFromFrom @Word.Word16 $ genI 0 65535
-  property "Word32" . tryFromFrom @Word.Word32 $ genI 0 4294967295
-  property "Word64" . tryFromTryFrom @Word.Word64 $ genI 0 9007199254740991
-  property "Word" . tryFromTryFrom @Word $ genI 0 9007199254740991
-  property "Natural" . tryFromTryFrom @Natural.Natural $ genI 0 9007199254740991
-  let genF lo hi = Gen.realFloat $ Range.linearFrac lo hi :: H.Gen Double
-  property "Rational" . tryFromFrom @Rational $ genF -9007199254740991 9007199254740991
-  property "Float" . fromFrom @Float $ genF -16777215 16777215
+  let s = p @Double
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f64 t) (mkUpperBound f64 t)
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    tryFromFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f64 t) (mkUpperBound f64 t)
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    tryFromFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f64 t) (mkUpperBound f64 t)
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f64 t) (mkUpperBound f64 t)
+
+  property "Int" $ do
+    let t = p @Int
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f64 t) (mkUpperBound f64 t)
+
+  property "Integer" $ do
+    let t = p @Integer
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ fmap unF64 Range.linearBounded
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f64 t) (mkUpperBound f64 t)
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    tryFromFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f64 t) (mkUpperBound f64 t)
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    tryFromFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f64 t) (mkUpperBound f64 t)
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f64 t) (mkUpperBound f64 t)
+
+  property "Word" $ do
+    let t = p @Word
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ Range.linear (mkLowerBound f64 t) (mkUpperBound f64 t)
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    tryFromTryFrom s t . fmap realToFrac . Gen.integral $ Range.linear 0 (unF64 maxBound)
+
+  property "Rational" $ do
+    let t = p @Rational
+    tryFromFrom s t . Gen.realFloat $ fmap (realToFrac . unF64) Range.linearBounded
+
+  property "Float" $ do
+    let t = p @Float
+    fromFrom s t . Gen.realFloat $ fmap (realToFrac . unF32) Range.linearBounded
+
+newtype F32 = MkF32
+  { unF32 :: Int.Int32
+  }
+  deriving (Eq, Ord, Show)
+  deriving (Bits.Bits, Enum, Integral, Num, Real) via Int.Int32
+
+instance Bounded F32 where
+  minBound = MkF32 (-16777215)
+  maxBound = MkF32 16777215
+
+f32 :: Typeable.Proxy F32
+f32 = Typeable.Proxy
+
+newtype F64 = MkF64
+  { unF64 :: Int.Int64
+  }
+  deriving (Eq, Ord, Show)
+  deriving (Bits.Bits, Enum, Integral, Num, Real) via Int.Int64
+
+instance Bounded F64 where
+  minBound = MkF64 (-9007199254740991)
+  maxBound = MkF64 9007199254740991
+
+f64 :: Typeable.Proxy F64
+f64 = Typeable.Proxy
 
 mkLowerBound ::
   ( Stack.HasCallStack,
@@ -390,7 +891,7 @@ mkLowerBound ::
   proxy b ->
   a
 mkLowerBound a b =
-  unsafeFromInteger $
+  unsafeFromIntegral $
     max
       (toInteger $ asProxy a minBound)
       (toInteger $ asProxy b minBound)
@@ -407,7 +908,7 @@ mkUpperBound ::
   proxy b ->
   a
 mkUpperBound a b =
-  unsafeFromInteger $
+  unsafeFromIntegral $
     min
       (toInteger $ asProxy a maxBound)
       (toInteger $ asProxy b maxBound)
@@ -418,11 +919,11 @@ asProxy = const id
 p :: Typeable.Proxy a
 p = Typeable.Proxy
 
-unsafeFromInteger ::
-  (Stack.HasCallStack, Bits.Bits a, Integral a) =>
-  Integer ->
-  a
-unsafeFromInteger = Maybe.fromJust . Bits.toIntegralSized
+unsafeFromIntegral ::
+  (Stack.HasCallStack, Bits.Bits a, Bits.Bits b, Integral a, Integral b) =>
+  a ->
+  b
+unsafeFromIntegral = Maybe.fromJust . Bits.toIntegralSized
 
 group ::
   H.GroupName ->
@@ -438,20 +939,6 @@ property ::
 property n = Writer.tell . pure . (,) n . H.property
 
 fromFrom ::
-  forall target source m.
-  ( Eq source,
-    Eq target,
-    Witch.From source target,
-    Witch.From target source,
-    Monad m,
-    Show source,
-    Show target
-  ) =>
-  H.Gen source ->
-  H.PropertyT m ()
-fromFrom = fromFromP (p @source) (p @target)
-
-fromFromP ::
   ( Eq source,
     Eq target,
     Witch.From source target,
@@ -464,28 +951,12 @@ fromFromP ::
   proxy target ->
   H.Gen source ->
   H.PropertyT m ()
-fromFromP s t =
+fromFrom s t =
   tripping
     (right . Witch.from . asProxy s)
     (right . Witch.from . asProxy t)
 
 fromTryFrom ::
-  forall target source m.
-  ( Eq source,
-    Eq target,
-    Witch.From source target,
-    Witch.TryFrom target source,
-    Monad m,
-    Show source,
-    Show target,
-    Typeable.Typeable source,
-    Typeable.Typeable target
-  ) =>
-  H.Gen source ->
-  H.PropertyT m ()
-fromTryFrom = fromTryFromP (p @source) (p @target)
-
-fromTryFromP ::
   ( Eq source,
     Eq target,
     Witch.From source target,
@@ -500,28 +971,12 @@ fromTryFromP ::
   proxy target ->
   H.Gen source ->
   H.PropertyT m ()
-fromTryFromP s t =
+fromTryFrom s t =
   tripping
     (right . Witch.from . asProxy s)
     (Witch.tryFrom . asProxy t)
 
 tryFromFrom ::
-  forall target source m.
-  ( Eq source,
-    Eq target,
-    Witch.TryFrom source target,
-    Witch.From target source,
-    Monad m,
-    Show source,
-    Show target,
-    Typeable.Typeable source,
-    Typeable.Typeable target
-  ) =>
-  H.Gen source ->
-  H.PropertyT m ()
-tryFromFrom = tryFromFromP (p @source) (p @target)
-
-tryFromFromP ::
   ( Eq source,
     Eq target,
     Witch.TryFrom source target,
@@ -536,28 +991,12 @@ tryFromFromP ::
   proxy target ->
   H.Gen source ->
   H.PropertyT m ()
-tryFromFromP s t =
+tryFromFrom s t =
   tripping
     (Witch.tryFrom . asProxy s)
     (right . Witch.from . asProxy t)
 
 tryFromTryFrom ::
-  forall target source m.
-  ( Eq source,
-    Eq target,
-    Witch.TryFrom source target,
-    Witch.TryFrom target source,
-    Monad m,
-    Show source,
-    Show target,
-    Typeable.Typeable source,
-    Typeable.Typeable target
-  ) =>
-  H.Gen source ->
-  H.PropertyT m ()
-tryFromTryFrom = tryFromTryFromP (p @source) (p @target)
-
-tryFromTryFromP ::
   ( Eq source,
     Eq target,
     Witch.TryFrom source target,
@@ -572,7 +1011,7 @@ tryFromTryFromP ::
   proxy target ->
   H.Gen source ->
   H.PropertyT m ()
-tryFromTryFromP s t =
+tryFromTryFrom s t =
   tripping
     (Witch.tryFrom . asProxy s)
     (Witch.tryFrom . asProxy t)
