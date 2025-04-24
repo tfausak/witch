@@ -8,6 +8,7 @@
 import qualified Control.Monad.Trans.Writer as Writer
 import qualified Data.Bits as Bits
 import qualified Data.Int as Int
+import qualified Data.Maybe as Maybe
 import qualified Data.Set as Set
 import qualified Data.Typeable as Typeable
 import qualified Data.Void as Void
@@ -24,22 +25,23 @@ main :: IO ()
 main = Main.defaultMain $ fmap H.checkParallel groups
 
 groups :: [H.Group]
-groups = Writer.execWriter $ do
-  Writer.tell $ pure groupWitch
-  Writer.tell $ pure groupInt8
-  Writer.tell $ pure groupInt16
-  Writer.tell $ pure groupInt32
-  Writer.tell $ pure groupInt64
-  Writer.tell $ pure groupInt
-  Writer.tell $ pure groupInteger
-  Writer.tell $ pure groupWord8
-  Writer.tell $ pure groupWord16
-  Writer.tell $ pure groupWord32
-  Writer.tell $ pure groupWord64
-  Writer.tell $ pure groupWord
-  Writer.tell $ pure groupNatural
-  Writer.tell $ pure groupFloat
-  Writer.tell $ pure groupDouble
+groups =
+  [ groupWitch,
+    groupInt8,
+    groupInt16,
+    groupInt32,
+    groupInt64,
+    groupInt,
+    groupInteger,
+    groupWord8,
+    groupWord16,
+    groupWord32,
+    groupWord64,
+    groupWord,
+    groupNatural,
+    groupFloat,
+    groupDouble
+  ]
 
 groupWitch :: H.Group
 groupWitch =
@@ -58,36 +60,115 @@ groupWitch =
 
 groupInt8 :: H.Group
 groupInt8 = group "Int8" $ do
-  property "Int16" . fromTryFrom @Int.Int16 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Int.Int16
-  property "Int32" . fromTryFrom @Int.Int32 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Int.Int32
-  property "Int64" . fromTryFrom @Int.Int64 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Int.Int64
-  property "Int" . fromTryFrom @Int . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Int
-  property "Integer" . fromTryFrom @Integer . Gen.integral $ Range.linear @Int.Int8 -128 127
-  property "Word8" . tryFromTryFrom @Word.Word8 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Word.Word8
-  property "Word16" . tryFromTryFrom @Word.Word16 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Word.Word16
-  property "Word32" . tryFromTryFrom @Word.Word32 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Word.Word32
-  property "Word64" . tryFromTryFrom @Word.Word64 . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Word.Word64
-  property "Word" . tryFromTryFrom @Word . Gen.integral . uncurry Range.linear $ mkBounds @Int.Int8 @Word
-  property "Natural" . tryFromTryFrom @Natural.Natural . Gen.integral $ Range.linear @Int.Int8 0 127
-  property "Float" . fromTryFrom @Float . Gen.integral $ Range.linear @Int.Int8 -128 127
-  property "Double" . fromTryFrom @Double . Gen.integral $ Range.linear @Int.Int8 -128 127
+  let s = p @Int.Int8
+
+  property "Int16" $ do
+    let t = p @Int.Int16
+    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int" $ do
+    let t = p @Int
+    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Integer" $ do
+    let t = p @Integer
+    fromTryFromP s t . Gen.integral $ Range.linearBounded
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word" $ do
+    let t = p @Word
+    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    tryFromTryFromP s t . Gen.integral $ Range.linear 0 maxBound
+
+  property "Float" $ do
+    let t = p @Float
+    fromTryFromP s t $ Gen.integral Range.linearBounded
+
+  property "Double" $ do
+    let t = p @Double
+    fromTryFromP s t $ Gen.integral Range.linearBounded
 
 groupInt16 :: H.Group
 groupInt16 = group "Int16" $ do
-  let gen lo hi = Gen.integral $ Range.linear lo hi :: H.Gen Int.Int16
-  property "Int8" . tryFromFrom @Int.Int8 $ gen -128 127
-  property "Int32" . fromTryFrom @Int.Int32 $ gen -32768 32767
-  property "Int64" . fromTryFrom @Int.Int64 $ gen -32768 32767
-  property "Int" . fromTryFrom @Int $ gen -32768 32767
-  property "Integer" . fromTryFrom @Integer $ gen -32768 32767
-  property "Word8" . tryFromFrom @Word.Word8 $ gen 0 255
-  property "Word16" . tryFromTryFrom @Word.Word16 $ gen 0 32767
-  property "Word32" . tryFromTryFrom @Word.Word32 $ gen 0 32767
-  property "Word64" . tryFromTryFrom @Word.Word64 $ gen 0 32767
-  property "Word" . tryFromTryFrom @Word $ gen 0 32767
-  property "Natural" . tryFromTryFrom @Natural.Natural $ gen 0 32767
-  property "Float" . fromTryFrom @Float $ gen -32768 32767
-  property "Double" . fromTryFrom @Double $ gen -32768 32767
+  let s = p @Int.Int16
+
+  property "Int8" $ do
+    let t = p @Int.Int8
+    tryFromFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int32" $ do
+    let t = p @Int.Int32
+    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int64" $ do
+    let t = p @Int.Int64
+    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Int" $ do
+    let t = p @Int
+    fromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Integer" $ do
+    let t = p @Integer
+    fromTryFromP s t $ Gen.integral Range.linearBounded
+
+  property "Word8" $ do
+    let t = p @Word.Word8
+    tryFromFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word16" $ do
+    let t = p @Word.Word16
+    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word32" $ do
+    let t = p @Word.Word32
+    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word64" $ do
+    let t = p @Word.Word64
+    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Word" $ do
+    let t = p @Word
+    tryFromTryFromP s t . Gen.integral $ Range.linear (mkLowerBound s t) (mkUpperBound s t)
+
+  property "Natural" $ do
+    let t = p @Natural.Natural
+    tryFromTryFromP s t . Gen.integral $ Range.linear 0 maxBound
+
+  property "Float" $ do
+    let t = p @Float
+    fromTryFromP s t $ Gen.integral Range.linearBounded
+
+  property "Double" $ do
+    let t = p @Double
+    fromTryFromP s t $ Gen.integral Range.linearBounded
 
 groupInt32 :: H.Group
 groupInt32 = group "Int32" $ do
@@ -297,41 +378,51 @@ groupDouble = group "Double" $ do
   property "Rational" . tryFromFrom @Rational $ genF -9007199254740991 9007199254740991
   property "Float" . fromFrom @Float $ genF -16777215 16777215
 
-mkBounds ::
-  forall a b.
+mkLowerBound ::
   ( Stack.HasCallStack,
     Bits.Bits a,
     Bounded a,
     Bounded b,
     Integral a,
-    Integral b,
-    Typeable.Typeable a
+    Integral b
   ) =>
-  (a, a)
-mkBounds =
-  ( unsafeFromInteger $ max (toInteger $ minBound @a) (toInteger $ minBound @b),
-    unsafeFromInteger $ min (toInteger $ maxBound @a) (toInteger $ maxBound @b)
-  )
+  proxy a ->
+  proxy b ->
+  a
+mkLowerBound a b =
+  unsafeFromInteger $
+    max
+      (toInteger $ asProxy a minBound)
+      (toInteger $ asProxy b minBound)
 
-unsafeFromInteger ::
-  forall a.
+mkUpperBound ::
   ( Stack.HasCallStack,
     Bits.Bits a,
+    Bounded a,
+    Bounded b,
     Integral a,
-    Typeable.Typeable a
+    Integral b
   ) =>
+  proxy a ->
+  proxy b ->
+  a
+mkUpperBound a b =
+  unsafeFromInteger $
+    min
+      (toInteger $ asProxy a maxBound)
+      (toInteger $ asProxy b maxBound)
+
+asProxy :: proxy a -> a -> a
+asProxy = const id
+
+p :: Typeable.Proxy a
+p = Typeable.Proxy
+
+unsafeFromInteger ::
+  (Stack.HasCallStack, Bits.Bits a, Integral a) =>
   Integer ->
   a
-unsafeFromInteger integer = case Bits.toIntegralSized integer of
-  Nothing ->
-    error $
-      ( showString "unsafeFromInteger @"
-          . showsPrec 11 (Typeable.typeRep (Typeable.Proxy :: Typeable.Proxy a))
-          . showString " "
-          . shows integer
-      )
-        ""
-  Just x -> x
+unsafeFromInteger = Maybe.fromJust . Bits.toIntegralSized
 
 group ::
   H.GroupName ->
@@ -346,8 +437,6 @@ property ::
   Writer.WriterT [(H.PropertyName, H.Property)] m ()
 property n = Writer.tell . pure . (,) n . H.property
 
--- | Tests round-tripping between two types using 'Witch.From' in both
--- directions.
 fromFrom ::
   forall target source m.
   ( Eq source,
@@ -360,10 +449,26 @@ fromFrom ::
   ) =>
   H.Gen source ->
   H.PropertyT m ()
-fromFrom = tripping (right . Witch.from) $ right . Witch.from @target
+fromFrom = fromFromP (p @source) (p @target)
 
--- | Tests round-tripping between two types using 'Witch.From' in one
--- direction and 'Witch.TryFrom' in the other.
+fromFromP ::
+  ( Eq source,
+    Eq target,
+    Witch.From source target,
+    Witch.From target source,
+    Monad m,
+    Show source,
+    Show target
+  ) =>
+  proxy source ->
+  proxy target ->
+  H.Gen source ->
+  H.PropertyT m ()
+fromFromP s t =
+  tripping
+    (right . Witch.from . asProxy s)
+    (right . Witch.from . asProxy t)
+
 fromTryFrom ::
   forall target source m.
   ( Eq source,
@@ -378,10 +483,28 @@ fromTryFrom ::
   ) =>
   H.Gen source ->
   H.PropertyT m ()
-fromTryFrom = tripping (right . Witch.from) $ Witch.tryFrom @target
+fromTryFrom = fromTryFromP (p @source) (p @target)
 
--- | Tests round-tripping between two types using 'Witch.TryFrom' in one
--- direction and 'Witch.From' in the other.
+fromTryFromP ::
+  ( Eq source,
+    Eq target,
+    Witch.From source target,
+    Monad m,
+    Show source,
+    Show target,
+    Witch.TryFrom target source,
+    Typeable.Typeable source,
+    Typeable.Typeable target
+  ) =>
+  proxy source ->
+  proxy target ->
+  H.Gen source ->
+  H.PropertyT m ()
+fromTryFromP s t =
+  tripping
+    (right . Witch.from . asProxy s)
+    (Witch.tryFrom . asProxy t)
+
 tryFromFrom ::
   forall target source m.
   ( Eq source,
@@ -396,10 +519,28 @@ tryFromFrom ::
   ) =>
   H.Gen source ->
   H.PropertyT m ()
-tryFromFrom = tripping Witch.tryFrom $ right . Witch.from @target
+tryFromFrom = tryFromFromP (p @source) (p @target)
 
--- | Tests round-tripping between two types using 'Witch.TryFrom' in both
--- directions.
+tryFromFromP ::
+  ( Eq source,
+    Eq target,
+    Witch.TryFrom source target,
+    Witch.From target source,
+    Monad m,
+    Show source,
+    Show target,
+    Typeable.Typeable source,
+    Typeable.Typeable target
+  ) =>
+  proxy source ->
+  proxy target ->
+  H.Gen source ->
+  H.PropertyT m ()
+tryFromFromP s t =
+  tripping
+    (Witch.tryFrom . asProxy s)
+    (right . Witch.from . asProxy t)
+
 tryFromTryFrom ::
   forall target source m.
   ( Eq source,
@@ -414,15 +555,28 @@ tryFromTryFrom ::
   ) =>
   H.Gen source ->
   H.PropertyT m ()
-tryFromTryFrom = tripping Witch.tryFrom $ Witch.tryFrom @target
+tryFromTryFrom = tryFromTryFromP (p @source) (p @target)
 
--- | Generic function for testing round-tripping between types. Consider using
--- one of these more specific functions instead:
---
--- - 'fromFrom'
--- - 'fromTryFrom'
--- - 'tryFromFrom'
--- - 'tryFromTryFrom'
+tryFromTryFromP ::
+  ( Eq source,
+    Eq target,
+    Witch.TryFrom source target,
+    Witch.TryFrom target source,
+    Monad m,
+    Show source,
+    Show target,
+    Typeable.Typeable source,
+    Typeable.Typeable target
+  ) =>
+  proxy source ->
+  proxy target ->
+  H.Gen source ->
+  H.PropertyT m ()
+tryFromTryFromP s t =
+  tripping
+    (Witch.tryFrom . asProxy s)
+    (Witch.tryFrom . asProxy t)
+
 tripping ::
   (Eq source, Eq target, Monad m, Show source, Show target, Show e1, Show e2) =>
   (source -> Either e1 target) ->
@@ -451,6 +605,5 @@ tripping into from gen = do
       -- through the target /again/ shouldn't change it.
       s3 H.=== s2
 
--- | Just used to pick a concrete type for the 'Left' case.
 right :: a -> Either Void.Void a
 right = Right
