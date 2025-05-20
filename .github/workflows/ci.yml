@@ -117,7 +117,7 @@ jobs:
         with:
           name: witch-${{ github.sha }}-ubuntu-24.04-9.12
       - run: tar --extract --file artifact.tar --verbose
-      - run: cabal upload --documentation --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' artifact/witch-${{ github.event.release.tag_name }}-docs.tar.gz
+      - run: cabal --http-transport=plain-http upload --documentation --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' artifact/witch-${{ github.event.release.tag_name }}-docs.tar.gz
 name: CI
 on:
   pull_request:
