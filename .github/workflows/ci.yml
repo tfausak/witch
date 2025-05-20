@@ -77,9 +77,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: haskell-actions/run-ormolu@v17
-  release:
+  create-release:
     if: ${{ github.event_name == 'release' }}
-    name: Release
+    name: Create Release
     needs: build
     permissions:
       contents: write
@@ -92,7 +92,31 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: artifact/witch-${{ github.event.release.tag_name }}.tar.gz
+  upload-package:
+    if: ${{ github.event_name == 'release' }}
+    name: Upload Package
+    needs: build
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: witch-${{ github.sha }}-ubuntu-24.04-9.12
+      - run: tar --extract --file artifact.tar --verbose
       - run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' artifact/witch-${{ github.event.release.tag_name }}.tar.gz
+  upload-documentation:
+    if: ${{ github.event_name == 'release' }}
+    name: Upload Documentation
+    needs: upload-package
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: witch-${{ github.sha }}-ubuntu-24.04-9.12
+      - run: tar --extract --file artifact.tar --verbose
       - run: cabal upload --documentation --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' artifact/witch-${{ github.event.release.tag_name }}-docs.tar.gz
 name: CI
 on:
