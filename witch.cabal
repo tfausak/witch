@@ -86,3 +86,14 @@ test-suite witch-test-suite
   hs-source-dirs: source/test-suite
   main-is: Main.hs
   type: exitcode-stdio-1.0
+
+test-suite witch-hedgehog
+  import: executable
+  build-depends:
+    hedgehog ^>=1.5,
+    transformers ^>=0.6.1.2,
+
+  ghc-options: -Wno-unused-packages
+  hs-source-dirs: source/hedgehog
+  main-is: Main.hs
+  type: exitcode-stdio-1.0
