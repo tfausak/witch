@@ -23,7 +23,6 @@ import qualified Data.Tagged as Tagged
 import qualified Data.Text as Text
 import qualified Data.Text.Lazy as LazyText
 import qualified Data.Time as Time
-import qualified Witch.Encoding as Encoding
 import qualified Data.Typeable as Typeable
 import qualified Data.Void as Void
 import qualified Data.Word as Word
@@ -34,6 +33,7 @@ import qualified Hedgehog.Main as Main
 import qualified Hedgehog.Range as Range
 import qualified Numeric.Natural as Natural
 import qualified Witch
+import qualified Witch.Encoding as Encoding
 
 main :: IO ()
 main = Main.defaultMain $ fmap H.checkParallel groups
@@ -966,31 +966,31 @@ groupByteString = group "ByteString" $ do
   property "[Word8]" $ do
     let s = Typeable.Proxy :: Typeable.Proxy ByteString.ByteString
     let t = Typeable.Proxy :: Typeable.Proxy [Word.Word8]
-    fromFrom s t $ genByteString
+    fromFrom s t genByteString
 
   property "LazyByteString" $ do
     let s = Typeable.Proxy :: Typeable.Proxy ByteString.ByteString
     let t = Typeable.Proxy :: Typeable.Proxy LazyByteString.ByteString
-    fromFrom s t $ genByteString
+    fromFrom s t genByteString
 
   property "ShortByteString" $ do
     let s = Typeable.Proxy :: Typeable.Proxy ByteString.ByteString
     let t = Typeable.Proxy :: Typeable.Proxy ShortByteString.ShortByteString
-    fromFrom s t $ genByteString
+    fromFrom s t genByteString
 
 groupLazyByteString :: H.Group
 groupLazyByteString = group "LazyByteString" $ do
   property "[Word8]" $ do
     let s = Typeable.Proxy :: Typeable.Proxy LazyByteString.ByteString
     let t = Typeable.Proxy :: Typeable.Proxy [Word.Word8]
-    fromFrom s t $ genLazyByteString
+    fromFrom s t genLazyByteString
 
 groupShortByteString :: H.Group
 groupShortByteString = group "ShortByteString" $ do
   property "[Word8]" $ do
     let s = Typeable.Proxy :: Typeable.Proxy ShortByteString.ShortByteString
     let t = Typeable.Proxy :: Typeable.Proxy [Word.Word8]
-    fromFrom s t $ genShortByteString
+    fromFrom s t genShortByteString
 
 groupText :: H.Group
 groupText = group "Text" $ do
@@ -1055,7 +1055,7 @@ groupMonoid = group "Monoid" $ do
     let t = Typeable.Proxy :: Typeable.Proxy (Monoid.Ap Maybe Word.Word8)
     fromFrom s t $ Gen.maybe (Gen.integral Range.linearBounded)
 
-  -- Endo cannot be tested because functions are not `Eq` or `Show`.
+-- Endo cannot be tested because functions are not `Eq` or `Show`.
 
 groupSemigroup :: H.Group
 groupSemigroup = group "Semigroup" $ do
@@ -1113,14 +1113,14 @@ groupTime = group "Time" $ do
     let t = Typeable.Proxy :: Typeable.Proxy Time.NominalDiffTime
     fromFrom s t genPico
 
-  -- Day -> DayOfWeek cannot be tested because there is no reverse instance.
-  -- DayOfWeek is a many-to-one mapping (7 days of the week).
+-- Day -> DayOfWeek cannot be tested because there is no reverse instance.
+-- DayOfWeek is a many-to-one mapping (7 days of the week).
 
-  -- The following time conversions are one-directional and cannot be
-  -- roundtrip tested: SystemTime -> UTCTime, SystemTime -> POSIXTime,
-  -- SystemTime -> AbsoluteTime, UTCTime -> POSIXTime, POSIXTime -> UTCTime,
-  -- UTCTime -> SystemTime, ZonedTime -> UTCTime,
-  -- CalendarDiffDays -> CalendarDiffTime, NominalDiffTime -> CalendarDiffTime.
+-- The following time conversions are one-directional and cannot be
+-- roundtrip tested: SystemTime -> UTCTime, SystemTime -> POSIXTime,
+-- SystemTime -> AbsoluteTime, UTCTime -> POSIXTime, POSIXTime -> UTCTime,
+-- UTCTime -> SystemTime, ZonedTime -> UTCTime,
+-- CalendarDiffDays -> CalendarDiffTime, NominalDiffTime -> CalendarDiffTime.
 
 groupLatin1S :: H.Group
 groupLatin1S = group "Latin1S" $ do
@@ -1327,10 +1327,10 @@ genShortByteString =
   fmap ShortByteString.pack . Gen.list (Range.linear 0 20) $ Gen.integral Range.linearBounded
 
 genText :: H.Gen Text.Text
-genText = fmap Text.pack $ Gen.string (Range.linear 0 20) Gen.unicode
+genText = Text.pack <$> Gen.string (Range.linear 0 20) Gen.unicode
 
 genLazyText :: H.Gen LazyText.Text
-genLazyText = fmap LazyText.pack $ Gen.string (Range.linear 0 20) Gen.unicode
+genLazyText = LazyText.pack <$> Gen.string (Range.linear 0 20) Gen.unicode
 
 genString :: H.Gen String
 genString = Gen.string (Range.linear 0 20) Gen.unicode
