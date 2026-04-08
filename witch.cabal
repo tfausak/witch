@@ -90,7 +90,7 @@ test-suite witch-test-suite
 test-suite witch-hedgehog
   import: executable
   build-depends:
-    hedgehog ^>=1.5,
+    hedgehog ^>=1.7,
     transformers ^>=0.6.1.2,
 
   ghc-options: -Wno-unused-packages
