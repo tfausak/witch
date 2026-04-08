@@ -2,10 +2,27 @@
 
 import qualified Control.Monad.Trans.Writer as Writer
 import qualified Data.Bits as Bits
+import qualified Data.ByteString as ByteString
+import qualified Data.ByteString.Lazy as LazyByteString
+import qualified Data.ByteString.Short as ShortByteString
+import qualified Data.Complex as Complex
+import qualified Data.Fixed as Fixed
 import qualified Data.Int as Int
+import qualified Data.IntMap as IntMap
+import qualified Data.IntSet as IntSet
+import qualified Data.List.NonEmpty as NonEmpty
+import qualified Data.Map as Map
 import qualified Data.Maybe as Maybe
+import qualified Data.Monoid as Monoid
+import qualified Data.Ratio as Ratio
+import qualified Data.Semigroup as Semigroup
+import qualified Data.Sequence as Seq
 import qualified Data.Set as Set
 import qualified Data.String as String
+import qualified Data.Tagged as Tagged
+import qualified Data.Text as Text
+import qualified Data.Text.Lazy as LazyText
+import qualified Data.Time as Time
 import qualified Data.Typeable as Typeable
 import qualified Data.Void as Void
 import qualified Data.Word as Word
@@ -37,7 +54,27 @@ groups =
     groupWord,
     groupNatural,
     groupFloat,
-    groupDouble
+    groupDouble,
+    groupComplex,
+    groupRatio,
+    groupFixed,
+    groupTagged,
+    groupNonEmpty,
+    groupSet,
+    groupIntSet,
+    groupMap,
+    groupIntMap,
+    groupSeq,
+    groupByteString,
+    groupLazyByteString,
+    groupShortByteString,
+    groupText,
+    groupLazyText,
+    groupString,
+    groupMonoid,
+    groupSemigroup,
+    groupBool,
+    groupTime
   ]
 
 groupA :: H.Group
@@ -847,6 +884,269 @@ groupDouble = group "Double" $ do
   property "Float" $ do
     let t = Typeable.Proxy :: Typeable.Proxy Float
     fromFrom s t . Gen.realFloat $ fmap (realToFrac . unF32) Range.linearBounded
+
+groupComplex :: H.Group
+groupComplex = group "Complex" $ do
+  property "Integer" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Integer
+    let t = Typeable.Proxy :: Typeable.Proxy (Complex.Complex Integer)
+    fromTryFrom s t . Gen.integral $ Range.linear (-1000) 1000
+
+groupRatio :: H.Group
+groupRatio = group "Ratio" $ do
+  property "Integer" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Integer
+    let t = Typeable.Proxy :: Typeable.Proxy (Ratio.Ratio Integer)
+    fromTryFrom s t . Gen.integral $ Range.linear (-1000) 1000
+
+groupFixed :: H.Group
+groupFixed = group "Fixed" $ do
+  property "Integer" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Integer
+    let t = Typeable.Proxy :: Typeable.Proxy Fixed.Pico
+    fromTryFrom s t . Gen.integral $ Range.linear (-1000000000000) 1000000000000
+
+  property "Rational" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Fixed.Pico
+    let t = Typeable.Proxy :: Typeable.Proxy Rational
+    fromTryFrom s t $ genPico
+
+groupTagged :: H.Group
+groupTagged = group "Tagged" $ do
+  let s = Typeable.Proxy :: Typeable.Proxy Word.Word8
+  let t = Typeable.Proxy :: Typeable.Proxy (Tagged.Tagged () Word.Word8)
+  property "a" $ do
+    fromFrom s t $ Gen.integral Range.linearBounded
+
+groupNonEmpty :: H.Group
+groupNonEmpty = group "NonEmpty" $ do
+  property "[Word8]" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy (NonEmpty.NonEmpty Word.Word8)
+    let t = Typeable.Proxy :: Typeable.Proxy [Word.Word8]
+    fromTryFrom s t . Gen.nonEmpty (Range.linear 1 10) $ Gen.integral Range.linearBounded
+
+groupSet :: H.Group
+groupSet = group "Set" $ do
+  property "[Word8]" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy (Set.Set Word.Word8)
+    let t = Typeable.Proxy :: Typeable.Proxy [Word.Word8]
+    fromFrom s t . Gen.set (Range.linear 0 10) $ Gen.integral Range.linearBounded
+
+groupIntSet :: H.Group
+groupIntSet = group "IntSet" $ do
+  property "[Int]" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy [Int]
+    let t = Typeable.Proxy :: Typeable.Proxy IntSet.IntSet
+    fromFrom s t . Gen.list (Range.linear 0 10) . Gen.integral $ Range.linear (-100) 100
+
+groupMap :: H.Group
+groupMap = group "Map" $ do
+  property "[(Word8, Word8)]" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy [(Word.Word8, Word.Word8)]
+    let t = Typeable.Proxy :: Typeable.Proxy (Map.Map Word.Word8 Word.Word8)
+    fromFrom s t . Gen.list (Range.linear 0 10) $ (,) <$> Gen.integral Range.linearBounded <*> Gen.integral Range.linearBounded
+
+groupIntMap :: H.Group
+groupIntMap = group "IntMap" $ do
+  property "[(Int, Word8)]" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy [(Int, Word.Word8)]
+    let t = Typeable.Proxy :: Typeable.Proxy (IntMap.IntMap Word.Word8)
+    fromFrom s t . Gen.list (Range.linear 0 10) $ (,) <$> Gen.integral (Range.linear (-100) 100) <*> Gen.integral Range.linearBounded
+
+groupSeq :: H.Group
+groupSeq = group "Seq" $ do
+  property "[Word8]" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy [Word.Word8]
+    let t = Typeable.Proxy :: Typeable.Proxy (Seq.Seq Word.Word8)
+    fromFrom s t . Gen.list (Range.linear 0 10) $ Gen.integral Range.linearBounded
+
+groupByteString :: H.Group
+groupByteString = group "ByteString" $ do
+  property "[Word8]" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy ByteString.ByteString
+    let t = Typeable.Proxy :: Typeable.Proxy [Word.Word8]
+    fromFrom s t $ genByteString
+
+  property "LazyByteString" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy ByteString.ByteString
+    let t = Typeable.Proxy :: Typeable.Proxy LazyByteString.ByteString
+    fromFrom s t $ genByteString
+
+  property "ShortByteString" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy ByteString.ByteString
+    let t = Typeable.Proxy :: Typeable.Proxy ShortByteString.ShortByteString
+    fromFrom s t $ genByteString
+
+groupLazyByteString :: H.Group
+groupLazyByteString = group "LazyByteString" $ do
+  property "[Word8]" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy LazyByteString.ByteString
+    let t = Typeable.Proxy :: Typeable.Proxy [Word.Word8]
+    fromFrom s t $ genLazyByteString
+
+groupShortByteString :: H.Group
+groupShortByteString = group "ShortByteString" $ do
+  property "[Word8]" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy ShortByteString.ShortByteString
+    let t = Typeable.Proxy :: Typeable.Proxy [Word.Word8]
+    fromFrom s t $ genShortByteString
+
+groupText :: H.Group
+groupText = group "Text" $ do
+  property "LazyText" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Text.Text
+    let t = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromFrom s t genText
+
+  property "String" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Text.Text
+    let t = Typeable.Proxy :: Typeable.Proxy String
+    fromFrom s t genText
+
+groupLazyText :: H.Group
+groupLazyText = group "LazyText" $ do
+  property "String" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    let t = Typeable.Proxy :: Typeable.Proxy String
+    fromFrom s t genLazyText
+
+groupString :: H.Group
+groupString = group "String" $ do
+  -- String -> Text -> String and String -> LazyText -> String are already
+  -- covered by the Text and LazyText groups. This group is here for
+  -- completeness to show that no String-as-source tests are missing.
+  pure ()
+
+groupMonoid :: H.Group
+groupMonoid = group "Monoid" $ do
+  property "Dual" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Word.Word8
+    let t = Typeable.Proxy :: Typeable.Proxy (Monoid.Dual Word.Word8)
+    fromFrom s t $ Gen.integral Range.linearBounded
+
+  property "Sum" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Word.Word8
+    let t = Typeable.Proxy :: Typeable.Proxy (Monoid.Sum Word.Word8)
+    fromFrom s t $ Gen.integral Range.linearBounded
+
+  property "Product" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Word.Word8
+    let t = Typeable.Proxy :: Typeable.Proxy (Monoid.Product Word.Word8)
+    fromFrom s t $ Gen.integral Range.linearBounded
+
+  property "First" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy (Maybe Word.Word8)
+    let t = Typeable.Proxy :: Typeable.Proxy (Monoid.First Word.Word8)
+    fromFrom s t $ Gen.maybe (Gen.integral Range.linearBounded)
+
+  property "Last" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy (Maybe Word.Word8)
+    let t = Typeable.Proxy :: Typeable.Proxy (Monoid.Last Word.Word8)
+    fromFrom s t $ Gen.maybe (Gen.integral Range.linearBounded)
+
+  property "Alt" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy (Maybe Word.Word8)
+    let t = Typeable.Proxy :: Typeable.Proxy (Monoid.Alt Maybe Word.Word8)
+    fromFrom s t $ Gen.maybe (Gen.integral Range.linearBounded)
+
+  property "Ap" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy (Maybe Word.Word8)
+    let t = Typeable.Proxy :: Typeable.Proxy (Monoid.Ap Maybe Word.Word8)
+    fromFrom s t $ Gen.maybe (Gen.integral Range.linearBounded)
+
+  -- Endo cannot be tested because functions are not `Eq` or `Show`.
+
+groupSemigroup :: H.Group
+groupSemigroup = group "Semigroup" $ do
+  property "Min" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Word.Word8
+    let t = Typeable.Proxy :: Typeable.Proxy (Semigroup.Min Word.Word8)
+    fromFrom s t $ Gen.integral Range.linearBounded
+
+  property "Max" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Word.Word8
+    let t = Typeable.Proxy :: Typeable.Proxy (Semigroup.Max Word.Word8)
+    fromFrom s t $ Gen.integral Range.linearBounded
+
+  property "First" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Word.Word8
+    let t = Typeable.Proxy :: Typeable.Proxy (Semigroup.First Word.Word8)
+    fromFrom s t $ Gen.integral Range.linearBounded
+
+  property "Last" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Word.Word8
+    let t = Typeable.Proxy :: Typeable.Proxy (Semigroup.Last Word.Word8)
+    fromFrom s t $ Gen.integral Range.linearBounded
+
+groupBool :: H.Group
+groupBool = group "Bool" $ do
+  property "All" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Bool
+    let t = Typeable.Proxy :: Typeable.Proxy Monoid.All
+    fromFrom s t Gen.bool
+
+  property "Any" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Bool
+    let t = Typeable.Proxy :: Typeable.Proxy Monoid.Any
+    fromFrom s t Gen.bool
+
+groupTime :: H.Group
+groupTime = group "Time" $ do
+  property "Day/Integer" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Integer
+    let t = Typeable.Proxy :: Typeable.Proxy Time.Day
+    fromFrom s t . Gen.integral $ Range.linear (-100000) 100000
+
+  property "UniversalTime/Rational" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Rational
+    let t = Typeable.Proxy :: Typeable.Proxy Time.UniversalTime
+    fromFrom s t genRational
+
+  property "DiffTime/Pico" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Fixed.Pico
+    let t = Typeable.Proxy :: Typeable.Proxy Time.DiffTime
+    fromFrom s t genPico
+
+  property "NominalDiffTime/Pico" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Fixed.Pico
+    let t = Typeable.Proxy :: Typeable.Proxy Time.NominalDiffTime
+    fromFrom s t genPico
+
+  -- Day -> DayOfWeek cannot be tested because there is no reverse instance.
+  -- DayOfWeek is a many-to-one mapping (7 days of the week).
+
+  -- The following time conversions are one-directional and cannot be
+  -- roundtrip tested: SystemTime -> UTCTime, SystemTime -> POSIXTime,
+  -- SystemTime -> AbsoluteTime, UTCTime -> POSIXTime, POSIXTime -> UTCTime,
+  -- UTCTime -> SystemTime, ZonedTime -> UTCTime,
+  -- CalendarDiffDays -> CalendarDiffTime, NominalDiffTime -> CalendarDiffTime.
+
+genByteString :: H.Gen ByteString.ByteString
+genByteString =
+  fmap ByteString.pack . Gen.list (Range.linear 0 20) $ Gen.integral Range.linearBounded
+
+genLazyByteString :: H.Gen LazyByteString.ByteString
+genLazyByteString =
+  fmap LazyByteString.pack . Gen.list (Range.linear 0 20) $ Gen.integral Range.linearBounded
+
+genShortByteString :: H.Gen ShortByteString.ShortByteString
+genShortByteString =
+  fmap ShortByteString.pack . Gen.list (Range.linear 0 20) $ Gen.integral Range.linearBounded
+
+genText :: H.Gen Text.Text
+genText = fmap Text.pack $ Gen.string (Range.linear 0 20) Gen.unicode
+
+genLazyText :: H.Gen LazyText.Text
+genLazyText = fmap LazyText.pack $ Gen.string (Range.linear 0 20) Gen.unicode
+
+genPico :: H.Gen Fixed.Pico
+genPico = fmap (fromInteger :: Integer -> Fixed.Pico) . Gen.integral $ Range.linear (-1000000000000) 1000000000000
+
+genRational :: H.Gen Rational
+genRational = do
+  n <- Gen.integral $ Range.linear (-1000000 :: Integer) 1000000
+  d <- Gen.integral $ Range.linear (1 :: Integer) 1000
+  pure $ n Ratio.% d
 
 newtype F32 = MkF32
   { unF32 :: Int.Int32
