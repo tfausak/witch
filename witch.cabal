@@ -22,9 +22,9 @@ flag pedantic
   manual: True
 
 common library
-  build-depends: base ^>=4.20.0.0 || ^>=4.21.0.0 || ^>=4.22.0.0
+  build-depends: base ^>=4.20.0 || ^>=4.21.0 || ^>=4.22.0
   build-depends:
-    bytestring ^>=0.12.0.2,
+    bytestring ^>=0.12.0,
     containers ^>=0.7 || ^>=0.8,
     tagged ^>=0.8.8,
     text ^>=2.1,
@@ -61,7 +61,7 @@ common executable
 library
   import: library
   build-depends:
-    template-haskell ^>=2.22.0.0 || ^>=2.23.0.0 || ^>=2.24.0.0
+    template-haskell ^>=2.22.0 || ^>=2.23.0 || ^>=2.24.0
 
   -- cabal-gild: discover source/library
   exposed-modules:
@@ -80,9 +80,19 @@ library
 test-suite witch-test-suite
   import: executable
   build-depends:
-    HUnit ^>=1.6.2.0,
-    transformers ^>=0.6.1.0,
+    HUnit ^>=1.6.2,
+    transformers ^>=0.6.1,
 
   hs-source-dirs: source/test-suite
+  main-is: Main.hs
+  type: exitcode-stdio-1.0
+
+test-suite witch-hedgehog
+  import: executable
+  build-depends:
+    hedgehog ^>=1.7,
+    transformers ^>=0.6.1,
+
+  hs-source-dirs: source/hedgehog
   main-is: Main.hs
   type: exitcode-stdio-1.0

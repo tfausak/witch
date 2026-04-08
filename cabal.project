@@ -1,4 +1,3 @@
 packages: .
-allow-newer:
-  , tagged:base
-  , tagged:template-haskell
+-- https://github.com/phadej/boring/issues/48
+allow-newer: boring:base
