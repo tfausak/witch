@@ -23,6 +23,7 @@ import qualified Data.Tagged as Tagged
 import qualified Data.Text as Text
 import qualified Data.Text.Lazy as LazyText
 import qualified Data.Time as Time
+import qualified Witch.Encoding as Encoding
 import qualified Data.Typeable as Typeable
 import qualified Data.Void as Void
 import qualified Data.Word as Word
@@ -74,7 +75,19 @@ groups =
     groupMonoid,
     groupSemigroup,
     groupBool,
-    groupTime
+    groupTime,
+    groupLatin1S,
+    groupLatin1L,
+    groupUtf8S,
+    groupUtf8L,
+    groupUtf16LS,
+    groupUtf16LL,
+    groupUtf16BS,
+    groupUtf16BL,
+    groupUtf32LS,
+    groupUtf32LL,
+    groupUtf32BS,
+    groupUtf32BL
   ]
 
 groupA :: H.Group
@@ -1121,6 +1134,198 @@ groupTime = group "Time" $ do
   -- UTCTime -> SystemTime, ZonedTime -> UTCTime,
   -- CalendarDiffDays -> CalendarDiffTime, NominalDiffTime -> CalendarDiffTime.
 
+groupLatin1S :: H.Group
+groupLatin1S = group "Latin1S" $ do
+  let s = Typeable.Proxy :: Typeable.Proxy Encoding.Latin1S
+
+  property "Text" $ do
+    let t = Typeable.Proxy :: Typeable.Proxy Text.Text
+    fromTryFrom s t genLatin1S
+
+  property "LazyText" $ do
+    let t = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromTryFrom s t genLatin1S
+
+  property "String" $ do
+    let t = Typeable.Proxy :: Typeable.Proxy String
+    fromTryFrom s t genLatin1S
+
+groupLatin1L :: H.Group
+groupLatin1L = group "Latin1L" $ do
+  let s = Typeable.Proxy :: Typeable.Proxy Encoding.Latin1L
+
+  property "Text" $ do
+    let t = Typeable.Proxy :: Typeable.Proxy Text.Text
+    fromTryFrom s t genLatin1L
+
+  property "LazyText" $ do
+    let t = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromTryFrom s t genLatin1L
+
+  property "String" $ do
+    let t = Typeable.Proxy :: Typeable.Proxy String
+    fromTryFrom s t genLatin1L
+
+groupUtf8S :: H.Group
+groupUtf8S = group "Utf8S" $ do
+  let t = Typeable.Proxy :: Typeable.Proxy Encoding.Utf8S
+
+  property "Text" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Text.Text
+    fromTryFrom s t genText
+
+  property "LazyText" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromTryFrom s t genLazyText
+
+  property "String" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy String
+    fromTryFrom s t genString
+
+groupUtf8L :: H.Group
+groupUtf8L = group "Utf8L" $ do
+  let t = Typeable.Proxy :: Typeable.Proxy Encoding.Utf8L
+
+  property "Text" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Text.Text
+    fromTryFrom s t genText
+
+  property "LazyText" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromTryFrom s t genLazyText
+
+  property "String" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy String
+    fromTryFrom s t genString
+
+groupUtf16LS :: H.Group
+groupUtf16LS = group "Utf16LS" $ do
+  let t = Typeable.Proxy :: Typeable.Proxy Encoding.Utf16LS
+
+  property "Text" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Text.Text
+    fromTryFrom s t genText
+
+  property "LazyText" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromTryFrom s t genLazyText
+
+  property "String" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy String
+    fromTryFrom s t genString
+
+groupUtf16LL :: H.Group
+groupUtf16LL = group "Utf16LL" $ do
+  let t = Typeable.Proxy :: Typeable.Proxy Encoding.Utf16LL
+
+  property "Text" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Text.Text
+    fromTryFrom s t genText
+
+  property "LazyText" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromTryFrom s t genLazyText
+
+  property "String" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy String
+    fromTryFrom s t genString
+
+groupUtf16BS :: H.Group
+groupUtf16BS = group "Utf16BS" $ do
+  let t = Typeable.Proxy :: Typeable.Proxy Encoding.Utf16BS
+
+  property "Text" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Text.Text
+    fromTryFrom s t genText
+
+  property "LazyText" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromTryFrom s t genLazyText
+
+  property "String" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy String
+    fromTryFrom s t genString
+
+groupUtf16BL :: H.Group
+groupUtf16BL = group "Utf16BL" $ do
+  let t = Typeable.Proxy :: Typeable.Proxy Encoding.Utf16BL
+
+  property "Text" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Text.Text
+    fromTryFrom s t genText
+
+  property "LazyText" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromTryFrom s t genLazyText
+
+  property "String" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy String
+    fromTryFrom s t genString
+
+groupUtf32LS :: H.Group
+groupUtf32LS = group "Utf32LS" $ do
+  let t = Typeable.Proxy :: Typeable.Proxy Encoding.Utf32LS
+
+  property "Text" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Text.Text
+    fromTryFrom s t genText
+
+  property "LazyText" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromTryFrom s t genLazyText
+
+  property "String" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy String
+    fromTryFrom s t genString
+
+groupUtf32LL :: H.Group
+groupUtf32LL = group "Utf32LL" $ do
+  let t = Typeable.Proxy :: Typeable.Proxy Encoding.Utf32LL
+
+  property "Text" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Text.Text
+    fromTryFrom s t genText
+
+  property "LazyText" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromTryFrom s t genLazyText
+
+  property "String" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy String
+    fromTryFrom s t genString
+
+groupUtf32BS :: H.Group
+groupUtf32BS = group "Utf32BS" $ do
+  let t = Typeable.Proxy :: Typeable.Proxy Encoding.Utf32BS
+
+  property "Text" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Text.Text
+    fromTryFrom s t genText
+
+  property "LazyText" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromTryFrom s t genLazyText
+
+  property "String" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy String
+    fromTryFrom s t genString
+
+groupUtf32BL :: H.Group
+groupUtf32BL = group "Utf32BL" $ do
+  let t = Typeable.Proxy :: Typeable.Proxy Encoding.Utf32BL
+
+  property "Text" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Text.Text
+    fromTryFrom s t genText
+
+  property "LazyText" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy LazyText.Text
+    fromTryFrom s t genLazyText
+
+  property "String" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy String
+    fromTryFrom s t genString
+
 genByteString :: H.Gen ByteString.ByteString
 genByteString =
   fmap ByteString.pack . Gen.list (Range.linear 0 20) $ Gen.integral Range.linearBounded
@@ -1138,6 +1343,15 @@ genText = fmap Text.pack $ Gen.string (Range.linear 0 20) Gen.unicode
 
 genLazyText :: H.Gen LazyText.Text
 genLazyText = fmap LazyText.pack $ Gen.string (Range.linear 0 20) Gen.unicode
+
+genString :: H.Gen String
+genString = Gen.string (Range.linear 0 20) Gen.unicode
+
+genLatin1S :: H.Gen Encoding.Latin1S
+genLatin1S = fmap Tagged.Tagged genByteString
+
+genLatin1L :: H.Gen Encoding.Latin1L
+genLatin1L = fmap Tagged.Tagged genLazyByteString
 
 genPico :: H.Gen Fixed.Pico
 genPico = fmap (fromInteger :: Integer -> Fixed.Pico) . Gen.integral $ Range.linear (-1000000000000) 1000000000000
