@@ -3,7 +3,7 @@ jobs:
     name: GHC ${{ matrix.ghc }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: mkdir artifact
       - uses: haskell/ghcup-setup@v1
         with:
@@ -11,7 +11,7 @@ jobs:
           cabal: latest
       - run: ghc-pkg list
       - run: cabal sdist --output-dir artifact
-      - run: cabal configure --enable-tests --flags=pedantic --jobs
+      - run: cabal configure --enable-documentation --enable-tests --flags=pedantic --haddock-for-hackage --jobs
       - run: cat cabal.project.local
       - run: cp cabal.project.local artifact
       - run: cabal update
@@ -19,7 +19,7 @@ jobs:
       - run: cat cabal.project.freeze
       - run: cp cabal.project.freeze artifact
       - run: cabal outdated --v2-freeze-file
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: ${{ matrix.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
           path: ~/.local/state/cabal
@@ -27,8 +27,9 @@ jobs:
       - run: cabal build --only-download
       - run: cabal build --only-dependencies
       - run: cabal build
+      - run: cp dist-newstyle/witch-*-docs.tar.gz artifact
       - run: tar --create --file artifact.tar --verbose artifact
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: witch-${{ github.sha }}-${{ matrix.os }}-${{ matrix.ghc }}
           path: artifact.tar
@@ -38,14 +39,12 @@ jobs:
       matrix:
         include:
           - ghc: 9.12
-            os: macos-13
-          - ghc: 9.12
             os: macos-14
-          - ghc: 9.8
-            os: ubuntu-24.04
           - ghc: '9.10'
             os: ubuntu-24.04
           - ghc: 9.12
+            os: ubuntu-24.04
+          - ghc: 9.14
             os: ubuntu-24.04
           - ghc: 9.12
             os: windows-2022
@@ -53,20 +52,20 @@ jobs:
     name: Cabal
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: cabal check
   gild:
     name: Gild
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: tfausak/cabal-gild-setup-action@v2
       - run: cabal-gild --input witch.cabal --mode check
   hlint:
     name: HLint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: haskell-actions/hlint-setup@v2
       - uses: haskell-actions/hlint-run@v2
         with:
@@ -75,7 +74,7 @@ jobs:
     name: Ormolu
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: haskell-actions/run-ormolu@v17
   release:
     if: ${{ github.event_name == 'release' }}
@@ -85,7 +84,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: witch-${{ github.sha }}-ubuntu-24.04-9.12
       - run: tar --extract --file artifact.tar --verbose
@@ -93,6 +92,7 @@ jobs:
         with:
           files: artifact/witch-${{ github.event.release.tag_name }}.tar.gz
       - run: cabal upload --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' artifact/witch-${{ github.event.release.tag_name }}.tar.gz
+      - run: cabal --http-transport=plain-http upload --documentation --publish --username '${{ secrets.HACKAGE_USERNAME }}' --password '${{ secrets.HACKAGE_PASSWORD }}' artifact/witch-${{ github.event.release.tag_name }}-docs.tar.gz
 name: CI
 on:
   pull_request:

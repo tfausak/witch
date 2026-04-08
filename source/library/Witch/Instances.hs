@@ -26,7 +26,9 @@ import qualified Data.IntSet as IntSet
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Map as Map
+import qualified Data.Monoid as Monoid
 import qualified Data.Ratio as Ratio
+import qualified Data.Semigroup as Semigroup
 import qualified Data.Sequence as Seq
 import qualified Data.Set as Set
 import qualified Data.Tagged as Tagged
@@ -965,6 +967,94 @@ instance (Eq a, Num a) => TryFrom.TryFrom (Complex.Complex a) a where
     if Complex.imagPart s == 0
       then Right $ Complex.realPart s
       else Left Exception.LossOfPrecision
+
+-- Data.Monoid newtypes
+
+-- | Uses @'coerce'@.
+instance From.From a (Monoid.Dual a)
+
+-- | Uses @'coerce'@.
+instance From.From (Monoid.Dual a) a
+
+-- | Uses @'coerce'@.
+instance From.From (a -> a) (Monoid.Endo a)
+
+-- | Uses @'coerce'@.
+instance From.From (Monoid.Endo a) (a -> a)
+
+-- | Uses @'coerce'@.
+instance From.From Bool Monoid.All
+
+-- | Uses @'coerce'@.
+instance From.From Monoid.All Bool
+
+-- | Uses @'coerce'@.
+instance From.From Bool Monoid.Any
+
+-- | Uses @'coerce'@.
+instance From.From Monoid.Any Bool
+
+-- | Uses @'coerce'@.
+instance From.From a (Monoid.Sum a)
+
+-- | Uses @'coerce'@.
+instance From.From (Monoid.Sum a) a
+
+-- | Uses @'coerce'@.
+instance From.From a (Monoid.Product a)
+
+-- | Uses @'coerce'@.
+instance From.From (Monoid.Product a) a
+
+-- | Uses @'coerce'@.
+instance From.From (Maybe a) (Monoid.First a)
+
+-- | Uses @'coerce'@.
+instance From.From (Monoid.First a) (Maybe a)
+
+-- | Uses @'coerce'@.
+instance From.From (Maybe a) (Monoid.Last a)
+
+-- | Uses @'coerce'@.
+instance From.From (Monoid.Last a) (Maybe a)
+
+-- | Uses @'coerce'@.
+instance From.From (f a) (Monoid.Alt f a)
+
+-- | Uses @'coerce'@.
+instance From.From (Monoid.Alt f a) (f a)
+
+-- | Uses @'coerce'@.
+instance From.From (f a) (Monoid.Ap f a)
+
+-- | Uses @'coerce'@.
+instance From.From (Monoid.Ap f a) (f a)
+
+-- Data.Semigroup newtypes
+
+-- | Uses @'coerce'@.
+instance From.From a (Semigroup.Min a)
+
+-- | Uses @'coerce'@.
+instance From.From (Semigroup.Min a) a
+
+-- | Uses @'coerce'@.
+instance From.From a (Semigroup.Max a)
+
+-- | Uses @'coerce'@.
+instance From.From (Semigroup.Max a) a
+
+-- | Uses @'coerce'@.
+instance From.From a (Semigroup.First a)
+
+-- | Uses @'coerce'@.
+instance From.From (Semigroup.First a) a
+
+-- | Uses @'coerce'@.
+instance From.From a (Semigroup.Last a)
+
+-- | Uses @'coerce'@.
+instance From.From (Semigroup.Last a) a
 
 -- NonEmpty
 
