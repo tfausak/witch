@@ -56,10 +56,7 @@ groups =
     groupNatural,
     groupFloat,
     groupDouble,
-    groupComplex,
-    groupRatio,
-    groupFixed,
-    groupTagged,
+    groupPico,
     groupNonEmpty,
     groupSet,
     groupIntSet,
@@ -96,6 +93,10 @@ groupA = group "a" $ do
 
   property "a" $ do
     let t = s
+    fromFrom s t $ Gen.integral Range.linearBounded
+
+  property "Tagged" $ do
+    let t = Typeable.Proxy :: Typeable.Proxy (Tagged.Tagged () Word.Word8)
     fromFrom s t $ Gen.integral Range.linearBounded
 
 groupList :: H.Group
@@ -441,6 +442,18 @@ groupInteger = group "Integer" $ do
   property "Double" $ do
     let t = Typeable.Proxy :: Typeable.Proxy Double
     tryFromTryFrom s t . Gen.integral $ fmap (toInteger . asProxy f64) Range.linearBounded
+
+  property "Complex" $ do
+    let t = Typeable.Proxy :: Typeable.Proxy (Complex.Complex Integer)
+    fromTryFrom s t . Gen.integral $ Range.linear (-1000) 1000
+
+  property "Ratio" $ do
+    let t = Typeable.Proxy :: Typeable.Proxy (Ratio.Ratio Integer)
+    fromTryFrom s t . Gen.integral $ Range.linear (-1000) 1000
+
+  property "Pico" $ do
+    let t = Typeable.Proxy :: Typeable.Proxy Fixed.Pico
+    fromTryFrom s t . Gen.integral $ Range.linear (-1000000000000) 1000000000000
 
 groupWord8 :: H.Group
 groupWord8 = group "Word8" $ do
@@ -898,38 +911,13 @@ groupDouble = group "Double" $ do
     let t = Typeable.Proxy :: Typeable.Proxy Float
     fromFrom s t . Gen.realFloat $ fmap (realToFrac . unF32) Range.linearBounded
 
-groupComplex :: H.Group
-groupComplex = group "Complex" $ do
-  property "Integer" $ do
-    let s = Typeable.Proxy :: Typeable.Proxy Integer
-    let t = Typeable.Proxy :: Typeable.Proxy (Complex.Complex Integer)
-    fromTryFrom s t . Gen.integral $ Range.linear (-1000) 1000
-
-groupRatio :: H.Group
-groupRatio = group "Ratio" $ do
-  property "Integer" $ do
-    let s = Typeable.Proxy :: Typeable.Proxy Integer
-    let t = Typeable.Proxy :: Typeable.Proxy (Ratio.Ratio Integer)
-    fromTryFrom s t . Gen.integral $ Range.linear (-1000) 1000
-
-groupFixed :: H.Group
-groupFixed = group "Fixed" $ do
-  property "Integer" $ do
-    let s = Typeable.Proxy :: Typeable.Proxy Integer
-    let t = Typeable.Proxy :: Typeable.Proxy Fixed.Pico
-    fromTryFrom s t . Gen.integral $ Range.linear (-1000000000000) 1000000000000
+groupPico :: H.Group
+groupPico = group "Pico" $ do
+  let s = Typeable.Proxy :: Typeable.Proxy Fixed.Pico
 
   property "Rational" $ do
-    let s = Typeable.Proxy :: Typeable.Proxy Fixed.Pico
     let t = Typeable.Proxy :: Typeable.Proxy Rational
-    fromTryFrom s t $ genPico
-
-groupTagged :: H.Group
-groupTagged = group "Tagged" $ do
-  let s = Typeable.Proxy :: Typeable.Proxy Word.Word8
-  let t = Typeable.Proxy :: Typeable.Proxy (Tagged.Tagged () Word.Word8)
-  property "a" $ do
-    fromFrom s t $ Gen.integral Range.linearBounded
+    fromTryFrom s t genPico
 
 groupNonEmpty :: H.Group
 groupNonEmpty = group "NonEmpty" $ do
