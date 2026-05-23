@@ -1175,6 +1175,18 @@ instance From.From [OsString.OsChar] OsString.OsString where
 instance From.From OsString.OsString [OsString.OsChar] where
   from = OsString.unpack
 
+-- | Uses 'OsString.encodeUtf'.
+instance TryFrom.TryFrom String OsString.OsString where
+  tryFrom =
+    Utility.eitherTryFrom $ \s ->
+      OsString.encodeUtf s :: Either Exception.SomeException OsString.OsString
+
+-- | Uses 'OsString.decodeUtf'.
+instance TryFrom.TryFrom OsString.OsString String where
+  tryFrom =
+    Utility.eitherTryFrom $ \os ->
+      OsString.decodeUtf os :: Either Exception.SomeException String
+
 -- Text
 
 -- | Uses 'LazyText.fromStrict'.

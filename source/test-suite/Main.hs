@@ -2462,6 +2462,18 @@ spec = describe "Witch" $ do
       it "works" $ do
         f "a" `shouldBe` Tagged.Tagged (LazyByteString.pack [0x00, 0x00, 0x00, 0x61])
 
+    describe "TryFrom String OsString" $ do
+      let f = hush . Witch.tryFrom @String @OsString.OsString
+      it "works" $ do
+        f "" `shouldBe` Just (OsString.pack [])
+        f "hello" `shouldBe` Just (Witch.unsafeFrom @String "hello")
+
+    describe "TryFrom OsString String" $ do
+      let f = hush . Witch.tryFrom @OsString.OsString @String
+      it "works" $ do
+        f (Witch.unsafeFrom @String "") `shouldBe` Just ""
+        f (Witch.unsafeFrom @String "hello") `shouldBe` Just "hello"
+
   describe "Generically" $ do
     it "converts into empty" $ do
       -- This only needs to type check.
