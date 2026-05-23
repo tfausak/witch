@@ -103,10 +103,3 @@ covers numeric types and we don't need to expand its scope here.
   per scoping decision.
 - `OsPath` — already covered transparently (it's a type alias).
 
-## Changelog and version
-
-Add a `CHANGELOG.md` entry for the new instances and the `os-string`
-dependency. Version bump is a maintainer call (PVP: adding instances is a
-breaking change since downstream `instance ... where` definitions could
-collide, but the new dependency also pushes things in that direction). Defer
-the exact bump to the implementation step.
