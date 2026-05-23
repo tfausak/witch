@@ -1867,6 +1867,18 @@ spec = describe "Witch" $ do
         f (OsString.pack [OsString.unsafeFromChar 'a', OsString.unsafeFromChar 'b'])
           `shouldBe` [OsString.unsafeFromChar 'a', OsString.unsafeFromChar 'b']
 
+    describe "From Text OsString" $ do
+      let f = Witch.from @Text.Text @OsString.OsString
+      it "works" $ do
+        f (Text.pack "") `shouldBe` OsString.pack []
+        f (Text.pack "hello") `shouldBe` OsString.pack (fmap OsString.unsafeFromChar "hello")
+
+    describe "From LazyText OsString" $ do
+      let f = Witch.from @LazyText.Text @OsString.OsString
+      it "works" $ do
+        f (LazyText.pack "") `shouldBe` OsString.pack []
+        f (LazyText.pack "hello") `shouldBe` OsString.pack (fmap OsString.unsafeFromChar "hello")
+
     describe "From Text LazyText" $ do
       let f = Witch.from @Text.Text @LazyText.Text
       it "works" $ do
@@ -2466,37 +2478,25 @@ spec = describe "Witch" $ do
       let f = hush . Witch.tryFrom @String @OsString.OsString
       it "works" $ do
         f "" `shouldBe` Just (OsString.pack [])
-        f "hello" `shouldBe` Just (Witch.unsafeFrom @String "hello")
+        f "hello" `shouldBe` Just (OsString.pack (fmap OsString.unsafeFromChar "hello"))
 
     describe "TryFrom OsString String" $ do
       let f = hush . Witch.tryFrom @OsString.OsString @String
       it "works" $ do
-        f (Witch.unsafeFrom @String "") `shouldBe` Just ""
-        f (Witch.unsafeFrom @String "hello") `shouldBe` Just "hello"
-
-    describe "From Text OsString" $ do
-      let f = Witch.from @Text.Text @OsString.OsString
-      it "works" $ do
-        f (Text.pack "") `shouldBe` Witch.unsafeFrom @String ""
-        f (Text.pack "hello") `shouldBe` Witch.unsafeFrom @String "hello"
+        f (OsString.pack []) `shouldBe` Just ""
+        f (OsString.pack (fmap OsString.unsafeFromChar "hello")) `shouldBe` Just "hello"
 
     describe "TryFrom OsString Text" $ do
       let f = hush . Witch.tryFrom @OsString.OsString @Text.Text
       it "works" $ do
-        f (Witch.unsafeFrom @String "") `shouldBe` Just (Text.pack "")
-        f (Witch.unsafeFrom @String "hello") `shouldBe` Just (Text.pack "hello")
-
-    describe "From LazyText OsString" $ do
-      let f = Witch.from @LazyText.Text @OsString.OsString
-      it "works" $ do
-        f (LazyText.pack "") `shouldBe` Witch.unsafeFrom @String ""
-        f (LazyText.pack "hello") `shouldBe` Witch.unsafeFrom @String "hello"
+        f (OsString.pack []) `shouldBe` Just (Text.pack "")
+        f (OsString.pack (fmap OsString.unsafeFromChar "hello")) `shouldBe` Just (Text.pack "hello")
 
     describe "TryFrom OsString LazyText" $ do
       let f = hush . Witch.tryFrom @OsString.OsString @LazyText.Text
       it "works" $ do
-        f (Witch.unsafeFrom @String "") `shouldBe` Just (LazyText.pack "")
-        f (Witch.unsafeFrom @String "hello") `shouldBe` Just (LazyText.pack "hello")
+        f (OsString.pack []) `shouldBe` Just (LazyText.pack "")
+        f (OsString.pack (fmap OsString.unsafeFromChar "hello")) `shouldBe` Just (LazyText.pack "hello")
 
   describe "Generically" $ do
     it "converts into empty" $ do
