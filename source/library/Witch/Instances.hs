@@ -1198,6 +1198,17 @@ instance TryFrom.TryFrom OsString.OsString Text.Text where
     Utility.eitherTryFrom $ \os ->
       fmap Text.pack (OsString.decodeUtf os :: Either Exception.SomeException String)
 
+-- | Uses 'OsString.unsafeEncodeUtf'. Total because 'LazyText.Text' cannot
+-- contain lone surrogates, so the underlying encode never fails.
+instance From.From LazyText.Text OsString.OsString where
+  from = OsString.unsafeEncodeUtf . LazyText.unpack
+
+-- | Converts via 'String' using 'OsString.decodeUtf'.
+instance TryFrom.TryFrom OsString.OsString LazyText.Text where
+  tryFrom =
+    Utility.eitherTryFrom $ \os ->
+      fmap LazyText.pack (OsString.decodeUtf os :: Either Exception.SomeException String)
+
 -- Text
 
 -- | Uses 'LazyText.fromStrict'.
