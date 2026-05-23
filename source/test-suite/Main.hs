@@ -2474,6 +2474,18 @@ spec = describe "Witch" $ do
         f (Witch.unsafeFrom @String "") `shouldBe` Just ""
         f (Witch.unsafeFrom @String "hello") `shouldBe` Just "hello"
 
+    describe "From Text OsString" $ do
+      let f = Witch.from @Text.Text @OsString.OsString
+      it "works" $ do
+        f (Text.pack "") `shouldBe` Witch.unsafeFrom @String ""
+        f (Text.pack "hello") `shouldBe` Witch.unsafeFrom @String "hello"
+
+    describe "TryFrom OsString Text" $ do
+      let f = hush . Witch.tryFrom @OsString.OsString @Text.Text
+      it "works" $ do
+        f (Witch.unsafeFrom @String "") `shouldBe` Just (Text.pack "")
+        f (Witch.unsafeFrom @String "hello") `shouldBe` Just (Text.pack "hello")
+
   describe "Generically" $ do
     it "converts into empty" $ do
       -- This only needs to type check.
