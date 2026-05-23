@@ -37,6 +37,7 @@ import qualified Data.Word as Word
 import qualified GHC.Generics as Generics
 import qualified GHC.Stack as Stack
 import qualified Numeric.Natural as Natural
+import qualified System.OsString as OsString
 import qualified Test.HUnit as HUnit
 import qualified Witch
 import qualified Witch.Encoding as Encoding
@@ -1849,6 +1850,22 @@ spec = describe "Witch" $ do
         f (ShortByteString.pack []) `shouldBe` ByteString.pack []
         f (ShortByteString.pack [0x00]) `shouldBe` ByteString.pack [0x00]
         f (ShortByteString.pack [0x0f, 0xf0]) `shouldBe` ByteString.pack [0x0f, 0xf0]
+
+    describe "From [OsChar] OsString" $ do
+      let f = Witch.from @[OsString.OsChar] @OsString.OsString
+      it "works" $ do
+        f [] `shouldBe` OsString.pack []
+        f [OsString.unsafeFromChar 'a'] `shouldBe` OsString.pack [OsString.unsafeFromChar 'a']
+        f [OsString.unsafeFromChar 'a', OsString.unsafeFromChar 'b']
+          `shouldBe` OsString.pack [OsString.unsafeFromChar 'a', OsString.unsafeFromChar 'b']
+
+    describe "From OsString [OsChar]" $ do
+      let f = Witch.from @OsString.OsString @[OsString.OsChar]
+      it "works" $ do
+        f (OsString.pack []) `shouldBe` []
+        f (OsString.pack [OsString.unsafeFromChar 'a']) `shouldBe` [OsString.unsafeFromChar 'a']
+        f (OsString.pack [OsString.unsafeFromChar 'a', OsString.unsafeFromChar 'b'])
+          `shouldBe` [OsString.unsafeFromChar 'a', OsString.unsafeFromChar 'b']
 
     describe "From Text LazyText" $ do
       let f = Witch.from @Text.Text @LazyText.Text

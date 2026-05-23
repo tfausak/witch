@@ -46,6 +46,7 @@ import qualified GHC.Float as Float
 import qualified Numeric
 import qualified Numeric.Natural as Natural
 import qualified System.IO.Unsafe as Unsafe
+import qualified System.OsString as OsString
 import qualified Witch.Encoding as Encoding
 import qualified Witch.From as From
 import qualified Witch.TryFrom as TryFrom
@@ -1163,6 +1164,16 @@ instance From.From ShortByteString.ShortByteString [Word.Word8] where
 -- | Uses 'ShortByteString.fromShort'.
 instance From.From ShortByteString.ShortByteString ByteString.ByteString where
   from = ShortByteString.fromShort
+
+-- OsString
+
+-- | Uses 'OsString.pack'.
+instance From.From [OsString.OsChar] OsString.OsString where
+  from = OsString.pack
+
+-- | Uses 'OsString.unpack'.
+instance From.From OsString.OsString [OsString.OsChar] where
+  from = OsString.unpack
 
 -- Text
 
