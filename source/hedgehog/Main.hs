@@ -32,6 +32,7 @@ import qualified Hedgehog.Gen as Gen
 import qualified Hedgehog.Main as Main
 import qualified Hedgehog.Range as Range
 import qualified Numeric.Natural as Natural
+import qualified System.OsString as OsString
 import qualified Witch
 import qualified Witch.Encoding as Encoding
 
@@ -66,6 +67,7 @@ groups =
     groupByteString,
     groupLazyByteString,
     groupShortByteString,
+    groupOsString,
     groupText,
     groupLazyText,
     groupString,
@@ -992,6 +994,13 @@ groupShortByteString = group "ShortByteString" $ do
     let t = Typeable.Proxy :: Typeable.Proxy [Word.Word8]
     fromFrom s t genShortByteString
 
+groupOsString :: H.Group
+groupOsString = group "OsString" $ do
+  property "[OsChar]" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy OsString.OsString
+    let t = Typeable.Proxy :: Typeable.Proxy [OsString.OsChar]
+    fromFrom s t genOsString
+
 groupText :: H.Group
 groupText = group "Text" $ do
   property "LazyText" $ do
@@ -1325,6 +1334,10 @@ genLazyByteString =
 genShortByteString :: H.Gen ShortByteString.ShortByteString
 genShortByteString =
   fmap ShortByteString.pack . Gen.list (Range.linear 0 20) $ Gen.integral Range.linearBounded
+
+genOsString :: H.Gen OsString.OsString
+genOsString =
+  fmap OsString.pack . Gen.list (Range.linear 0 20) $ fmap OsString.unsafeFromChar Gen.ascii
 
 genText :: H.Gen Text.Text
 genText = Text.pack <$> Gen.string (Range.linear 0 20) Gen.unicode
