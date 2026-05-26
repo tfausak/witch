@@ -46,6 +46,7 @@ import qualified GHC.Float as Float
 import qualified Numeric
 import qualified Numeric.Natural as Natural
 import qualified System.IO.Unsafe as Unsafe
+import qualified System.OsString as OsString
 import qualified Witch.Encoding as Encoding
 import qualified Witch.From as From
 import qualified Witch.TryFrom as TryFrom
@@ -1163,6 +1164,50 @@ instance From.From ShortByteString.ShortByteString [Word.Word8] where
 -- | Uses 'ShortByteString.fromShort'.
 instance From.From ShortByteString.ShortByteString ByteString.ByteString where
   from = ShortByteString.fromShort
+
+-- OsString
+
+-- | Uses 'OsString.pack'.
+instance From.From [OsString.OsChar] OsString.OsString where
+  from = OsString.pack
+
+-- | Uses 'OsString.unpack'.
+instance From.From OsString.OsString [OsString.OsChar] where
+  from = OsString.unpack
+
+-- | Uses 'OsString.encodeUtf'.
+instance TryFrom.TryFrom String OsString.OsString where
+  tryFrom =
+    Utility.eitherTryFrom $ \s ->
+      OsString.encodeUtf s :: Either Exception.SomeException OsString.OsString
+
+-- | Uses 'OsString.decodeUtf'.
+instance TryFrom.TryFrom OsString.OsString String where
+  tryFrom =
+    Utility.eitherTryFrom $ \os ->
+      OsString.decodeUtf os :: Either Exception.SomeException String
+
+-- | Uses 'OsString.unsafeEncodeUtf'. Total because 'Text.Text' cannot contain
+-- lone surrogates, so the underlying encode never fails.
+instance From.From Text.Text OsString.OsString where
+  from = OsString.unsafeEncodeUtf . Text.unpack
+
+-- | Converts via 'String' using 'OsString.decodeUtf'.
+instance TryFrom.TryFrom OsString.OsString Text.Text where
+  tryFrom =
+    Utility.eitherTryFrom $ \os ->
+      fmap Text.pack (OsString.decodeUtf os :: Either Exception.SomeException String)
+
+-- | Uses 'OsString.unsafeEncodeUtf'. Total because 'LazyText.Text' cannot
+-- contain lone surrogates, so the underlying encode never fails.
+instance From.From LazyText.Text OsString.OsString where
+  from = OsString.unsafeEncodeUtf . LazyText.unpack
+
+-- | Converts via 'String' using 'OsString.decodeUtf'.
+instance TryFrom.TryFrom OsString.OsString LazyText.Text where
+  tryFrom =
+    Utility.eitherTryFrom $ \os ->
+      fmap LazyText.pack (OsString.decodeUtf os :: Either Exception.SomeException String)
 
 -- Text
 

@@ -37,6 +37,8 @@ import qualified Data.Word as Word
 import qualified GHC.Generics as Generics
 import qualified GHC.Stack as Stack
 import qualified Numeric.Natural as Natural
+import qualified System.Info as Info
+import qualified System.OsString as OsString
 import qualified Test.HUnit as HUnit
 import qualified Witch
 import qualified Witch.Encoding as Encoding
@@ -1850,6 +1852,34 @@ spec = describe "Witch" $ do
         f (ShortByteString.pack [0x00]) `shouldBe` ByteString.pack [0x00]
         f (ShortByteString.pack [0x0f, 0xf0]) `shouldBe` ByteString.pack [0x0f, 0xf0]
 
+    describe "From [OsChar] OsString" $ do
+      let f = Witch.from @[OsString.OsChar] @OsString.OsString
+      it "works" $ do
+        f [] `shouldBe` OsString.pack []
+        f [OsString.unsafeFromChar 'a'] `shouldBe` OsString.pack [OsString.unsafeFromChar 'a']
+        f [OsString.unsafeFromChar 'a', OsString.unsafeFromChar 'b']
+          `shouldBe` OsString.pack [OsString.unsafeFromChar 'a', OsString.unsafeFromChar 'b']
+
+    describe "From OsString [OsChar]" $ do
+      let f = Witch.from @OsString.OsString @[OsString.OsChar]
+      it "works" $ do
+        f (OsString.pack []) `shouldBe` []
+        f (OsString.pack [OsString.unsafeFromChar 'a']) `shouldBe` [OsString.unsafeFromChar 'a']
+        f (OsString.pack [OsString.unsafeFromChar 'a', OsString.unsafeFromChar 'b'])
+          `shouldBe` [OsString.unsafeFromChar 'a', OsString.unsafeFromChar 'b']
+
+    describe "From Text OsString" $ do
+      let f = Witch.from @Text.Text @OsString.OsString
+      it "works" $ do
+        f (Text.pack "") `shouldBe` OsString.pack []
+        f (Text.pack "hello") `shouldBe` OsString.pack (fmap OsString.unsafeFromChar "hello")
+
+    describe "From LazyText OsString" $ do
+      let f = Witch.from @LazyText.Text @OsString.OsString
+      it "works" $ do
+        f (LazyText.pack "") `shouldBe` OsString.pack []
+        f (LazyText.pack "hello") `shouldBe` OsString.pack (fmap OsString.unsafeFromChar "hello")
+
     describe "From Text LazyText" $ do
       let f = Witch.from @Text.Text @LazyText.Text
       it "works" $ do
@@ -2445,6 +2475,34 @@ spec = describe "Witch" $ do
       it "works" $ do
         f "a" `shouldBe` Tagged.Tagged (LazyByteString.pack [0x00, 0x00, 0x00, 0x61])
 
+    describe "TryFrom String OsString" $ do
+      let f = hush . Witch.tryFrom @String @OsString.OsString
+      it "works" $ do
+        f "" `shouldBe` Just (OsString.pack [])
+        f "hello" `shouldBe` Just (OsString.pack (fmap OsString.unsafeFromChar "hello"))
+        f "\xD800" `shouldBe` Nothing
+
+    describe "TryFrom OsString String" $ do
+      let f = hush . Witch.tryFrom @OsString.OsString @String
+      it "works" $ do
+        f (OsString.pack []) `shouldBe` Just ""
+        f (OsString.pack (fmap OsString.unsafeFromChar "hello")) `shouldBe` Just "hello"
+        f invalidOsString `shouldBe` Nothing
+
+    describe "TryFrom OsString Text" $ do
+      let f = hush . Witch.tryFrom @OsString.OsString @Text.Text
+      it "works" $ do
+        f (OsString.pack []) `shouldBe` Just (Text.pack "")
+        f (OsString.pack (fmap OsString.unsafeFromChar "hello")) `shouldBe` Just (Text.pack "hello")
+        f invalidOsString `shouldBe` Nothing
+
+    describe "TryFrom OsString LazyText" $ do
+      let f = hush . Witch.tryFrom @OsString.OsString @LazyText.Text
+      it "works" $ do
+        f (OsString.pack []) `shouldBe` Just (LazyText.pack "")
+        f (OsString.pack (fmap OsString.unsafeFromChar "hello")) `shouldBe` Just (LazyText.pack "hello")
+        f invalidOsString `shouldBe` Nothing
+
   describe "Generically" $ do
     it "converts into empty" $ do
       -- This only needs to type check.
@@ -2543,6 +2601,14 @@ describe label = testToSpec . HUnit.TestLabel label . specToTest
 
 hush :: Either x a -> Maybe a
 hush = either (const Nothing) Just
+
+-- | An 'OsString.OsString' that 'OsString.decodeUtf' cannot decode. On POSIX
+-- this is the lone byte @0xFF@ (invalid UTF-8); on Windows it is the
+-- unpaired surrogate @0xD800@ (invalid UTF-16).
+invalidOsString :: OsString.OsString
+invalidOsString =
+  let c = if Info.os == "mingw32" then '\xD800' else '\xFF'
+   in OsString.pack [OsString.unsafeFromChar c]
 
 it :: (Stack.HasCallStack) => String -> HUnit.Assertion -> Spec
 it label = testToSpec . HUnit.TestLabel label . HUnit.TestCase
