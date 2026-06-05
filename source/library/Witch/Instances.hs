@@ -1175,6 +1175,21 @@ instance From.From [OsString.OsChar] OsString.OsString where
 instance From.From OsString.OsString [OsString.OsChar] where
   from = OsString.unpack
 
+-- | Uses 'OsString.unsafeFromChar'. Fails when the 'Char' does not fit in an
+-- 'OsString.OsChar', which holds one byte on POSIX (code points above @0xFF@)
+-- and two bytes on Windows (code points above @0xFFFF@). Guarded by a round
+-- trip through 'OsString.toChar', so it never silently truncates.
+instance TryFrom.TryFrom Char OsString.OsChar where
+  tryFrom =
+    Utility.maybeTryFrom $ \c ->
+      let oc = OsString.unsafeFromChar c
+       in if OsString.toChar oc == c then Just oc else Nothing
+
+-- | Uses 'OsString.toChar'. Total because every 'OsString.OsChar' is a valid
+-- Unicode code point.
+instance From.From OsString.OsChar Char where
+  from = OsString.toChar
+
 -- | Uses 'OsString.encodeUtf'.
 instance TryFrom.TryFrom String OsString.OsString where
   tryFrom =
