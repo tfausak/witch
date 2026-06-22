@@ -1006,6 +1006,12 @@ groupOsString = group "OsString" $ do
     let t = Typeable.Proxy :: Typeable.Proxy OsString.OsChar
     tryFromFrom s t Gen.ascii
 
+  property "OsChar/Word" $ do
+    let s = Typeable.Proxy :: Typeable.Proxy Word
+    let t = Typeable.Proxy :: Typeable.Proxy OsString.OsChar
+    -- @0@ to @0xFF@ fits an 'OsString.OsChar' on both POSIX and Windows.
+    tryFromFrom s t . Gen.integral $ Range.linear 0 0xFF
+
 groupText :: H.Group
 groupText = group "Text" $ do
   property "LazyText" $ do
