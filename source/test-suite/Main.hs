@@ -1874,6 +1874,12 @@ spec = describe "Witch" $ do
         f (OsString.unsafeFromChar 'a') `shouldBe` 'a'
         f (OsString.unsafeFromChar '\xFF') `shouldBe` '\xFF'
 
+    describe "From OsChar Word" $ do
+      let f = Witch.from @OsString.OsChar @Word
+      it "works" $ do
+        f (OsString.unsafeFromChar 'a') `shouldBe` 97
+        f (OsString.unsafeFromChar '\xFF') `shouldBe` 255
+
     describe "From Text OsString" $ do
       let f = Witch.from @Text.Text @OsString.OsString
       it "works" $ do
@@ -2488,6 +2494,14 @@ spec = describe "Witch" $ do
         f '\xFF' `shouldBe` Just (OsString.unsafeFromChar '\xFF')
         -- Above @0xFFFF@, so it fails on both POSIX and Windows.
         f '\x10000' `shouldBe` Nothing
+
+    describe "TryFrom Word OsChar" $ do
+      let f = hush . Witch.tryFrom @Word @OsString.OsChar
+      it "works" $ do
+        f 97 `shouldBe` Just (OsString.unsafeFromChar 'a')
+        f 255 `shouldBe` Just (OsString.unsafeFromChar '\xFF')
+        -- Above @0x10FFFF@, so it fails on both POSIX and Windows.
+        f 0x110000 `shouldBe` Nothing
 
     describe "TryFrom String OsString" $ do
       let f = hush . Witch.tryFrom @String @OsString.OsString
