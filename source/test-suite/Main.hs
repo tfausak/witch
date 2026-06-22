@@ -1868,12 +1868,6 @@ spec = describe "Witch" $ do
         f (OsString.pack [OsString.unsafeFromChar 'a', OsString.unsafeFromChar 'b'])
           `shouldBe` [OsString.unsafeFromChar 'a', OsString.unsafeFromChar 'b']
 
-    describe "From OsChar Char" $ do
-      let f = Witch.from @OsString.OsChar @Char
-      it "works" $ do
-        f (OsString.unsafeFromChar 'a') `shouldBe` 'a'
-        f (OsString.unsafeFromChar '\xFF') `shouldBe` '\xFF'
-
     describe "From OsChar Word" $ do
       let f = Witch.from @OsString.OsChar @Word
       it "works" $ do
@@ -2486,14 +2480,6 @@ spec = describe "Witch" $ do
       let f = Witch.from @String @Encoding.Utf32BL
       it "works" $ do
         f "a" `shouldBe` Tagged.Tagged (LazyByteString.pack [0x00, 0x00, 0x00, 0x61])
-
-    describe "TryFrom Char OsChar" $ do
-      let f = hush . Witch.tryFrom @Char @OsString.OsChar
-      it "works" $ do
-        f 'a' `shouldBe` Just (OsString.unsafeFromChar 'a')
-        f '\xFF' `shouldBe` Just (OsString.unsafeFromChar '\xFF')
-        -- Above @0xFFFF@, so it fails on both POSIX and Windows.
-        f '\x10000' `shouldBe` Nothing
 
     describe "TryFrom Word OsChar" $ do
       let f = hush . Witch.tryFrom @Word @OsString.OsChar

@@ -1175,37 +1175,8 @@ instance From.From [OsString.OsChar] OsString.OsString where
 instance From.From OsString.OsString [OsString.OsChar] where
   from = OsString.unpack
 
--- | Uses 'OsString.unsafeFromChar'. Fails when the 'Char' does not fit in an
--- 'OsString.OsChar', which holds one byte on POSIX (code points above @0xFF@)
--- and two bytes on Windows (code points above @0xFFFF@). Guarded by a round
--- trip through 'OsString.toChar', so it never silently truncates.
---
--- An 'OsString.OsChar' is a single code unit in a platform encoding, not a
--- character; even the @os-string@ documentation notes it should perhaps have
--- been named @OsWord@. Treating it as a 'Char' is usually a mistake, since a
--- Unicode code point may span several code units. Prefer the
--- @'TryFrom.TryFrom' 'Word' 'OsString.OsChar'@ instance, which makes the code
--- unit explicit.
-instance TryFrom.TryFrom Char OsString.OsChar where
-  tryFrom =
-    Utility.maybeTryFrom $ \c ->
-      let oc = OsString.unsafeFromChar c
-       in if OsString.toChar oc == c then Just oc else Nothing
-
--- | Uses 'OsString.toChar'. Total because every 'OsString.OsChar' is a valid
--- Unicode code point.
---
--- Be wary of this conversion: an 'OsString.OsChar' is a single code unit in a
--- platform encoding rather than a character, so reinterpreting it as a 'Char'
--- produces a meaningful code point only for single-unit values. Prefer the
--- @'From.From' 'OsString.OsChar' 'Word'@ instance, which exposes the code unit
--- without pretending it is a character.
-instance From.From OsString.OsChar Char where
-  from = OsString.toChar
-
--- | Exposes the underlying code unit of an 'OsString.OsChar' as a 'Word'. Total
--- because an 'OsString.OsChar' is a single code unit (one byte on POSIX, two on
--- Windows), which always fits in a 'Word'.
+-- | Uses 'OsString.toChar'. Total because an 'OsString.OsChar' is a single code
+-- unit, which always fits in a 'Word'.
 instance From.From OsString.OsChar Word where
   from = fromIntegral . Char.ord . OsString.toChar
 

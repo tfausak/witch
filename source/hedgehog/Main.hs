@@ -1001,11 +1001,6 @@ groupOsString = group "OsString" $ do
     let t = Typeable.Proxy :: Typeable.Proxy [OsString.OsChar]
     fromFrom s t genOsString
 
-  property "OsChar" $ do
-    let s = Typeable.Proxy :: Typeable.Proxy Char
-    let t = Typeable.Proxy :: Typeable.Proxy OsString.OsChar
-    tryFromFrom s t Gen.ascii
-
   property "OsChar/Word" $ do
     let s = Typeable.Proxy :: Typeable.Proxy Word
     let t = Typeable.Proxy :: Typeable.Proxy OsString.OsChar
